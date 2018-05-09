@@ -1,0 +1,16 @@
+[
+{
+  "modid": "aorta",
+  "name": "Aorta",
+  "description": "An Ortega mod",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://github.com/msifd/aorta",
+  "updateUrl": "",
+  "authorList": ["msifeed"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
