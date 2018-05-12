@@ -15,6 +15,7 @@ public class Aorta {
 
     @Mod.Instance
     public static Aorta INSTANCE;
+
     @SidedProxy(
             serverSide = "msifeed.mc.aorta.core.Core",
             clientSide = "msifeed.mc.aorta.core.CoreClient"

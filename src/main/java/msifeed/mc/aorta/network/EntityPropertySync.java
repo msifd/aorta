@@ -1,7 +1,6 @@
 package msifeed.mc.aorta.network;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -42,21 +41,13 @@ public class EntityPropertySync implements IMessage {
     }
 
     public static void sync(World world, Entity entity, ISyncProp prop) {
-        if (!world.isRemote)
+        if (!world.isRemote || !(world instanceof WorldServer))
             return;
 
         final EntityPropertySync msg = new EntityPropertySync(entity, prop);
-
-        if (FMLCommonHandler.instance().getSide().isClient()) {
-            final Entity e = FMLClientHandler.instance().getWorldClient().getEntityByID(msg.entityId);
-            final IExtendedEntityProperties p = e.getExtendedProperties(msg.propName);
-            if (p != null)
-                p.loadNBTData(msg.compound);
-        } else {
-            final EntityTracker tracker = ((WorldServer) world).getEntityTracker();
-            for (EntityPlayer player : tracker.getTrackingPlayers(entity)) {
-                Networking.CHANNEL.sendTo(msg, (EntityPlayerMP) player);
-            }
+        final EntityTracker tracker = ((WorldServer) world).getEntityTracker();
+        for (EntityPlayer player : tracker.getTrackingPlayers(entity)) {
+            Networking.CHANNEL.sendTo(msg, (EntityPlayerMP) player);
         }
     }
 

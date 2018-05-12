@@ -2,6 +2,8 @@ package msifeed.mc.aorta.core.things;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import msifeed.mc.aorta.core.character.CharacterFactory;
+import msifeed.mc.aorta.core.character.CharacterProperty;
 import msifeed.mc.aorta.things.AortaCreativeTab;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,10 +38,13 @@ public class ItemBattleStick extends Item {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity target) {
-        if (!FMLCommonHandler.instance().getMinecraftServerInstance().isServerRunning())
-            return false;
+        if (!player.worldObj.isRemote)
+            return true;
 
         System.out.println("entity in");
+        final CharacterProperty charProp = CharacterProperty.get(target);
+        charProp.setCharacter(CharacterFactory.forEntity(target));
+//        EntityPropertySync.sync(target.worldObj, target, charProp);
 
         return true;
     }
@@ -48,6 +53,7 @@ public class ItemBattleStick extends Item {
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
         if (player.isSneaking()) {
             System.out.println("self out");
+//            charProp.character =
         }
         return itemStack;
     }

@@ -13,7 +13,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class AortaCreativeTab extends CreativeTabs {
-    public static final AortaCreativeTab ITEMS = new AortaCreativeTab("Aorta - Items");
+    public static final AortaCreativeTab ITEMS = new AortaCreativeTab("aorta.items");
 
     private ArrayList<ItemStack> cache = new ArrayList<>();
 
