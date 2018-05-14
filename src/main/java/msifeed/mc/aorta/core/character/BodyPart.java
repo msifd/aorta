@@ -1,17 +1,39 @@
 package msifeed.mc.aorta.core.character;
 
-public class BodyPart {
+import msifeed.mc.aorta.props.INBTSerializable;
+import net.minecraft.nbt.NBTTagCompound;
+
+public class BodyPart implements INBTSerializable {
+    public String name;
     public Type type;
-    public byte hits;
-    public byte maxHits;
+    public short hits;
+    public short maxHits;
+    public short criticalToKO;
+    public short criticalToDeath;
 
     public BodyPart() {
     }
 
-    public BodyPart(Type type, int hits) {
-        this.type = type;
-        this.hits = (byte) hits;
-        this.maxHits = (byte) hits;
+    @Override
+    public NBTTagCompound toNBT() {
+        final NBTTagCompound compound = new NBTTagCompound();
+        compound.setString("name", name);
+        compound.setShort("type", (short) type.ordinal());
+        compound.setShort("hits", hits);
+        compound.setShort("maxHits", maxHits);
+        compound.setShort("critKO", criticalToKO);
+        compound.setShort("critDeath", criticalToDeath);
+        return compound;
+    }
+
+    @Override
+    public void fromNBT(NBTTagCompound compound) {
+        name = compound.getString("name");
+        type = Type.values()[compound.getByte("type")];
+        hits = compound.getShort("hits");
+        maxHits = compound.getShort("maxHits");
+        criticalToKO = compound.getShort("critKO");
+        criticalToDeath = compound.getShort("critDeath");
     }
 
     public enum Type {

@@ -11,7 +11,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import org.lwjgl.opengl.GL11;
 
@@ -32,9 +31,10 @@ public enum DebugHud {
         if (heldItem == null || !(heldItem.getItem() instanceof ItemDebugTool))
             return;
 
-        Entity entity = getEntityLookingAt();
-        if (entity == null)
-            entity = mc.thePlayer;
+        Entity hitEntity = getEntityLookingAt();
+        if (!(hitEntity instanceof EntityLivingBase))
+            hitEntity = mc.thePlayer;
+        final EntityLivingBase entity = (EntityLivingBase) hitEntity;
 
         final LinkedList<String> lines = new LinkedList<>();
         lines.add("[Aorta debug]");
@@ -51,7 +51,7 @@ public enum DebugHud {
         GL11.glPopMatrix();
     }
 
-    private void addCharProp(LinkedList<String> lines, Entity entity) {
+    private void addCharProp(LinkedList<String> lines, EntityLivingBase entity) {
         final CharacterProperty charProp = CharacterProperty.get(entity);
         if (charProp == null)
             return;

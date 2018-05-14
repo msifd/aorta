@@ -4,8 +4,10 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.aorta.core.character.CharacterFactory;
 import msifeed.mc.aorta.core.character.CharacterProperty;
+import msifeed.mc.aorta.props.SyncProp;
 import msifeed.mc.aorta.things.AortaCreativeTab;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -38,13 +40,15 @@ public class ItemBattleStick extends Item {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity target) {
-        if (!player.worldObj.isRemote)
+        if (!player.worldObj.isRemote || !(target instanceof EntityLivingBase))
             return true;
 
+        final EntityLivingBase entity = (EntityLivingBase) target;
+
         System.out.println("entity in");
-        final CharacterProperty charProp = CharacterProperty.get(target);
-        charProp.setCharacter(CharacterFactory.forEntity(target));
-//        EntityPropertySync.sync(target.worldObj, target, charProp);
+        final CharacterProperty charProp = CharacterProperty.get(entity);
+        charProp.setCharacter(CharacterFactory.forEntity(entity));
+        SyncProp.sync(entity.worldObj, target, charProp);
 
         return true;
     }
@@ -61,6 +65,9 @@ public class ItemBattleStick extends Item {
     @SubscribeEvent
     public void onEntityInteract(EntityInteractEvent event) {
         if (!FMLCommonHandler.instance().getMinecraftServerInstance().isServerRunning())
+            return;
+        final ItemStack heldItem = event.entityPlayer.getHeldItem();
+        if (heldItem == null || !(heldItem.getItem() instanceof ItemBattleStick))
             return;
 
         System.out.println("entity out");

@@ -20,7 +20,7 @@ public class Aorta {
             serverSide = "msifeed.mc.aorta.core.Core",
             clientSide = "msifeed.mc.aorta.core.CoreClient"
     )
-    public static Core core;
+    public static Core CORE;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -29,6 +29,6 @@ public class Aorta {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         Networking.INSTANCE.init();
-        core.init();
+        CORE.init();
     }
 }
