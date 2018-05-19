@@ -1,10 +1,10 @@
 package msifeed.mc.aorta.things;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import msifeed.mc.aorta.utils.AlphanumComparator;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -13,7 +13,15 @@ import java.util.Comparator;
 import java.util.List;
 
 public class AortaCreativeTab extends CreativeTabs {
+    public static final AortaCreativeTab BLOCKS = new AortaCreativeTab("aorta.blocks");
     public static final AortaCreativeTab ITEMS = new AortaCreativeTab("aorta.items");
+
+    private static Item iconItem = new Item();
+
+    static {
+        iconItem.setTextureName("aorta:aorta_tab");
+        GameRegistry.registerItem(iconItem, "aorta_tab");
+    }
 
     private ArrayList<ItemStack> cache = new ArrayList<>();
 
@@ -23,7 +31,7 @@ public class AortaCreativeTab extends CreativeTabs {
 
     @Override
     public Item getTabIconItem() {
-        return Items.bowl;
+        return iconItem;
     }
 
     @Override

@@ -2,14 +2,14 @@
 {
   "modid": "aorta",
   "name": "Aorta",
-  "description": "An Ortega mod",
+  "description": "Awesome Ortega Additions",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "https://github.com/msifd/aorta",
   "updateUrl": "",
   "authorList": ["msifeed"],
   "credits": "",
-  "logoFile": "",
+  "logoFile": "aorta.png",
   "screenshots": [],
   "dependencies": []
 }

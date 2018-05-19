@@ -1,0 +1,26 @@
+[
+  {
+    "id": "barrel_apples",
+    "texture": [
+      "aorta:barrel_bottom",
+      "aorta:barrel_apples",
+      "aorta:barrel_side"
+    ],
+    "texture_layout": "012222",
+    "traits": [
+      "block",
+      "wooden"
+    ]
+  },
+  {
+    "id": "basalt",
+    "traits": [
+      "block",
+      "stone",
+      "unbreakable",
+      "add_slabs",
+      "add_stairs"
+    ]
+  }
+
+]

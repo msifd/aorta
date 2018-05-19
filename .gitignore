@@ -18,6 +18,10 @@ build
 .gradle
 
 # other
+run/*
 eclipse
-run
 classes
+
+# exclude genesis config
+!run/genesis/
+!run/resourcepacks/
