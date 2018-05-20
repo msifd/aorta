@@ -9,6 +9,6 @@ public class ScreenCharEditor extends MellowGuiScreen {
 
     public ScreenCharEditor(EntityLivingBase entity) {
         this.entity = entity;
-        scene.addChild(new Window());
+        scene.addChild(new Window(scene));
     }
 }
