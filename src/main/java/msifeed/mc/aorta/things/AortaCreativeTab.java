@@ -13,25 +13,31 @@ import java.util.Comparator;
 import java.util.List;
 
 public class AortaCreativeTab extends CreativeTabs {
-    public static final AortaCreativeTab BLOCKS = new AortaCreativeTab("aorta.blocks");
-    public static final AortaCreativeTab ITEMS = new AortaCreativeTab("aorta.items");
+    private static final Item iconAorta = new Item();
+    private static final Item iconTools = new Item();
 
-    private static Item iconItem = new Item();
+    public static final AortaCreativeTab BLOCKS = new AortaCreativeTab("aorta.blocks", iconAorta);
+    public static final AortaCreativeTab ITEMS = new AortaCreativeTab("aorta.items", iconAorta);
+    public static final AortaCreativeTab TOOLS = new AortaCreativeTab("aorta.tools", iconTools);
 
     static {
-        iconItem.setTextureName("aorta:aorta_tab");
-        GameRegistry.registerItem(iconItem, "aorta_tab");
+        iconAorta.setTextureName("aorta:tab_aorta");
+        iconTools.setTextureName("aorta:tab_tools");
+        GameRegistry.registerItem(iconAorta, "tab_aorta");
+        GameRegistry.registerItem(iconTools, "tab_tools");
     }
 
+    private final Item icon;
     private ArrayList<ItemStack> cache = new ArrayList<>();
 
-    private AortaCreativeTab(String name) {
+    private AortaCreativeTab(String name, Item icon) {
         super(name);
+        this.icon = icon;
     }
 
     @Override
     public Item getTabIconItem() {
-        return iconItem;
+        return icon;
     }
 
     @Override

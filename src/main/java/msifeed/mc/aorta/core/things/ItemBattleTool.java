@@ -15,22 +15,16 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 
-public class ItemBattleStick extends Item {
-    public static String ITEM_NAME = "battle_stick";
+public class ItemBattleTool extends Item {
+    public static String ITEM_NAME = "tool_battle";
 
-    public ItemBattleStick() {
+    public ItemBattleTool() {
         setUnlocalizedName(ITEM_NAME);
-        setTextureName("blaze_rod");
-        setCreativeTab(AortaCreativeTab.ITEMS);
+        setTextureName("aorta:tool_battle");
+        setCreativeTab(AortaCreativeTab.TOOLS);
         setMaxStackSize(1);
-        setFull3D();
 
         MinecraftForge.EVENT_BUS.register(this);
-    }
-
-    @Override
-    public boolean hasEffect(ItemStack par1ItemStack, int pass) {
-        return true;
     }
 
     @Override
@@ -67,7 +61,7 @@ public class ItemBattleStick extends Item {
         if (!FMLCommonHandler.instance().getMinecraftServerInstance().isServerRunning())
             return;
         final ItemStack heldItem = event.entityPlayer.getHeldItem();
-        if (heldItem == null || !(heldItem.getItem() instanceof ItemBattleStick))
+        if (heldItem == null || !(heldItem.getItem() instanceof ItemBattleTool))
             return;
 
         System.out.println("entity out");

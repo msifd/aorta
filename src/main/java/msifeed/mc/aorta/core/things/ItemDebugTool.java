@@ -5,17 +5,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public class ItemDebugTool extends Item {
-    public static String ITEM_NAME = "debug_tool";
+    public static String ITEM_NAME = "tool_debug";
 
     public ItemDebugTool() {
         setUnlocalizedName(ITEM_NAME);
-        setTextureName("netherbrick");
-        setCreativeTab(AortaCreativeTab.ITEMS);
+        setTextureName("aorta:tool_debug");
+        setCreativeTab(AortaCreativeTab.TOOLS);
         setMaxStackSize(1);
-    }
-
-    @Override
-    public boolean hasEffect(ItemStack par1ItemStack, int pass) {
-        return true;
     }
 }
