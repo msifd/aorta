@@ -1,12 +1,24 @@
 package msifeed.mc.mellow.widgets;
 
-public class Scene extends Widget {
+import com.google.common.eventbus.EventBus;
+import msifeed.mc.mellow.WidgetCollection;
+
+import javax.vecmath.Point3f;
+
+public class Scene extends WidgetCollection {
+    private EventBus eventBus = new EventBus();
+
     public Scene() {
         super(null);
     }
 
     @Override
-    public void renderSelf() {
+    public Point3f getAbsPos() {
+        return pos;
+    }
 
+    @Override
+    protected EventBus getEventBus() {
+        return eventBus;
     }
 }

@@ -2,7 +2,6 @@ package msifeed.mc.aorta.core.things;
 
 import msifeed.mc.aorta.things.AortaCreativeTab;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 
 public class ItemDebugTool extends Item {
     public static String ITEM_NAME = "tool_debug";

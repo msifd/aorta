@@ -1,25 +1,33 @@
 package msifeed.mc.mellow.widgets;
 
 import msifeed.mc.mellow.Mellow;
+import msifeed.mc.mellow.Widget;
+import msifeed.mc.mellow.WidgetCollection;
 import msifeed.mc.mellow.render.RenderParts;
 import msifeed.mc.mellow.theme.Part;
 
-public class Window extends Widget {
+public class Window extends WidgetCollection {
     private Part part = Mellow.THEME.parts.get("window");
-    private Label title = new Label(this);
+    private Button.Transparent header = new Button.Transparent(this);
 
     public Window(Widget parent) {
         super(parent);
-        pos.set(10, 10, 0);
-        size.set(200, 100);
+        setPos(10, 10, 0);
+        setSize(200, 100);
 
-        title.pos.set(3, 4, 0);
-        title.text = "Title";
+        header.setPos(2, 1);
+        header.setLabel("Title goes here");
     }
 
     @Override
-    public void renderSelf() {
-        RenderParts.ninePatches(part, pos, size);
-        title.render();
+    public void setSize(float w, float h) {
+        super.setSize(w, h);
+        header.setSize(w - 4, 12);
+    }
+
+    @Override
+    protected void renderSelf() {
+        RenderParts.ninePatches(part, getAbsPos(), size);
+        header.render();
     }
 }
