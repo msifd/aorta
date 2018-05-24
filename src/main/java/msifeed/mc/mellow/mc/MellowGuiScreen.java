@@ -1,7 +1,11 @@
 package msifeed.mc.mellow.mc;
 
+import msifeed.mc.mellow.Widget;
+import msifeed.mc.mellow.events.MouseEvent;
 import msifeed.mc.mellow.widgets.Scene;
 import net.minecraft.client.gui.GuiScreen;
+
+import javax.vecmath.Point3f;
 
 public class MellowGuiScreen extends GuiScreen {
     protected Scene scene = new Scene();
@@ -12,13 +16,18 @@ public class MellowGuiScreen extends GuiScreen {
     }
 
     @Override
-    public void drawScreen(int p_73863_1_, int p_73863_2_, float p_73863_3_) {
+    public void drawScreen(int xMouse, int yMouse, float tick) {
         scene.render();
+        final Widget lookup = scene.lookupWidget(new Point3f(xMouse, yMouse, 0));
+        if (lookup != null)
+            lookup.renderDebug();
     }
 
     @Override
-    protected void mouseClicked(int p_73864_1_, int p_73864_2_, int p_73864_3_) {
-        super.mouseClicked(p_73864_1_, p_73864_2_, p_73864_3_);
+    protected void mouseClicked(int xMouse, int yMouse, int button) {
+        final Widget lookup = scene.lookupWidget(new Point3f(xMouse, yMouse, 0));
+        if (lookup != null)
+            scene.getEventBus().post(new MouseEvent.Click(lookup, xMouse, yMouse, button));
     }
 
     @Override

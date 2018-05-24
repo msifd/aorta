@@ -1,6 +1,7 @@
 package msifeed.mc.mellow.widgets;
 
 import com.google.common.eventbus.EventBus;
+import msifeed.mc.mellow.Widget;
 import msifeed.mc.mellow.WidgetCollection;
 
 import javax.vecmath.Point3f;
@@ -18,7 +19,12 @@ public class Scene extends WidgetCollection {
     }
 
     @Override
-    protected EventBus getEventBus() {
+    public Widget getTopWidget() {
+        return this;
+    }
+
+    @Override
+    public EventBus getEventBus() {
         return eventBus;
     }
 }

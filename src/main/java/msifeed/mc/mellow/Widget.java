@@ -1,6 +1,7 @@
 package msifeed.mc.mellow;
 
 import com.google.common.eventbus.EventBus;
+import msifeed.mc.mellow.render.RenderShapes;
 
 import javax.vecmath.Point2f;
 import javax.vecmath.Point3f;
@@ -45,6 +46,10 @@ public abstract class Widget {
         return parent;
     }
 
+    public Widget getTopWidget() {
+        return parent.getTopWidget();
+    }
+
     public void setParent(Widget widget) {
         if (parent != null)
             parent.getEventBus().unregister(this);
@@ -55,12 +60,23 @@ public abstract class Widget {
 
     public void render() {
         renderSelf();
-//        RenderShapes.frame(getAbsPos(), size, 0.5f, hashCode()); // for debug purposes
+//        renderDebug();
+    }
+
+    public void renderDebug() {
+        RenderShapes.frame(getAbsPos(), size, 1, hashCode()); // for debug purposes
     }
 
     protected abstract void renderSelf();
 
     protected EventBus getEventBus() {
         return parent.getEventBus();
+    }
+
+    public Widget lookupWidget(Point3f p) {
+        final Point3f ap = getAbsPos();
+        return p.x >= ap.x && p.x <= ap.x + size.x
+                && p.y >= ap.y && p.y <= ap.y + size.y
+                && p.z >= ap.z ? this : null;
     }
 }

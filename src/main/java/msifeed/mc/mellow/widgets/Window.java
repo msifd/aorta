@@ -6,6 +6,8 @@ import msifeed.mc.mellow.WidgetCollection;
 import msifeed.mc.mellow.render.RenderParts;
 import msifeed.mc.mellow.theme.Part;
 
+import javax.vecmath.Point3f;
+
 public class Window extends WidgetCollection {
     private Part part = Mellow.THEME.parts.get("window");
     private Button.Transparent header = new Button.Transparent(this);
@@ -17,6 +19,9 @@ public class Window extends WidgetCollection {
 
         header.setPos(1, 1);
         header.setLabel("Title goes here");
+        header.setClickCallback(event -> {
+            System.out.println("My header just got clicked!");
+        });
     }
 
     @Override
@@ -29,5 +34,12 @@ public class Window extends WidgetCollection {
     protected void renderSelf() {
         RenderParts.nineSlice(part, getAbsPos(), size);
         header.render();
+    }
+
+    @Override
+    public Widget lookupWidget(Point3f p) {
+        if (header.lookupWidget(p) != null)
+            return header;
+        return super.lookupWidget(p);
     }
 }
