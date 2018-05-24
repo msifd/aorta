@@ -10,12 +10,15 @@ import javax.vecmath.Point2f;
 import javax.vecmath.Point3f;
 
 public final class RenderParts {
-    public static void patch(ResourceLocation tex, double x, double y, double z, double u, double v, double w, double h) {
+    public static void slice(ResourceLocation tex, double x, double y, double z, double u, double v, double w, double h) {
         Minecraft.getMinecraft().getTextureManager().bindTexture(tex);
-        patch(x, y, z, u, v, w, h, w, h);
+        slice(x, y, z, u, v, w, h, w, h);
     }
 
-    public static void patch(double x, double y, double z, double w, double h, double u, double v, double tw, double th) {
+    public static void slice(double x, double y, double z, double w, double h, double u, double v, double tw, double th) {
+        if (w <= 0 || h <= 0)
+            return;
+
         // 256:256 texture aspect ratio
         final double f = 0.00390625;
         final double f1 = 0.00390625;
@@ -28,11 +31,14 @@ public final class RenderParts {
         tessellator.draw();
     }
 
-    public static void ninePatches(Part part, Point3f pos, Point2f size) {
-        if (part == null || pos == null || size == null || part.patchesSize == null)
+    public static void nineSlice(Part part, Point3f pos, Point2f size) {
+        if (part == null || pos == null || size == null || part.slicesSize == null)
             return;
 
         Minecraft.getMinecraft().getTextureManager().bindTexture(Mellow.THEME.sprite);
+
+        final double midWidth = Math.max(size.x - part.slicesSize[0].x - part.slicesSize[3].x, 0);
+        final double midHeight = Math.max(size.y - part.slicesSize[0].y - part.slicesSize[6].y, 0);
 
         double x = pos.x;
         double y = pos.y;
@@ -40,12 +46,12 @@ public final class RenderParts {
             final int xth = i % 3;
             final int yth = i / 3;
 
-            final Point2f patchUV = part.patchesUV[i];
-            final Point2f patchSize = part.patchesSize[i];
-            final double width = xth == 1 ? Math.max(size.x, patchSize.x) : patchSize.x;
-            final double height = yth == 1 ? Math.max(size.y, patchSize.y) : patchSize.y;
+            final Point2f sliceUV = part.slicesUV[i];
+            final Point2f sliceSize = part.slicesSize[i];
+            final double width = xth == 1 ? midWidth : sliceSize.x;
+            final double height = yth == 1 ? midHeight : sliceSize.y;
 
-            patch(x, y, pos.z, width, height, patchUV.x, patchUV.y, patchSize.x, patchSize.y);
+            slice(x, y, pos.z, width, height, sliceUV.x, sliceUV.y, sliceSize.x, sliceSize.y);
 
             if (xth == 2) {
                 x = pos.x;

@@ -15,19 +15,19 @@ public class Window extends WidgetCollection {
         setPos(10, 10, 0);
         setSize(200, 100);
 
-        header.setPos(2, 1);
+        header.setPos(1, 1);
         header.setLabel("Title goes here");
     }
 
     @Override
     public void setSize(float w, float h) {
         super.setSize(w, h);
-        header.setSize(w - 4, 12);
+        header.setSize(w - 2, 12);
     }
 
     @Override
     protected void renderSelf() {
-        RenderParts.ninePatches(part, getAbsPos(), size);
+        RenderParts.nineSlice(part, getAbsPos(), size);
         header.render();
     }
 }

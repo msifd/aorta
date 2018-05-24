@@ -33,10 +33,8 @@ public class Label extends Widget {
     @Override
     protected void renderSelf() {
         final Minecraft mc = Minecraft.getMinecraft();
-//        GL11.glPushMatrix();
-//        GL11.glScalef(0.8f, 0.8f, 1f);
-        final Point3f rel = getAbsPos();
+        Point3f rel = getAbsPos();
+        rel.y += 1; // tuning
         mc.fontRenderer.drawString(text, MathHelper.floor_float(rel.x), MathHelper.floor_float(rel.y), color);
-//        GL11.glPopMatrix();
     }
 }

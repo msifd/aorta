@@ -27,12 +27,16 @@ public class Button extends Widget {
     @Override
     protected void renderSelf() {
         renderBackground();
-        label.setPos(2, (size.y - label.size.y) / 2 + 2);
+        renderLabel();
+    }
+
+    protected void renderLabel() {
+        label.setPos(1, (size.y - label.size.y) / 2 + 1);
         RenderWidgets.cropped(label, getAbsPos(), size);
     }
 
     protected void renderBackground() {
-        RenderParts.ninePatches(normalPart, getAbsPos(), size);
+        RenderParts.nineSlice(normalPart, getAbsPos(), size);
     }
 
     public static class Transparent extends Button {

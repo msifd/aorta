@@ -10,8 +10,8 @@ public class Part {
     public Point2f pos;
     public Point2f size = null;
 
-    public Point2f[] patchesUV = null;
-    public Point2f[] patchesSize = null;
+    public Point2f[] slicesUV = null;
+    public Point2f[] slicesSize = null;
 
     public static class PointAdapter implements JsonDeserializer<Point2f> {
         @Override
@@ -38,17 +38,17 @@ public class Part {
             if (obj.has("size"))
                 part.size = context.deserialize(obj.get("size"), Point2f.class);
 
-            if (obj.has("9patch")) {
-                final Point2f[] compact = context.deserialize(obj.get("9patch"), Point2f[].class);
+            if (obj.has("9slice")) {
+                final Point2f[] compact = context.deserialize(obj.get("9slice"), Point2f[].class);
                 if (compact.length != 3)
-                    throw new JsonParseException("The Part's 9-patch should have exactly three points");
-                part.patchesSize = new Point2f[9];
-                part.patchesUV = new Point2f[9];
+                    throw new JsonParseException("The Part's 9-Slice should have exactly three points");
+                part.slicesSize = new Point2f[9];
+                part.slicesUV = new Point2f[9];
                 for (int i = 0; i < 9; i++) {
                     final int u = Arrays.stream(compact).limit(i % 3).mapToInt(value -> (int) value.x).sum();
                     final int v = Arrays.stream(compact).limit(i / 3).mapToInt(value -> (int) value.y).sum();
-                    part.patchesUV[i] = new Point2f(part.pos.x + u, part.pos.y + v);
-                    part.patchesSize[i] = new Point2f(compact[i % 3].x, compact[i / 3].y);
+                    part.slicesUV[i] = new Point2f(part.pos.x + u, part.pos.y + v);
+                    part.slicesSize[i] = new Point2f(compact[i % 3].x, compact[i / 3].y);
                 }
             }
             return part;

@@ -55,7 +55,7 @@ public abstract class Widget {
 
     public void render() {
         renderSelf();
-//        RenderShapes.frame(getAbsPos(), size); // for debug purposes
+//        RenderShapes.frame(getAbsPos(), size, 0.5f, hashCode()); // for debug purposes
     }
 
     protected abstract void renderSelf();

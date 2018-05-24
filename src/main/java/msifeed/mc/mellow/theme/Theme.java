@@ -14,7 +14,7 @@ public class Theme {
     public transient HashMap<String, Integer> colors = new HashMap<>();
 
     @SerializedName("colors")
-    private HashMap<String, String> colorsStr;
+    private HashMap<String, String> colorsStr; // Used for reading hex values
 
     public static Theme load(ResourceLocation sprite, String metaJson) {
         final Gson gson = (new GsonBuilder())
