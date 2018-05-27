@@ -1,7 +1,8 @@
 package msifeed.mc.mellow.mc;
 
-import msifeed.mc.mellow.Widget;
-import msifeed.mc.mellow.events.MouseEvent;
+import msifeed.mc.mellow.MellowGlobal;
+import msifeed.mc.mellow.widgets.Widget;
+import msifeed.mc.mellow.handlers.MouseHandler;
 import msifeed.mc.mellow.widgets.Scene;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -17,21 +18,44 @@ public class MellowGuiScreen extends GuiScreen {
 
     @Override
     public void drawScreen(int xMouse, int yMouse, float tick) {
-        scene.render();
         final Widget lookup = scene.lookupWidget(new Point3f(xMouse, yMouse, 0));
-        if (lookup != null)
-            lookup.renderDebug();
+        MellowGlobal.hoveredWidget = lookup;
+
+        scene.render();
     }
 
     @Override
     protected void mouseClicked(int xMouse, int yMouse, int button) {
         final Widget lookup = scene.lookupWidget(new Point3f(xMouse, yMouse, 0));
-        if (lookup != null)
-            scene.getEventBus().post(new MouseEvent.Click(lookup, xMouse, yMouse, button));
+        if (lookup instanceof MouseHandler.Press)
+            ((MouseHandler.Press) lookup).onPress(xMouse, yMouse, button);
+        MellowGlobal.focusedWidget = MellowGlobal.pressedWidget = lookup;
     }
 
     @Override
-    protected void keyTyped(char p_73869_1_, int p_73869_2_) {
-        super.keyTyped(p_73869_1_, p_73869_2_);
+    protected void mouseClickMove(int xMouse, int yMouse, int button, long timeSinceMouseClick) {
+        final Widget lookup = scene.lookupWidget(new Point3f(xMouse, yMouse, 0));
+        if (lookup instanceof MouseHandler.Move)
+            ((MouseHandler.Move) lookup).onMove(xMouse, yMouse, button);
+    }
+
+    @Override
+    protected void mouseMovedOrUp(int xMouse, int yMouse, int button) {
+        final Widget lookup = scene.lookupWidget(new Point3f(xMouse, yMouse, 0));
+        if (lookup != null) {
+            if (button == -1)
+                if (lookup instanceof MouseHandler.Move)
+                    ((MouseHandler.Move) lookup).onMove(xMouse, yMouse, button);
+            else if (lookup instanceof MouseHandler.Release)
+                ((MouseHandler.Release) lookup).onRelease(xMouse, yMouse, button);
+
+            if (MellowGlobal.pressedWidget == lookup && lookup instanceof MouseHandler.Click)
+                ((MouseHandler.Click) lookup).onClick(xMouse, yMouse, button);
+        }
+    }
+
+    @Override
+    protected void keyTyped(char c, int key) {
+        super.keyTyped(c, key);
     }
 }

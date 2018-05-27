@@ -1,6 +1,6 @@
 package msifeed.mc.mellow.render;
 
-import msifeed.mc.mellow.Widget;
+import msifeed.mc.mellow.widgets.Widget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.opengl.GL11;
@@ -20,5 +20,11 @@ public final class RenderWidgets {
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         widget.render();
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
+    }
+
+    public static void string(final Point3f pos, String text, int color) {
+        final Minecraft mc = Minecraft.getMinecraft();
+        pos.y += 1; // tuning
+        mc.fontRenderer.drawString(text, MathHelper.floor_float(pos.x), MathHelper.floor_float(pos.y), color);
     }
 }

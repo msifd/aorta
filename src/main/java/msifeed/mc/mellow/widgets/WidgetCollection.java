@@ -1,10 +1,10 @@
-package msifeed.mc.mellow;
+package msifeed.mc.mellow.widgets;
 
 import javax.vecmath.Point3f;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public abstract class WidgetCollection extends Widget {
+public class WidgetCollection extends Widget {
     protected ArrayList<Widget> children = new ArrayList<>();
 
     public WidgetCollection(Widget parent) {
@@ -30,15 +30,13 @@ public abstract class WidgetCollection extends Widget {
     }
 
     protected void renderChildren() {
-        if (children != null) {
-            for (Widget w : getChildren())
-                w.render();
-        }
+        for (Widget w : getChildren())
+            w.render();
     }
 
     @Override
     public Widget lookupWidget(Point3f p) {
-        for (Widget c : children) {
+        for (Widget c : getChildren()) {
             final Widget result = c.lookupWidget(p);
             if (result != null)
                 return result;

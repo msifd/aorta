@@ -1,11 +1,8 @@
 package msifeed.mc.mellow.widgets;
 
 import msifeed.mc.mellow.Mellow;
-import msifeed.mc.mellow.Widget;
+import msifeed.mc.mellow.render.RenderWidgets;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.MathHelper;
-
-import javax.vecmath.Point3f;
 
 public class Label extends Widget {
     protected int color = Mellow.THEME.colors.get("text");
@@ -32,9 +29,6 @@ public class Label extends Widget {
 
     @Override
     protected void renderSelf() {
-        final Minecraft mc = Minecraft.getMinecraft();
-        Point3f rel = getAbsPos();
-        rel.y += 1; // tuning
-        mc.fontRenderer.drawString(text, MathHelper.floor_float(rel.x), MathHelper.floor_float(rel.y), color);
+        RenderWidgets.string(getAbsPos(), text, color);
     }
 }

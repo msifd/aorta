@@ -1,19 +1,15 @@
 package msifeed.mc.mellow.widgets;
 
-import com.google.common.eventbus.Subscribe;
 import msifeed.mc.mellow.Mellow;
-import msifeed.mc.mellow.Widget;
-import msifeed.mc.mellow.events.MouseEvent;
 import msifeed.mc.mellow.render.RenderParts;
 import msifeed.mc.mellow.render.RenderWidgets;
 import msifeed.mc.mellow.theme.Part;
+import msifeed.mc.mellow.handlers.MouseHandler;
 
-import java.util.function.Consumer;
-
-public class Button extends Widget {
+public class Button extends Widget implements MouseHandler.Click {
     protected Part normalPart = Mellow.THEME.parts.get("button_normal");
     protected Label label = new Label(this);
-    protected Consumer<MouseEvent.Click> clickCallback = null;
+    protected Runnable clickCallback = null;
 
     public Button(Widget parent) {
         this(parent, "");
@@ -29,7 +25,7 @@ public class Button extends Widget {
         this.label.setText(text);
     }
 
-    public void setClickCallback(Consumer<MouseEvent.Click> callback) {
+    public void setClickCallback(Runnable callback) {
         this.clickCallback = callback;
     }
 
@@ -40,7 +36,7 @@ public class Button extends Widget {
     }
 
     protected void renderLabel() {
-        label.setPos(2, (size.y - label.size.y) / 2 + 1);
+        label.setPos(2, (size.y - label.size.y) / 2);
         RenderWidgets.cropped(label, getAbsPos(), size);
     }
 
@@ -48,19 +44,9 @@ public class Button extends Widget {
         RenderParts.nineSlice(normalPart, getAbsPos(), size);
     }
 
-    @Subscribe
-    public void onClickEvent(MouseEvent.Click event) {
-        if (event.target == this && clickCallback != null)
-            clickCallback.accept(event);
-    }
-
-    public static class Transparent extends Button {
-        public Transparent(Widget parent) {
-            super(parent);
-        }
-
-        @Override
-        protected void renderBackground() {
-        }
+    @Override
+    public void onClick(int xMouse, int yMouse, int button) {
+        if (clickCallback != null)
+            clickCallback.run();
     }
 }
