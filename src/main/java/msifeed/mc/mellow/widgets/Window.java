@@ -1,65 +1,53 @@
 package msifeed.mc.mellow.widgets;
 
 import msifeed.mc.mellow.Mellow;
+import msifeed.mc.mellow.layout.FloatLayout;
 import msifeed.mc.mellow.render.RenderParts;
 import msifeed.mc.mellow.render.RenderShapes;
 import msifeed.mc.mellow.theme.Part;
+import msifeed.mc.mellow.utils.Rect;
 
-import javax.vecmath.Point3f;
-import java.util.Collection;
-
-public class Window extends WidgetCollection {
+public class Window extends Widget {
     private Part part = Mellow.THEME.parts.get("window");
     private Header header = new Header(this);
-    private WidgetCollection content = new WidgetCollection(this);
+    private Widget content = new Widget(this);
 
     public Window(Widget parent) {
         super(parent);
-        setPos(10, 10, 0);
-        setSize(200, 100);
+        padding.set(1);
+        setLayout(new FloatLayout());
 
-        header.setPos(1, 1);
+        setMargin(10, 10);
+        setMinSize(200, 100);
+
+//        header.setMargin(1, 1);
         header.setLabel("Title goes here");
         header.setClickCallback(() -> {
             System.out.println("My header just got clicked!");
         });
 
-        content.setPos(1, 14);
+        content.setMargin(1, 14);
+
+        addChild(header);
+        addChild(content);
     }
 
-    @Override
-    public void setSize(float w, float h) {
-        super.setSize(w, h);
-        header.setSize(w - 2, Math.min(13, h));
-        content.setSize(w - 2, Math.max(0, h - 2 - 13));
-    }
+//    @Override
+//    public void setSize(float w, float h) {
+//        super.setSize(w, h);
+//        header.setSize(w - 2, Math.min(13, h));
+//        content.setSize(w - 2, Math.max(0, h - 2 - 13));
+//    }
 
     @Override
-    public void addChild(Widget widget) {
-        content.addChild(widget);
-    }
-
-    @Override
-    public void removeChild(Widget widget) {
-        content.removeChild(widget);
-    }
-
-    @Override
-    public Collection<Widget> getChildren() {
-        return content.getChildren();
+    protected void updateSelf() {
+        final Rect b = getBounds();
+        header.setMinSize(b.w - 2, Math.min(13, b.h));
     }
 
     @Override
     protected void renderSelf() {
-        RenderParts.nineSlice(part, getAbsPos(), size);
-        header.render();
-    }
-
-    @Override
-    public Widget lookupWidget(Point3f p) {
-        if (header.lookupWidget(p) != null)
-            return header;
-        return super.lookupWidget(p);
+        RenderParts.nineSlice(part, getBounds());
     }
 
     static class Header extends Button {
@@ -70,7 +58,7 @@ public class Window extends WidgetCollection {
         @Override
         protected void renderBackground() {
             if (isHovered())
-                RenderShapes.rect(getAbsPos(), size, 0x997577, 80);
+                RenderShapes.rect(getBounds(), 0x997577, 80);
         }
     }
 }

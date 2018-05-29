@@ -2,6 +2,7 @@ package msifeed.mc.mellow.render;
 
 import msifeed.mc.mellow.Mellow;
 import msifeed.mc.mellow.theme.Part;
+import msifeed.mc.mellow.utils.Rect;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
@@ -31,17 +32,17 @@ public final class RenderParts {
         tessellator.draw();
     }
 
-    public static void nineSlice(Part part, Point3f pos, Point2f size) {
-        if (part == null || pos == null || size == null || part.slicesSize == null)
+    public static void nineSlice(Part part, Rect bounds) {
+        if (part == null || part.slicesSize == null)
             return;
 
         Minecraft.getMinecraft().getTextureManager().bindTexture(Mellow.THEME.sprite);
 
-        final double midWidth = Math.max(size.x - part.slicesSize[0].x - part.slicesSize[3].x, 0);
-        final double midHeight = Math.max(size.y - part.slicesSize[0].y - part.slicesSize[6].y, 0);
+        final double midWidth = Math.max(bounds.w - part.slicesSize[0].x - part.slicesSize[3].x, 0);
+        final double midHeight = Math.max(bounds.h - part.slicesSize[0].y - part.slicesSize[6].y, 0);
 
-        double x = pos.x;
-        double y = pos.y;
+        double x = bounds.x;
+        double y = bounds.y;
         for (int i = 0; i < 9; i++) {
             final int xth = i % 3;
             final int yth = i / 3;
@@ -51,10 +52,10 @@ public final class RenderParts {
             final double width = xth == 1 ? midWidth : sliceSize.x;
             final double height = yth == 1 ? midHeight : sliceSize.y;
 
-            slice(x, y, pos.z, width, height, sliceUV.x, sliceUV.y, sliceSize.x, sliceSize.y);
+            slice(x, y, 0, width, height, sliceUV.x, sliceUV.y, sliceSize.x, sliceSize.y);
 
             if (xth == 2) {
-                x = pos.x;
+                x = bounds.x;
                 y += height;
             } else {
                 x += width;

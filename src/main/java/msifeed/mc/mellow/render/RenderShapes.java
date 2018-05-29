@@ -1,5 +1,6 @@
 package msifeed.mc.mellow.render;
 
+import msifeed.mc.mellow.utils.Rect;
 import net.minecraft.client.renderer.Tessellator;
 import org.lwjgl.opengl.GL11;
 
@@ -25,18 +26,18 @@ public final class RenderShapes {
 //        GL11.glPopMatrix();
     }
 
-    public static void rect(Point3f pos, Point2f size, int color, int alpha) {
-        final float w = size.x;
-        final float h = size.y;
+    public static void rect(Rect bounds, int color, int alpha) {
+        final float w = bounds.w;
+        final float h = bounds.h;
 //        GL11.glPushMatrix();
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         final Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawing(GL11.GL_QUADS);
         tessellator.setColorRGBA_I(color, alpha);
-        tessellator.addVertex(pos.x + 0, pos.y + h, pos.z);
-        tessellator.addVertex(pos.x + w, pos.y + h, pos.z);
-        tessellator.addVertex(pos.x + w, pos.y + 0, pos.z);
-        tessellator.addVertex(pos.x + 0, pos.y + 0, pos.z);
+        tessellator.addVertex(bounds.x + 0, bounds.y + h, 0);
+        tessellator.addVertex(bounds.x + w, bounds.y + h, 0);
+        tessellator.addVertex(bounds.x + w, bounds.y + 0, 0);
+        tessellator.addVertex(bounds.x + 0, bounds.y + 0, 0);
         tessellator.draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
 //        GL11.glPopMatrix();

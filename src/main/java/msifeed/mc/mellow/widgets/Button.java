@@ -5,6 +5,7 @@ import msifeed.mc.mellow.render.RenderParts;
 import msifeed.mc.mellow.render.RenderWidgets;
 import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.handlers.MouseHandler;
+import msifeed.mc.mellow.utils.Rect;
 
 public class Button extends Widget implements MouseHandler.Click {
     protected Part normalPart = Mellow.THEME.parts.get("button_normal");
@@ -15,10 +16,11 @@ public class Button extends Widget implements MouseHandler.Click {
         this(parent, "");
     }
 
-    public Button(Widget parent, String label) {
+    public Button(Widget parent, String text) {
         super(parent);
-        setSize(50, 10);
-        setLabel(label);
+        setMinSize(50, 10);
+        setLabel(text);
+        addChild(this.label);
     }
 
     public void setLabel(String text) {
@@ -30,18 +32,23 @@ public class Button extends Widget implements MouseHandler.Click {
     }
 
     @Override
+    protected void updateSelf() {
+        final Rect b = getBounds();
+        label.setMargin(b.x + 2, b.y + (b.h - label.getBounds().y) / 2);
+    }
+
+    @Override
     protected void renderSelf() {
         renderBackground();
         renderLabel();
     }
 
     protected void renderLabel() {
-        label.setPos(2, (size.y - label.size.y) / 2);
-        RenderWidgets.cropped(label, getAbsPos(), size);
+        RenderWidgets.cropped(label, getBounds());
     }
 
     protected void renderBackground() {
-        RenderParts.nineSlice(normalPart, getAbsPos(), size);
+        RenderParts.nineSlice(normalPart, getBounds());
     }
 
     @Override
