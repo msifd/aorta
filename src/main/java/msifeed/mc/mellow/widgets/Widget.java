@@ -4,7 +4,6 @@ import msifeed.mc.mellow.layout.Layout;
 import msifeed.mc.mellow.utils.Offset;
 import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.utils.Rect;
-import msifeed.mc.mellow.utils.SizeHint;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,7 +16,6 @@ public class Widget {
     protected Point minSize = new Point();
     protected Offset margin = new Offset();
     protected Offset padding = new Offset();
-    protected SizeHint hint = new SizeHint();
     private Rect bounds = new Rect();
 
     private int depth = 0;
@@ -57,8 +55,12 @@ public class Widget {
         return bounds;
     }
 
+    public void setBounds(Rect bounds) {
+        this.bounds = bounds;
+    }
+
     public void setBounds(int x, int y, int w, int h) {
-        this.bounds.set(x, y, w, h);
+        this.bounds.setPos(x, y, w, h);
     }
 
     public Widget getParent() {
@@ -66,14 +68,22 @@ public class Widget {
     }
 
     public void setParent(Widget parent) {
-        this.parent = parent;
-        if (parent != null)
-            this.depth = parent.depth + 1;
+        if (parent != null) {
+            final Widget container = parent.getContainer();
+            this.parent = container;
+            this.depth = container.depth + 1;
+        } else {
+            this.parent = null;
+        }
         markDirty();
     }
 
     public int getDepth() {
         return depth;
+    }
+
+    public Widget getContainer() {
+        return this;
     }
 
     public void addChild(Widget widget) {

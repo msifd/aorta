@@ -16,4 +16,18 @@ public class Point {
         this.x = x;
         this.y = y;
     }
+
+    public void set(Point p) {
+        this.x = p.x;
+        this.y = p.y;
+    }
+
+    public void translate(int x, int y) {
+        this.x += x;
+        this.y += y;
+    }
+
+    public void translate(Point p) {
+        translate(p.x, p.y);
+    }
 }

@@ -16,4 +16,10 @@ public final class MouseHandler {
     public interface Click {
         void onClick(int xMouse, int yMouse, int button);
     }
+
+    public interface AllBasic extends Press, Move, Release {
+    }
+
+    public interface All extends AllBasic, Click {
+    }
 }

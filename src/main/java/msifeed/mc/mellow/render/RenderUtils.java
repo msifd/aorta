@@ -5,10 +5,10 @@ import net.minecraft.client.Minecraft;
 public final class RenderUtils {
     private static int cacheSizeHint = 0;
     private static int cacheScaleFactor = 0;
-    
+
     public static int getScreenScaleFactor() {
         final Minecraft mc = Minecraft.getMinecraft();
-        
+
         final int sizeHint = mc.displayWidth + mc.displayHeight + (mc.func_152349_b() ? 1 : 2);
         if (cacheSizeHint == sizeHint)
             return cacheScaleFactor;

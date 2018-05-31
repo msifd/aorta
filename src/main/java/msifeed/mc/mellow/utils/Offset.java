@@ -31,4 +31,16 @@ public class Offset {
         this.bottom = b;
         this.left = l;
     }
+
+    public void set(Offset o) {
+        this.top = o.top;
+        this.right = o.right;
+        this.bottom = o.bottom;
+        this.left = o.left;
+    }
+
+    public void translateTopLeft(int left, int top) {
+        this.top += top;
+        this.left += left;
+    }
 }

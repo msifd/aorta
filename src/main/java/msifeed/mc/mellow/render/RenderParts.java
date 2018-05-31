@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 
 import javax.vecmath.Point2f;
-import javax.vecmath.Point3f;
 
 public final class RenderParts {
     public static void slice(ResourceLocation tex, double x, double y, double z, double u, double v, double w, double h) {
