@@ -9,7 +9,7 @@ import msifeed.mc.mellow.render.RenderWidgets;
 import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.utils.Point;
 
-import java.util.Collection;
+import java.util.Optional;
 
 public class Button extends Widget implements MouseHandler.Click {
     protected Part normalPart = Mellow.THEME.parts.get("button_normal");
@@ -25,14 +25,13 @@ public class Button extends Widget implements MouseHandler.Click {
 
     public Button(Widget parent, String text) {
         super(parent);
-        setMinSize(50, 10);
-        padding.set(2);
+        setSizeHint(50, 10);
         setLabel(text);
-        setLayout(new AnchorLayout(AnchorLayout.Anchor.CENTER));
 
-//        label.setMargin(2, 2);
-
-        addChild(this.label);
+        final AnchorLayout layout = new AnchorLayout(this, AnchorLayout.Anchor.CENTER);
+        layout.getMargin().set(2, 2, 2, 2);
+        layout.addWidget(label);
+        setLayout(layout);
     }
 
     private Button(Widget parent, Layout layout) {
@@ -48,11 +47,6 @@ public class Button extends Widget implements MouseHandler.Click {
         this.clickCallback = callback;
     }
 
-//    @Override
-//    protected void updateSelf() {
-//        final Rect b = getBounds();
-//    }
-
     @Override
     protected void renderSelf() {
         renderBackground();
@@ -60,20 +54,21 @@ public class Button extends Widget implements MouseHandler.Click {
     }
 
     protected void renderLabel() {
-        RenderWidgets.cropped(label, getBounds());
+        RenderWidgets.cropped(label, getGeometry());
     }
 
     protected void renderBackground() {
         if (isPressed())
-            RenderParts.nineSlice(pressPart, getBounds());
+            RenderParts.nineSlice(pressPart, getGeometry());
         else if (isHovered())
-            RenderParts.nineSlice(hoverPart, getBounds());
+            RenderParts.nineSlice(hoverPart, getGeometry());
         else
-            RenderParts.nineSlice(normalPart, getBounds());
+            RenderParts.nineSlice(normalPart, getGeometry());
     }
 
     @Override
-    public void addChildrenAt(Collection<Widget> widgets, Point p) {
+    public Optional<Widget> childAt(Point p) {
+        return Optional.empty();
     }
 
     @Override

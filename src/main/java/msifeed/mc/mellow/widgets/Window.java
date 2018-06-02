@@ -6,54 +6,56 @@ import msifeed.mc.mellow.handlers.MouseHandler;
 import msifeed.mc.mellow.layout.AnchorLayout;
 import msifeed.mc.mellow.layout.FloatLayout;
 import msifeed.mc.mellow.layout.Layout;
+import msifeed.mc.mellow.layout.VerticalLayout;
 import msifeed.mc.mellow.render.RenderParts;
 import msifeed.mc.mellow.render.RenderShapes;
 import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.utils.Point;
-import msifeed.mc.mellow.utils.Rect;
+import msifeed.mc.mellow.utils.SizePolicy;
 
 public class Window extends Widget {
     private Part part = Mellow.THEME.parts.get("window");
     private Header header = new Header(this);
-    private Widget content = new Widget(this);
+    private Layout contentLayout = new FloatLayout(this);
 
     public Window(Widget parent) {
         super(parent);
-        padding.set(1);
-        super.setLayout(new FloatLayout());
 
-        setMargin(10, 10);
-        setMinSize(200, 100);
+        final VerticalLayout layout = new VerticalLayout(this);
+        layout.getMargin().set(1);
+        super.setLayout(layout); // Window' setLayout returns content layout
 
-        header.setLabel("Title goes here");
+        header.setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.MAXIMUM);
+        header.setSizeHint(10, 13);
 
-        content.setMargin(0, 14);
-        content.setLayout(new FloatLayout());
+        layout.addWidget(header);
+        layout.addLayout(contentLayout);
 
-        Button btn = new Button(content, "pew");
-        btn.setMinSize(100, 50);
-        btn.setClickCallback(() -> System.out.println("meow!"));
-        content.addChild(btn);
+//        final VerticalLayout content = new VerticalLayout(this);
+//        content.getMargin().set(2);
+    }
 
-        addChild(header);
-        addChild(content);
+    public void setTitle(String text) {
+        header.setLabel(text);
+    }
+
+    @Override
+    public Layout getLayout() {
+        return contentLayout;
     }
 
     @Override
     public void setLayout(Layout layout) {
-        content.setLayout(layout);
-    }
-
-    @Override
-    protected void updateSelf() {
-        final Rect b = getBounds();
-        header.setMinSize(b.w - 2, Math.min(13, b.h));
-        content.setMinSize(b.w - 2, Math.max(0, b.h - 2 - 13));
+        final Layout baseLayout = super.getLayout();
+        baseLayout.removeItem(contentLayout);
+        baseLayout.addLayout(layout);
+        contentLayout = layout;
+        setDirty();
     }
 
     @Override
     protected void renderSelf() {
-        RenderParts.nineSlice(part, getBounds());
+        RenderParts.nineSlice(part, getGeometry());
     }
 
     static class Header extends Button implements MouseHandler.AllBasic {
@@ -62,13 +64,17 @@ public class Window extends Widget {
         Header(Widget parent) {
             super(parent);
             dragHandler = new DragHandler(parent);
-            setLayout(new AnchorLayout(AnchorLayout.Anchor.LEFT, AnchorLayout.Anchor.TOP));
+
+            final AnchorLayout layout = new AnchorLayout(this, AnchorLayout.Anchor.LEFT, AnchorLayout.Anchor.TOP);
+            layout.getMargin().set(2);
+            layout.addWidget(label);
+            setLayout(layout);
         }
 
         @Override
         protected void renderBackground() {
             if (isHovered())
-                RenderShapes.rect(getBounds(), 0x997577, 80);
+                RenderShapes.rect(getGeometry(), 0x997577, 80);
         }
 
         @Override

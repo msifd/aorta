@@ -1,44 +1,57 @@
 package msifeed.mc.mellow.layout;
 
-import msifeed.mc.mellow.utils.Offset;
 import msifeed.mc.mellow.utils.Rect;
 import msifeed.mc.mellow.widgets.Widget;
 
 public class AnchorLayout extends Layout {
-    private Anchor horAnchor;
-    private Anchor verAnchor;
+    protected Anchor horAnchor;
+    protected Anchor verAnchor;
+    protected LayoutItem item;
 
-    public AnchorLayout(Anchor both) {
+    public AnchorLayout(Widget parent, Anchor both) {
+        super(parent);
         this.horAnchor = both;
         this.verAnchor = both;
     }
 
-    public AnchorLayout(Anchor hor, Anchor ver) {
+    public AnchorLayout(Widget parent, Anchor hor, Anchor ver) {
+        super(parent);
         this.horAnchor = hor;
         this.verAnchor = ver;
     }
 
     @Override
-    public void update() {
-        final Rect hostBounds = host.getBounds();
-        hostBounds.offset(host.getPadding());
+    public void addItem(LayoutItem item) {
+        this.item = item;
+    }
 
-        for (Widget w : host.getChildren()) {
-            setAnchoredBounds(w, hostBounds);
+    @Override
+    public void removeItem(LayoutItem item) {
+        if (this.item == item)
+            this.item = null;
+    }
+
+    @Override
+    public int countItems() {
+        return item == null ? 0 : 1;
+    }
+
+    @Override
+    public void update() {
+        if (item != null) {
+            setAnchoredGeom();
         }
     }
 
-    private void setAnchoredBounds(Widget w, Rect hostBounds) {
-        final Rect result = new Rect();
-        final Offset margin = w.getMargin();
-
-        result.translate(margin.left, margin.top); // ???
-        result.translate(hostBounds);
-        result.resize(w.getMinSize());
+    private void setAnchoredGeom() {
+        final Rect itemGeom = new Rect();
+        itemGeom.translate(geometry);
+        itemGeom.translate(item.getPos());
+        itemGeom.setSize(item.getSizeHint());
 
         switch (verAnchor) {
             case CENTER:
-                result.y += (hostBounds.h - result.h) / 2;
+                itemGeom.y += (geometry.h - itemGeom.h) / 2;
                 break;
             case TOP:
                 break;
@@ -48,7 +61,7 @@ public class AnchorLayout extends Layout {
 
         switch (horAnchor) {
             case CENTER:
-                result.x += (hostBounds.w - result.w) / 2;
+                itemGeom.x += (geometry.w - itemGeom.w) / 2;
                 break;
             case LEFT:
                 break;
@@ -56,7 +69,7 @@ public class AnchorLayout extends Layout {
                 break;
         }
 
-        w.setBounds(result);
+        item.setGeometry(itemGeom);
     }
 
     public enum Anchor {

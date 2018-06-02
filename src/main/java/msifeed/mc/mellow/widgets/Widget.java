@@ -1,24 +1,27 @@
 package msifeed.mc.mellow.widgets;
 
 import msifeed.mc.mellow.layout.Layout;
-import msifeed.mc.mellow.utils.Offset;
+import msifeed.mc.mellow.render.RenderShapes;
 import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.utils.Rect;
+import msifeed.mc.mellow.utils.SizePolicy;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 
 public class Widget {
     public static Widget focusedWidget = null;
     public static Widget hoveredWidget = null;
     public static Widget pressedWidget = null;
 
-    protected Point minSize = new Point();
-    protected Offset margin = new Offset();
-    protected Offset padding = new Offset();
-    private Rect bounds = new Rect();
+    //    private Point minSize = new Point();
+    private Point pos = new Point();
+    private Point sizeHint = new Point();
+    private SizePolicy sizePolicy = new SizePolicy();
+    private Rect geometry = new Rect();
 
-    private int depth = 0;
+    private int widgetTreeDepth = 0;
     private Widget parent;
     private ArrayList<Widget> children = new ArrayList<>();
 
@@ -29,38 +32,66 @@ public class Widget {
         setParent(parent);
     }
 
-    public Point getMinSize() {
-        return minSize;
+//    public Point minSize() {
+//        return minSize;
+//    }
+//
+//    public void setMinSize(int w, int h) {
+//        minSize.set(w, h);
+//        setDirty();
+//    }
+
+
+    public Point getPos() {
+        return pos;
     }
 
-    public Offset getMargin() {
-        return margin;
+    public void setPos(Point pos) {
+        this.pos.set(pos);
+        setDirty();
     }
 
-    public Offset getPadding() {
-        return padding;
+    public void setPos(int x, int y) {
+        this.pos.set(x, y);
+        setDirty();
     }
 
-    public void setMargin(int x, int y) {
-        margin.setTopLeft(x, y);
-        markDirty();
+    public Point getSizeHint() {
+        return sizeHint;
     }
 
-    public void setMinSize(int w, int h) {
-        minSize.set(w, h);
-        markDirty();
+    public void setSizeHint(Point sizeHint) {
+        this.sizeHint = sizeHint;
     }
 
-    public Rect getBounds() {
-        return bounds;
+    public void setSizeHint(int w, int h) {
+        this.sizeHint.set(w, h);
     }
 
-    public void setBounds(Rect bounds) {
-        this.bounds = bounds;
+    public SizePolicy getSizePolicy() {
+        return sizePolicy;
     }
 
-    public void setBounds(int x, int y, int w, int h) {
-        this.bounds.setPos(x, y, w, h);
+    public void setSizePolicy(SizePolicy sizePolicy) {
+        this.sizePolicy = sizePolicy;
+        setDirty();
+    }
+
+    public void setSizePolicy(SizePolicy.Policy h, SizePolicy.Policy v) {
+        this.sizePolicy.horizontalPolicy = h;
+        this.sizePolicy.verticalPolicy = v;
+        setDirty();
+    }
+
+    public Rect getGeometry() {
+        return geometry;
+    }
+
+    public void setGeometry(Rect g) {
+        this.geometry = g;
+        if (this.layout != null)
+            this.layout.setGeometry(g);
+        setDirty();
     }
 
     public Widget getParent() {
@@ -69,31 +100,26 @@ public class Widget {
 
     public void setParent(Widget parent) {
         if (parent != null) {
-            final Widget container = parent.getContainer();
-            this.parent = container;
-            this.depth = container.depth + 1;
+            this.parent = parent;
+            this.widgetTreeDepth = parent.widgetTreeDepth + 1;
         } else {
             this.parent = null;
         }
-        markDirty();
+        setDirty();
     }
 
-    public int getDepth() {
-        return depth;
-    }
-
-    public Widget getContainer() {
-        return this;
+    public int getWidgetTreeDepth() {
+        return widgetTreeDepth;
     }
 
     public void addChild(Widget widget) {
         children.add(widget);
-        markDirty();
+        setDirty();
     }
 
     public void removeChild(Widget widget) {
         children.remove(widget);
-        markDirty();
+        setDirty();
     }
 
     public Collection<Widget> getChildren() {
@@ -106,27 +132,26 @@ public class Widget {
 
     public void setLayout(Layout layout) {
         this.layout = layout;
-        this.layout.bind(this);
-        markDirty();
+        setDirty();
     }
 
-    public void markDirty() {
+    public void setDirty() {
         this.dirty = true;
+        if (parent != null)
+            this.parent.dirty = true;
         for (Widget w : getChildren())
-            w.markDirty();
-//        if (parent != null)
-//            parent.dirty = true;
+            w.setDirty();
     }
 
     public void update() {
         if (dirty) {
-            if (parent != null && parent.layout != null)
-                parent.layout.update();
-            dirty = false;
             updateSelf();
+            if (layout != null)
+                layout.update();
+            dirty = false;
+            for (Widget c : getChildren())
+                c.update();
         }
-        for (Widget w : getChildren())
-            w.update();
     }
 
     public void render() {
@@ -137,7 +162,7 @@ public class Widget {
     }
 
     public void renderDebug() {
-//        RenderShapes.frame(getAbsPos(), size, 1, hashCode()); // for debug purposes
+        RenderShapes.frame(getGeometry(), 1, hashCode()); // for debug purposes
     }
 
     protected void updateSelf() {
@@ -151,12 +176,12 @@ public class Widget {
             w.render();
     }
 
-    public void addChildrenAt(Collection<Widget> widgets, Point p) {
+    public Optional<Widget> childAt(Point p) {
         for (Widget w : getChildren()) {
-            if (w.bounds.contains(p))
-                widgets.add(w);
-            w.addChildrenAt(widgets, p);
+            if (w.geometry.contains(p))
+                return Optional.of(w);
         }
+        return Optional.empty();
     }
 
     public boolean isHovered() {

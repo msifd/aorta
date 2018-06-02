@@ -1,6 +1,5 @@
 package msifeed.mc.mellow.handlers;
 
-import msifeed.mc.mellow.utils.Offset;
 import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.widgets.Widget;
 
@@ -9,7 +8,7 @@ public class DragHandler {
 
     protected boolean dragging = false;
     protected Point dragStart = new Point();
-    protected Offset marginOnStart = new Offset();
+    protected Point posOnStart = new Point();
 
     public DragHandler(Widget w) {
         target = w;
@@ -18,15 +17,12 @@ public class DragHandler {
     public void startDrag(Point p) {
         dragging = true;
         dragStart.set(p);
-        marginOnStart.set(target.getMargin());
+        posOnStart.set(target.getPos());
     }
 
     public void drag(Point p) {
         if (dragging) {
-            final Offset m = target.getMargin();
-            m.left = marginOnStart.left + p.x - dragStart.x;
-            m.top = marginOnStart.top + p.y - dragStart.y;
-            target.markDirty();
+            target.setPos(posOnStart.x - dragStart.x + p.x, posOnStart.y - dragStart.y + p.y);
         }
     }
 

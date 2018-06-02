@@ -24,11 +24,11 @@ public class Label extends Widget {
     public void setText(String text) {
         final Minecraft mc = Minecraft.getMinecraft();
         this.text = text;
-        setMinSize(mc.fontRenderer.getStringWidth(text), mc.fontRenderer.FONT_HEIGHT);
+        setSizeHint(mc.fontRenderer.getStringWidth(text), mc.fontRenderer.FONT_HEIGHT);
     }
 
     @Override
     protected void renderSelf() {
-        RenderWidgets.string(getBounds(), text, color);
+        RenderWidgets.string(getGeometry(), text, color);
     }
 }

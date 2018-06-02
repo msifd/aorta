@@ -1,21 +1,23 @@
 package msifeed.mc.mellow.utils;
 
-public class Offset {
+public class Margins {
     public int top;
     public int right;
     public int bottom;
     public int left;
 
-    public void setTopLeft(int x, int y) {
-        this.top = y;
-        this.left = x;
+    public Margins() {
     }
 
-    public void set(int a) {
-        this.top = a;
-        this.right = a;
-        this.bottom = a;
-        this.left = a;
+    public Margins(int all) {
+        set(all);
+    }
+
+    public void set(int all) {
+        this.top = all;
+        this.right = all;
+        this.bottom = all;
+        this.left = all;
     }
 
     public void set(int v, int h) {
@@ -32,15 +34,10 @@ public class Offset {
         this.left = l;
     }
 
-    public void set(Offset o) {
+    public void set(Margins o) {
         this.top = o.top;
         this.right = o.right;
         this.bottom = o.bottom;
         this.left = o.left;
-    }
-
-    public void translateTopLeft(int left, int top) {
-        this.top += top;
-        this.left += left;
     }
 }

@@ -1,21 +1,41 @@
 package msifeed.mc.mellow.layout;
 
-import msifeed.mc.mellow.utils.Offset;
-import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.utils.Rect;
 import msifeed.mc.mellow.widgets.Widget;
 
+import java.util.ArrayList;
+
 public class FloatLayout extends Layout {
+    protected ArrayList<LayoutItem> items = new ArrayList<>();
+
+    public FloatLayout(Widget parent) {
+        super(parent);
+    }
+
+    @Override
+    public void addItem(LayoutItem item) {
+        items.add(item);
+    }
+
+    @Override
+    public void removeItem(LayoutItem item) {
+        items.remove(item);
+    }
+
+    @Override
+    public int countItems() {
+        return items.size();
+    }
+
     @Override
     public void update() {
-        final Offset hPadding = host.getPadding();
-        for (Widget w : host.getChildren()) {
-            final Point minSize = w.getMinSize();
-            final Offset margin = w.getMargin();
-            final Rect bounds = w.getBounds();
-            bounds.setPos(margin.left, margin.top, minSize.x, minSize.y);
-            bounds.translate(host.getBounds());
-            bounds.translate(hPadding.left, hPadding.top);
+        for (LayoutItem item : items) {
+            final Rect itemGeom = new Rect();
+            itemGeom.translate(geometry);
+            itemGeom.translate(item.getPos());
+            itemGeom.setSize(item.getSizeHint());
+            item.setGeometry(itemGeom);
+            item.update();
         }
     }
 }

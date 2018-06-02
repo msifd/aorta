@@ -1,9 +1,12 @@
 package msifeed.mc.mellow.mc;
 
 import msifeed.mc.mellow.handlers.MouseHandler;
+import msifeed.mc.mellow.render.RenderUtils;
 import msifeed.mc.mellow.utils.Point;
+import msifeed.mc.mellow.utils.Rect;
 import msifeed.mc.mellow.widgets.Scene;
 import msifeed.mc.mellow.widgets.Widget;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
 public class MellowGuiScreen extends GuiScreen {
@@ -12,6 +15,9 @@ public class MellowGuiScreen extends GuiScreen {
     @Override
     public void initGui() {
         super.initGui();
+        final Minecraft mc = Minecraft.getMinecraft();
+        final int scaleFactor = RenderUtils.getScreenScaleFactor();
+        scene.setGeometry(new Rect(0, 0, mc.displayWidth / scaleFactor, mc.displayHeight / scaleFactor));
     }
 
     @Override
@@ -45,8 +51,14 @@ public class MellowGuiScreen extends GuiScreen {
             } else {
                 if (widget instanceof MouseHandler.Release)
                     ((MouseHandler.Release) widget).onRelease(xMouse, yMouse, button);
-                if (Widget.pressedWidget == widget && widget instanceof MouseHandler.Click)
-                    ((MouseHandler.Click) widget).onClick(xMouse, yMouse, button);
+
+                // If move mouse away click don't counts
+                final Widget lookup = scene.lookupWidget(new Point(xMouse, yMouse)).orElse(null);
+                if (lookup == Widget.pressedWidget) {
+                    if (Widget.pressedWidget == widget && widget instanceof MouseHandler.Click)
+                        ((MouseHandler.Click) widget).onClick(xMouse, yMouse, button);
+                }
+
                 Widget.pressedWidget = null;
             }
         }
