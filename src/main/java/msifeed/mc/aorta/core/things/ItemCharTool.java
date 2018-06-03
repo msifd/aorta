@@ -1,11 +1,10 @@
 package msifeed.mc.aorta.core.things;
 
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import msifeed.mc.aorta.core.client.gui.ScreenCharEditor;
+import msifeed.mc.aorta.core.Core;
 import msifeed.mc.aorta.things.AortaCreativeTab;
-import net.minecraft.client.Minecraft;
+import msifeed.mc.aorta.utils.SideUtils;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -33,7 +32,8 @@ public class ItemCharTool extends Item {
 
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-        if (FMLCommonHandler.instance().getEffectiveSide().isClient() && player.isSneaking()) {
+        // RMB + Shift = Self
+        if (player.isSneaking()) {
             handleEntity(player);
         }
         return itemStack;
@@ -41,16 +41,14 @@ public class ItemCharTool extends Item {
 
     @SubscribeEvent
     public void onEntityInteract(EntityInteractEvent event) {
-        if (FMLCommonHandler.instance().getEffectiveSide().isServer())
-            return;
         final ItemStack heldItem = event.entityPlayer.getHeldItem();
         if (heldItem == null || !(heldItem.getItem() instanceof ItemCharTool))
             return;
-
-        handleEntity(event.entityLiving);
+        if (event.target instanceof EntityLivingBase)
+            handleEntity((EntityLivingBase) event.target);
     }
 
     private void handleEntity(EntityLivingBase entity) {
-        FMLClientHandler.instance().displayGuiScreen(Minecraft.getMinecraft().thePlayer, new ScreenCharEditor(entity));
+        Core.GUI_EXEC.openCharEditor(entity);
     }
 }

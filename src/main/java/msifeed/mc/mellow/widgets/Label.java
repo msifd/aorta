@@ -14,7 +14,7 @@ public class Label extends Widget {
 
     public Label(Widget parent, String text) {
         this(parent);
-        this.text = text;
+        setText(text);
     }
 
     public String getText() {

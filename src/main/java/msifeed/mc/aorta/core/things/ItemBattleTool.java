@@ -6,6 +6,7 @@ import msifeed.mc.aorta.core.character.CharacterFactory;
 import msifeed.mc.aorta.core.character.CharacterProperty;
 import msifeed.mc.aorta.props.SyncProp;
 import msifeed.mc.aorta.things.AortaCreativeTab;
+import msifeed.mc.aorta.utils.SideUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,7 +35,7 @@ public class ItemBattleTool extends Item {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity target) {
-        if (!player.worldObj.isRemote || !(target instanceof EntityLivingBase))
+        if (SideUtils.isClient() || !(target instanceof EntityLivingBase))
             return true;
 
         final EntityLivingBase entity = (EntityLivingBase) target;
@@ -58,7 +59,7 @@ public class ItemBattleTool extends Item {
 
     @SubscribeEvent
     public void onEntityInteract(EntityInteractEvent event) {
-        if (!FMLCommonHandler.instance().getMinecraftServerInstance().isServerRunning())
+        if (SideUtils.isClient())
             return;
         final ItemStack heldItem = event.entityPlayer.getHeldItem();
         if (heldItem == null || !(heldItem.getItem() instanceof ItemBattleTool))
