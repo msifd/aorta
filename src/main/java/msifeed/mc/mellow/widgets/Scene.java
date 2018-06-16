@@ -8,8 +8,7 @@ import java.util.Optional;
 public class Scene extends Widget {
 
     public Scene() {
-        super(null);
-        setLayout(new AnchorLayout(this, AnchorLayout.Anchor.CENTER));
+        setLayout(new AnchorLayout(AnchorLayout.Anchor.CENTER));
     }
 
     public Optional<Widget> lookupWidget(Point p) {

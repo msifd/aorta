@@ -16,27 +16,20 @@ public class Button extends Widget implements MouseHandler.Click {
     protected Part hoverPart = Mellow.THEME.parts.get("button_hover");
     protected Part pressPart = Mellow.THEME.parts.get("button_press");
 
-    protected Label label = new Label(this);
+    protected Label label = new Label();
     protected Runnable clickCallback = null;
 
-    public Button(Widget parent) {
-        this(parent, "");
+    public Button() {
+        this("");
     }
 
-    public Button(Widget parent, String text) {
-        super(parent);
+    public Button(String text) {
         setSizeHint(50, 10);
+//        getMargin().set(2, 2, 2, 2);
+        setLayout(new AnchorLayout(AnchorLayout.Anchor.CENTER));
+
         setLabel(text);
-
-        final AnchorLayout layout = new AnchorLayout(this, AnchorLayout.Anchor.CENTER);
-        layout.getMargin().set(2, 2, 2, 2);
-        layout.addWidget(label);
-        setLayout(layout);
-    }
-
-    private Button(Widget parent, Layout layout) {
-        super(parent);
-        setLayout(layout);
+        addChild(label);
     }
 
     public void setLabel(String text) {

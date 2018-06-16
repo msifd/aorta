@@ -16,6 +16,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class CharacterProperty implements ISyncableExtProp {
     private Character character;
@@ -28,9 +29,8 @@ public class CharacterProperty implements ISyncableExtProp {
         return (CharacterProperty) e.getExtendedProperties(Tags.PROP_NAME);
     }
 
-    @Nullable
-    public Character getCharacter() {
-        return character;
+    public Optional<Character> getCharacter() {
+        return Optional.ofNullable(character);
     }
 
     public void setCharacter(Character character) {

@@ -1,53 +1,42 @@
 package msifeed.mc.mellow.layout;
 
+import msifeed.mc.mellow.utils.Margins;
 import msifeed.mc.mellow.utils.Rect;
 import msifeed.mc.mellow.widgets.Widget;
+
+import java.util.Collection;
 
 public class AnchorLayout extends Layout {
     protected Anchor horAnchor;
     protected Anchor verAnchor;
-    protected LayoutItem item;
 
-    public AnchorLayout(Widget parent, Anchor both) {
-        super(parent);
+    public AnchorLayout(Anchor both) {
         this.horAnchor = both;
         this.verAnchor = both;
     }
 
-    public AnchorLayout(Widget parent, Anchor hor, Anchor ver) {
-        super(parent);
+    public AnchorLayout(Anchor hor, Anchor ver) {
         this.horAnchor = hor;
         this.verAnchor = ver;
     }
 
     @Override
-    public void addItem(LayoutItem item) {
-        this.item = item;
-    }
+    public void apply(Widget widget, Collection<Widget> children) {
+        if (children.isEmpty())
+            return;
 
-    @Override
-    public void removeItem(LayoutItem item) {
-        if (this.item == item)
-            this.item = null;
-    }
+        final Margins margin = widget.getMargin();
+        final Rect geometry = new Rect(widget.getGeometry());
+        geometry.offsetPos(margin);
+//        geometry.offsetSize(margin);
 
-    @Override
-    public int countItems() {
-        return item == null ? 0 : 1;
-    }
+        final Widget item = children.iterator().next();
 
-    @Override
-    public void update() {
-        if (item != null) {
-            setAnchoredGeom();
-        }
-    }
-
-    private void setAnchoredGeom() {
         final Rect itemGeom = new Rect();
         itemGeom.translate(geometry);
         itemGeom.translate(item.getPos());
         itemGeom.setSize(item.getSizeHint());
+//        itemGeom.offsetSize(margin);
 
         switch (verAnchor) {
             case CENTER:

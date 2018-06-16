@@ -9,6 +9,7 @@ import net.minecraft.entity.EntityLivingBase;
 public class CoreGuiHandlerClient extends CoreGuiHandler {
     @Override
     public void openCharEditor(EntityLivingBase entity) {
-        FMLClientHandler.instance().displayGuiScreen(Minecraft.getMinecraft().thePlayer, new ScreenCharEditor(entity));
+        if (entity.worldObj.isRemote)
+            FMLClientHandler.instance().displayGuiScreen(Minecraft.getMinecraft().thePlayer, new ScreenCharEditor(entity));
     }
 }

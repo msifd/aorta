@@ -55,7 +55,7 @@ public enum DebugHud {
         final CharacterProperty charProp = CharacterProperty.get(entity);
         if (charProp == null)
             return;
-        final Character character = charProp.getCharacter();
+        final Character character = charProp.getCharacter().orElse(null);
         if (character == null)
             return;
 

@@ -2,45 +2,32 @@ package msifeed.mc.mellow.widgets;
 
 import msifeed.mc.mellow.layout.Layout;
 import msifeed.mc.mellow.render.RenderShapes;
-import msifeed.mc.mellow.utils.Point;
-import msifeed.mc.mellow.utils.Rect;
-import msifeed.mc.mellow.utils.SizePolicy;
+import msifeed.mc.mellow.utils.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
-public class Widget {
+public class Widget extends WidgetContainer {
     public static Widget focusedWidget = null;
     public static Widget hoveredWidget = null;
     public static Widget pressedWidget = null;
 
-    //    private Point minSize = new Point();
     private Point pos = new Point();
     private Point sizeHint = new Point();
     private SizePolicy sizePolicy = new SizePolicy();
+    private Margins margin = new Margins();
     private Rect geometry = new Rect();
 
     private int widgetTreeDepth = 0;
     private Widget parent;
-    private ArrayList<Widget> children = new ArrayList<>();
 
-    private Layout layout;
+    protected Layout layout = Layout.NONE;
     private boolean dirty = true;
 
-    public Widget(Widget parent) {
-        setParent(parent);
-    }
-
-//    public Point minSize() {
-//        return minSize;
+//    public Widget(Widget parent) {
+//        setParent(parent);
 //    }
-//
-//    public void setMinSize(int w, int h) {
-//        minSize.set(w, h);
-//        setDirty();
-//    }
-
 
     public Point getPos() {
         return pos;
@@ -62,10 +49,12 @@ public class Widget {
 
     public void setSizeHint(Point sizeHint) {
         this.sizeHint = sizeHint;
+        setDirty();
     }
 
     public void setSizeHint(int w, int h) {
         this.sizeHint.set(w, h);
+        setDirty();
     }
 
     public SizePolicy getSizePolicy() {
@@ -83,14 +72,21 @@ public class Widget {
         setDirty();
     }
 
+    public Margins getMargin() {
+        return margin;
+    }
+
+    public void setMargin(Margins margin) {
+        this.margin = margin;
+        setDirty();
+    }
+
     public Rect getGeometry() {
         return geometry;
     }
 
     public void setGeometry(Rect g) {
         this.geometry = g;
-        if (this.layout != null)
-            this.layout.setGeometry(g);
         setDirty();
     }
 
@@ -101,7 +97,7 @@ public class Widget {
     public void setParent(Widget parent) {
         if (parent != null) {
             this.parent = parent;
-            this.widgetTreeDepth = parent.widgetTreeDepth + 1;
+            this.widgetTreeDepth = this.parent.widgetTreeDepth + 1;
         } else {
             this.parent = null;
         }
@@ -112,23 +108,9 @@ public class Widget {
         return widgetTreeDepth;
     }
 
-    public void addChild(Widget widget) {
-        children.add(widget);
-        setDirty();
-    }
-
-    public void removeChild(Widget widget) {
-        children.remove(widget);
-        setDirty();
-    }
-
-    public Collection<Widget> getChildren() {
-        return children;
-    }
-
-    public Layout getLayout() {
-        return layout;
-    }
+//    public Layout getLayout() {
+//        return layout;
+//    }
 
     public void setLayout(Layout layout) {
         this.layout = layout;
@@ -138,19 +120,18 @@ public class Widget {
     public void setDirty() {
         this.dirty = true;
         if (parent != null)
-            this.parent.dirty = true;
-        for (Widget w : getChildren())
-            w.setDirty();
+            parent.dirty = true;
+//        for (Widget w : children)
+//            w.setDirty();
     }
 
     public void update() {
         if (dirty) {
             updateSelf();
-            if (layout != null)
-                layout.update();
-            dirty = false;
-            for (Widget c : getChildren())
+            updateLayout();
+            for (Widget c : children)
                 c.update();
+            dirty = false;
         }
     }
 
@@ -168,16 +149,35 @@ public class Widget {
     protected void updateSelf() {
     }
 
+    protected void updateLayout() {
+        layout.apply(this, children);
+    }
+
     protected void renderSelf() {
     }
 
     protected void renderChildren() {
-        for (Widget w : getChildren())
+        for (Widget w : children)
             w.render();
     }
 
+    @Override
+    public void addChild(Widget widget) {
+        super.addChild(widget);
+        setDirty();
+        if (widget.parent == null) {
+            widget.setParent(this);
+        }
+    }
+
+    @Override
+    public void removeChild(Widget widget) {
+        super.removeChild(widget);
+        setDirty();
+    }
+
     public Optional<Widget> childAt(Point p) {
-        for (Widget w : getChildren()) {
+        for (Widget w : children) {
             if (w.geometry.contains(p))
                 return Optional.of(w);
         }

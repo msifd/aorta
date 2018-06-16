@@ -1,41 +1,32 @@
 package msifeed.mc.mellow.layout;
 
+import msifeed.mc.mellow.utils.Margins;
 import msifeed.mc.mellow.utils.Rect;
 import msifeed.mc.mellow.widgets.Widget;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class FloatLayout extends Layout {
-    protected ArrayList<LayoutItem> items = new ArrayList<>();
+    public static final FloatLayout INSTANCE = new FloatLayout();
 
-    public FloatLayout(Widget parent) {
-        super(parent);
+    private FloatLayout() {
     }
 
     @Override
-    public void addItem(LayoutItem item) {
-        items.add(item);
-    }
+    public void apply(Widget widget, Collection<Widget> children) {
+        final Margins margin = widget.getMargin();
+        final Rect geometry = new Rect(widget.getGeometry());
+        geometry.offsetPos(margin);
+        geometry.offsetSize(margin);
 
-    @Override
-    public void removeItem(LayoutItem item) {
-        items.remove(item);
-    }
-
-    @Override
-    public int countItems() {
-        return items.size();
-    }
-
-    @Override
-    public void update() {
-        for (LayoutItem item : items) {
+        for (Widget child : children) {
             final Rect itemGeom = new Rect();
             itemGeom.translate(geometry);
-            itemGeom.translate(item.getPos());
-            itemGeom.setSize(item.getSizeHint());
-            item.setGeometry(itemGeom);
-            item.update();
+            itemGeom.translate(child.getPos());
+            itemGeom.setSize(child.getSizeHint());
+            child.setGeometry(itemGeom);
+            child.update();
         }
     }
 }

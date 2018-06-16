@@ -2,19 +2,20 @@ package msifeed.mc.mellow.widgets;
 
 import msifeed.mc.mellow.Mellow;
 import msifeed.mc.mellow.render.RenderWidgets;
+import msifeed.mc.mellow.utils.SizePolicy;
 import net.minecraft.client.Minecraft;
 
 public class Label extends Widget {
     protected int color = Mellow.THEME.colors.get("text");
     protected String text = "";
 
-    public Label(Widget parent) {
-        super(parent);
+    public Label() {
+        this("");
     }
 
-    public Label(Widget parent, String text) {
-        this(parent);
+    public Label(String text) {
         setText(text);
+        setSizePolicy(SizePolicy.Policy.PREFERRED, SizePolicy.Policy.MAXIMUM);
     }
 
     public String getText() {

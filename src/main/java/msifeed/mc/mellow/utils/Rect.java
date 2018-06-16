@@ -59,11 +59,14 @@ public class Rect implements Cloneable {
         this.h = p.y;
     }
 
-    public void offset(Margins o) {
-        this.x += o.left;
-        this.y += o.top;
-        this.w -= o.left + o.right;
-        this.h -= o.top + o.bottom;
+    public void offsetPos(Margins m) {
+        this.x += m.left;
+        this.y += m.top;
+    }
+
+    public void offsetSize(Margins m) {
+        this.w -= m.left + m.right;
+        this.h -= m.top + m.bottom;
     }
 
     public boolean contains(Point p) {

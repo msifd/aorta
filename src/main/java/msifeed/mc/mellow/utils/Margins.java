@@ -20,7 +20,7 @@ public class Margins {
         this.left = all;
     }
 
-    public void set(int v, int h) {
+    public void set(int h, int v) {
         this.top = v;
         this.right = h;
         this.bottom = v;

@@ -1,11 +1,10 @@
 package msifeed.mc.mellow.widgets;
 
+import com.google.common.collect.ImmutableList;
 import msifeed.mc.mellow.Mellow;
 import msifeed.mc.mellow.handlers.DragHandler;
 import msifeed.mc.mellow.handlers.MouseHandler;
 import msifeed.mc.mellow.layout.AnchorLayout;
-import msifeed.mc.mellow.layout.FloatLayout;
-import msifeed.mc.mellow.layout.Layout;
 import msifeed.mc.mellow.layout.VerticalLayout;
 import msifeed.mc.mellow.render.RenderParts;
 import msifeed.mc.mellow.render.RenderShapes;
@@ -13,26 +12,27 @@ import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.utils.SizePolicy;
 
+import java.util.Collection;
+import java.util.Optional;
+
 public class Window extends Widget {
-    private Part part = Mellow.THEME.parts.get("window");
+    private Part backgroundPart = Mellow.THEME.parts.get("window");
     private Header header = new Header(this);
-    private Layout contentLayout = new FloatLayout(this);
+    private Widget content = new Widget();
 
-    public Window(Widget parent) {
-        super(parent);
-
-        final VerticalLayout layout = new VerticalLayout(this);
-        layout.getMargin().set(1);
-        super.setLayout(layout); // Window' setLayout returns content layout
+    public Window() {
+        setLayout(VerticalLayout.INSTANCE);
+        getMargin().set(1);
 
         header.setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.MAXIMUM);
         header.setSizeHint(10, 13);
+        header.getMargin().set(3, 0);
 
-        layout.addWidget(header);
-        layout.addLayout(contentLayout);
+        content.getMargin().set(2);
+        content.setLayout(VerticalLayout.INSTANCE);
 
-//        final VerticalLayout content = new VerticalLayout(this);
-//        content.getMargin().set(2);
+        super.addChild(header);
+        super.addChild(content);
     }
 
     public void setTitle(String text) {
@@ -40,35 +40,40 @@ public class Window extends Widget {
     }
 
     @Override
-    public Layout getLayout() {
-        return contentLayout;
+    public void addChild(Widget widget) {
+        content.addChild(widget);
     }
 
     @Override
-    public void setLayout(Layout layout) {
-        final Layout baseLayout = super.getLayout();
-        baseLayout.removeItem(contentLayout);
-        baseLayout.addLayout(layout);
-        contentLayout = layout;
-        setDirty();
+    public void removeChild(Widget widget) {
+        content.removeChild(widget);
+    }
+
+    @Override
+    public Collection<Widget> getChildren() {
+        return content.getChildren();
     }
 
     @Override
     protected void renderSelf() {
-        RenderParts.nineSlice(part, getGeometry());
+        RenderParts.nineSlice(backgroundPart, getGeometry());
+    }
+
+    @Override
+    public Optional<Widget> childAt(Point p) {
+        final Optional<Widget> w = super.childAt(p);
+        return w.isPresent() ? w : content.childAt(p);
     }
 
     static class Header extends Button implements MouseHandler.AllBasic {
         protected final DragHandler dragHandler;
 
-        Header(Widget parent) {
-            super(parent);
-            dragHandler = new DragHandler(parent);
+        Header(Window window) {
+            this.dragHandler = new DragHandler(window);
 
-            final AnchorLayout layout = new AnchorLayout(this, AnchorLayout.Anchor.LEFT, AnchorLayout.Anchor.TOP);
-            layout.getMargin().set(2);
-            layout.addWidget(label);
-            setLayout(layout);
+            getMargin().set(2);
+            setLayout(new AnchorLayout(AnchorLayout.Anchor.LEFT, AnchorLayout.Anchor.CENTER));
+            addChild(label);
         }
 
         @Override

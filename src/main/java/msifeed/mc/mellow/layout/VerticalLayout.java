@@ -1,31 +1,42 @@
 package msifeed.mc.mellow.layout;
 
+import msifeed.mc.mellow.utils.Margins;
 import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.utils.Rect;
 import msifeed.mc.mellow.widgets.Widget;
 
-public class VerticalLayout extends BoxLayout {
-    public VerticalLayout(Widget parent) {
-        super(parent);
+import java.util.Collection;
+
+public class VerticalLayout extends Layout {
+    public static final VerticalLayout INSTANCE = new VerticalLayout();
+
+    public int spacing = 1;
+
+    private VerticalLayout() {
     }
 
-    // TODO: refactor
     @Override
-    public void update() {
+    public void apply(Widget widget, Collection<Widget> children) {
+        final Margins margin = widget.getMargin();
+        final Rect geometry = new Rect(widget.getGeometry());
+        geometry.offsetPos(margin);
+        geometry.offsetSize(margin);
+
         int yPos = 0;
-        for (LayoutItem item : items) {
-            final Point sh = item.getSizeHint();
+        for (Widget child : children) {
+            final Point sh = child.getSizeHint();
             final Rect itemGeom = new Rect();
 
             itemGeom.translate(geometry);
 //            itemGeom.translate(item.getPos());
             itemGeom.translate(0, yPos);
-
             itemGeom.setSize(geometry.w, sh.y);
 
-            item.setGeometry(itemGeom);
+            child.setGeometry(itemGeom);
             yPos += itemGeom.h;
+            yPos += spacing;
         }
+    }
 
 //        int fixedHeight = 0;
 //        int growableItems = 0;
@@ -70,5 +81,4 @@ public class VerticalLayout extends BoxLayout {
 //            item.setGeometry(geom);
 //            yPos += geom.h;
 //        }
-    }
 }
