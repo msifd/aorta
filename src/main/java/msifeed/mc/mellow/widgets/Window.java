@@ -28,7 +28,7 @@ public class Window extends Widget {
         header.setSizeHint(10, 13);
         header.getMargin().set(3, 0);
 
-        content.getMargin().set(2);
+        content.getMargin().set(3);
         content.setLayout(VerticalLayout.INSTANCE);
 
         super.addChild(header);
@@ -69,11 +69,12 @@ public class Window extends Widget {
         protected final DragHandler dragHandler;
 
         Header(Window window) {
+            super("");
             this.dragHandler = new DragHandler(window);
 
             getMargin().set(2);
             setLayout(new AnchorLayout(AnchorLayout.Anchor.LEFT, AnchorLayout.Anchor.CENTER));
-            addChild(label);
+//            addChild(label);
         }
 
         @Override

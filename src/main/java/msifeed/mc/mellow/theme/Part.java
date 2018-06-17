@@ -1,27 +1,27 @@
 package msifeed.mc.mellow.theme;
 
 import com.google.gson.*;
+import msifeed.mc.mellow.utils.Point;
 
-import javax.vecmath.Point2f;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 
 public class Part {
-    public Point2f pos;
-    public Point2f size = null;
+    public Point pos;
+    public Point size = null;
 
-    public Point2f[] slicesUV = null;
-    public Point2f[] slicesSize = null;
+    public Point[] slicesUV = null;
+    public Point[] slicesSize = null;
 
-    public static class PointAdapter implements JsonDeserializer<Point2f> {
+    public static class PointAdapter implements JsonDeserializer<Point> {
         @Override
-        public Point2f deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        public Point deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             if (!json.isJsonArray())
-                throw new JsonParseException("The Point2f should be an array value");
+                throw new JsonParseException("The Point should be an array value");
             final int[] array = context.deserialize(json, int[].class);
             if (array.length != 2)
-                throw new JsonParseException("The Point2f should have exactly two numbers");
-            return new Point2f(array[0], array[1]);
+                throw new JsonParseException("The Point should have exactly two numbers");
+            return new Point(array[0], array[1]);
         }
     }
 
@@ -33,22 +33,22 @@ public class Part {
             final JsonObject obj = json.getAsJsonObject();
             final Part part = new Part();
 
-            part.pos = context.deserialize(obj.get("pos").getAsJsonArray(), Point2f.class);
+            part.pos = context.deserialize(obj.get("pos").getAsJsonArray(), Point.class);
 
             if (obj.has("size"))
-                part.size = context.deserialize(obj.get("size"), Point2f.class);
+                part.size = context.deserialize(obj.get("size"), Point.class);
 
             if (obj.has("9slice")) {
-                final Point2f[] compact = context.deserialize(obj.get("9slice"), Point2f[].class);
+                final Point[] compact = context.deserialize(obj.get("9slice"), Point[].class);
                 if (compact.length != 3)
                     throw new JsonParseException("The Part's 9-Slice should have exactly three points");
-                part.slicesSize = new Point2f[9];
-                part.slicesUV = new Point2f[9];
+                part.slicesSize = new Point[9];
+                part.slicesUV = new Point[9];
                 for (int i = 0; i < 9; i++) {
                     final int u = Arrays.stream(compact).limit(i % 3).mapToInt(value -> (int) value.x).sum();
                     final int v = Arrays.stream(compact).limit(i / 3).mapToInt(value -> (int) value.y).sum();
-                    part.slicesUV[i] = new Point2f(part.pos.x + u, part.pos.y + v);
-                    part.slicesSize[i] = new Point2f(compact[i % 3].x, compact[i / 3].y);
+                    part.slicesUV[i] = new Point(part.pos.x + u, part.pos.y + v);
+                    part.slicesSize[i] = new Point(compact[i % 3].x, compact[i / 3].y);
                 }
             }
             return part;

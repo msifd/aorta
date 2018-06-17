@@ -31,9 +31,9 @@ public enum Genesis {
     private static void generate(JsonElement jsonElement) {
         if (jsonElement.isJsonObject()) {
             final JsonObject json = jsonElement.getAsJsonObject();
-            final HashSet<Trait> traits = new HashSet<>();
+            final HashSet<GenesisTrait> traits = new HashSet<>();
             for (JsonElement je : json.getAsJsonArray("traits")) {
-                traits.add(Trait.valueOf(je.getAsJsonPrimitive().getAsString().toLowerCase()));
+                traits.add(GenesisTrait.valueOf(je.getAsJsonPrimitive().getAsString().toLowerCase()));
             }
 
             GenesisBuilder blockBuilder = new BlockBuilder(json, traits);

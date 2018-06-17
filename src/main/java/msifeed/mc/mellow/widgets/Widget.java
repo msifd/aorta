@@ -23,6 +23,7 @@ public class Widget extends WidgetContainer {
     private Widget parent;
 
     protected Layout layout = Layout.NONE;
+    protected boolean visible = true;
     private boolean dirty = true;
 
 //    public Widget(Widget parent) {
@@ -136,10 +137,12 @@ public class Widget extends WidgetContainer {
     }
 
     public void render() {
-        renderSelf();
-        renderChildren();
-        if (isHovered())
-            renderDebug();
+        if (visible) {
+            renderSelf();
+            renderChildren();
+            if (isHovered())
+                renderDebug();
+        }
     }
 
     public void renderDebug() {
@@ -178,7 +181,7 @@ public class Widget extends WidgetContainer {
 
     public Optional<Widget> childAt(Point p) {
         for (Widget w : children) {
-            if (w.geometry.contains(p))
+            if (w.visible && w.geometry.contains(p))
                 return Optional.of(w);
         }
         return Optional.empty();
@@ -190,5 +193,9 @@ public class Widget extends WidgetContainer {
 
     public boolean isPressed() {
         return this == pressedWidget;
+    }
+
+    public boolean isFocused() {
+        return this == focusedWidget;
     }
 }

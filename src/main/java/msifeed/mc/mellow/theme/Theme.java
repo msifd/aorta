@@ -3,9 +3,9 @@ package msifeed.mc.mellow.theme;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
+import msifeed.mc.mellow.utils.Point;
 import net.minecraft.util.ResourceLocation;
 
-import javax.vecmath.Point2f;
 import java.util.HashMap;
 
 public class Theme {
@@ -18,7 +18,7 @@ public class Theme {
 
     public static Theme load(ResourceLocation sprite, String metaJson) {
         final Gson gson = (new GsonBuilder())
-                .registerTypeAdapter(Point2f.class, new Part.PointAdapter())
+                .registerTypeAdapter(Point.class, new Part.PointAdapter())
                 .registerTypeAdapter(Part.class, new Part.PartAdapter())
                 .create();
 

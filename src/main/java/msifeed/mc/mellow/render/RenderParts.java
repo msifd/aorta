@@ -2,12 +2,11 @@ package msifeed.mc.mellow.render;
 
 import msifeed.mc.mellow.Mellow;
 import msifeed.mc.mellow.theme.Part;
+import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.utils.Rect;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
-
-import javax.vecmath.Point2f;
 
 public final class RenderParts {
     public static void slice(ResourceLocation tex, double x, double y, double z, double u, double v, double w, double h) {
@@ -31,11 +30,19 @@ public final class RenderParts {
         tessellator.draw();
     }
 
+    public static void slice(Part part, int x, int y) {
+        if (part == null || part.size == null)
+            return;
+
+        bindThemeTexture();
+        slice(x, y, 0, part.size.x, part.size.y, part.pos.x, part.pos.y, part.size.x, part.size.y);
+    }
+
     public static void nineSlice(Part part, Rect bounds) {
         if (part == null || part.slicesSize == null)
             return;
 
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Mellow.THEME.sprite);
+        bindThemeTexture();
 
         final double midWidth = Math.max(bounds.w - part.slicesSize[0].x - part.slicesSize[3].x, 0);
         final double midHeight = Math.max(bounds.h - part.slicesSize[0].y - part.slicesSize[6].y, 0);
@@ -46,8 +53,8 @@ public final class RenderParts {
             final int xth = i % 3;
             final int yth = i / 3;
 
-            final Point2f sliceUV = part.slicesUV[i];
-            final Point2f sliceSize = part.slicesSize[i];
+            final Point sliceUV = part.slicesUV[i];
+            final Point sliceSize = part.slicesSize[i];
             final double width = xth == 1 ? midWidth : sliceSize.x;
             final double height = yth == 1 ? midHeight : sliceSize.y;
 
@@ -60,5 +67,9 @@ public final class RenderParts {
                 x += width;
             }
         }
+    }
+
+    private static void bindThemeTexture() {
+        Minecraft.getMinecraft().getTextureManager().bindTexture(Mellow.THEME.sprite);
     }
 }

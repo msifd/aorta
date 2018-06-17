@@ -10,11 +10,11 @@ import java.util.Collection;
 public abstract class GenesisBuilder {
     protected final Side side = FMLCommonHandler.instance().getSide();
     protected final JsonObject json;
-    protected final Collection<Trait> traits;
+    protected final Collection<GenesisTrait> traits;
 
     protected String id;
 
-    public GenesisBuilder(JsonObject json, Collection<Trait> traits) {
+    public GenesisBuilder(JsonObject json, Collection<GenesisTrait> traits) {
         this.json = json;
         this.traits = traits;
     }
@@ -25,17 +25,14 @@ public abstract class GenesisBuilder {
 
     public void build() {
         commons();
-        produce();
-        register();
+        process();
     }
 
     protected void commons() {
         id = json.getAsJsonPrimitive("id").getAsString();
     }
 
-    public abstract Collection<Trait> specificTraits();
+    public abstract Collection<GenesisTrait> specificTraits();
 
-    public abstract void produce();
-
-    public abstract void register();
+    public abstract void process();
 }

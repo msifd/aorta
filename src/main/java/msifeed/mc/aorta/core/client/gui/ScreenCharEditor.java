@@ -6,10 +6,7 @@ import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.character.Grade;
 import msifeed.mc.mellow.layout.VerticalLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
-import msifeed.mc.mellow.widgets.Button;
-import msifeed.mc.mellow.widgets.Label;
-import msifeed.mc.mellow.widgets.Widget;
-import msifeed.mc.mellow.widgets.Window;
+import msifeed.mc.mellow.widgets.*;
 import net.minecraft.entity.EntityLivingBase;
 
 import java.util.Map;
@@ -27,8 +24,11 @@ public class ScreenCharEditor extends MellowGuiScreen {
         scene.addChild(window);
 
         final Label entityName = new Label("Entity: " + entity.getCommandSenderName());
-        entityName.getMargin().bottom = 5;
         window.addChild(entityName);
+        window.addChild(new Separator());
+
+        final DropDown dropDown = new DropDown();
+        window.addChild(dropDown);
 
         final CharacterProperty charProp = CharacterProperty.get(entity);
         charProp.getCharacter().ifPresent(c -> addCharacterInfo(window, c));
@@ -45,6 +45,7 @@ public class ScreenCharEditor extends MellowGuiScreen {
             final Label label = new Label(text);
             window.addChild(label);
         }
+        window.addChild(new Separator());
     }
 
 }

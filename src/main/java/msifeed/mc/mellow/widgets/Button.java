@@ -1,9 +1,9 @@
 package msifeed.mc.mellow.widgets;
 
+import com.google.common.collect.ImmutableList;
 import msifeed.mc.mellow.Mellow;
 import msifeed.mc.mellow.handlers.MouseHandler;
 import msifeed.mc.mellow.layout.AnchorLayout;
-import msifeed.mc.mellow.layout.Layout;
 import msifeed.mc.mellow.render.RenderParts;
 import msifeed.mc.mellow.render.RenderWidgets;
 import msifeed.mc.mellow.theme.Part;
@@ -16,7 +16,7 @@ public class Button extends Widget implements MouseHandler.Click {
     protected Part hoverPart = Mellow.THEME.parts.get("button_hover");
     protected Part pressPart = Mellow.THEME.parts.get("button_press");
 
-    protected Label label = new Label();
+    protected Widget label;
     protected Runnable clickCallback = null;
 
     public Button() {
@@ -24,20 +24,30 @@ public class Button extends Widget implements MouseHandler.Click {
     }
 
     public Button(String text) {
+        this(new Label(text));
+    }
+
+    public Button(Widget label) {
         setSizeHint(50, 10);
 //        getMargin().set(2, 2, 2, 2);
         setLayout(new AnchorLayout(AnchorLayout.Anchor.CENTER));
-
-        setLabel(text);
-        addChild(label);
+        this.label = label;
     }
 
     public void setLabel(String text) {
-        this.label.setText(text);
+        if (label instanceof Label)
+            ((Label) this.label).setText(text);
     }
 
     public void setClickCallback(Runnable callback) {
         this.clickCallback = callback;
+    }
+
+    @Override
+    protected void updateLayout() {
+        super.updateLayout();
+        if (label != null)
+            layout.apply(this, ImmutableList.of(label));
     }
 
     @Override
@@ -47,7 +57,8 @@ public class Button extends Widget implements MouseHandler.Click {
     }
 
     protected void renderLabel() {
-        RenderWidgets.cropped(label, getGeometry());
+        if (label != null)
+            RenderWidgets.cropped(label, getGeometry());
     }
 
     protected void renderBackground() {

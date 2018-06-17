@@ -7,47 +7,69 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import msifeed.mc.aorta.genesis.GenesisBuilder;
-import msifeed.mc.aorta.genesis.Trait;
+import msifeed.mc.aorta.genesis.GenesisTrait;
 import msifeed.mc.aorta.things.AortaCreativeTab;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.item.Item;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-import static msifeed.mc.aorta.genesis.Trait.*;
+import static msifeed.mc.aorta.genesis.GenesisTrait.*;
 import static msifeed.mc.aorta.genesis.blocks.BlockBuilder.BlockTags.texture;
 import static msifeed.mc.aorta.genesis.blocks.BlockBuilder.BlockTags.texture_layout;
 
 public class BlockBuilder extends GenesisBuilder {
-    private static final ImmutableSet<Trait> blockTraits = ImmutableSet.of(Trait.block);
+    private static final ImmutableSet<GenesisTrait> blockTraits = ImmutableSet.of(GenesisTrait.block);
 
-    protected GenesisBlock block = null;
-
-    public BlockBuilder(JsonObject json, Collection<Trait> traits) {
+    public BlockBuilder(JsonObject json, Collection<GenesisTrait> traits) {
         super(json, traits);
     }
 
     @Override
-    public Collection<Trait> specificTraits() {
+    public Collection<GenesisTrait> specificTraits() {
         return blockTraits;
     }
 
     @Override
-    public void produce() {
-        block = new GenesisBlock(getMaterial());
-        block.setBlockName(id);
-        block.setCreativeTab(AortaCreativeTab.BLOCKS);
+    public void process() {
+        final Block basic = new BlockTemplate(getMaterial());
+        fillBlockCommons(basic, id);
+        GameRegistry.registerBlock(basic, id);
 
-        setCommonTraits();
 
-        if (side.isClient()) {
-            setTexture();
+        if (traits.contains(add_stairs)) {
+            final String id = this.id + "_stairs";
+            final Block stairs = new StairsTemplate(basic);
+            fillBlockCommons(stairs, id);
+            GameRegistry.registerBlock(stairs, id);
+        }
+
+        if (traits.contains(add_slabs)) {
+            final SlabTemplate slabSingle = new SlabTemplate(basic, false);
+            final SlabTemplate slabDouble = new SlabTemplate(basic, true);
+            fillBlockCommons(slabSingle, slabSingle.getName());
+            fillBlockCommons(slabDouble, slabDouble.getName());
+            slabDouble.setCreativeTab(null);
+            GameRegistry.registerBlock(slabSingle, SlabTemplate.SlabItem.class, slabSingle.getName(), slabSingle, slabDouble);
+            slabDouble.item = Item.getItemFromBlock(basic); // Refer to basic block on middle click
+            GameRegistry.registerBlock(slabDouble, slabDouble.getName());
         }
     }
 
-    @Override
-    public void register() {
-        GameRegistry.registerBlock(block, id);
+    private void fillBlockCommons(Block block, String id) {
+        block.setBlockName(id);
+        block.setCreativeTab(AortaCreativeTab.BLOCKS);
+
+        if (traits.contains(unbreakable)) {
+            block.setBlockUnbreakable();
+            block.setResistance(6000000);
+        }
+
+        if (side.isClient()) {
+            setTexture(block);
+        }
     }
 
     private Material getMaterial() {
@@ -61,15 +83,8 @@ public class BlockBuilder extends GenesisBuilder {
             return Material.wood;
     }
 
-    private void setCommonTraits() {
-        if (traits.contains(unbreakable)) {
-            block.setBlockUnbreakable();
-            block.setResistance(6000000);
-        }
-    }
-
     @SideOnly(Side.CLIENT)
-    private void setTexture() {
+    private void setTexture(Block block) {
         // default - texture is id
         if (!has(texture)) {
             block.setBlockTextureName("aorta:" + id);
@@ -85,8 +100,9 @@ public class BlockBuilder extends GenesisBuilder {
         }
 
         // texture is array - use layout
-        if (txEl.isJsonArray()) {
-            ArrayList<String> rawTextures = new ArrayList<>();
+        if (block instanceof BlockTemplate && txEl.isJsonArray()) {
+            final BlockTemplate blockTemplate = (BlockTemplate) block;
+            final ArrayList<String> rawTextures = new ArrayList<>();
             for (JsonElement el : txEl.getAsJsonArray())
                 rawTextures.add(el.getAsString());
 
@@ -101,10 +117,10 @@ public class BlockBuilder extends GenesisBuilder {
                         .map(Character::getNumericValue)
                         .map(i -> Math.min(i, 5)) // [0, 5]
                         .toArray();
-                block.setTextures(rawTextures, layout);
+                blockTemplate.textureLayout = new BlockTextureLayout(rawTextures, layout);
             } else {
                 // Без разметки берем только первую текстуру
-                block.setBlockTextureName(rawTextures.get(0));
+                blockTemplate.setBlockTextureName(rawTextures.get(0));
             }
         }
     }

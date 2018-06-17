@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public enum Trait {
+public enum GenesisTrait {
     // Types
     block, item,
 
@@ -15,7 +15,7 @@ public enum Trait {
     rotatable,
     add_slabs, add_stairs;
 
-    public static final ImmutableList<String> strings = ImmutableList.copyOf(Arrays.stream(Trait.values())
+    public static final ImmutableList<String> strings = ImmutableList.copyOf(Arrays.stream(GenesisTrait.values())
             .map(Object::toString)
             .collect(Collectors.toList()));
 }
