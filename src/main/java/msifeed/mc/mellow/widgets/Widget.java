@@ -25,11 +25,7 @@ public class Widget extends WidgetContainer {
     protected Layout layout = Layout.NONE;
     protected boolean visible = true;
     private boolean dirty = true;
-
-//    public Widget(Widget parent) {
-//        setParent(parent);
-//    }
-
+    
     public Point getPos() {
         return pos;
     }
@@ -46,6 +42,10 @@ public class Widget extends WidgetContainer {
 
     public Point getSizeHint() {
         return sizeHint;
+    }
+
+    public Point getLayoutSizeHint() {
+        return layout.sizeHintOfContent(this);
     }
 
     public void setSizeHint(Point sizeHint) {
@@ -120,19 +120,15 @@ public class Widget extends WidgetContainer {
 
     public void setDirty() {
         this.dirty = true;
-        if (parent != null)
-            parent.dirty = true;
-//        for (Widget w : children)
-//            w.setDirty();
     }
 
     public void update() {
         if (dirty) {
-            updateSelf();
+            dirty = false;
             updateLayout();
+            updateSelf();
             for (Widget c : children)
                 c.update();
-            dirty = false;
         }
     }
 

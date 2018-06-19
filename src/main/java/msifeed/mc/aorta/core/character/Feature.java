@@ -1,13 +1,13 @@
 package msifeed.mc.aorta.core.character;
 
 public enum Feature {
-    TRAINING, DEXTERITY, TENACITY, INTELLIGENCE;
+    STRENGTH, DEXTERITY, TENACITY, INTELLIGENCE;
 
     @Override
     public String toString() {
         switch (this) {
-            case TRAINING:
-                return "Training";
+            case STRENGTH:
+                return "Strength";
             case DEXTERITY:
                 return "Dexterity";
             case TENACITY:

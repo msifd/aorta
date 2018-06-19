@@ -42,6 +42,7 @@ public class Part {
                 final Point[] compact = context.deserialize(obj.get("9slice"), Point[].class);
                 if (compact.length != 3)
                     throw new JsonParseException("The Part's 9-Slice should have exactly three points");
+                part.size = new Point();
                 part.slicesSize = new Point[9];
                 part.slicesUV = new Point[9];
                 for (int i = 0; i < 9; i++) {
@@ -49,6 +50,9 @@ public class Part {
                     final int v = Arrays.stream(compact).limit(i / 3).mapToInt(value -> (int) value.y).sum();
                     part.slicesUV[i] = new Point(part.pos.x + u, part.pos.y + v);
                     part.slicesSize[i] = new Point(compact[i % 3].x, compact[i / 3].y);
+                }
+                for (int i = 0; i < 9; i += 4) {
+                    part.size.translate(part.slicesSize[i]);
                 }
             }
             return part;

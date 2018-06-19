@@ -4,6 +4,7 @@ import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.CharacterProperty;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.character.Grade;
+import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.layout.VerticalLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.mellow.widgets.*;
@@ -27,11 +28,11 @@ public class ScreenCharEditor extends MellowGuiScreen {
         window.addChild(entityName);
         window.addChild(new Separator());
 
-        final DropDown dropDown = new DropDown();
-        window.addChild(dropDown);
-
         final CharacterProperty charProp = CharacterProperty.get(entity);
-        charProp.getCharacter().ifPresent(c -> addCharacterInfo(window, c));
+        charProp.getCharacter().ifPresent(c -> {
+            window.addChild(makeCharStatsEditor(c));
+            window.addChild(new Separator());
+        });
 
         final Button btn = new Button("Kill");
         btn.setSizeHint(20, 20);
@@ -39,13 +40,17 @@ public class ScreenCharEditor extends MellowGuiScreen {
         window.addChild(btn);
     }
 
-    private void addCharacterInfo(Window window, Character character) {
+    private Widget makeCharStatsEditor(Character character) {
+        final Widget widget = new Widget();
+        widget.setLayout(new GridLayout());
+
         for (Map.Entry<Feature, Grade> entry : character.features.entrySet()) {
-            final String text = entry.getKey().toString() + ": " + entry.getValue().toString();
-            final Label label = new Label(text);
-            window.addChild(label);
+            widget.addChild(new Label(entry.getKey().toString() + ':'));
+            final DropDown dropDown = new DropDown(Grade.STRINGS);
+            dropDown.selectItem(entry.getValue().ordinal());
+            widget.addChild(dropDown);
         }
-        window.addChild(new Separator());
+        return widget;
     }
 
 }

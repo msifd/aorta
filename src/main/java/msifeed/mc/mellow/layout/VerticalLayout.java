@@ -24,7 +24,7 @@ public class VerticalLayout extends Layout {
 
         int yPos = 0;
         for (Widget child : children) {
-            final Point sh = child.getSizeHint();
+            final Point sh = child.getLayoutSizeHint();
             final Rect itemGeom = new Rect();
 
             itemGeom.translate(geometry);

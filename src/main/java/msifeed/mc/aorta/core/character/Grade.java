@@ -1,5 +1,10 @@
 package msifeed.mc.aorta.core.character;
 
+import com.google.common.collect.ImmutableList;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 public enum Grade {
     BAD, NORMAL, GOOD, GREAT, EXCELLENT;
 
@@ -20,4 +25,8 @@ public enum Grade {
                 return super.toString();
         }
     }
+
+    public static final ImmutableList<String> STRINGS = ImmutableList.copyOf(Arrays.stream(Grade.values())
+            .map(Object::toString)
+            .collect(Collectors.toList()));
 }

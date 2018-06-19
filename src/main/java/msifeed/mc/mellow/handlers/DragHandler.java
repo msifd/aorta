@@ -23,6 +23,8 @@ public class DragHandler {
     public void drag(Point p) {
         if (dragging) {
             target.setPos(posOnStart.x - dragStart.x + p.x, posOnStart.y - dragStart.y + p.y);
+            if (target.getParent() != null)
+                target.getParent().setDirty();
         }
     }
 
