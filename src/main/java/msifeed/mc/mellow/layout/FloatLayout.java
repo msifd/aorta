@@ -1,10 +1,9 @@
 package msifeed.mc.mellow.layout;
 
+import msifeed.mc.mellow.utils.Geom;
 import msifeed.mc.mellow.utils.Margins;
-import msifeed.mc.mellow.utils.Rect;
 import msifeed.mc.mellow.widgets.Widget;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 public class FloatLayout extends Layout {
@@ -16,17 +15,16 @@ public class FloatLayout extends Layout {
     @Override
     public void apply(Widget widget, Collection<Widget> children) {
         final Margins margin = widget.getMargin();
-        final Rect geometry = new Rect(widget.getGeometry());
+        final Geom geometry = new Geom(widget.getGeometry());
         geometry.offsetPos(margin);
         geometry.offsetSize(margin);
 
         for (Widget child : children) {
-            final Rect itemGeom = new Rect();
-            itemGeom.translate(geometry);
-            itemGeom.translate(child.getPos());
-            itemGeom.setSize(child.getSizeHint());
-            child.setGeometry(itemGeom);
-            child.update();
+            final Geom itemGeom = child.getGeometry();
+            itemGeom.set(geometry);
+            itemGeom.setSize(child.getLayoutSizeHint());
+            itemGeom.translate(child.getPos(), child.getZLevel());
+            child.setDirty();
         }
     }
 }

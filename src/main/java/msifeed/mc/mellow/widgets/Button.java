@@ -5,11 +5,13 @@ import msifeed.mc.mellow.Mellow;
 import msifeed.mc.mellow.handlers.MouseHandler;
 import msifeed.mc.mellow.layout.AnchorLayout;
 import msifeed.mc.mellow.render.RenderParts;
+import msifeed.mc.mellow.render.RenderShapes;
 import msifeed.mc.mellow.render.RenderWidgets;
 import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.utils.Point;
 
-import java.util.Optional;
+import java.util.Collection;
+import java.util.Collections;
 
 public class Button extends Widget implements MouseHandler.Click {
     protected Part normalPart = Mellow.THEME.parts.get("button_normal");
@@ -29,7 +31,6 @@ public class Button extends Widget implements MouseHandler.Click {
 
     public Button(Widget label) {
         setSizeHint(50, 10);
-//        getMargin().set(2, 2, 2, 2);
         setLayout(new AnchorLayout(AnchorLayout.Anchor.CENTER));
         this.label = label;
     }
@@ -71,13 +72,36 @@ public class Button extends Widget implements MouseHandler.Click {
     }
 
     @Override
-    public Optional<Widget> childAt(Point p) {
-        return Optional.empty();
+    public Collection<Widget> childrenAt(Point p) {
+        return Collections.emptyList();
     }
 
     @Override
     public void onClick(int xMouse, int yMouse, int button) {
         if (clickCallback != null)
             clickCallback.run();
+    }
+
+    public static class ToggleableButton extends Button {
+        protected boolean selected = false;
+
+        public boolean isSelected() {
+            return selected;
+        }
+
+        @Override
+        public void onClick(int xMouse, int yMouse, int button) {
+            selected = !selected;
+            super.onClick(xMouse, yMouse, button);
+        }
+    }
+
+    public static class AlmostTransparentButton extends Button {
+        @Override
+        protected void renderBackground() {
+//            super.renderBackground();
+            if (isHovered())
+                RenderShapes.rect(getGeometry(), 0x997577, 80);
+        }
     }
 }

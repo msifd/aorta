@@ -1,20 +1,21 @@
 package msifeed.mc.mellow.utils;
 
-public class Rect implements Cloneable {
+public class Geom implements Cloneable {
     public int x;
     public int y;
+    public int z;
     public int w;
     public int h;
 
-    public Rect() {
+    public Geom() {
     }
 
-    public Rect(int x, int y, int w, int h) {
+    public Geom(int x, int y, int w, int h) {
         set(x, y, w, h);
     }
 
-    public Rect(Rect rect) {
-        set(rect);
+    public Geom(Geom geom) {
+        set(geom);
     }
 
     public void set(int x, int y, int w, int h) {
@@ -24,9 +25,10 @@ public class Rect implements Cloneable {
         this.h = h;
     }
 
-    public void set(Rect r) {
+    public void set(Geom r) {
         this.x = r.x;
         this.y = r.y;
+        this.z = r.z;
         this.w = r.w;
         this.h = r.h;
     }
@@ -37,15 +39,24 @@ public class Rect implements Cloneable {
     }
 
     public void translate(int x, int y) {
+        translate(x, y, 0);
+    }
+
+    public void translate(int x, int y, int z) {
         this.x += x;
         this.y += y;
+        this.z += z;
     }
 
     public void translate(Point p) {
         translate(p.x, p.y);
     }
 
-    public void translate(Rect p) {
+    public void translate(Point p, int z) {
+        translate(p.x, p.y, z);
+    }
+
+    public void translate(Geom p) {
         translate(p.x, p.y);
     }
 
@@ -57,6 +68,11 @@ public class Rect implements Cloneable {
     public void setSize(Point p) {
         this.w = p.x;
         this.h = p.y;
+    }
+
+    public void addSize(Geom g) {
+        this.w += g.w;
+        this.h += g.h;
     }
 
     public void offsetPos(Margins m) {

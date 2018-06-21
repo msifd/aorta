@@ -1,33 +1,32 @@
 package msifeed.mc.mellow.widgets;
 
-import com.google.common.collect.ImmutableList;
 import msifeed.mc.mellow.Mellow;
+import msifeed.mc.mellow.layout.AnchorLayout;
 import msifeed.mc.mellow.layout.FloatLayout;
 import msifeed.mc.mellow.layout.VerticalLayout;
 import msifeed.mc.mellow.render.RenderParts;
 import msifeed.mc.mellow.theme.Part;
-import msifeed.mc.mellow.utils.Rect;
+import msifeed.mc.mellow.utils.Geom;
+import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.utils.SizePolicy;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 public class DropDown extends Widget {
-    private DropButton header = new DropButton(this);
-    private DropList list = new DropList(this);
-    private boolean toggled = false;
-
+    private final DropButton header = new DropButton(this);
+    private final DropList list;
     private final List<String> items;
     private int selectedItem;
+    private boolean opened = false;
 
     public DropDown(List<String> items) {
         this.items = items;
+        this.list = new DropList(this);
         selectItem(0);
 
         setSizeHint(header.getSizeHint());
         setSizePolicy(header.getSizePolicy());
-        setLayout(VerticalLayout.INSTANCE);
+        setLayout(new VerticalLayout(0));
 
         this.list.visible = false;
 
@@ -46,35 +45,39 @@ public class DropDown extends Widget {
         return items.get(selectedItem);
     }
 
-    protected static class DropButton extends Button {
-        protected Part textPart = Mellow.THEME.parts.get("dropdown_text");
-        protected Part downIconPart = Mellow.THEME.parts.get("dropdown_icon");
-        protected Part buttonNormalPart = Mellow.THEME.parts.get("dropdown_button");
-        protected Part buttonHoverPart = Mellow.THEME.parts.get("dropdown_button_hover");
-        protected final DropDown parent;
+    @Override
+    public boolean containsPoint(Point p) {
+        return super.containsPoint(p) || list.containsPoint(p);
+    }
 
-        protected Rect textGeom = new Rect();
-        protected Rect buttonGeom = new Rect();
-        protected Rect iconGeom = new Rect();
+    private static class DropButton extends Button {
+        final DropDown parent;
+        Part textPart = Mellow.THEME.parts.get("dropdown_text");
+        Part downIconPart = Mellow.THEME.parts.get("dropdown_icon");
+        Part buttonNormalPart = Mellow.THEME.parts.get("dropdown_button");
+        Part buttonHoverPart = Mellow.THEME.parts.get("dropdown_button_hover");
+        Geom textGeom = new Geom();
+        Geom buttonGeom = new Geom();
+        Geom iconGeom = new Geom();
 
-        public DropButton(DropDown parent) {
+        DropButton(DropDown parent) {
             this.parent = parent;
             setSizeHint(100, 11);
             setSizePolicy(SizePolicy.Policy.PREFERRED, SizePolicy.Policy.MAXIMUM);
             setLayout(FloatLayout.INSTANCE);
-            getMargin().set(1, 0, 0, 2);
+            getMargin().set(1, 0, 0, 3);
         }
 
         @Override
         protected void updateSelf() {
             textGeom.set(getGeometry());
-            textGeom.w -= buttonNormalPart.size.x + 2;
+            textGeom.w = textBarWidth();
 
             buttonGeom.set(getGeometry());
             buttonGeom.x += textGeom.w;
             buttonGeom.w = buttonNormalPart.size.x;
 
-            iconGeom.setPos(buttonGeom.x, buttonGeom.y);
+            iconGeom.set(buttonGeom);
             iconGeom.setSize(downIconPart.size);
             iconGeom.translate(buttonNormalPart.size.x / 2, buttonNormalPart.size.y / 2);
             iconGeom.translate(-iconGeom.w / 2, -iconGeom.h / 2 - 1);
@@ -83,7 +86,7 @@ public class DropDown extends Widget {
         @Override
         protected void renderBackground() {
             RenderParts.nineSlice(textPart, textGeom);
-            if (parent.toggled || isHovered())
+            if (isHovered() || parent.opened)
                 RenderParts.nineSlice(buttonHoverPart, buttonGeom);
             else
                 RenderParts.nineSlice(buttonNormalPart, buttonGeom);
@@ -93,16 +96,77 @@ public class DropDown extends Widget {
         protected void renderLabel() {
             super.renderLabel();
             RenderParts.slice(downIconPart, iconGeom.x, iconGeom.y);
-            // TODO: draw label
+        }
+
+        @Override
+        public void onClick(int xMouse, int yMouse, int button) {
+            parent.opened = !parent.opened;
+            super.onClick(xMouse, yMouse, button);
+        }
+
+        @Override
+        protected void onFocusLoss() {
+            if (!(focusedWidget instanceof ListButton))
+                parent.opened = false;
+        }
+
+        private int textBarWidth() {
+            return parent.getGeometry().w - parent.header.buttonNormalPart.size.x - 2;
         }
     }
 
-    protected static class DropList extends Widget {
-        protected Part listPart = Mellow.THEME.parts.get("dropdown_list");
-        protected final DropDown parent;
+    private static class DropList extends Widget {
+        final DropDown parent;
+        Part listPart = Mellow.THEME.parts.get("dropdown_list");
 
-        public DropList(DropDown parent) {
+        DropList(DropDown parent) {
             this.parent = parent;
+            setPos(1, 0);
+            setZLevel(10);
+            getMargin().set(1);
+            setSizeHint(10, parent.items.size() * 11);
+            setSizePolicy(SizePolicy.Policy.FIXED, SizePolicy.Policy.FIXED);
+            setLayout(VerticalLayout.INSTANCE);
+
+            for (int i = 0; i < parent.items.size(); i++) {
+                addChild(new ListButton(parent, i));
+            }
+        }
+
+        @Override
+        public Point getLayoutSizeHint() {
+            final Point p = super.getLayoutSizeHint();
+            p.x = parent.header.textBarWidth() - 2;
+            return p;
+        }
+
+        @Override
+        public boolean isVisible() {
+            return parent.opened;
+//            return parent.opened || children.stream().allMatch(w -> w.isPressed() || w.isFocused());
+        }
+
+        @Override
+        protected void renderSelf() {
+            RenderParts.nineSlice(listPart, getGeometry());
+        }
+    }
+
+    private static class ListButton extends Button.AlmostTransparentButton {
+        final DropDown parent;
+        final int itemN;
+
+        ListButton(DropDown parent, int n) {
+            this.parent = parent;
+            this.itemN = n;
+            setZLevel(1);
+            getMargin().set(1, 0);
+            setLayout(new AnchorLayout(AnchorLayout.Anchor.LEFT, AnchorLayout.Anchor.CENTER));
+            setLabel(parent.items.get(n));
+            setClickCallback(() -> {
+                parent.selectItem(itemN);
+                parent.opened = false;
+            });
         }
     }
 }

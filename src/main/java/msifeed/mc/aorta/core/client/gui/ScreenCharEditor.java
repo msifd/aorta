@@ -36,7 +36,7 @@ public class ScreenCharEditor extends MellowGuiScreen {
 
         final Button btn = new Button("Kill");
         btn.setSizeHint(20, 20);
-        btn.setClickCallback(entity::setDead);
+//        btn.setClickCallback(entity::setDead);
         window.addChild(btn);
     }
 

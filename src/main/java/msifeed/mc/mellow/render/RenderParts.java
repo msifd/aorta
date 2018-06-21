@@ -2,8 +2,8 @@ package msifeed.mc.mellow.render;
 
 import msifeed.mc.mellow.Mellow;
 import msifeed.mc.mellow.theme.Part;
+import msifeed.mc.mellow.utils.Geom;
 import msifeed.mc.mellow.utils.Point;
-import msifeed.mc.mellow.utils.Rect;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
@@ -38,17 +38,18 @@ public final class RenderParts {
         slice(x, y, 0, part.size.x, part.size.y, part.pos.x, part.pos.y, part.size.x, part.size.y);
     }
 
-    public static void nineSlice(Part part, Rect bounds) {
+    public static void nineSlice(Part part, Geom geom) {
         if (part == null || part.slicesSize == null)
             return;
 
         bindThemeTexture();
 
-        final double midWidth = Math.max(bounds.w - part.slicesSize[0].x - part.slicesSize[3].x, 0);
-        final double midHeight = Math.max(bounds.h - part.slicesSize[0].y - part.slicesSize[6].y, 0);
+        final double midWidth = Math.max(geom.w - part.slicesSize[0].x - part.slicesSize[3].x, 0);
+        final double midHeight = Math.max(geom.h - part.slicesSize[0].y - part.slicesSize[6].y, 0);
 
-        double x = bounds.x;
-        double y = bounds.y;
+        double x = geom.x;
+        double y = geom.y;
+        double z = geom.z;
         for (int i = 0; i < 9; i++) {
             final int xth = i % 3;
             final int yth = i / 3;
@@ -58,10 +59,10 @@ public final class RenderParts {
             final double width = xth == 1 ? midWidth : sliceSize.x;
             final double height = yth == 1 ? midHeight : sliceSize.y;
 
-            slice(x, y, 0, width, height, sliceUV.x, sliceUV.y, sliceSize.x, sliceSize.y);
+            slice(x, y, z, width, height, sliceUV.x, sliceUV.y, sliceSize.x, sliceSize.y);
 
             if (xth == 2) {
-                x = bounds.x;
+                x = geom.x;
                 y += height;
             } else {
                 x += width;

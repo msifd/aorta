@@ -1,31 +1,33 @@
 package msifeed.mc.mellow.widgets;
 
+import msifeed.mc.mellow.layout.FloatLayout;
 import msifeed.mc.mellow.layout.Layout;
 import msifeed.mc.mellow.render.RenderShapes;
 import msifeed.mc.mellow.utils.*;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Widget extends WidgetContainer {
-    public static Widget focusedWidget = null;
     public static Widget hoveredWidget = null;
     public static Widget pressedWidget = null;
+    protected static Widget focusedWidget = null;
 
+    protected Layout layout = FloatLayout.INSTANCE;
+
+    protected boolean visible = true;
     private Point pos = new Point();
+    private int zLevel = 0;
     private Point sizeHint = new Point();
     private SizePolicy sizePolicy = new SizePolicy();
     private Margins margin = new Margins();
-    private Rect geometry = new Rect();
 
-    private int widgetTreeDepth = 0;
-    private Widget parent;
-
-    protected Layout layout = Layout.NONE;
-    protected boolean visible = true;
     private boolean dirty = true;
-    
+    private Geom geometry = new Geom();
+
+    private Widget parent;
+    private int widgetTreeDepth = 0;
+
     public Point getPos() {
         return pos;
     }
@@ -40,17 +42,25 @@ public class Widget extends WidgetContainer {
         setDirty();
     }
 
-    public Point getSizeHint() {
-        return sizeHint;
+    public int getZLevel() {
+        return zLevel;
     }
 
-    public Point getLayoutSizeHint() {
-        return layout.sizeHintOfContent(this);
+    public void setZLevel(int z) {
+        this.zLevel = z;
+    }
+
+    public Point getSizeHint() {
+        return sizeHint;
     }
 
     public void setSizeHint(Point sizeHint) {
         this.sizeHint = sizeHint;
         setDirty();
+    }
+
+    public Point getLayoutSizeHint() {
+        return layout.sizeHintOfContent(this);
     }
 
     public void setSizeHint(int w, int h) {
@@ -82,13 +92,8 @@ public class Widget extends WidgetContainer {
         setDirty();
     }
 
-    public Rect getGeometry() {
+    public Geom getGeometry() {
         return geometry;
-    }
-
-    public void setGeometry(Rect g) {
-        this.geometry = g;
-        setDirty();
     }
 
     public Widget getParent() {
@@ -98,7 +103,6 @@ public class Widget extends WidgetContainer {
     public void setParent(Widget parent) {
         if (parent != null) {
             this.parent = parent;
-            this.widgetTreeDepth = this.parent.widgetTreeDepth + 1;
         } else {
             this.parent = null;
         }
@@ -109,10 +113,6 @@ public class Widget extends WidgetContainer {
         return widgetTreeDepth;
     }
 
-//    public Layout getLayout() {
-//        return layout;
-//    }
-
     public void setLayout(Layout layout) {
         this.layout = layout;
         setDirty();
@@ -122,9 +122,15 @@ public class Widget extends WidgetContainer {
         this.dirty = true;
     }
 
+    public boolean isVisible() {
+        return visible;
+    }
+
     public void update() {
         if (dirty) {
             dirty = false;
+            if (parent != null)
+                widgetTreeDepth = parent.widgetTreeDepth + 1;
             updateLayout();
             updateSelf();
             for (Widget c : children)
@@ -133,7 +139,7 @@ public class Widget extends WidgetContainer {
     }
 
     public void render() {
-        if (visible) {
+        if (isVisible()) {
             renderSelf();
             renderChildren();
             if (isHovered())
@@ -175,12 +181,18 @@ public class Widget extends WidgetContainer {
         setDirty();
     }
 
-    public Optional<Widget> childAt(Point p) {
-        for (Widget w : children) {
-            if (w.visible && w.geometry.contains(p))
-                return Optional.of(w);
-        }
-        return Optional.empty();
+//    protected Collection<Widget> getLookupChildren() {
+//        return getChildren();
+//    }
+
+    public boolean containsPoint(Point p) {
+        return isVisible() && getGeometry().contains(p);
+    }
+
+    public Collection<Widget> childrenAt(Point p) {
+        return children.stream()
+                .filter(w -> w.containsPoint(p))
+                .collect(Collectors.toList());
     }
 
     public boolean isHovered() {
@@ -193,5 +205,22 @@ public class Widget extends WidgetContainer {
 
     public boolean isFocused() {
         return this == focusedWidget;
+    }
+
+    public static void setFocused(Widget widget) {
+        if (focusedWidget == widget)
+            return;
+        final Widget lastFocus = focusedWidget;
+        focusedWidget = widget;
+        if (lastFocus != null)
+            lastFocus.onFocusLoss();
+    }
+
+    protected void onFocusLoss() {
+    }
+
+    public boolean isHigherThan(Widget another) {
+        return geometry.z > another.geometry.z
+                || (geometry.z == another.geometry.z && widgetTreeDepth > another.widgetTreeDepth);
     }
 }

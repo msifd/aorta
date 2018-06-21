@@ -1,9 +1,8 @@
 package msifeed.mc.mellow.layout;
 
+import msifeed.mc.mellow.utils.Geom;
 import msifeed.mc.mellow.utils.Margins;
 import msifeed.mc.mellow.utils.Point;
-import msifeed.mc.mellow.utils.Rect;
-import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
 
 import java.util.Collection;
@@ -40,22 +39,19 @@ public class GridLayout extends Layout {
 
     private int makeGrid(Widget widget, Collection<Widget> children) {
         final Margins margin = widget.getMargin();
-        final Rect geometry = new Rect(widget.getGeometry());
+        final Geom geometry = new Geom(widget.getGeometry());
         geometry.offsetPos(margin);
         geometry.offsetSize(margin);
 
         boolean labelCol = true;
 
         int minLabelWidth = 0;
-//        int minValueWidth = 0;
         for (Widget child : children) {
-            int minWidth = child.getSizePolicy().horizontalPolicy == SizePolicy.Policy.MAXIMUM
+            int minWidth = child.getSizePolicy().horizontalPolicy.canGrow
                     ? child.getSizeHint().x
                     : 0;
             if (labelCol && minWidth > minLabelWidth)
                 minLabelWidth = minWidth;
-//            if (!labelCol && minWidth > minValueWidth)
-//                minValueWidth = minWidth;
             labelCol = !labelCol;
         }
 
@@ -66,24 +62,21 @@ public class GridLayout extends Layout {
         labelCol = true;
         int heightAcc = 0;
         for (Widget child : children) {
-            final Point sh = child.getSizeHint();
-            final Rect itemGeom = new Rect();
+            final Point sh = child.getLayoutSizeHint();
+            final Geom childGeom = child.getGeometry();
             final int width = labelCol ? labelWidth : valueWidth;
 
-            itemGeom.translate(geometry);
-            itemGeom.translate(0, heightAcc);
-            if (!labelCol) {
-                itemGeom.translate(labelWidth + spacing, 0);
-            }
-            itemGeom.setSize(width, sh.y);
-
-            child.setGeometry(itemGeom);
+            childGeom.set(geometry);
+            childGeom.setSize(width, sh.y);
+            childGeom.translate(0, heightAcc, child.getZLevel());
+            if (!labelCol)
+                childGeom.translate(labelWidth + spacing, 0);
+            child.setDirty();
 
             if (!labelCol) {
-                heightAcc += itemGeom.h;
+                heightAcc += childGeom.h;
                 heightAcc += spacing;
             }
-
             labelCol = !labelCol;
         }
 

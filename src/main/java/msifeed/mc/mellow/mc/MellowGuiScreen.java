@@ -3,7 +3,6 @@ package msifeed.mc.mellow.mc;
 import msifeed.mc.mellow.handlers.MouseHandler;
 import msifeed.mc.mellow.render.RenderUtils;
 import msifeed.mc.mellow.utils.Point;
-import msifeed.mc.mellow.utils.Rect;
 import msifeed.mc.mellow.widgets.Scene;
 import msifeed.mc.mellow.widgets.Widget;
 import net.minecraft.client.Minecraft;
@@ -17,14 +16,14 @@ public class MellowGuiScreen extends GuiScreen {
         super.initGui();
         final Minecraft mc = Minecraft.getMinecraft();
         final int scaleFactor = RenderUtils.getScreenScaleFactor();
-        scene.setGeometry(new Rect(0, 0, mc.displayWidth / scaleFactor, mc.displayHeight / scaleFactor));
+        scene.getGeometry().set(0, 0, mc.displayWidth / scaleFactor, mc.displayHeight / scaleFactor);
     }
 
     @Override
     public void drawScreen(int xMouse, int yMouse, float tick) {
-        Widget.hoveredWidget = scene.lookupWidget(new Point(xMouse, yMouse)).orElse(null);
         scene.update();
         scene.render();
+        Widget.hoveredWidget = scene.lookupWidget(new Point(xMouse, yMouse)).orElse(null);
     }
 
     @Override
@@ -32,7 +31,8 @@ public class MellowGuiScreen extends GuiScreen {
         final Widget lookup = scene.lookupWidget(new Point(xMouse, yMouse)).orElse(null);
         if (lookup instanceof MouseHandler.Press)
             ((MouseHandler.Press) lookup).onPress(xMouse, yMouse, button);
-        Widget.focusedWidget = Widget.pressedWidget = lookup;
+        Widget.setFocused(lookup);
+        Widget.pressedWidget = lookup;
     }
 
     @Override

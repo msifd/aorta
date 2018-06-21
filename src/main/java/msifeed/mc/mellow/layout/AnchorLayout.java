@@ -1,7 +1,7 @@
 package msifeed.mc.mellow.layout;
 
+import msifeed.mc.mellow.utils.Geom;
 import msifeed.mc.mellow.utils.Margins;
-import msifeed.mc.mellow.utils.Rect;
 import msifeed.mc.mellow.widgets.Widget;
 
 import java.util.Collection;
@@ -26,21 +26,20 @@ public class AnchorLayout extends Layout {
             return;
 
         final Margins margin = widget.getMargin();
-        final Rect geometry = new Rect(widget.getGeometry());
+        final Geom geometry = new Geom(widget.getGeometry());
         geometry.offsetPos(margin);
 //        geometry.offsetSize(margin);
 
-        final Widget item = children.iterator().next();
+        final Widget child = children.iterator().next();
 
-        final Rect itemGeom = new Rect();
-        itemGeom.translate(geometry);
-        itemGeom.translate(item.getPos());
-        itemGeom.setSize(item.getSizeHint());
-//        itemGeom.offsetSize(margin);
+        final Geom childGeom = child.getGeometry();
+        childGeom.set(geometry);
+        childGeom.setSize(child.getSizeHint());
+        childGeom.translate(child.getPos(), child.getZLevel());
 
         switch (verAnchor) {
             case CENTER:
-                itemGeom.y += (geometry.h - itemGeom.h) / 2;
+                childGeom.y += (geometry.h - childGeom.h) / 2;
                 break;
             case TOP:
                 break;
@@ -50,7 +49,7 @@ public class AnchorLayout extends Layout {
 
         switch (horAnchor) {
             case CENTER:
-                itemGeom.x += (geometry.w - itemGeom.w) / 2;
+                childGeom.x += (geometry.w - childGeom.w) / 2;
                 break;
             case LEFT:
                 break;
@@ -58,7 +57,7 @@ public class AnchorLayout extends Layout {
                 break;
         }
 
-        item.setGeometry(itemGeom);
+        child.setDirty();
     }
 
     public enum Anchor {

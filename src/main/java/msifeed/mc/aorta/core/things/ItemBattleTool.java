@@ -1,6 +1,5 @@
 package msifeed.mc.aorta.core.things;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.aorta.core.character.CharacterFactory;
 import msifeed.mc.aorta.core.character.CharacterProperty;

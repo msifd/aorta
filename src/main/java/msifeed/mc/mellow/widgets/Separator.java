@@ -5,7 +5,7 @@ import msifeed.mc.mellow.render.RenderParts;
 import msifeed.mc.mellow.render.RenderUtils;
 import msifeed.mc.mellow.render.RenderWidgets;
 import msifeed.mc.mellow.theme.Part;
-import msifeed.mc.mellow.utils.Rect;
+import msifeed.mc.mellow.utils.Geom;
 
 public class Separator extends Widget {
     protected Part horizontalPart = Mellow.THEME.parts.get("separator_hor");
@@ -16,7 +16,7 @@ public class Separator extends Widget {
 
     @Override
     protected void renderSelf() {
-        final Rect geom = getGeometry();
+        final Geom geom = getGeometry();
         RenderWidgets.beginCropped(this, geom);
         final int endX = geom.x + geom.w;
         final int partWidth = horizontalPart.pos.x / RenderUtils.getScreenScaleFactor() + 1;

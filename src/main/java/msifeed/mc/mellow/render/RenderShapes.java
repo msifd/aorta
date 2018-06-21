@@ -1,11 +1,11 @@
 package msifeed.mc.mellow.render;
 
-import msifeed.mc.mellow.utils.Rect;
+import msifeed.mc.mellow.utils.Geom;
 import net.minecraft.client.renderer.Tessellator;
 import org.lwjgl.opengl.GL11;
 
 public final class RenderShapes {
-    public static void frame(Rect geom, float width, int color) {
+    public static void frame(Geom geom, float width, int color) {
         final float w = geom.w;
         final float h = geom.h;
 
@@ -22,7 +22,7 @@ public final class RenderShapes {
         GL11.glEnable(GL11.GL_TEXTURE_2D);
     }
 
-    public static void rect(Rect bounds, int color, int alpha) {
+    public static void rect(Geom bounds, int color, int alpha) {
         final float w = bounds.w;
         final float h = bounds.h;
 

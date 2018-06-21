@@ -7,9 +7,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.util.IIcon;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class BlockTemplate extends Block {
     protected BlockTextureLayout textureLayout = null;
 

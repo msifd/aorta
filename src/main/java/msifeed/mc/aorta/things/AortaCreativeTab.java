@@ -14,10 +14,9 @@ import java.util.List;
 
 public class AortaCreativeTab extends CreativeTabs {
     private static final Item iconAorta = new Item();
-    private static final Item iconTools = new Item();
-
     public static final AortaCreativeTab BLOCKS = new AortaCreativeTab("aorta.blocks", iconAorta);
     public static final AortaCreativeTab ITEMS = new AortaCreativeTab("aorta.items", iconAorta);
+    private static final Item iconTools = new Item();
     public static final AortaCreativeTab TOOLS = new AortaCreativeTab("aorta.tools", iconTools);
 
     static {

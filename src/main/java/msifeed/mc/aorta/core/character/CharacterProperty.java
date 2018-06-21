@@ -15,7 +15,6 @@ import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 
-import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class CharacterProperty implements ISyncableExtProp {
