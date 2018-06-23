@@ -28,7 +28,7 @@ public class Button extends Widget implements MouseHandler.Click {
     }
 
     public Button(Widget label) {
-        setSizeHint(50, 10);
+        setSizeHint(50, 20);
         setLayout(new AnchorLayout(AnchorLayout.Anchor.CENTER));
 
         this.label = label;

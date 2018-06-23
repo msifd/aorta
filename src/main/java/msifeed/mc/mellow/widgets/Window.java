@@ -10,8 +10,6 @@ import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.utils.SizePolicy;
 
-import java.util.Collection;
-
 public class Window extends Widget {
     private Part backgroundPart = Mellow.THEME.parts.get("window");
     private Header header = new Header(this);
@@ -26,7 +24,7 @@ public class Window extends Widget {
         header.getMargin().set(3, 0);
         header.setZLevel(1);
 
-        content.getMargin().set(3);
+        content.getMargin().set(1, 3, 9, 3);
         content.setLayout(VerticalLayout.INSTANCE);
 
         super.addChild(header);
@@ -35,6 +33,10 @@ public class Window extends Widget {
 
     public void setTitle(String text) {
         header.setLabel(text);
+    }
+
+    public Widget getContent() {
+        return content;
     }
 
     @Override

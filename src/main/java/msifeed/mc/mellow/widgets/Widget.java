@@ -60,7 +60,7 @@ public class Widget extends WidgetContainer {
     }
 
     public Point getLayoutSizeHint() {
-        return layout.sizeHintOfContent(this);
+        return layout.getSizeOfContent(this);
     }
 
     public void setSizeHint(int w, int h) {
@@ -79,6 +79,11 @@ public class Widget extends WidgetContainer {
 
     public void setSizePolicy(SizePolicy.Policy h, SizePolicy.Policy v) {
         this.sizePolicy.horizontalPolicy = h;
+        this.sizePolicy.verticalPolicy = v;
+        setDirty();
+    }
+
+    public void setVerSizePolicy(SizePolicy.Policy v) {
         this.sizePolicy.verticalPolicy = v;
         setDirty();
     }
@@ -133,17 +138,17 @@ public class Widget extends WidgetContainer {
                 widgetTreeDepth = parent.widgetTreeDepth + 1;
             updateLayout();
             updateSelf();
-            for (Widget c : children)
-                c.update();
         }
+        for (Widget c : children)
+            c.update();
     }
 
     public void render() {
         if (isVisible()) {
             renderSelf();
             renderChildren();
-            if (isHovered())
-                renderDebug();
+//            if (isHovered())
+//                renderDebug();
         }
     }
 

@@ -4,13 +4,13 @@ import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.props.CharacterProperty;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.character.Grade;
-import msifeed.mc.aorta.props.ExtProp;
-import msifeed.mc.aorta.props.SyncPropHandler;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.layout.VerticalLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
+import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.*;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,6 +18,7 @@ import java.util.Map;
 
 public class ScreenCharEditor extends MellowGuiScreen {
     private final EntityLivingBase entity;
+    private final Widget mainSection = new Widget();
 
     public ScreenCharEditor(EntityLivingBase entity) {
         this.entity = entity;
@@ -32,18 +33,17 @@ public class ScreenCharEditor extends MellowGuiScreen {
         window.addChild(entityName);
         window.addChild(new Separator());
 
-        final CharacterProperty charProp = CharacterProperty.get(entity);
-        charProp.getCharacter().ifPresent(c -> {
-            window.addChild(makeCharStatsEditor(c));
-            window.addChild(new Separator());
-        });
+        mainSection.setLayout(VerticalLayout.INSTANCE);
+        mainSection.setSizeHint(200, 200);
+        refillMainSection();
+        window.addChild(mainSection);
 
-        final Button btn = new Button("Submit");
-        btn.setSizeHint(20, 20);
-        btn.setClickCallback(() -> {
-            charProp.syncServer(entity);
+        final Button submitBtn = new Button("Submit");
+        submitBtn.setVerSizePolicy(SizePolicy.Policy.MAXIMUM);
+        submitBtn.setClickCallback(() -> {
+            CharacterProperty.get(entity).syncServer(entity);
         });
-        window.addChild(btn);
+        window.addChild(submitBtn);
     }
 
     @Override
@@ -51,19 +51,41 @@ public class ScreenCharEditor extends MellowGuiScreen {
         return false;
     }
 
-    private Widget makeCharStatsEditor(Character character) {
-        final Widget widget = new Widget();
-        widget.setLayout(new GridLayout());
+    private void refillMainSection() {
+        mainSection.clearChildren();
+
+        final CharacterProperty prop = CharacterProperty.get(entity);
+        if (prop.character != null) {
+            addCharFeatures(prop.character);
+        } else {
+            final Button addDataBtn = new Button("Add data");
+            addDataBtn.setVerSizePolicy(SizePolicy.Policy.MAXIMUM);
+            addDataBtn.setClickCallback(() -> {
+                prop.character = new Character();
+                prop.syncServer(entity);
+                refillMainSection();
+//                mainSection.update();
+            });
+            mainSection.addChild(addDataBtn);
+        }
+    }
+
+    private void addCharFeatures(Character character) {
+        final Widget features = new Widget();
+        features.setLayout(new GridLayout());
+        features.setVerSizePolicy(SizePolicy.Policy.MAXIMUM);
 
         final List<Grade> gradeList = Arrays.asList(Grade.values());
         for (Map.Entry<Feature, Grade> entry : character.features.entrySet()) {
-            widget.addChild(new Label(entry.getKey().toString() + ':'));
+            features.addChild(new Label(entry.getKey().toString() + ':'));
             final DropDown<Grade> dropDown = new DropDown<>(gradeList);
             dropDown.selectItem(entry.getValue().ordinal());
             dropDown.setSelectCallback(grade -> character.features.put(entry.getKey(), grade));
-            widget.addChild(dropDown);
+            features.addChild(dropDown);
         }
-        return widget;
+
+        mainSection.addChild(features);
+        mainSection.addChild(new Separator());
     }
 
 }

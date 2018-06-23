@@ -11,14 +11,14 @@ public class GridLayout extends Layout {
     public int spacing = 1;
 
     @Override
-    public Point sizeHintOfContent(Widget widget) {
+    public Point getSizeOfContent(Widget widget) {
         Point size = new Point(widget.getSizeHint());
         size.y = 0;
 
         boolean valueCol = false;
         for (Widget child : widget.getChildren()) {
             if (valueCol)
-                size.y += child.getSizeHint().y + spacing;
+                size.y += child.getLayoutSizeHint().y + spacing;
             valueCol = !valueCol;
         }
 

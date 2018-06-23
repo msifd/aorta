@@ -8,6 +8,10 @@ import java.util.Collection;
 public class WidgetContainer {
     protected ArrayList<Widget> children = new ArrayList<>();
 
+    public Collection<Widget> getChildren() {
+        return children;
+    }
+
     public void addChild(Widget widget) {
         children.add(widget);
     }
@@ -16,7 +20,7 @@ public class WidgetContainer {
         children.remove(widget);
     }
 
-    public Collection<Widget> getChildren() {
-        return children;
+    public void clearChildren() {
+        children.clear();
     }
 }

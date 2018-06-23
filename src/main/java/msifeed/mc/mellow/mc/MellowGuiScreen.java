@@ -13,7 +13,6 @@ public class MellowGuiScreen extends GuiScreen {
 
     @Override
     public void initGui() {
-        super.initGui();
         final Minecraft mc = Minecraft.getMinecraft();
         final int scaleFactor = RenderUtils.getScreenScaleFactor();
         scene.getGeometry().set(0, 0, mc.displayWidth / scaleFactor, mc.displayHeight / scaleFactor);

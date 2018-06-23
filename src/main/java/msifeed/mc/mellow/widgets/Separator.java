@@ -6,12 +6,14 @@ import msifeed.mc.mellow.render.RenderUtils;
 import msifeed.mc.mellow.render.RenderWidgets;
 import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.utils.Geom;
+import msifeed.mc.mellow.utils.SizePolicy;
 
 public class Separator extends Widget {
     protected Part horizontalPart = Mellow.THEME.parts.get("separator_hor");
 
     public Separator() {
         setSizeHint(horizontalPart.size.x, horizontalPart.size.y);
+        setVerSizePolicy(SizePolicy.Policy.FIXED);
     }
 
     @Override

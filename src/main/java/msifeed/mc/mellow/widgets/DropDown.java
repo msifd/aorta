@@ -38,6 +38,11 @@ public class DropDown<T> extends Widget {
         addChild(list);
     }
 
+    @Override
+    public Point getLayoutSizeHint() {
+        return getSizeHint();
+    }
+
     public void selectItem(int i) {
         if (i < items.size()) {
             selectedItem = i;
@@ -73,7 +78,7 @@ public class DropDown<T> extends Widget {
         DropButton(DropDown parent) {
             this.parent = parent;
             setSizeHint(100, 11);
-            setSizePolicy(SizePolicy.Policy.PREFERRED, SizePolicy.Policy.MAXIMUM);
+            setVerSizePolicy(SizePolicy.Policy.MINIMUM);
             setLayout(FloatLayout.INSTANCE);
             getMargin().set(1, 0, 0, 3);
 
@@ -131,7 +136,7 @@ public class DropDown<T> extends Widget {
             this.parent = parent;
             setPos(1, 0);
             setZLevel(10);
-            getMargin().set(1);
+            getMargin().set(1, 1, 6, 1);
             setSizeHint(10, parent.items.size() * 11 + 2);
             setSizePolicy(SizePolicy.Policy.FIXED, SizePolicy.Policy.FIXED);
             setLayout(VerticalLayout.INSTANCE);
@@ -166,6 +171,7 @@ public class DropDown<T> extends Widget {
         ListButton(DropDown parent, int n) {
             this.parent = parent;
             this.itemN = n;
+            setSizeHint(0, 11);
             setZLevel(1);
             getMargin().set(2, 0);
             setLayout(new AnchorLayout(AnchorLayout.Anchor.LEFT, AnchorLayout.Anchor.CENTER));

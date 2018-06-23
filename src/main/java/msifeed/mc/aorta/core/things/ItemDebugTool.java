@@ -1,5 +1,6 @@
 package msifeed.mc.aorta.core.things;
 
+import javafx.util.Pair;
 import msifeed.mc.aorta.core.props.CharacterProperty;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.character.Grade;
@@ -18,16 +19,5 @@ public class ItemDebugTool extends Item {
         setTextureName("aorta:tool_debug");
         setCreativeTab(AortaCreativeTab.TOOLS);
         setMaxStackSize(1);
-    }
-
-    @Override
-    public ItemStack onItemRightClick(ItemStack p_77659_1_, World p_77659_2_, EntityPlayer player) {
-        CharacterProperty prop = CharacterProperty.get(player);
-        prop.getCharacter().ifPresent(character -> {
-            character.features.put(Feature.INTELLIGENCE, Grade.GREAT);
-            prop.syncServer(player);
-        });
-
-        return super.onItemRightClick(p_77659_1_, p_77659_2_, player);
     }
 }

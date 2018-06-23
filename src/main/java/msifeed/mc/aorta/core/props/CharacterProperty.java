@@ -13,19 +13,13 @@ import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 
-import java.util.Optional;
-
 public class CharacterProperty extends ExtProp {
     private static final String PROP_NAME = Aorta.MODID + ".core.char";
 
-    private Character character;
+    public Character character;
 
     public static CharacterProperty get(EntityLivingBase entity) {
         return (CharacterProperty) entity.getExtendedProperties(PROP_NAME);
-    }
-
-    public Optional<Character> getCharacter() {
-        return Optional.ofNullable(character);
     }
 
     @Override
@@ -65,7 +59,7 @@ public class CharacterProperty extends ExtProp {
 
         @SubscribeEvent
         public void entityJoinWorld(EntityJoinWorldEvent e) {
-            if (e.entity instanceof EntityLivingBase) {
+            if (!e.world.isRemote && e.entity instanceof EntityLivingBase) {
                 final CharacterProperty prop = get((EntityLivingBase) e.entity);
                 prop.sync(e.world, e.entity);
             }
@@ -73,9 +67,9 @@ public class CharacterProperty extends ExtProp {
 
         @SubscribeEvent
         public void playerStartedTracking(PlayerEvent.StartTracking e) {
-            if (e.entity instanceof EntityLivingBase) {
-                final CharacterProperty prop = get((EntityLivingBase) e.entity);
-                prop.sync(e.entityPlayer, e.entity);
+            if (!e.target.worldObj.isRemote && e.target instanceof EntityLivingBase) {
+                final CharacterProperty prop = get((EntityLivingBase) e.target);
+                prop.sync(e.entityPlayer, e.target);
             }
         }
     }
