@@ -3,6 +3,7 @@ package msifeed.mc.aorta.core.client;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.aorta.core.character.*;
 import msifeed.mc.aorta.core.character.Character;
+import msifeed.mc.aorta.core.props.CharacterProperty;
 import msifeed.mc.aorta.core.things.ItemDebugTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;

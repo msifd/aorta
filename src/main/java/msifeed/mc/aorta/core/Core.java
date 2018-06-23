@@ -2,10 +2,12 @@ package msifeed.mc.aorta.core;
 
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.registry.GameRegistry;
-import msifeed.mc.aorta.core.character.CharacterProperty;
+import msifeed.mc.aorta.core.props.CharacterProperty;
 import msifeed.mc.aorta.core.things.ItemBattleTool;
 import msifeed.mc.aorta.core.things.ItemCharTool;
 import msifeed.mc.aorta.core.things.ItemDebugTool;
+import msifeed.mc.aorta.props.ExtProp;
+import net.minecraftforge.common.MinecraftForge;
 
 public class Core {
     @SidedProxy(
@@ -15,7 +17,7 @@ public class Core {
     public static CoreGuiHandler GUI_EXEC;
 
     public void init() {
-        CharacterProperty.registerEvents();
+        MinecraftForge.EVENT_BUS.register(new CharacterProperty.Handler());
 
         GameRegistry.registerItem(new ItemDebugTool(), ItemDebugTool.ITEM_NAME);
         GameRegistry.registerItem(new ItemCharTool(), ItemCharTool.ITEM_NAME);

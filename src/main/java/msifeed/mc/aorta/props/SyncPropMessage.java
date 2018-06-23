@@ -6,15 +6,15 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class MessageSyncProp implements IMessage {
+public class SyncPropMessage implements IMessage {
     int entityId;
     String propName;
     NBTTagCompound compound;
 
-    public MessageSyncProp() {
+    public SyncPropMessage() {
     }
 
-    MessageSyncProp(Entity entity, SyncableExtProp prop) {
+    SyncPropMessage(Entity entity, ExtProp prop) {
         this.entityId = entity.getEntityId();
         this.propName = prop.getName();
         this.compound = new NBTTagCompound();
