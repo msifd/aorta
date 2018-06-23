@@ -4,12 +4,15 @@ import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.CharacterProperty;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.character.Grade;
+import msifeed.mc.aorta.props.SyncProp;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.layout.VerticalLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.mellow.widgets.*;
 import net.minecraft.entity.EntityLivingBase;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 public class ScreenCharEditor extends MellowGuiScreen {
@@ -34,20 +37,29 @@ public class ScreenCharEditor extends MellowGuiScreen {
             window.addChild(new Separator());
         });
 
-        final Button btn = new Button("Kill");
+        final Button btn = new Button("Submit");
         btn.setSizeHint(20, 20);
-//        btn.setClickCallback(entity::setDead);
+        btn.setClickCallback(() -> {
+            SyncProp.syncServer(entity, charProp);
+        });
         window.addChild(btn);
+    }
+
+    @Override
+    public boolean doesGuiPauseGame() {
+        return false;
     }
 
     private Widget makeCharStatsEditor(Character character) {
         final Widget widget = new Widget();
         widget.setLayout(new GridLayout());
 
+        final List<Grade> gradeList = Arrays.asList(Grade.values());
         for (Map.Entry<Feature, Grade> entry : character.features.entrySet()) {
             widget.addChild(new Label(entry.getKey().toString() + ':'));
-            final DropDown dropDown = new DropDown(Grade.STRINGS);
+            final DropDown<Grade> dropDown = new DropDown<>(gradeList);
             dropDown.selectItem(entry.getValue().ordinal());
+            dropDown.setSelectCallback(grade -> character.features.put(entry.getKey(), grade));
             widget.addChild(dropDown);
         }
         return widget;

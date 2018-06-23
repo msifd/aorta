@@ -2,7 +2,7 @@ package msifeed.mc.aorta.core.character;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.aorta.Aorta;
-import msifeed.mc.aorta.props.ISyncableExtProp;
+import msifeed.mc.aorta.props.SyncableExtProp;
 import msifeed.mc.aorta.props.SyncProp;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -17,10 +18,10 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 
 import java.util.Optional;
 
-public class CharacterProperty implements ISyncableExtProp {
+public class CharacterProperty implements SyncableExtProp {
     private Character character;
 
-    public static void register() {
+    public static void registerEvents() {
         MinecraftForge.EVENT_BUS.register(new Handler());
     }
 
@@ -30,10 +31,6 @@ public class CharacterProperty implements ISyncableExtProp {
 
     public Optional<Character> getCharacter() {
         return Optional.ofNullable(character);
-    }
-
-    public void setCharacter(Character character) {
-        this.character = character;
     }
 
     @Override
@@ -67,10 +64,10 @@ public class CharacterProperty implements ISyncableExtProp {
             if (!(e.entity instanceof EntityLivingBase))
                 return;
 
-            if (e.entity.getExtendedProperties(Tags.PROP_NAME) == null) {
+            if (get((EntityLivingBase) e.entity) == null) {
                 final CharacterProperty prop = new CharacterProperty();
                 if (e.entity instanceof EntityPlayer)
-                    prop.character = CharacterFactory.forEntity((EntityLivingBase) e.entity);
+                    prop.character = new Character();
                 e.entity.registerExtendedProperties(Tags.PROP_NAME, prop);
             }
         }
@@ -89,8 +86,8 @@ public class CharacterProperty implements ISyncableExtProp {
             if (!(e.entity instanceof EntityLivingBase))
                 return;
             final CharacterProperty prop = get((EntityLivingBase) e.entity);
-            if (prop != null)
-                SyncProp.sync(e.world, e.entity, prop);
+            if (prop != null && prop.character != null)
+                SyncProp.syncWithTracking(e.world, e.entity, prop);
         }
 
         @SubscribeEvent
@@ -98,8 +95,8 @@ public class CharacterProperty implements ISyncableExtProp {
             if (!(e.target instanceof EntityLivingBase))
                 return;
             final CharacterProperty prop = get((EntityLivingBase) e.target);
-            if (prop != null)
-                SyncProp.sync((EntityPlayerMP) e.entityPlayer, e.target, prop);
+            if (prop != null && prop.character != null)
+                SyncProp.syncOne((EntityPlayerMP) e.entityPlayer, e.target, prop);
         }
     }
 

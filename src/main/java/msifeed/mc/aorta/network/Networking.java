@@ -14,5 +14,6 @@ public enum Networking {
 
     public void init() {
         CHANNEL.registerMessage(SyncProp.class, MessageSyncProp.class, 0x00, Side.CLIENT);
+        CHANNEL.registerMessage(SyncProp.class, MessageSyncProp.class, 0x01, Side.SERVER);
     }
 }

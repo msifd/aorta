@@ -14,7 +14,7 @@ public class MessageSyncProp implements IMessage {
     public MessageSyncProp() {
     }
 
-    MessageSyncProp(Entity entity, ISyncableExtProp prop) {
+    MessageSyncProp(Entity entity, SyncableExtProp prop) {
         this.entityId = entity.getEntityId();
         this.propName = prop.getName();
         this.compound = new NBTTagCompound();

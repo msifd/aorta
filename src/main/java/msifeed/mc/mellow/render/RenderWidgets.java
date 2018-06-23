@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
 public final class RenderWidgets {
-    public static void beginCropped(Widget widget, Geom geom) {
+    public static void beginCropped(Geom geom) {
         final Minecraft mc = Minecraft.getMinecraft();
         final int sf = RenderUtils.getScreenScaleFactor();
         final int x = geom.x * sf;
@@ -22,7 +22,7 @@ public final class RenderWidgets {
     }
 
     public static void cropped(Widget widget, Geom geom) {
-        beginCropped(widget, geom);
+        beginCropped(geom);
         widget.render();
         endCropped();
     }
@@ -32,6 +32,7 @@ public final class RenderWidgets {
         GL11.glPushMatrix();
         GL11.glTranslatef(0, 0, geom.z);
         mc.fontRenderer.drawString(text, geom.x, geom.y + 1, color); // +1 tuning
+        GL11.glColor4f(1, 1, 1, 1);
         GL11.glPopMatrix();
     }
 }

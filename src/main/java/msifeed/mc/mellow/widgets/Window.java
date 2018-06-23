@@ -47,21 +47,9 @@ public class Window extends Widget {
         content.removeChild(widget);
     }
 
-//    @Override
-//    public Collection<Widget> getChildren() {
-//        return content.getChildren();
-//    }
-
     @Override
     protected void renderSelf() {
         RenderParts.nineSlice(backgroundPart, getGeometry());
-    }
-
-    @Override
-    public Collection<Widget> childrenAt(Point p) {
-        final Collection<Widget> w = super.childrenAt(p);
-        w.addAll(content.childrenAt(p));
-        return w;
     }
 
     static class Header extends Button.AlmostTransparentButton implements MouseHandler.AllBasic {

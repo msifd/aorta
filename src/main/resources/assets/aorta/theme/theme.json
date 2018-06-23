@@ -30,7 +30,7 @@
     },
     "dropdown_icon": {
       "pos": [41,27],
-      "size": [3,3]
+      "size": [3,4]
     },
     "dropdown_text": {
       "pos": [32,16],
@@ -50,6 +50,7 @@
     }
   },
   "colors": {
-    "text": "f6d6bd"
+    "text_bright": "f6d6bd",
+    "text_dark": "0f2a3f"
   }
 }

@@ -5,21 +5,25 @@ import msifeed.mc.mellow.layout.AnchorLayout;
 import msifeed.mc.mellow.layout.FloatLayout;
 import msifeed.mc.mellow.layout.VerticalLayout;
 import msifeed.mc.mellow.render.RenderParts;
+import msifeed.mc.mellow.render.RenderShapes;
 import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.utils.Geom;
 import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.utils.SizePolicy;
 
 import java.util.List;
+import java.util.function.Consumer;
 
-public class DropDown extends Widget {
+public class DropDown<T> extends Widget {
     private final DropButton header = new DropButton(this);
     private final DropList list;
-    private final List<String> items;
+    private final List<T> items;
     private int selectedItem;
     private boolean opened = false;
 
-    public DropDown(List<String> items) {
+    protected Consumer<T> selectCallback = null;
+
+    public DropDown(List<T> items) {
         this.items = items;
         this.list = new DropList(this);
         selectItem(0);
@@ -37,12 +41,18 @@ public class DropDown extends Widget {
     public void selectItem(int i) {
         if (i < items.size()) {
             selectedItem = i;
-            header.setLabel(getSelectedItem());
+            header.setLabel(getSelectedItem().toString());
+            if (selectCallback != null)
+                selectCallback.accept(items.get(i));
         }
     }
 
-    public String getSelectedItem() {
+    public T getSelectedItem() {
         return items.get(selectedItem);
+    }
+
+    public void setSelectCallback(Consumer<T> callback) {
+        this.selectCallback = callback;
     }
 
     @Override
@@ -66,6 +76,9 @@ public class DropDown extends Widget {
             setSizePolicy(SizePolicy.Policy.PREFERRED, SizePolicy.Policy.MAXIMUM);
             setLayout(FloatLayout.INSTANCE);
             getMargin().set(1, 0, 0, 3);
+
+            if (label instanceof Label)
+                ((Label) label).setColor(((Label) label).darkColor);
         }
 
         @Override
@@ -79,22 +92,17 @@ public class DropDown extends Widget {
 
             iconGeom.set(buttonGeom);
             iconGeom.setSize(downIconPart.size);
-            iconGeom.translate(buttonNormalPart.size.x / 2, buttonNormalPart.size.y / 2);
-            iconGeom.translate(-iconGeom.w / 2, -iconGeom.h / 2 - 1);
+            iconGeom.translate((buttonNormalPart.size.x - iconGeom.w) / 2, (buttonNormalPart.size.y - iconGeom.h) / 2);
         }
 
         @Override
-        protected void renderBackground() {
+        protected void renderSelf() {
             RenderParts.nineSlice(textPart, textGeom);
             if (isHovered() || parent.opened)
                 RenderParts.nineSlice(buttonHoverPart, buttonGeom);
             else
                 RenderParts.nineSlice(buttonNormalPart, buttonGeom);
-        }
 
-        @Override
-        protected void renderLabel() {
-            super.renderLabel();
             RenderParts.slice(downIconPart, iconGeom.x, iconGeom.y);
         }
 
@@ -124,7 +132,7 @@ public class DropDown extends Widget {
             setPos(1, 0);
             setZLevel(10);
             getMargin().set(1);
-            setSizeHint(10, parent.items.size() * 11);
+            setSizeHint(10, parent.items.size() * 11 + 2);
             setSizePolicy(SizePolicy.Policy.FIXED, SizePolicy.Policy.FIXED);
             setLayout(VerticalLayout.INSTANCE);
 
@@ -143,7 +151,6 @@ public class DropDown extends Widget {
         @Override
         public boolean isVisible() {
             return parent.opened;
-//            return parent.opened || children.stream().allMatch(w -> w.isPressed() || w.isFocused());
         }
 
         @Override
@@ -152,7 +159,7 @@ public class DropDown extends Widget {
         }
     }
 
-    private static class ListButton extends Button.AlmostTransparentButton {
+    private static class ListButton extends Button {
         final DropDown parent;
         final int itemN;
 
@@ -160,13 +167,22 @@ public class DropDown extends Widget {
             this.parent = parent;
             this.itemN = n;
             setZLevel(1);
-            getMargin().set(1, 0);
+            getMargin().set(2, 0);
             setLayout(new AnchorLayout(AnchorLayout.Anchor.LEFT, AnchorLayout.Anchor.CENTER));
-            setLabel(parent.items.get(n));
+            setLabel(parent.items.get(n).toString());
             setClickCallback(() -> {
                 parent.selectItem(itemN);
                 parent.opened = false;
             });
+
+            if (label instanceof Label)
+                ((Label) label).setColor(((Label) label).darkColor);
+        }
+
+        @Override
+        protected void renderSelf() {
+            if (isHovered())
+                RenderShapes.rect(getGeometry(), 0xc3a38a, 255);
         }
     }
 }

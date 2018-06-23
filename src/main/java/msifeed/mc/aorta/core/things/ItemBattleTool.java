@@ -1,9 +1,6 @@
 package msifeed.mc.aorta.core.things;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import msifeed.mc.aorta.core.character.CharacterFactory;
-import msifeed.mc.aorta.core.character.CharacterProperty;
-import msifeed.mc.aorta.props.SyncProp;
 import msifeed.mc.aorta.things.AortaCreativeTab;
 import msifeed.mc.aorta.utils.SideUtils;
 import net.minecraft.entity.Entity;
@@ -37,12 +34,7 @@ public class ItemBattleTool extends Item {
         if (SideUtils.isClient() || !(target instanceof EntityLivingBase))
             return true;
 
-        final EntityLivingBase entity = (EntityLivingBase) target;
-
         System.out.println("entity in");
-        final CharacterProperty charProp = CharacterProperty.get(entity);
-        charProp.setCharacter(CharacterFactory.forEntity(entity));
-        SyncProp.sync(entity.worldObj, target, charProp);
 
         return true;
     }
@@ -51,7 +43,6 @@ public class ItemBattleTool extends Item {
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
         if (player.isSneaking()) {
             System.out.println("self out");
-//            charProp.character =
         }
         return itemStack;
     }

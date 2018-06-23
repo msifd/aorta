@@ -38,25 +38,17 @@ public class Scene extends Widget {
         final Optional<Widget> lookup = fullLookup(p);
         pr.endSection();
 
-//        lookup.ifPresent(widget -> {
-//            GL11.glPushMatrix();
-//            GL11.glScalef(0.5f, 0.5f, 0.5f);
-//            FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
-//            fr.drawString(widget.getClass().getSimpleName(), 5, 5, 0xffffff);
-//            GL11.glPopMatrix();
-//        });
-
         return lookup;
     }
 
     private Optional<Widget> fullLookup(Point p) {
         ArrayList<Widget> active = new ArrayList<>();
-        ArrayList<Widget> pending = new ArrayList<>(getChildren());
+        ArrayList<Widget> pending = new ArrayList<>(getLookupChildren());
 
         while (!pending.isEmpty()) {
             ArrayList<Widget> nextPending = new ArrayList<>();
             for (Widget pw : pending) {
-                for (Widget w : pw.getChildren()) {
+                for (Widget w : pw.getLookupChildren()) {
                     if (w.isVisible())
                         nextPending.add(w);
                 }
@@ -66,15 +58,15 @@ public class Scene extends Widget {
             pending.addAll(nextPending);
         }
 
-        GL11.glPushMatrix();
-        GL11.glScalef(0.5f, 0.5f, 0.5f);
-        FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
-        int y = 5;
-        for (Object o : active.stream().filter(widget -> widget.containsPoint(p)).toArray()) {
-            fr.drawString(o.getClass().getSimpleName(), 5, y, 0xffffff);
-            y += fr.FONT_HEIGHT + 2;
-        }
-        GL11.glPopMatrix();
+//        GL11.glPushMatrix();
+//        GL11.glScalef(0.5f, 0.5f, 0.5f);
+//        FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
+//        int y = 5;
+//        for (Object o : active.stream().filter(widget -> widget.containsPoint(p)).toArray()) {
+//            fr.drawString(o.getClass().getSimpleName(), 5, y, 0xffffff);
+//            y += fr.FONT_HEIGHT + 2;
+//        }
+//        GL11.glPopMatrix();
 
         return active.isEmpty()
                 ? Optional.empty()
@@ -82,25 +74,5 @@ public class Scene extends Widget {
                 .stream()
                 .filter(widget -> widget.containsPoint(p))
                 .reduce(active.get(0), (top, w) -> w.isHigherThan(top) ? w : top));
-    }
-
-    private Optional<Widget> containedLookup(Point p) {
-        ArrayList<Widget> foundWidgets = new ArrayList<>();
-
-        ArrayList<Widget> pendingWidgets = new ArrayList<>(childrenAt(p));
-        while (!pendingWidgets.isEmpty()) {
-            ArrayList<Widget> nextPending = new ArrayList<>();
-            for (Widget w : pendingWidgets)
-                nextPending.addAll(w.childrenAt(p));
-            foundWidgets.addAll(pendingWidgets);
-            pendingWidgets.clear();
-            pendingWidgets.addAll(nextPending);
-        }
-
-        return foundWidgets.isEmpty()
-                ? Optional.empty()
-                : Optional.ofNullable(foundWidgets
-                .stream()
-                .reduce(foundWidgets.get(0), (top, w) -> w.isHigherThan(top) ? w : top));
     }
 }

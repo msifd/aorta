@@ -1,6 +1,5 @@
 package msifeed.mc.mellow.widgets;
 
-import com.google.common.collect.ImmutableList;
 import msifeed.mc.mellow.Mellow;
 import msifeed.mc.mellow.handlers.MouseHandler;
 import msifeed.mc.mellow.layout.AnchorLayout;
@@ -8,7 +7,6 @@ import msifeed.mc.mellow.render.RenderParts;
 import msifeed.mc.mellow.render.RenderShapes;
 import msifeed.mc.mellow.render.RenderWidgets;
 import msifeed.mc.mellow.theme.Part;
-import msifeed.mc.mellow.utils.Point;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -32,7 +30,11 @@ public class Button extends Widget implements MouseHandler.Click {
     public Button(Widget label) {
         setSizeHint(50, 10);
         setLayout(new AnchorLayout(AnchorLayout.Anchor.CENTER));
+
         this.label = label;
+        this.label.setZLevel(Math.max(1, label.getZLevel()));
+
+        addChild(label);
     }
 
     public void setLabel(String text) {
@@ -45,24 +47,7 @@ public class Button extends Widget implements MouseHandler.Click {
     }
 
     @Override
-    protected void updateLayout() {
-        super.updateLayout();
-        if (label != null)
-            layout.apply(this, ImmutableList.of(label));
-    }
-
-    @Override
     protected void renderSelf() {
-        renderBackground();
-        renderLabel();
-    }
-
-    protected void renderLabel() {
-        if (label != null)
-            RenderWidgets.cropped(label, getGeometry());
-    }
-
-    protected void renderBackground() {
         if (isPressed())
             RenderParts.nineSlice(pressPart, getGeometry());
         else if (isHovered())
@@ -72,7 +57,14 @@ public class Button extends Widget implements MouseHandler.Click {
     }
 
     @Override
-    public Collection<Widget> childrenAt(Point p) {
+    protected void renderChildren() {
+        RenderWidgets.beginCropped(getGeometry());
+        super.renderChildren();
+        RenderWidgets.endCropped();
+    }
+
+    @Override
+    protected Collection<Widget> getLookupChildren() {
         return Collections.emptyList();
     }
 
@@ -82,24 +74,9 @@ public class Button extends Widget implements MouseHandler.Click {
             clickCallback.run();
     }
 
-    public static class ToggleableButton extends Button {
-        protected boolean selected = false;
-
-        public boolean isSelected() {
-            return selected;
-        }
-
-        @Override
-        public void onClick(int xMouse, int yMouse, int button) {
-            selected = !selected;
-            super.onClick(xMouse, yMouse, button);
-        }
-    }
-
     public static class AlmostTransparentButton extends Button {
         @Override
-        protected void renderBackground() {
-//            super.renderBackground();
+        protected void renderSelf() {
             if (isHovered())
                 RenderShapes.rect(getGeometry(), 0x997577, 80);
         }

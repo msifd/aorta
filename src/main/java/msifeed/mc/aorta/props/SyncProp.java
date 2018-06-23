@@ -5,6 +5,7 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.aorta.network.Networking;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,35 +16,48 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.IExtendedEntityProperties;
 
 public class SyncProp implements IMessageHandler<MessageSyncProp, IMessage> {
-    public static void sync(EntityPlayerMP playerMP, Entity entity, ISyncableExtProp prop) {
-        final MessageSyncProp msg = new MessageSyncProp();
-        msg.entityId = entity.getEntityId();
-        msg.propName = prop.getName();
-        msg.compound = new NBTTagCompound();
-        prop.saveNBTData(msg.compound);
 
+    public static void syncOne(EntityPlayerMP playerMP, Entity entity, SyncableExtProp prop) {
+        final MessageSyncProp msg = new MessageSyncProp(entity, prop);
         Networking.CHANNEL.sendTo(msg, playerMP);
     }
 
-    public static void sync(World world, Entity entity, ISyncableExtProp prop) {
-        if (!world.isRemote || !(world instanceof WorldServer))
-            return;
-
+    public static void syncWithTracking(World world, Entity entity, SyncableExtProp prop) {
         final MessageSyncProp msg = new MessageSyncProp(entity, prop);
-        final EntityTracker tracker = ((WorldServer) world).getEntityTracker();
-        for (EntityPlayer player : tracker.getTrackingPlayers(entity)) {
-            Networking.CHANNEL.sendTo(msg, (EntityPlayerMP) player);
+        if (world instanceof WorldServer) {
+            final EntityTracker tracker = ((WorldServer) world).getEntityTracker();
+            for (EntityPlayer player : tracker.getTrackingPlayers(entity)) {
+                Networking.CHANNEL.sendTo(msg, (EntityPlayerMP) player);
+            }
+        } else {
+            setProp(FMLClientHandler.instance().getWorldClient().getEntityByID(msg.entityId), msg);
+        }
+    }
+
+    public static void syncServer(Entity entity, SyncableExtProp prop) {
+        final MessageSyncProp msg = new MessageSyncProp(entity, prop);
+        Networking.CHANNEL.sendToServer(msg);
+        if (Minecraft.getMinecraft().theWorld.isRemote) {
+            prop.loadNBTData(msg.compound);
         }
     }
 
     @Override
     public IMessage onMessage(MessageSyncProp message, MessageContext ctx) {
-        final Entity e = FMLClientHandler.instance().getWorldClient().getEntityByID(message.entityId);
+        if (ctx.side.isClient()) {
+            setProp(FMLClientHandler.instance().getWorldClient().getEntityByID(message.entityId), message);
+            setProp(FMLClientHandler.instance().getServer().getEntityWorld().getEntityByID(message.entityId), message);
+        } else {
+            setProp(ctx.getServerHandler().playerEntity.worldObj.getEntityByID(message.entityId), message);
+        }
+        return null;
+    }
+
+    private static void setProp(Entity e, MessageSyncProp message) {
         if (e != null) {
             final IExtendedEntityProperties prop = e.getExtendedProperties(message.propName);
             if (prop != null)
                 prop.loadNBTData(message.compound);
         }
-        return null;
     }
 }

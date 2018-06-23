@@ -15,7 +15,7 @@ public class Core {
     public static CoreGuiHandler GUI_EXEC;
 
     public void init() {
-        CharacterProperty.register();
+        CharacterProperty.registerEvents();
 
         GameRegistry.registerItem(new ItemDebugTool(), ItemDebugTool.ITEM_NAME);
         GameRegistry.registerItem(new ItemCharTool(), ItemCharTool.ITEM_NAME);

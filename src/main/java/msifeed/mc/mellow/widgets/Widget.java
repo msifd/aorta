@@ -181,9 +181,9 @@ public class Widget extends WidgetContainer {
         setDirty();
     }
 
-//    protected Collection<Widget> getLookupChildren() {
-//        return getChildren();
-//    }
+    protected Collection<Widget> getLookupChildren() {
+        return getChildren();
+    }
 
     public boolean containsPoint(Point p) {
         return isVisible() && getGeometry().contains(p);

@@ -17,7 +17,7 @@ public class Separator extends Widget {
     @Override
     protected void renderSelf() {
         final Geom geom = getGeometry();
-        RenderWidgets.beginCropped(this, geom);
+        RenderWidgets.beginCropped(geom);
         final int endX = geom.x + geom.w;
         final int partWidth = horizontalPart.pos.x / RenderUtils.getScreenScaleFactor() + 1;
         for (int x = geom.x; x < endX; x += partWidth) {

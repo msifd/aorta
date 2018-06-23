@@ -22,18 +22,18 @@ public final class RenderShapes {
         GL11.glEnable(GL11.GL_TEXTURE_2D);
     }
 
-    public static void rect(Geom bounds, int color, int alpha) {
-        final float w = bounds.w;
-        final float h = bounds.h;
+    public static void rect(Geom geom, int color, int alpha) {
+        final float w = geom.w;
+        final float h = geom.h;
 
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         final Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawing(GL11.GL_QUADS);
         tessellator.setColorRGBA_I(color, alpha);
-        tessellator.addVertex(bounds.x + 0, bounds.y + h, 0);
-        tessellator.addVertex(bounds.x + w, bounds.y + h, 0);
-        tessellator.addVertex(bounds.x + w, bounds.y + 0, 0);
-        tessellator.addVertex(bounds.x + 0, bounds.y + 0, 0);
+        tessellator.addVertex(geom.x + 0, geom.y + h, geom.z);
+        tessellator.addVertex(geom.x + w, geom.y + h, geom.z);
+        tessellator.addVertex(geom.x + w, geom.y + 0, geom.z);
+        tessellator.addVertex(geom.x + 0, geom.y + 0, geom.z);
         tessellator.draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
     }

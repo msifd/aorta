@@ -11,6 +11,13 @@ public class Character implements INBTSerializable {
     public EnumMap<Feature, Grade> features = new EnumMap<>(Feature.class);
     public HashSet<BodyPart> bodyParts = new HashSet<>();
 
+    public Character() {
+        final Feature[] featureEnum = Feature.values();
+        for (Feature f : featureEnum) {
+            features.put(f, Grade.NORMAL);
+        }
+    }
+
     @Override
     public NBTTagCompound toNBT() {
         final NBTTagCompound compound = new NBTTagCompound();

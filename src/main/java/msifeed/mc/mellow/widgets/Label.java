@@ -6,8 +6,11 @@ import msifeed.mc.mellow.utils.SizePolicy;
 import net.minecraft.client.Minecraft;
 
 public class Label extends Widget {
-    protected int color = Mellow.THEME.colors.get("text");
+    public int brightColor = Mellow.THEME.colors.get("text_bright");
+    public int darkColor = Mellow.THEME.colors.get("text_dark");
+
     protected String text = "";
+    protected int color = brightColor;
 
     public Label() {
         this("");
@@ -28,8 +31,17 @@ public class Label extends Widget {
         setSizeHint(mc.fontRenderer.getStringWidth(text), mc.fontRenderer.FONT_HEIGHT);
     }
 
+    protected int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
     @Override
     protected void renderSelf() {
         RenderWidgets.string(getGeometry(), text, color);
     }
+
 }
