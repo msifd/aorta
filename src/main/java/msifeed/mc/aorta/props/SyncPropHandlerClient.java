@@ -5,8 +5,10 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.IExtendedEntityProperties;
 
 public class SyncPropHandlerClient extends SyncPropHandler {
     @Override
@@ -17,5 +19,17 @@ public class SyncPropHandlerClient extends SyncPropHandler {
         if (serverWorld != null)
             setProp(serverWorld, message);
         return null;
+    }
+
+    private static void setProp(World w, SyncPropMessage message) {
+        final Entity e = w.getEntityByID(message.entityId);
+        if (e != null) {
+            final IExtendedEntityProperties prop = e.getExtendedProperties(message.propName);
+            if (prop != null) {
+                prop.loadNBTData(message.compound);
+            }
+        } else {
+            System.err.println("Missing sync entity!");
+        }
     }
 }

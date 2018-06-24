@@ -7,6 +7,7 @@ import msifeed.mc.mellow.utils.Point;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
 
 public final class RenderParts {
     public static void slice(ResourceLocation tex, double x, double y, double z, double u, double v, double w, double h) {

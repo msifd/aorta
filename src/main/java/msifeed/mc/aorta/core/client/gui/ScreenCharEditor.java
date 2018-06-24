@@ -19,6 +19,7 @@ import java.util.Map;
 public class ScreenCharEditor extends MellowGuiScreen {
     private final EntityLivingBase entity;
     private final Widget mainSection = new Widget();
+    private final Button submitBtn = new Button("Submit");
 
     public ScreenCharEditor(EntityLivingBase entity) {
         this.entity = entity;
@@ -38,9 +39,10 @@ public class ScreenCharEditor extends MellowGuiScreen {
         refillMainSection();
         window.addChild(mainSection);
 
-        final Button submitBtn = new Button("Submit");
         submitBtn.setVerSizePolicy(SizePolicy.Policy.MAXIMUM);
         submitBtn.setClickCallback(() -> {
+            if (!entity.isEntityAlive())
+                System.out.println("entity is actually dead");
             CharacterProperty.get(entity).syncServer(entity);
         });
         window.addChild(submitBtn);
@@ -49,6 +51,12 @@ public class ScreenCharEditor extends MellowGuiScreen {
     @Override
     public boolean doesGuiPauseGame() {
         return false;
+    }
+
+    @Override
+    public void drawScreen(int xMouse, int yMouse, float tick) {
+        submitBtn.setDisabled(!entity.isEntityAlive());
+        super.drawScreen(xMouse, yMouse, tick);
     }
 
     private void refillMainSection() {
@@ -62,9 +70,7 @@ public class ScreenCharEditor extends MellowGuiScreen {
             addDataBtn.setVerSizePolicy(SizePolicy.Policy.MAXIMUM);
             addDataBtn.setClickCallback(() -> {
                 prop.character = new Character();
-                prop.syncServer(entity);
                 refillMainSection();
-//                mainSection.update();
             });
             mainSection.addChild(addDataBtn);
         }

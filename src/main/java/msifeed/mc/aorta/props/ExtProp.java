@@ -19,13 +19,16 @@ public abstract class ExtProp implements IExtendedEntityProperties {
     }
 
     public void sync(World world, Entity entity) {
-        if (!world.isRemote || !(world instanceof WorldServer))
+        if (!(world instanceof WorldServer))
             return;
 
         final SyncPropMessage msg = new SyncPropMessage(entity, this);
         final EntityTracker tracker = ((WorldServer) world).getEntityTracker();
         for (EntityPlayer player : tracker.getTrackingPlayers(entity)) {
             Networking.CHANNEL.sendTo(msg, (EntityPlayerMP) player);
+        }
+        if (entity instanceof EntityPlayerMP) {
+            Networking.CHANNEL.sendTo(msg, (EntityPlayerMP) entity);
         }
     }
 

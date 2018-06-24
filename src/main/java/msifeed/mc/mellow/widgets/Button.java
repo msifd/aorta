@@ -15,8 +15,10 @@ public class Button extends Widget implements MouseHandler.Click {
     protected Part normalPart = Mellow.THEME.parts.get("button_normal");
     protected Part hoverPart = Mellow.THEME.parts.get("button_hover");
     protected Part pressPart = Mellow.THEME.parts.get("button_press");
+    protected Part disabledPart = Mellow.THEME.parts.get("button_disabled");
 
     protected Widget label;
+    protected boolean disabled = false;
     protected Runnable clickCallback = null;
 
     public Button() {
@@ -42,13 +44,23 @@ public class Button extends Widget implements MouseHandler.Click {
             ((Label) this.label).setText(text);
     }
 
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
     public void setClickCallback(Runnable callback) {
         this.clickCallback = callback;
     }
 
     @Override
     protected void renderSelf() {
-        if (isPressed())
+        if (isDisabled())
+            RenderParts.nineSlice(disabledPart, getGeometry());
+        else if (isPressed())
             RenderParts.nineSlice(pressPart, getGeometry());
         else if (isHovered())
             RenderParts.nineSlice(hoverPart, getGeometry());
@@ -70,7 +82,7 @@ public class Button extends Widget implements MouseHandler.Click {
 
     @Override
     public void onClick(int xMouse, int yMouse, int button) {
-        if (clickCallback != null)
+        if (!disabled && clickCallback != null)
             clickCallback.run();
     }
 

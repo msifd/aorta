@@ -8,15 +8,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 
 public class SyncPropHandler implements IMessageHandler<SyncPropMessage, IMessage> {
-
     @Override
     public IMessage onMessage(SyncPropMessage message, MessageContext ctx) {
         final World w = ctx.getServerHandler().playerEntity.worldObj;
-        setProp(w, message);
-        return null;
-    }
-
-    static void setProp(World w, SyncPropMessage message) {
         final Entity e = w.getEntityByID(message.entityId);
         if (e != null) {
             final IExtendedEntityProperties prop = e.getExtendedProperties(message.propName);
@@ -28,6 +22,6 @@ public class SyncPropHandler implements IMessageHandler<SyncPropMessage, IMessag
         } else {
             System.err.println("Missing sync entity!");
         }
+        return null;
     }
-
 }

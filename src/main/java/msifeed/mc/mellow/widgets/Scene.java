@@ -44,9 +44,9 @@ public class Scene extends Widget {
     private Optional<Widget> fullLookup(Point p) {
         ArrayList<Widget> active = new ArrayList<>();
         ArrayList<Widget> pending = new ArrayList<>(getLookupChildren());
+        ArrayList<Widget> nextPending = new ArrayList<>();
 
         while (!pending.isEmpty()) {
-            ArrayList<Widget> nextPending = new ArrayList<>();
             for (Widget pw : pending) {
                 for (Widget w : pw.getLookupChildren()) {
                     if (w.isVisible())
@@ -56,6 +56,7 @@ public class Scene extends Widget {
             active.addAll(pending);
             pending.clear();
             pending.addAll(nextPending);
+            nextPending.clear();
         }
 
 //        GL11.glPushMatrix();
