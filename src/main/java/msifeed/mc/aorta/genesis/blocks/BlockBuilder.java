@@ -34,10 +34,13 @@ public class BlockBuilder extends GenesisBuilder {
 
     @Override
     public void process() {
-        final Block basic = new BlockTemplate(getMaterial());
+        final BlockTemplate basic = new BlockTemplate(getMaterial());
         fillBlockCommons(basic, id);
         GameRegistry.registerBlock(basic, id);
 
+        if (traits.contains(rotatable)) {
+            basic.rotatable = true;
+        }
 
         if (traits.contains(add_stairs)) {
             final String id = this.id + "_stairs";

@@ -21,6 +21,22 @@
       "add_slabs",
       "add_stairs"
     ]
+  },
+  {
+    "id": "rotatable_apples",
+    "texture": [
+      "aorta:barrel_bottom",
+      "aorta:barrel_apples",
+      "minecraft:portal",
+      "aorta:barrel_side",
+      "minecraft:ice",
+      "minecraft:glowstone"
+    ],
+    "texture_layout": "012345",
+    "traits": [
+      "block",
+      "rotatable",
+      "wooden"
+    ]
   }
-
 ]
