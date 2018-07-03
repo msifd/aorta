@@ -17,8 +17,8 @@ public class Aorta {
     public static Core CORE;
 
     public void init() {
+        new Genesis().generate();
         Networking.INSTANCE.init();
-        Genesis.INSTANCE.init();
         CORE.init();
     }
 }

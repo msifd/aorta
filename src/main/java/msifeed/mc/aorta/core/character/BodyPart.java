@@ -37,6 +37,6 @@ public class BodyPart implements INBTSerializable {
     }
 
     public enum Type {
-        UNKNOWN, HEAD, BODY, HAND, LEG
+        OTHER, HEAD, BODY, HAND, LEG
     }
 }

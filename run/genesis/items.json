@@ -1,0 +1,9 @@
+[
+  {
+    "id": "aorta_item",
+    "texture": "aorta:tab_aorta",
+    "traits": [
+      "item"
+    ]
+  }
+]
