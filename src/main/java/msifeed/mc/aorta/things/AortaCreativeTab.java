@@ -13,18 +13,14 @@ import java.util.Comparator;
 import java.util.List;
 
 public class AortaCreativeTab extends CreativeTabs {
-    private static final Item iconAorta = new Item();
-    public static final AortaCreativeTab BLOCKS = new AortaCreativeTab("aorta.blocks", iconAorta);
-    public static final AortaCreativeTab ITEMS = new AortaCreativeTab("aorta.items", iconAorta);
-    private static final Item iconTools = new Item();
-    public static final AortaCreativeTab TOOLS = new AortaCreativeTab("aorta.tools", iconTools);
+    private static final Item iconAorta = makeIcon("tab_aorta");
+    private static final Item iconBlocks = makeIcon("tab_blocks");
+    private static final Item iconItems = makeIcon("tab_items");
+    private static final Item iconTools = makeIcon("tab_tools");
 
-    static {
-        iconAorta.setTextureName("aorta:tab_aorta");
-        iconTools.setTextureName("aorta:tab_tools");
-        GameRegistry.registerItem(iconAorta, "tab_aorta");
-        GameRegistry.registerItem(iconTools, "tab_tools");
-    }
+    public static final AortaCreativeTab BLOCKS = new AortaCreativeTab("aorta.blocks", iconBlocks);
+    public static final AortaCreativeTab ITEMS = new AortaCreativeTab("aorta.items", iconItems);
+    public static final AortaCreativeTab TOOLS = new AortaCreativeTab("aorta.tools", iconTools);
 
     private final Item icon;
     private ArrayList<ItemStack> cache = new ArrayList<>();
@@ -64,5 +60,12 @@ public class AortaCreativeTab extends CreativeTabs {
         if (this.func_111225_m() != null) {
             this.addEnchantmentBooksToList(list, this.func_111225_m());
         }
+    }
+
+    private static Item makeIcon(String name) {
+        final Item item = new Item();
+        item.setTextureName("aorta:" + name);
+        GameRegistry.registerItem(item, name);
+        return item;
     }
 }
