@@ -36,6 +36,9 @@ public class BlockGenerator implements Generator {
         if (unit.traits.contains(rotatable)) {
             basic.rotatable = true;
         }
+        else if (unit.traits.contains(pillar)) {
+            basic.pillar = true;
+        }
 
         GameRegistry.registerBlock(basic, unit.id);
 

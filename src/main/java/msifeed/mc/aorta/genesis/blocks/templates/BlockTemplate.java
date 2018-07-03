@@ -16,24 +16,32 @@ import net.minecraft.world.World;
 public class BlockTemplate extends Block {
     public BlockTextureLayout textureLayout = null;
     public boolean rotatable = false;
+    public boolean pillar = false;
 
     public BlockTemplate(Material material, String id) {
         super(material);
         setBlockName(id);
     }
 
+    public int getRenderType() {
+        if (pillar)
+            return 31;
+        return 0;
+    }
+
+    public int onBlockPlaced(World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int meta) {
+        if (pillar)
+            return BlockTextureLayout.getPillarMeta(side, meta);
+        return meta;
+    }
+
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemStack) {
         if (rotatable) {
             final int placedOrt = BlockPistonBase.determineOrientation(world, x, y, z, entity);
-            final int layoutOrt = BlockTextureLayout.getRotatableOrientation(placedOrt);
-            world.setBlockMetadataWithNotify(x, y, z, layoutOrt, 0);
+            final int layoutMeta = BlockTextureLayout.getRotatableMeta(placedOrt);
+            world.setBlockMetadataWithNotify(x, y, z, layoutMeta, 0);
         }
-    }
-
-    @Override
-    protected ItemStack createStackedBlock(int meta) {
-        return new ItemStack(Item.getItemFromBlock(this), 1, meta & 3);
     }
 
     @Override
@@ -43,6 +51,8 @@ public class BlockTemplate extends Block {
             return super.getIcon(side, meta);
         if (rotatable)
             return textureLayout.getRotatableIcon(side, meta);
+        if (pillar)
+            return textureLayout.getPillarIcon(side, meta);
         return textureLayout.getIcon(side);
     }
 

@@ -37,14 +37,41 @@ public class BlockTextureLayout {
         return textures[textureLayout[side]];
     }
 
+    public IIcon getPillarIcon(int side, int meta) {
+        int k = meta & 12;
+        int l = meta & 3;
+        // TODO: make really rotatable pillar
+        final IIcon topIcon = textures[textureLayout[1]];
+        final IIcon sideIcon = textures[textureLayout[2]];
+        return k == 0 && (side == 1 || side == 0) ? topIcon : (k == 4 && (side == 5 || side == 4) ? topIcon : (k == 8 && (side == 2 || side == 3) ? topIcon : sideIcon));
+    }
+
     public void registerBlockIcons(IIconRegister register) {
         textures = rawTextures.stream()
                 .map(register::registerIcon)
                 .toArray(IIcon[]::new);
     }
 
-    public static int getRotatableOrientation(int ort) {
+    public static int getRotatableMeta(int ort) {
         // Zero is default side alignment used in inventory and etc. so add 1. Subtracted in getRotatableIcon.
         return ort + 1;
+    }
+
+    public static int getPillarMeta(int side, int meta) {
+        byte b0 = 0;
+        switch (side) {
+            case 0:
+            case 1:
+                b0 = 0;
+                break;
+            case 2:
+            case 3:
+                b0 = 8;
+                break;
+            case 4:
+            case 5:
+                b0 = 4;
+        }
+        return meta | b0;
     }
 }

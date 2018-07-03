@@ -7,7 +7,7 @@ public enum GenesisTrait {
     // Blocks
     wooden, stone, metal,
     unbreakable,
-    rotatable,
+    rotatable, pillar,
     add_slabs, add_stairs,
 
     // Items
