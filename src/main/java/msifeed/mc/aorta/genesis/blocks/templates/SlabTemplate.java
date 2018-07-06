@@ -1,22 +1,30 @@
 package msifeed.mc.aorta.genesis.blocks.templates;
 
+import msifeed.mc.aorta.genesis.blocks.BlockTraitCommons;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemSlab;
 import net.minecraft.world.World;
 
-public class SlabTemplate extends BlockSlab {
+public class SlabTemplate extends BlockSlab implements BlockTraitCommons.Getter {
+    private final BlockTraitCommons traits;
     private final String selfId;
     private Item item;
 
-    public SlabTemplate(Block parent, boolean isDouble, String id) {
+    public SlabTemplate(Block parent, boolean isDouble, String id, BlockTraitCommons traits) {
         super(isDouble, parent.getMaterial());
+        this.traits = traits;
         this.selfId = id;
         setBlockName(id);
 
         if (isDouble)
             item = Item.getItemFromBlock(parent); // Refer to parent block on middle click
+    }
+
+    @Override
+    public BlockTraitCommons getCommons() {
+        return traits;
     }
 
     @Override

@@ -4,13 +4,23 @@ public enum GenesisTrait {
     // Types
     block, item,
 
-    // Blocks
+    // Size
+    small, large,
+
+    // Blocks // // // // // // // //
     wooden, stone, metal,
     unbreakable,
-    rotatable, pillar,
+
+    // Appearance
+    rotatable, pillar, half,
+
+    // Logic
+    container,
+
+    // Extensions
     add_slabs, add_stairs,
 
-    // Items
+    // Items // // // // // // // //
     not_stackable,
 
     ;

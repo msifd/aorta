@@ -11,8 +11,6 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class BlockGenesisUnit extends GenesisUnit {
-    public BlockType type = BlockType.BASIC;
-
     public String textureString = null;
     public List<String> textureArray = null;
     public int[] textureLayout = null;
@@ -43,10 +41,6 @@ public class BlockGenesisUnit extends GenesisUnit {
                         .toArray();
             }
         }
-    }
-
-    public enum BlockType {
-        BASIC, STAIRS, SLAB
     }
 
     private static class Props {

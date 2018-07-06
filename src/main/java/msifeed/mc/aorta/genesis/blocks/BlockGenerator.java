@@ -8,6 +8,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import msifeed.mc.aorta.genesis.Generator;
 import msifeed.mc.aorta.genesis.GenesisTrait;
 import msifeed.mc.aorta.genesis.blocks.templates.BlockTemplate;
+import msifeed.mc.aorta.genesis.blocks.templates.ContainerTemplate;
 import msifeed.mc.aorta.genesis.blocks.templates.SlabTemplate;
 import msifeed.mc.aorta.genesis.blocks.templates.StairsTemplate;
 import msifeed.mc.aorta.things.AortaCreativeTab;
@@ -22,44 +23,53 @@ public class BlockGenerator implements Generator {
     @Override
     public void generate(JsonObject json, HashSet<GenesisTrait> traits) {
         final BlockGenesisUnit unit = new BlockGenesisUnit(json, traits);
-        switch (unit.type) {
-            case BASIC:
-                generateBasic(unit);
-                break;
-        }
-    }
 
-    private void generateBasic(BlockGenesisUnit unit) {
-        final BlockTemplate basic = new BlockTemplate(getMaterial(unit), unit.id);
-        fillCommons(unit, basic);
+        final Block block = makeBaseBlock(unit);
+        fillCommons(unit, block);
 
         if (unit.traits.contains(rotatable)) {
-            basic.rotatable = true;
+            ((BlockTraitCommons.Getter) block).getCommons().rotatable = true;
         }
         else if (unit.traits.contains(pillar)) {
-            basic.pillar = true;
+            ((BlockTraitCommons.Getter) block).getCommons().pillar = true;
         }
 
-        GameRegistry.registerBlock(basic, unit.id);
+        GameRegistry.registerBlock(block, unit.id);
 
         if (unit.traits.contains(add_stairs))
-            generateStairs(unit, basic);
+            generateStairs(unit, block);
         if (unit.traits.contains(add_slabs))
-            generateSlabs(unit, basic);
+            generateSlabs(unit, block);
+    }
+
+    private Block makeBaseBlock(BlockGenesisUnit unit) {
+        if (unit.traits.contains(container)) {
+            final int rows;
+            if (unit.traits.contains(large))
+                rows = 6;
+            else if (unit.traits.contains(small))
+                rows = 1;
+            else
+                rows = 3;
+            return new ContainerTemplate(getMaterial(unit), unit.id, rows);
+        }
+        else
+            return new BlockTemplate(getMaterial(unit), unit.id);
     }
 
     private void generateStairs(BlockGenesisUnit unit, Block parent) {
         final String id = unit.id + "_stairs";
-        final Block stairs = new StairsTemplate(parent, id);
+        final Block stairs = new StairsTemplate(parent, id, ((BlockTraitCommons.Getter) parent).getCommons());
         fillCommons(unit, stairs);
         GameRegistry.registerBlock(stairs, id);
     }
 
     private void generateSlabs(BlockGenesisUnit unit, Block parent) {
+        final BlockTraitCommons commons = ((BlockTraitCommons.Getter) parent).getCommons();
         final String singleId = unit.id + "_slab";
         final String doubleId = unit.id + "_doubleslab";
-        final SlabTemplate slabSingle = new SlabTemplate(parent, false, singleId);
-        final SlabTemplate slabDouble = new SlabTemplate(parent, true, doubleId);
+        final SlabTemplate slabSingle = new SlabTemplate(parent, false, singleId, commons);
+        final SlabTemplate slabDouble = new SlabTemplate(parent, true, doubleId, commons);
 
         fillCommons(unit, slabSingle);
         fillCommons(unit, slabDouble);
@@ -101,8 +111,7 @@ public class BlockGenerator implements Generator {
         }
 
         if (unit.textureArray != null && unit.textureLayout != null) {
-            if (block instanceof BlockTemplate)
-                ((BlockTemplate) block).textureLayout = new BlockTextureLayout(unit.textureArray, unit.textureLayout);
+            ((BlockTraitCommons.Getter) block).getCommons().textureLayout = new BlockTextureLayout(unit.textureArray, unit.textureLayout);
             return;
         }
 

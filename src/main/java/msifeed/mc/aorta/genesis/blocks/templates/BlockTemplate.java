@@ -3,63 +3,56 @@ package msifeed.mc.aorta.genesis.blocks.templates;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import msifeed.mc.aorta.genesis.blocks.BlockTextureLayout;
+import msifeed.mc.aorta.genesis.blocks.BlockTraitCommons;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
-public class BlockTemplate extends Block {
-    public BlockTextureLayout textureLayout = null;
-    public boolean rotatable = false;
-    public boolean pillar = false;
+public class BlockTemplate extends Block implements BlockTraitCommons.Getter {
+    private BlockTraitCommons traits = new BlockTraitCommons();
 
     public BlockTemplate(Material material, String id) {
         super(material);
         setBlockName(id);
     }
 
-    public int getRenderType() {
-        if (pillar)
-            return 31;
-        return 0;
+    @Override
+    public BlockTraitCommons getCommons() {
+        return traits;
     }
 
+    @Override
+    public int getRenderType() {
+        return traits.getRenderType();
+    }
+
+    @Override
     public int onBlockPlaced(World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int meta) {
-        if (pillar)
-            return BlockTextureLayout.getPillarMeta(side, meta);
-        return meta;
+        return traits.onBlockPlaced(side, meta);
     }
 
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemStack) {
-        if (rotatable) {
-            final int placedOrt = BlockPistonBase.determineOrientation(world, x, y, z, entity);
-            final int layoutMeta = BlockTextureLayout.getRotatableMeta(placedOrt);
-            world.setBlockMetadataWithNotify(x, y, z, layoutMeta, 0);
-        }
+        traits.onBlockPlacedBy(world, x, y, z, entity);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int meta) {
-        if (textureLayout == null)
+        if (traits.textureLayout == null)
             return super.getIcon(side, meta);
-        if (rotatable)
-            return textureLayout.getRotatableIcon(side, meta);
-        if (pillar)
-            return textureLayout.getPillarIcon(side, meta);
-        return textureLayout.getIcon(side);
+        return traits.getIcon(side, meta);
     }
 
     @Override
     public void registerBlockIcons(IIconRegister register) {
-        if (textureLayout != null)
-            textureLayout.registerBlockIcons(register);
+        if (traits.textureLayout != null)
+            traits.textureLayout.registerBlockIcons(register);
         else
             super.registerBlockIcons(register);
     }

@@ -9,7 +9,9 @@
     "texture_layout": "012222",
     "traits": [
       "block",
-      "wooden"
+      "wooden",
+      "container",
+      "small"
     ]
   },
   {
@@ -36,7 +38,22 @@
     "traits": [
       "block",
       "rotatable",
-      "wooden"
+      "wooden",
+      "container",
+      "large"
+    ]
+  },
+  {
+    "id": "rope",
+    "texture": [
+      "aorta:rope_top",
+      "aorta:rope_side"
+    ],
+    "texture_layout": "001111",
+    "traits": [
+      "block",
+      "wooden",
+      "pillar"
     ]
   }
 ]
