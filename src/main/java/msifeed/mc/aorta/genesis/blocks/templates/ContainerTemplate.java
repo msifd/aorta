@@ -1,5 +1,6 @@
 package msifeed.mc.aorta.genesis.blocks.templates;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -111,7 +112,8 @@ public class ContainerTemplate extends BlockContainer implements BlockTraitCommo
         final Random rand = new Random();
         for (ItemStack drop : drops) {
             final EntityItem item = new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, drop);
-            item.setVelocity((rand.nextDouble() - 0.5) * 0.25, rand.nextDouble() * 0.5 * 0.25, (rand.nextDouble() - 0.5) * 0.25);
+            if (FMLCommonHandler.instance().getSide().isClient())
+                item.setVelocity((rand.nextDouble() - 0.5) * 0.25, rand.nextDouble() * 0.5 * 0.25, (rand.nextDouble() - 0.5) * 0.25);
             world.spawnEntityInWorld(item);
         }
     }
