@@ -14,7 +14,7 @@ import msifeed.mc.mellow.utils.SizePolicy;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class DropDown<T> extends Widget {
+public class DropDownList<T> extends Widget {
     private final DropButton header = new DropButton(this);
     private final DropList list;
     private final List<T> items;
@@ -23,7 +23,7 @@ public class DropDown<T> extends Widget {
 
     protected Consumer<T> selectCallback = null;
 
-    public DropDown(List<T> items) {
+    public DropDownList(List<T> items) {
         this.items = items;
         this.list = new DropList(this);
         selectItem(0);
@@ -66,7 +66,7 @@ public class DropDown<T> extends Widget {
     }
 
     private static class DropButton extends Button {
-        final DropDown parent;
+        final DropDownList parent;
         Part textPart = Mellow.THEME.parts.get("dropdown_text");
         Part downIconPart = Mellow.THEME.parts.get("dropdown_icon");
         Part buttonNormalPart = Mellow.THEME.parts.get("dropdown_button");
@@ -75,7 +75,7 @@ public class DropDown<T> extends Widget {
         Geom buttonGeom = new Geom();
         Geom iconGeom = new Geom();
 
-        DropButton(DropDown parent) {
+        DropButton(DropDownList parent) {
             this.parent = parent;
             setSizeHint(100, 11);
             setVerSizePolicy(SizePolicy.Policy.MINIMUM);
@@ -129,10 +129,10 @@ public class DropDown<T> extends Widget {
     }
 
     private static class DropList extends Widget {
-        final DropDown parent;
+        final DropDownList parent;
         Part listPart = Mellow.THEME.parts.get("dropdown_list");
 
-        DropList(DropDown parent) {
+        DropList(DropDownList parent) {
             this.parent = parent;
             setPos(1, 0);
             setZLevel(10);
@@ -165,10 +165,10 @@ public class DropDown<T> extends Widget {
     }
 
     private static class ListButton extends Button {
-        final DropDown parent;
+        final DropDownList parent;
         final int itemN;
 
-        ListButton(DropDown parent, int n) {
+        ListButton(DropDownList parent, int n) {
             this.parent = parent;
             this.itemN = n;
             setSizeHint(0, 11);

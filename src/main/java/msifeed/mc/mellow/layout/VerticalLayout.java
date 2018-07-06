@@ -21,16 +21,21 @@ public class VerticalLayout extends Layout {
     public Point getSizeOfContent(Widget widget) {
         final Point size = new Point();
 
-        for (Widget child : widget.getChildren()) {
+        final Collection<Widget> children = widget.getChildren();
+        for (Widget child : children) {
             final Point sh = child.getLayoutSizeHint();
             if (sh.x > size.x)
                 size.x = sh.x;
             size.y += sh.y;
+//            size.y += spacing;
         }
 
         final Margins margin = widget.getMargin();
         size.x += margin.left + margin.right;
         size.y += margin.top + margin.bottom;
+//        size.y += spacing * children.size();
+//        if (!children.isEmpty())
+//            size.y += spacing * (children.size() - 1);
 
         return size;
     }
@@ -46,11 +51,9 @@ public class VerticalLayout extends Layout {
         int fixedHeight = 0;
         int fixedChildren = 0;
         for (Widget child : children) {
-            final Point sh = child.getLayoutSizeHint();
-            final SizePolicy sp = child.getSizePolicy();
-            final int preferred = getPreferredSize(averageTargetChildHeight, sh.y, sp.verticalPolicy);
+            final int preferred = getPreferredHeight(averageTargetChildHeight, child);
             if (preferred != averageTargetChildHeight) {
-                fixedHeight += sh.y;
+                fixedHeight += preferred;
                 fixedChildren++;
             }
         }
@@ -59,12 +62,9 @@ public class VerticalLayout extends Layout {
 
         int yPos = 0;
         for (Widget child : children) {
-            final Point sh = child.getLayoutSizeHint();
-            final SizePolicy sp = child.getSizePolicy();
             final Geom childGeom = child.getGeometry();
-
-            final int width = getPreferredSize(geometry.w, sh.x, sp.horizontalPolicy);
-            final int height = getPreferredSize(targetChildHeight, sh.y, sp.verticalPolicy);
+            final int width = getPreferredWidth(geometry.w, child);
+            final int height = getPreferredHeight(targetChildHeight, child);
 
             childGeom.set(geometry);
             childGeom.translate(0, yPos, child.getZLevel());

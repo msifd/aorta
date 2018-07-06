@@ -6,23 +6,29 @@ import net.minecraft.nbt.NBTTagCompound;
 public class BodyPart implements INBTSerializable {
     public String name;
     public Type type;
-    public short hits;
-    public short maxHits;
-    public short criticalToKO;
-    public short criticalToDeath;
+    public short max;
+    public short disfunction;
+    public short death;
 
     public BodyPart() {
+    }
+
+    public BodyPart(String name, Type type, int max, int disfunction, int death) {
+        this.name = name;
+        this.type = type;
+        this.max = (short) max;
+        this.disfunction = (short) disfunction;
+        this.death = (short) death;
     }
 
     @Override
     public NBTTagCompound toNBT() {
         final NBTTagCompound compound = new NBTTagCompound();
         compound.setString("name", name);
-        compound.setShort("type", (short) type.ordinal());
-        compound.setShort("hits", hits);
-        compound.setShort("maxHits", maxHits);
-        compound.setShort("critKO", criticalToKO);
-        compound.setShort("critDeath", criticalToDeath);
+        compound.setByte("type", (byte) type.ordinal());
+        compound.setShort("max", max);
+        compound.setShort("disfunction", disfunction);
+        compound.setShort("death", death);
         return compound;
     }
 
@@ -30,10 +36,14 @@ public class BodyPart implements INBTSerializable {
     public void fromNBT(NBTTagCompound compound) {
         name = compound.getString("name");
         type = Type.values()[compound.getByte("type")];
-        hits = compound.getShort("hits");
-        maxHits = compound.getShort("maxHits");
-        criticalToKO = compound.getShort("critKO");
-        criticalToDeath = compound.getShort("critDeath");
+        max = compound.getShort("max");
+        disfunction = compound.getShort("disfunction");
+        death = compound.getShort("death");
+    }
+
+    public String toLineString() {
+        // head [head] 25/5/0
+        return String.format("%s [%s] %d/%d/%d", name, type.toString().toLowerCase(), max, disfunction, death);
     }
 
     public enum Type {

@@ -2,10 +2,8 @@ package msifeed.mc.aorta.genesis.blocks.templates;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import msifeed.mc.aorta.genesis.blocks.BlockTextureLayout;
 import msifeed.mc.aorta.genesis.blocks.BlockTraitCommons;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;

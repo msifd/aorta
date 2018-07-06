@@ -68,7 +68,7 @@ public enum DebugHud {
         lines.add("  }");
         lines.add("  bodyParts: {");
         for (BodyPart bodyPart : character.bodyParts) {
-            lines.add("    " + bodyPart.type.toString().toLowerCase() + ": " + bodyPart.hits + "/" + bodyPart.maxHits);
+            lines.add("    " + bodyPart.toLineString());
         }
         lines.add("  }");
         lines.add("}");

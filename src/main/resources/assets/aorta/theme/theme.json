@@ -51,6 +51,18 @@
     "dropdown_list": {
       "pos": [32,27],
       "9slice": [[2,2], [3,1], [2,2]]
+    },
+    "scrollbar_bg": {
+      "pos": [0,32],
+      "9slice": [[2,2], [4,4], [2,2]]
+    },
+    "scrollbar_thumb": {
+      "pos": [8,32],
+      "9slice": [[2,2], [2,2], [2,2]]
+    },
+    "scrollbar_thumb_hover": {
+      "pos": [8,40],
+      "9slice": [[2,2], [2,2], [2,2]]
     }
   },
   "colors": {

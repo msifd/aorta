@@ -59,15 +59,15 @@ public class Scene extends Widget {
             nextPending.clear();
         }
 
-//        GL11.glPushMatrix();
-//        GL11.glScalef(0.5f, 0.5f, 0.5f);
-//        FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
-//        int y = 5;
-//        for (Object o : active.stream().filter(widget -> widget.containsPoint(p)).toArray()) {
-//            fr.drawString(o.getClass().getSimpleName(), 5, y, 0xffffff);
-//            y += fr.FONT_HEIGHT + 2;
-//        }
-//        GL11.glPopMatrix();
+        GL11.glPushMatrix();
+        GL11.glScalef(0.5f, 0.5f, 0.5f);
+        FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
+        int y = 5;
+        for (Object o : active.stream().filter(widget -> widget.containsPoint(p)).toArray()) {
+            fr.drawString(o.getClass().getSimpleName(), 5, y, 0xffffff);
+            y += fr.FONT_HEIGHT + 2;
+        }
+        GL11.glPopMatrix();
 
         return active.isEmpty()
                 ? Optional.empty()

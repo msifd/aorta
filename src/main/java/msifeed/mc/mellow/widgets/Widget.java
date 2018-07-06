@@ -55,7 +55,7 @@ public class Widget extends WidgetContainer {
     }
 
     public void setSizeHint(Point sizeHint) {
-        this.sizeHint = sizeHint;
+        this.sizeHint.set(sizeHint);
         setDirty();
     }
 
@@ -147,8 +147,8 @@ public class Widget extends WidgetContainer {
         if (isVisible()) {
             renderSelf();
             renderChildren();
-//            if (isHovered())
-//                renderDebug();
+            if (isHovered())
+                renderDebug();
         }
     }
 
