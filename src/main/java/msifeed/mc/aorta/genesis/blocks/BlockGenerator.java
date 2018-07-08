@@ -98,6 +98,16 @@ public class BlockGenerator implements Generator {
             block.setResistance(6000000);
         }
 
+        if (unit.traits.contains(half)) {
+            ((BlockTraitCommons.Getter) block).getCommons().half = true;
+        }
+
+        if (unit.traits.contains(large)) {
+            ((BlockTraitCommons.Getter) block).getCommons().size = BlockTraitCommons.Size.LARGE;
+        } else if (unit.traits.contains(small)) {
+            ((BlockTraitCommons.Getter) block).getCommons().size = BlockTraitCommons.Size.SMALL;
+        }
+
         if (FMLCommonHandler.instance().getSide().isClient()) {
             fillTexture(unit, block);
         }

@@ -9,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,11 +18,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class ContainerTemplate extends BlockContainer implements BlockTraitCommons.Getter {
@@ -47,6 +51,16 @@ public class ContainerTemplate extends BlockContainer implements BlockTraitCommo
     @Override
     public TileEntity createNewTileEntity(World world, int meta) {
         return new TileEntityContainer(rows * 9, getUnlocalizedName());
+    }
+
+    @Override
+    public boolean isOpaqueCube() {
+        return traits != null && !traits.half;
+    }
+
+    @Override
+    public boolean isBlockSolid(IBlockAccess access, int x, int y, int z, int side) {
+        return traits.isSolid(side, access.getBlockMetadata(x, y, z));
     }
 
     @Override
@@ -116,6 +130,23 @@ public class ContainerTemplate extends BlockContainer implements BlockTraitCommo
                 item.setVelocity((rand.nextDouble() - 0.5) * 0.25, rand.nextDouble() * 0.5 * 0.25, (rand.nextDouble() - 0.5) * 0.25);
             world.spawnEntityInWorld(item);
         }
+    }
+
+    @Override
+    public void setBlockBoundsBasedOnState(IBlockAccess access, int x, int y, int z) {
+        traits.setBlockBoundsBasedOnState(access, x, y, z);
+    }
+
+    @Override
+    public void setBlockBoundsForItemRender() {
+        if (traits.half) {
+            this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.5F, 1.0F);
+        }
+    }
+
+    public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB mask, List list, Entity entity) {
+        this.setBlockBoundsBasedOnState(world, x, y, z);
+        super.addCollisionBoxesToList(world, x, y, z, mask, list, entity);
     }
 
     public static class TileEntityContainer extends TileEntity implements IInventory {

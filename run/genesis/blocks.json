@@ -37,10 +37,11 @@
     "texture_layout": "012345",
     "traits": [
       "block",
-      "rotatable",
       "wooden",
+      "rotatable",
       "container",
-      "large"
+      "small",
+      "half"
     ]
   },
   {
