@@ -5,14 +5,15 @@ public enum GenesisTrait {
     block, item,
 
     // Size
-    small, large,
+    tiny, small, large,
 
     // Blocks // // // // // // // //
     wooden, stone, metal,
-    unbreakable,
+    unbreakable, transparent, not_collidable,
 
     // Appearance
-    rotatable, pillar, half,
+    rotatable, pillar,
+    half, crossed_squares,
 
     // Logic
     container,

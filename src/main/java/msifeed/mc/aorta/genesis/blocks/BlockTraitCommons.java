@@ -23,15 +23,30 @@ public class BlockTraitCommons {
     public boolean rotatable = false;
     public boolean pillar = false;
     public boolean half = false;
+    public boolean crossedSquares = false;
+    public boolean not_collidable = false;
+    public boolean transparent = false;
     public Size size = Size.MEDIUM;
 
+    public boolean isOpaqueCube() {
+        return !half && !crossedSquares && !transparent;
+    }
+
+    public boolean isNotCollidable() {
+        return not_collidable;
+    }
+
     public boolean isSolid(int side, int meta) {
+        if (transparent)
+            return false;
         if (half)
             return side == Facing.oppositeSide[getOrt(meta)];
         return true;
     }
 
     public int getRenderType() {
+        if (crossedSquares)
+            return 1;
         if (pillar)
             return 31;
         return 0;
@@ -53,8 +68,11 @@ public class BlockTraitCommons {
 
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int meta) {
-        if (rotatable)
+        if (rotatable) {
+            if (meta == 0) // For item render
+                return textureLayout.getRotatableIcon(side, half ? 2 : 4);
             return textureLayout.getRotatableIcon(side, meta);
+        }
         if (pillar)
             return textureLayout.getPillarIcon(side, meta);
         return textureLayout.getIcon(side);
@@ -65,14 +83,18 @@ public class BlockTraitCommons {
             final int ort = getOrt(access.getBlockMetadata(x, y, z));
             final float halfSize;
             switch (size) {
+                case TINY:
+                    halfSize = 0.0625f;
+                    break;
                 case SMALL:
                     halfSize = 0.25f;
                     break;
-                case LARGE:
-                    halfSize = 0.75f;
-                    break;
+                case MEDIUM:
                 default:
                     halfSize = 0.5f;
+                    break;
+                case LARGE:
+                    halfSize = 0.75f;
                     break;
             }
 
@@ -96,7 +118,7 @@ public class BlockTraitCommons {
     }
 
     public static int getRotatedOrt(int meta) {
-        return (meta & 7) - 1; // Minus default mode - zero
+        return (meta & 7) - 1; // Minus default mode for item render
     }
 
     public static int getPillarOrt(int meta) {
@@ -141,7 +163,7 @@ public class BlockTraitCommons {
     }
 
     public enum Size {
-        SMALL, MEDIUM, LARGE
+        TINY, SMALL, MEDIUM, LARGE
     }
     
     public interface Getter {

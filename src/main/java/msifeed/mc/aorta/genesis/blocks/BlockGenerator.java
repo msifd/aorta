@@ -18,6 +18,7 @@ import net.minecraft.block.material.Material;
 import java.util.HashSet;
 
 import static msifeed.mc.aorta.genesis.GenesisTrait.*;
+import static msifeed.mc.aorta.genesis.GenesisTrait.block;
 
 public class BlockGenerator implements Generator {
     @Override
@@ -26,13 +27,7 @@ public class BlockGenerator implements Generator {
 
         final Block block = makeBaseBlock(unit);
         fillCommons(unit, block);
-
-        if (unit.traits.contains(rotatable)) {
-            ((BlockTraitCommons.Getter) block).getCommons().rotatable = true;
-        }
-        else if (unit.traits.contains(pillar)) {
-            ((BlockTraitCommons.Getter) block).getCommons().pillar = true;
-        }
+        applyBlockType(unit, ((BlockTraitCommons.Getter) block).getCommons());
 
         GameRegistry.registerBlock(block, unit.id);
 
@@ -42,12 +37,30 @@ public class BlockGenerator implements Generator {
             generateSlabs(unit, block);
     }
 
+    private void applyBlockType(BlockGenesisUnit unit, BlockTraitCommons commons) {
+        if (unit.traits.contains(half)) {
+            commons.half = true;
+        }
+        if (unit.traits.contains(rotatable)) {
+            commons.rotatable = true;
+        }
+        else if (unit.traits.contains(pillar)) {
+            commons.pillar = true;
+            return;
+        }
+        if (unit.traits.contains(crossed_squares)) {
+            commons.crossedSquares = true;
+        }
+    }
+
     private Block makeBaseBlock(BlockGenesisUnit unit) {
         if (unit.traits.contains(container)) {
             final int rows;
             if (unit.traits.contains(large))
                 rows = 6;
             else if (unit.traits.contains(small))
+                rows = 2;
+            else if (unit.traits.contains(tiny))
                 rows = 1;
             else
                 rows = 3;
@@ -97,20 +110,20 @@ public class BlockGenerator implements Generator {
             block.setBlockUnbreakable();
             block.setResistance(6000000);
         }
+        if (unit.traits.contains(transparent))
+            ((BlockTraitCommons.Getter) block).getCommons().transparent = true;
+        if (unit.traits.contains(not_collidable))
+            ((BlockTraitCommons.Getter) block).getCommons().not_collidable = true;
 
-        if (unit.traits.contains(half)) {
-            ((BlockTraitCommons.Getter) block).getCommons().half = true;
-        }
-
-        if (unit.traits.contains(large)) {
+        if (unit.traits.contains(large))
             ((BlockTraitCommons.Getter) block).getCommons().size = BlockTraitCommons.Size.LARGE;
-        } else if (unit.traits.contains(small)) {
+        else if (unit.traits.contains(small))
             ((BlockTraitCommons.Getter) block).getCommons().size = BlockTraitCommons.Size.SMALL;
-        }
+        else if (unit.traits.contains(tiny))
+            ((BlockTraitCommons.Getter) block).getCommons().size = BlockTraitCommons.Size.TINY;
 
-        if (FMLCommonHandler.instance().getSide().isClient()) {
+        if (FMLCommonHandler.instance().getSide().isClient())
             fillTexture(unit, block);
-        }
     }
 
     @SideOnly(Side.CLIENT)

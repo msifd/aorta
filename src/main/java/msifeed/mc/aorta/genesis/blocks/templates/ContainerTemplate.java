@@ -55,7 +55,7 @@ public class ContainerTemplate extends BlockContainer implements BlockTraitCommo
 
     @Override
     public boolean isOpaqueCube() {
-        return traits != null && !traits.half;
+        return traits != null && traits.isOpaqueCube();
     }
 
     @Override
@@ -145,8 +145,16 @@ public class ContainerTemplate extends BlockContainer implements BlockTraitCommo
     }
 
     public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB mask, List list, Entity entity) {
-        this.setBlockBoundsBasedOnState(world, x, y, z);
+        if (traits.half)
+            this.setBlockBoundsBasedOnState(world, x, y, z);
         super.addCollisionBoxesToList(world, x, y, z, mask, list, entity);
+    }
+
+    @Override
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World p_149668_1_, int p_149668_2_, int p_149668_3_, int p_149668_4_) {
+        if (traits.isNotCollidable())
+            return null;
+        return super.getCollisionBoundingBoxFromPool(p_149668_1_, p_149668_2_, p_149668_3_, p_149668_4_);
     }
 
     public static class TileEntityContainer extends TileEntity implements IInventory {

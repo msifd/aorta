@@ -40,7 +40,7 @@
       "wooden",
       "rotatable",
       "container",
-      "small",
+      "tiny",
       "half"
     ]
   },
@@ -55,6 +55,16 @@
       "block",
       "wooden",
       "pillar"
+    ]
+  },
+  {
+    "id": "apple_cross",
+    "texture": "aorta:barrel_apples",
+    "traits": [
+      "block",
+      "wooden",
+      "crossed_squares",
+      "not_collidable"
     ]
   }
 ]

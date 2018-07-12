@@ -10,7 +10,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Facing;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -37,7 +36,7 @@ public class BlockTemplate extends Block implements BlockTraitCommons.Getter {
 
     @Override
     public boolean isOpaqueCube() {
-        return traits != null && !traits.half;
+        return traits != null && traits.isOpaqueCube();
     }
 
     @Override
@@ -68,8 +67,16 @@ public class BlockTemplate extends Block implements BlockTraitCommons.Getter {
     }
 
     public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB mask, List list, Entity entity) {
-        this.setBlockBoundsBasedOnState(world, x, y, z);
+        if (traits.half)
+            this.setBlockBoundsBasedOnState(world, x, y, z);
         super.addCollisionBoxesToList(world, x, y, z, mask, list, entity);
+    }
+
+    @Override
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World p_149668_1_, int p_149668_2_, int p_149668_3_, int p_149668_4_) {
+        if (traits.isNotCollidable())
+            return null;
+        return super.getCollisionBoundingBoxFromPool(p_149668_1_, p_149668_2_, p_149668_3_, p_149668_4_);
     }
 
     @Override
@@ -78,6 +85,11 @@ public class BlockTemplate extends Block implements BlockTraitCommons.Getter {
         if (traits.textureLayout == null)
             return super.getIcon(side, meta);
         return traits.getIcon(side, meta);
+    }
+
+    @Override
+    public IIcon getIcon(IBlockAccess p_149673_1_, int p_149673_2_, int p_149673_3_, int p_149673_4_, int p_149673_5_) {
+        return super.getIcon(p_149673_1_, p_149673_2_, p_149673_3_, p_149673_4_, p_149673_5_);
     }
 
     @Override
