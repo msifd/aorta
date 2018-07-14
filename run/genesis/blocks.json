@@ -25,10 +25,10 @@
     ]
   },
   {
-    "id": "rotatable_apples",
+    "id": "xyz_test_block",
     "texture": [
       "aorta:barrel_bottom",
-      "aorta:barrel_apples",
+      "minecraft:pumpkin_face_off",
       "minecraft:portal",
       "aorta:barrel_side",
       "minecraft:ice",
@@ -38,10 +38,7 @@
     "traits": [
       "block",
       "wooden",
-      "rotatable",
-      "container",
-      "tiny",
-      "half"
+      "rotatable"
     ]
   },
   {

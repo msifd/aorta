@@ -4,6 +4,7 @@ import cpw.mods.fml.common.SidedProxy;
 import msifeed.mc.aorta.core.Core;
 import msifeed.mc.aorta.genesis.Genesis;
 import msifeed.mc.aorta.network.Networking;
+import msifeed.mc.aorta.tweaks.EnableDesertRain;
 
 public class Aorta {
     public static final String MODID = "aorta";
@@ -16,9 +17,17 @@ public class Aorta {
     )
     public static Core CORE;
 
+    @SidedProxy(
+            serverSide = "msifeed.mc.aorta.genesis.Genesis",
+            clientSide = "msifeed.mc.aorta.genesis.GenesisClient"
+    )
+    public static Genesis GENESIS;
+
     public void init() {
-        new Genesis().generate();
         Networking.INSTANCE.init();
         CORE.init();
+        GENESIS.generate();
+
+        EnableDesertRain.apply();
     }
 }

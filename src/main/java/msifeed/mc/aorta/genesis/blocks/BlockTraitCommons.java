@@ -47,6 +47,8 @@ public class BlockTraitCommons {
     public int getRenderType() {
         if (crossedSquares)
             return 1;
+        if (rotatable)
+            return GenesisBlockRenderer.ROTATABLE;
         if (pillar)
             return 31;
         return 0;
