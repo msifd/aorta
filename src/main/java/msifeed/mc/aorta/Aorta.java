@@ -1,10 +1,13 @@
 package msifeed.mc.aorta;
 
 import cpw.mods.fml.common.SidedProxy;
+import msifeed.mc.aorta.chat.ChatHandler;
+import msifeed.mc.aorta.chat.Speechat;
 import msifeed.mc.aorta.core.Core;
 import msifeed.mc.aorta.genesis.Genesis;
 import msifeed.mc.aorta.network.Networking;
 import msifeed.mc.aorta.tweaks.EnableDesertRain;
+import net.minecraftforge.common.MinecraftForge;
 
 public class Aorta {
     public static final String MODID = "aorta";
@@ -23,11 +26,15 @@ public class Aorta {
     )
     public static Genesis GENESIS;
 
+    public static Speechat SPEECHAT = new Speechat();
+
     public void init() {
-        Networking.INSTANCE.init();
         CORE.init();
         GENESIS.generate();
+        SPEECHAT.init();
 
         EnableDesertRain.apply();
+
+        Networking.INSTANCE.init();
     }
 }

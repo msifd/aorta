@@ -5,6 +5,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import msifeed.mc.aorta.Aorta;
+import msifeed.mc.aorta.chat.SpeechMessage;
 import msifeed.mc.aorta.props.SyncPropHandler;
 import msifeed.mc.aorta.props.SyncPropMessage;
 
@@ -22,5 +23,7 @@ public enum Networking {
     public void init() {
         CHANNEL.registerMessage(syncPropHandler, SyncPropMessage.class, 0x00, Side.SERVER);
         CHANNEL.registerMessage(syncPropHandler, SyncPropMessage.class, 0x01, Side.CLIENT);
+
+        CHANNEL.registerMessage(Aorta.SPEECHAT.speechHandler, SpeechMessage.class, 0x11, Side.CLIENT);
     }
 }

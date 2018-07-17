@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.core.chat;
+package msifeed.mc.aorta.chat.obfuscation;
 
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;

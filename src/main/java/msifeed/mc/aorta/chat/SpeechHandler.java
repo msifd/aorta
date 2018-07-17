@@ -1,6 +1,9 @@
-package msifeed.mc.aorta.core.chat;
+package msifeed.mc.aorta.chat;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
@@ -8,7 +11,13 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 
-public class ChatHandlerClient {
+public class SpeechHandler implements IMessageHandler<SpeechMessage, IMessage> {
+    @Override
+    public IMessage onMessage(SpeechMessage message, MessageContext ctx) {
+        Minecraft.getMinecraft().thePlayer.addChatMessage(message.chatComponent);
+        return null;
+    }
+
     @SubscribeEvent
     public void onChatMessageReceived(ClientChatReceivedEvent event) {
         if (!(event.message instanceof ChatComponentTranslation))

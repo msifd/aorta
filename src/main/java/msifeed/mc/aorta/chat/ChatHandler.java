@@ -1,6 +1,10 @@
-package msifeed.mc.aorta.core.chat;
+package msifeed.mc.aorta.chat;
 
+import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import msifeed.mc.aorta.network.Networking;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.*;
 import net.minecraftforge.event.ServerChatEvent;
 
@@ -8,14 +12,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChatHandler {
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onChatMessageSent(ServerChatEvent event) {
-        final List<ChatComponentText> originalTexts = extractTextComponents(event.component);
+//        final List<ChatComponentText> originalTexts = extractTextComponents(event.component);
+//        LangObfuscator processor = new MenalaObfuscator();
+//        final List<ChatComponentText> processedTexts = processor.obfuscate(originalTexts);
+//        IChatComponent component = formatTexts(event.username, processedTexts);
 
-        LangProcessor processor = new LangMenala();
-        final List<ChatComponentText> processedTexts = processor.process(originalTexts);
+        final SpeechMessage message = ChatMessageParser.parse(event.player, event.component);
+        sendSpeechMessage(event.player, message);
 
-        event.component = formatTexts(event.username, processedTexts);
+        event.component = null;
+    }
+
+    public static void sendSpeechMessage(EntityPlayerMP sender, SpeechMessage message) {
+        final ChunkCoordinates cord = sender.getPlayerCoordinates();
+        final NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(0, cord.posX, cord.posY, cord.posZ, 10);
+        Networking.CHANNEL.sendToAllAround(message, point);
     }
 
     private List<ChatComponentText> extractTextComponents(ChatComponentTranslation comp) {

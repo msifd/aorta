@@ -2,7 +2,6 @@ package msifeed.mc.aorta.core;
 
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.registry.GameRegistry;
-import msifeed.mc.aorta.core.chat.ChatHandler;
 import msifeed.mc.aorta.core.props.CharacterProperty;
 import msifeed.mc.aorta.core.things.ItemBattleTool;
 import msifeed.mc.aorta.core.things.ItemCharTool;
@@ -18,7 +17,6 @@ public class Core {
 
     public void init() {
         MinecraftForge.EVENT_BUS.register(new CharacterProperty.Handler());
-        MinecraftForge.EVENT_BUS.register(new ChatHandler());
 
         GameRegistry.registerItem(new ItemDebugTool(), ItemDebugTool.ITEM_NAME);
         GameRegistry.registerItem(new ItemCharTool(), ItemCharTool.ITEM_NAME);

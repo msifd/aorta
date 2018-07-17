@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.core.chat;
+package msifeed.mc.aorta.chat.obfuscation;
 
 import net.minecraft.util.ChatComponentText;
 
@@ -7,9 +7,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class LangMenala implements LangProcessor {
+public class MenalaObfuscator implements LangObfuscator {
     @Override
-    public List<ChatComponentText> process(List<ChatComponentText> components) {
+    public List<ChatComponentText> obfuscate(List<ChatComponentText> components) {
         for (ChatComponentText c : components)
             LangUtils.setText(c, shuffleWords(c.getUnformattedTextForChat()));
         return components;
