@@ -1,10 +1,14 @@
 package msifeed.mc.aorta.core.client;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import msifeed.mc.aorta.core.character.*;
+import msifeed.mc.aorta.core.character.BodyPart;
 import msifeed.mc.aorta.core.character.Character;
+import msifeed.mc.aorta.core.character.Feature;
+import msifeed.mc.aorta.core.character.Grade;
 import msifeed.mc.aorta.core.props.CharacterProperty;
+import msifeed.mc.aorta.core.props.TraitsProperty;
 import msifeed.mc.aorta.core.things.ItemDebugTool;
+import msifeed.mc.aorta.core.traits.Trait;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.Entity;
@@ -16,8 +20,8 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.LinkedList;
 
 public enum DebugHud {
     INSTANCE;
@@ -37,10 +41,11 @@ public enum DebugHud {
             hitEntity = mc.thePlayer;
         final EntityLivingBase entity = (EntityLivingBase) hitEntity;
 
-        final LinkedList<String> lines = new LinkedList<>();
+        final ArrayList<String> lines = new ArrayList<>();
         lines.add("[Aorta debug]");
         lines.add("Entity: " + entity.getCommandSenderName());
         addCharProp(lines, entity);
+        addTraits(lines, entity);
 
         GL11.glPushMatrix();
         GL11.glScalef(0.5f, 0.5f, 0.5f);
@@ -52,7 +57,7 @@ public enum DebugHud {
         GL11.glPopMatrix();
     }
 
-    private void addCharProp(LinkedList<String> lines, EntityLivingBase entity) {
+    private void addCharProp(ArrayList<String> lines, EntityLivingBase entity) {
         final CharacterProperty charProp = CharacterProperty.get(entity);
         if (charProp == null)
             return;
@@ -72,6 +77,30 @@ public enum DebugHud {
         }
         lines.add("  }");
         lines.add("}");
+    }
+
+    private void addTraits(ArrayList<String> lines, EntityLivingBase entity) {
+        final TraitsProperty prop = TraitsProperty.get(entity);
+        if (prop == null)
+            return;
+
+        lines.add("Traits [");
+
+        final StringBuilder sb = new StringBuilder("  ");
+        for (Trait t : prop.traits) {
+            sb.append(t);
+            sb.append(", ");
+            if (sb.length() > 50) {
+                lines.add(sb.toString());
+                sb.setLength(0);
+                sb.append("  ");
+            }
+        }
+        if (sb.length() > 0) {
+            lines.add(sb.toString());
+        }
+
+        lines.add("]");
     }
 
     @Nullable

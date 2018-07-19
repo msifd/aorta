@@ -2,9 +2,9 @@ package msifeed.mc.aorta.core.client.gui;
 
 import msifeed.mc.aorta.core.character.BodyPart;
 import msifeed.mc.aorta.core.character.Character;
-import msifeed.mc.aorta.core.props.CharacterProperty;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.character.Grade;
+import msifeed.mc.aorta.core.props.CharacterProperty;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.layout.VerticalLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;

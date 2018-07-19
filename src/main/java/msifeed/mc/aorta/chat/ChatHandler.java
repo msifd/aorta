@@ -5,7 +5,10 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import msifeed.mc.aorta.network.Networking;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.*;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.event.ServerChatEvent;
 
 import java.util.ArrayList;
@@ -26,8 +29,7 @@ public class ChatHandler {
     }
 
     public static void sendSpeechMessage(EntityPlayerMP sender, SpeechMessage message) {
-        final ChunkCoordinates cord = sender.getPlayerCoordinates();
-        final NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(0, cord.posX, cord.posY, cord.posZ, 10);
+        final NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(sender.dimension, sender.posX, sender.posY, sender.posZ, message.radius);
         Networking.CHANNEL.sendToAllAround(message, point);
     }
 

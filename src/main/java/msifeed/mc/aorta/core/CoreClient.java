@@ -3,6 +3,7 @@ package msifeed.mc.aorta.core;
 import msifeed.mc.aorta.chat.SpeechHandler;
 import msifeed.mc.aorta.core.client.DebugHud;
 import msifeed.mc.aorta.core.client.DisableVanillaHud;
+import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 
 public class CoreClient extends Core {
@@ -14,5 +15,7 @@ public class CoreClient extends Core {
 
         MinecraftForge.EVENT_BUS.register(DebugHud.INSTANCE);
         MinecraftForge.EVENT_BUS.register(DisableVanillaHud.INSTANCE);
+
+        registerCommands(ClientCommandHandler.instance);
     }
 }

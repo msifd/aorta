@@ -1,13 +1,12 @@
 package msifeed.mc.aorta;
 
 import cpw.mods.fml.common.SidedProxy;
-import msifeed.mc.aorta.chat.ChatHandler;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import msifeed.mc.aorta.chat.Speechat;
 import msifeed.mc.aorta.core.Core;
 import msifeed.mc.aorta.genesis.Genesis;
 import msifeed.mc.aorta.network.Networking;
 import msifeed.mc.aorta.tweaks.EnableDesertRain;
-import net.minecraftforge.common.MinecraftForge;
 
 public class Aorta {
     public static final String MODID = "aorta";
@@ -33,8 +32,14 @@ public class Aorta {
         GENESIS.generate();
         SPEECHAT.init();
 
-        EnableDesertRain.apply();
+        Networking.init();
+    }
 
-        Networking.INSTANCE.init();
+    public void postInit() {
+        EnableDesertRain.apply();
+    }
+
+    public void serverStarting(FMLServerStartingEvent event) {
+        CORE.serverStarting(event);
     }
 }

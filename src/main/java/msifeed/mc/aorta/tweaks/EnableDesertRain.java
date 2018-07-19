@@ -11,6 +11,6 @@ public class EnableDesertRain {
                 ? "enableRain" : "field_76765_S";
         for (BiomeGenBase biome : BiomeGenBase.getBiomeGenArray())
             if (biome instanceof BiomeGenDesert)
-                ReflectionHelper.setPrivateValue(BiomeGenBase.class, BiomeGenBase.desert, true, rainField);
+                ReflectionHelper.setPrivateValue(BiomeGenBase.class, biome, true, rainField);
     }
 }

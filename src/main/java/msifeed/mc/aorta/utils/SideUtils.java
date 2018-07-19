@@ -3,6 +3,7 @@ package msifeed.mc.aorta.utils;
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.server.MinecraftServer;
 
+@Deprecated
 public class SideUtils {
     public static boolean isServer() {
         final MinecraftServer ms = FMLCommonHandler.instance().getMinecraftServerInstance();

@@ -18,7 +18,6 @@ import net.minecraft.block.material.Material;
 import java.util.HashSet;
 
 import static msifeed.mc.aorta.genesis.GenesisTrait.*;
-import static msifeed.mc.aorta.genesis.GenesisTrait.block;
 
 public class BlockGenerator implements Generator {
     @Override
