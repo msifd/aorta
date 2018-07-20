@@ -8,7 +8,7 @@ import msifeed.mc.aorta.core.props.PropsHandler;
 import msifeed.mc.aorta.core.things.ItemBattleTool;
 import msifeed.mc.aorta.core.things.ItemCharTool;
 import msifeed.mc.aorta.core.things.ItemDebugTool;
-import msifeed.mc.aorta.core.traits.Trait;
+import msifeed.mc.aorta.core.traits.TraitDecoder;
 import net.minecraft.command.CommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -20,7 +20,7 @@ public class Core {
     public static CoreGuiHandler GUI_EXEC;
 
     public void init() {
-        Trait.init();
+        TraitDecoder.init();
 
         MinecraftForge.EVENT_BUS.register(new PropsHandler());
 

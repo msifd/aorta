@@ -2,7 +2,7 @@ package msifeed.mc.aorta.core.props;
 
 import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.core.traits.Trait;
-import msifeed.mc.aorta.core.traits.TraitsHolder;
+import msifeed.mc.aorta.core.traits.TraitDecoder;
 import msifeed.mc.aorta.props.ExtProp;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -11,10 +11,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.world.World;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class TraitsProperty extends ExtProp {
     static final String PROP_NAME = Aorta.MODID + ".core.traits";
@@ -42,7 +40,7 @@ public class TraitsProperty extends ExtProp {
         if (traits == null)
             return;
 
-        int[] array = traits.stream().mapToInt(Trait::code).toArray();
+        int[] array = traits.stream().mapToInt(t -> t.code).toArray();
         root.setTag(PROP_NAME, new NBTTagIntArray(array));
     }
 
@@ -52,7 +50,7 @@ public class TraitsProperty extends ExtProp {
             return;
 
         final int[] codes = root.getIntArray(PROP_NAME);
-        traits = Arrays.stream(codes).mapToObj(TraitsHolder::trait).collect(Collectors.toSet());
+        traits = TraitDecoder.decode(codes);
     }
 
     public boolean has(Trait trait) {

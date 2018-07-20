@@ -81,7 +81,7 @@ public enum DebugHud {
 
     private void addTraits(ArrayList<String> lines, EntityLivingBase entity) {
         final TraitsProperty prop = TraitsProperty.get(entity);
-        if (prop == null)
+        if (prop == null || prop.traits == null)
             return;
 
         lines.add("Traits [");
