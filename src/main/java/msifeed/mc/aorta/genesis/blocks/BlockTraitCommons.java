@@ -11,8 +11,8 @@ import net.minecraft.world.World;
 
 public class BlockTraitCommons {
     private static final int[] ROTATION_MATRIX = new int[]{
-            2, 3, 0, 1, 4, 5,
-            3, 2, 1, 0, 4, 5,
+            2, 3, 0, 1, 5, 4,
+            3, 2, 1, 0, 5, 4,
             0, 1, 2, 3, 4, 5,
             0, 1, 3, 2, 5, 4,
             0, 1, 5, 4, 2, 3,

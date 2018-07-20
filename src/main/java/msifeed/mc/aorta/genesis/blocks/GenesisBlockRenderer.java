@@ -67,24 +67,26 @@ public class GenesisBlockRenderer implements ISimpleBlockRenderingHandler {
     private boolean renderRotatable(IBlockAccess world, int x, int y, int z, Block block, RenderBlocks renderer) {
         final int meta = world.getBlockMetadata(x, y, z);
         final int ort = BlockTraitCommons.getRotatedOrt(meta);
-        final int topRotation;
-        if (ort > 3)
-            topRotation = ort - 3;
-        else if (ort > 1)
-            topRotation = ort + 1;
-        else
-            topRotation = 0;
+
+        if (ort > 3) {
+            renderer.uvRotateTop = ort - 3;
+            renderer.uvRotateBottom = ort - 3;
+        }
+        else if (ort > 1) {
+            renderer.uvRotateTop = ort + 1;
+            renderer.uvRotateBottom = 5 - ort + 1;
+        }
+
         if (ort == 0)
             renderer.uvRotateEast = 3;
-
-        renderer.uvRotateTop = topRotation;
-        renderer.uvRotateBottom = topRotation;
+        if (ort == 1)
+            renderer.uvRotateEast = 3;
 
         final boolean result = renderer.renderStandardBlock(block, x, y, z);
 
         renderer.uvRotateTop = 0;
         renderer.uvRotateBottom = 0;
-        renderer.uvRotateNorth = 0;
+        renderer.uvRotateEast = 0;
 
         return result;
     }
