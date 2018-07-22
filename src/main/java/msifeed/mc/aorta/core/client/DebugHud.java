@@ -1,12 +1,12 @@
 package msifeed.mc.aorta.core.client;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import msifeed.mc.aorta.chat.selection.LangAttribute;
 import msifeed.mc.aorta.core.character.BodyPart;
-import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.character.Grade;
-import msifeed.mc.aorta.core.props.CharacterProperty;
-import msifeed.mc.aorta.core.props.TraitsProperty;
+import msifeed.mc.aorta.core.props.CharacterAttribute;
+import msifeed.mc.aorta.core.props.TraitsAttribute;
 import msifeed.mc.aorta.core.things.ItemDebugTool;
 import msifeed.mc.aorta.core.traits.Trait;
 import net.minecraft.client.Minecraft;
@@ -46,6 +46,7 @@ public enum DebugHud {
         lines.add("Entity: " + entity.getCommandSenderName());
         addCharProp(lines, entity);
         addTraits(lines, entity);
+        addLang(lines, entity);
 
         GL11.glPushMatrix();
         GL11.glScalef(0.5f, 0.5f, 0.5f);
@@ -58,49 +59,48 @@ public enum DebugHud {
     }
 
     private void addCharProp(ArrayList<String> lines, EntityLivingBase entity) {
-        final CharacterProperty charProp = CharacterProperty.get(entity);
-        if (charProp == null)
-            return;
-        final Character character = charProp.character;
-        if (character == null)
-            return;
-
-        lines.add("Character {");
-        lines.add("  features: {");
-        for (EnumMap.Entry<Feature, Grade> e : character.features.entrySet()) {
-            lines.add("    " + e.getKey().toString().toLowerCase() + ": " + (e.getValue().ordinal() + 1));
-        }
-        lines.add("  }");
-        lines.add("  bodyParts: {");
-        for (BodyPart bodyPart : character.bodyParts) {
-            lines.add("    " + bodyPart.toLineString());
-        }
-        lines.add("  }");
-        lines.add("}");
+        CharacterAttribute.INSTANCE.get(entity).ifPresent(character -> {
+            lines.add("Character {");
+            lines.add("  features: {");
+            for (EnumMap.Entry<Feature, Grade> e : character.features.entrySet()) {
+                lines.add("    " + e.getKey().toString().toLowerCase() + ": " + (e.getValue().ordinal() + 1));
+            }
+            lines.add("  }");
+            lines.add("  bodyParts: {");
+            for (BodyPart bodyPart : character.bodyParts) {
+                lines.add("    " + bodyPart.toLineString());
+            }
+            lines.add("  }");
+            lines.add("}");
+        });
     }
 
     private void addTraits(ArrayList<String> lines, EntityLivingBase entity) {
-        final TraitsProperty prop = TraitsProperty.get(entity);
-        if (prop == null || prop.traits == null)
-            return;
+        TraitsAttribute.INSTANCE.get(entity).ifPresent(traits -> {
+            lines.add("Traits [");
 
-        lines.add("Traits [");
-
-        final StringBuilder sb = new StringBuilder("  ");
-        for (Trait t : prop.traits) {
-            sb.append(t);
-            sb.append(", ");
-            if (sb.length() > 50) {
-                lines.add(sb.toString());
-                sb.setLength(0);
-                sb.append("  ");
+            final StringBuilder sb = new StringBuilder("  ");
+            for (Trait t : traits) {
+                sb.append(t);
+                sb.append(", ");
+                if (sb.length() > 50) {
+                    lines.add(sb.toString());
+                    sb.setLength(0);
+                    sb.append("  ");
+                }
             }
-        }
-        if (sb.length() > 0) {
-            lines.add(sb.toString());
-        }
+            if (sb.length() > 0) {
+                lines.add(sb.toString());
+            }
 
-        lines.add("]");
+            lines.add("]");
+        });
+    }
+
+    private void addLang(ArrayList<String> lines, EntityLivingBase entity) {
+        LangAttribute.INSTANCE.get(entity).ifPresent(lang -> {
+            lines.add("Language: " + lang);
+        });
     }
 
     @Nullable

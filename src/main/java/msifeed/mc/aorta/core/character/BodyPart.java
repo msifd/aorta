@@ -1,9 +1,8 @@
 package msifeed.mc.aorta.core.character;
 
-import msifeed.mc.aorta.props.INBTSerializable;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class BodyPart implements INBTSerializable {
+public class BodyPart {
     public String name;
     public Type type;
     public short max;
@@ -21,7 +20,6 @@ public class BodyPart implements INBTSerializable {
         this.death = (short) death;
     }
 
-    @Override
     public NBTTagCompound toNBT() {
         final NBTTagCompound compound = new NBTTagCompound();
         compound.setString("name", name);
@@ -32,7 +30,6 @@ public class BodyPart implements INBTSerializable {
         return compound;
     }
 
-    @Override
     public void fromNBT(NBTTagCompound compound) {
         name = compound.getString("name");
         type = Type.values()[compound.getByte("type")];

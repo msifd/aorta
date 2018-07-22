@@ -5,7 +5,7 @@ import msifeed.mc.aorta.chat.obfuscation.MenalaObfuscator;
 import msifeed.mc.aorta.core.traits.Trait;
 
 public enum Language {
-    MENALA(Trait.lang_menala, new MenalaObfuscator());
+    VANILLA(null, null), MENALA(Trait.lang_menala, new MenalaObfuscator());
 
     public Trait trait;
     public LangObfuscator obfuscator;

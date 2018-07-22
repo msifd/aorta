@@ -2,11 +2,12 @@ package msifeed.mc.aorta;
 
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import msifeed.mc.aorta.attributes.AttributeHandler;
 import msifeed.mc.aorta.chat.Speechat;
 import msifeed.mc.aorta.core.Core;
 import msifeed.mc.aorta.genesis.Genesis;
-import msifeed.mc.aorta.network.Networking;
 import msifeed.mc.aorta.tweaks.EnableDesertRain;
+import net.minecraft.command.CommandHandler;
 
 public class Aorta {
     public static final String MODID = "aorta";
@@ -28,11 +29,10 @@ public class Aorta {
     public static Speechat SPEECHAT = new Speechat();
 
     public void init() {
+        AttributeHandler.INSTANCE.init();
         CORE.init();
         GENESIS.generate();
         SPEECHAT.init();
-
-        Networking.init();
     }
 
     public void postInit() {
@@ -40,6 +40,8 @@ public class Aorta {
     }
 
     public void serverStarting(FMLServerStartingEvent event) {
-        CORE.serverStarting(event);
+        final CommandHandler commandHandler = (CommandHandler) event.getServer().getCommandManager();
+        CORE.registerCommands(commandHandler);
+        SPEECHAT.registerCommands(commandHandler);
     }
 }

@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.props;
+package msifeed.mc.aorta.attributes;
 
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -6,33 +6,32 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class SyncPropMessage implements IMessage {
+public class SyncAttrMessage implements IMessage {
     int entityId;
-    String propName;
+    String attrName;
     NBTTagCompound compound;
 
-    public SyncPropMessage() {
+    public SyncAttrMessage() {
     }
 
-    SyncPropMessage(Entity entity, ExtProp prop) {
+    SyncAttrMessage(Entity entity, EntityAttribute attribute) {
         this.entityId = entity.getEntityId();
-        this.propName = prop.getName();
+        this.attrName = attribute.getName();
         this.compound = new NBTTagCompound();
-        prop.saveNBTData(this.compound);
+        attribute.toNBT(entity, this.compound);
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         entityId = buf.readInt();
-        propName = ByteBufUtils.readUTF8String(buf);
+        attrName = ByteBufUtils.readUTF8String(buf);
         compound = ByteBufUtils.readTag(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(entityId);
-        ByteBufUtils.writeUTF8String(buf, propName);
+        ByteBufUtils.writeUTF8String(buf, attrName);
         ByteBufUtils.writeTag(buf, compound);
     }
-
 }

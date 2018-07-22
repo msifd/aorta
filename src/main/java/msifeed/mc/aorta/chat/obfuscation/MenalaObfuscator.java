@@ -1,5 +1,6 @@
 package msifeed.mc.aorta.chat.obfuscation;
 
+import msifeed.mc.aorta.chat.ChatUtils;
 import net.minecraft.util.ChatComponentText;
 
 import java.util.ArrayList;
@@ -9,10 +10,9 @@ import java.util.Random;
 
 public class MenalaObfuscator implements LangObfuscator {
     @Override
-    public List<ChatComponentText> obfuscate(List<ChatComponentText> components) {
+    public void obfuscate(List<ChatComponentText> components) {
         for (ChatComponentText c : components)
-            LangUtils.setText(c, shuffleWords(c.getUnformattedTextForChat()));
-        return components;
+            ChatUtils.setText(c, shuffleWords(c.getUnformattedTextForChat()));
     }
 
     private String shuffleWords(String source) {
@@ -30,7 +30,8 @@ public class MenalaObfuscator implements LangObfuscator {
                 continue;
             }
             if (!wordCodes.isEmpty()) {
-                shuffleCodes(wordCodes);
+                if (wordCodes.size() > 2)
+                    shuffleCodes(wordCodes);
                 for (int c : wordCodes)
                     sb.appendCodePoint(c);
                 wordCodes.clear();
@@ -48,7 +49,7 @@ public class MenalaObfuscator implements LangObfuscator {
     }
 
     private void shuffleCodes(ArrayList<Integer> wordCodes) {
-        final Random random = LangUtils.codesSeededRandom(wordCodes);
+        final Random random = ChatUtils.codesSeededRandom(wordCodes);
         Collections.shuffle(wordCodes, random);
     }
 }

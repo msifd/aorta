@@ -4,7 +4,7 @@ import msifeed.mc.aorta.core.character.BodyPart;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.character.Grade;
-import msifeed.mc.aorta.core.props.CharacterProperty;
+import msifeed.mc.aorta.core.props.CharacterAttribute;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.layout.VerticalLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
@@ -21,6 +21,8 @@ public class ScreenCharEditor extends MellowGuiScreen {
     private final ScrollArea mainScroll = new ScrollArea();
     private final Widget mainSection = mainScroll.getContent();
     private final Button submitBtn = new Button("Submit");
+
+    private Character character = null;
 
     public ScreenCharEditor(EntityLivingBase entity) {
         this.entity = entity;
@@ -44,7 +46,8 @@ public class ScreenCharEditor extends MellowGuiScreen {
         submitBtn.setClickCallback(() -> {
             if (!entity.isEntityAlive())
                 System.out.println("entity is actually dead");
-            CharacterProperty.get(entity).syncServer(entity);
+            else if (character != null)
+                CharacterAttribute.INSTANCE.set(entity, character);
         });
         window.addChild(submitBtn);
     }
@@ -63,22 +66,23 @@ public class ScreenCharEditor extends MellowGuiScreen {
     private void refillMainSection() {
         mainSection.clearChildren();
 
-        final CharacterProperty prop = CharacterProperty.get(entity);
-        if (prop.character != null) {
-            addFeatures(prop.character);
-            addBodyParts(prop.character);
+        CharacterAttribute.INSTANCE.get(entity).ifPresent(c -> this.character = c);
+
+        if (character != null) {
+            addFeatures();
+            addBodyParts();
         } else {
             final Button addDataBtn = new Button("Add data");
             addDataBtn.setVerSizePolicy(SizePolicy.Policy.MAXIMUM);
             addDataBtn.setClickCallback(() -> {
-                prop.character = new Character();
+                character = new Character();
                 refillMainSection();
             });
             mainSection.addChild(addDataBtn);
         }
     }
 
-    private void addFeatures(Character character) {
+    private void addFeatures() {
         final Widget features = new Widget();
         features.setLayout(new GridLayout());
         features.setVerSizePolicy(SizePolicy.Policy.MAXIMUM);
@@ -96,7 +100,7 @@ public class ScreenCharEditor extends MellowGuiScreen {
         mainSection.addChild(new Separator());
     }
 
-    private void addBodyParts(Character character) {
+    private void addBodyParts() {
         final Widget bodyParts = new Widget();
         bodyParts.setLayout(new VerticalLayout(3));
 

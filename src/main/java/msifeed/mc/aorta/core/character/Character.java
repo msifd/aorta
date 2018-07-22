@@ -1,13 +1,12 @@
 package msifeed.mc.aorta.core.character;
 
-import msifeed.mc.aorta.props.INBTSerializable;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
 import java.util.EnumMap;
 import java.util.HashSet;
 
-public class Character implements INBTSerializable {
+public class Character {
     public EnumMap<Feature, Grade> features = new EnumMap<>(Feature.class);
     public HashSet<BodyPart> bodyParts = new HashSet<>();
 
@@ -18,7 +17,6 @@ public class Character implements INBTSerializable {
         }
     }
 
-    @Override
     public NBTTagCompound toNBT() {
         final NBTTagCompound compound = new NBTTagCompound();
 
@@ -35,7 +33,6 @@ public class Character implements INBTSerializable {
         return compound;
     }
 
-    @Override
     public void fromNBT(NBTTagCompound compound) {
         final NBTTagCompound features = compound.getCompoundTag("features");
         final Feature[] featEnum = Feature.values();

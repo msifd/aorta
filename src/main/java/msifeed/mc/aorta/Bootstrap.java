@@ -32,6 +32,7 @@ public class Bootstrap {
         AORTA.postInit();
     }
 
+    @Mod.EventHandler
     public void serverStarting(FMLServerStartingEvent event) {
         AORTA.serverStarting(event);
     }

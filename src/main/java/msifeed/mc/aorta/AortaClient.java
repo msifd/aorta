@@ -6,6 +6,7 @@ import msifeed.mc.aorta.utils.DRM;
 import msifeed.mc.mellow.Mellow;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.ClientCommandHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,5 +31,7 @@ public class AortaClient extends Aorta {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        SPEECHAT.registerCommands(ClientCommandHandler.instance);
     }
 }

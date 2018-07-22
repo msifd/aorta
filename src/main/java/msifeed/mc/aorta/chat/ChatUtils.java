@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.chat.obfuscation;
+package msifeed.mc.aorta.chat;
 
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
@@ -9,7 +9,7 @@ import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.Random;
 
-public class LangUtils {
+public class ChatUtils {
     public static Random stringSeededRandom(String s) {
         return new Random(Hashing.goodFastHash(64).hashUnencodedChars(s).asLong());
     }

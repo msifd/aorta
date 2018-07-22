@@ -5,5 +5,5 @@ import net.minecraft.util.ChatComponentText;
 import java.util.List;
 
 public interface LangObfuscator {
-    List<ChatComponentText> obfuscate(List<ChatComponentText> components);
+    void obfuscate(List<ChatComponentText> components);
 }
