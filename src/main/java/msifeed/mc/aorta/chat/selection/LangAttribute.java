@@ -6,7 +6,6 @@ import msifeed.mc.aorta.chat.Language;
 import msifeed.mc.aorta.core.props.TraitsAttribute;
 import msifeed.mc.aorta.core.traits.Trait;
 import msifeed.mc.aorta.core.traits.TraitTypes;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -15,7 +14,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class LangAttribute extends PlayerAttribute<Language> {
     public static final LangAttribute INSTANCE = new LangAttribute();

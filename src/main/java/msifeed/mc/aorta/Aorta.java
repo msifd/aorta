@@ -1,13 +1,15 @@
 package msifeed.mc.aorta;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import msifeed.mc.aorta.attributes.AttributeHandler;
 import msifeed.mc.aorta.chat.Speechat;
 import msifeed.mc.aorta.core.Core;
 import msifeed.mc.aorta.genesis.Genesis;
 import msifeed.mc.aorta.tweaks.EnableDesertRain;
 import net.minecraft.command.CommandHandler;
+import net.minecraft.server.MinecraftServer;
 
 public class Aorta {
     public static final String MODID = "aorta";
@@ -39,8 +41,9 @@ public class Aorta {
         EnableDesertRain.apply();
     }
 
-    public void serverStarting(FMLServerStartingEvent event) {
-        final CommandHandler commandHandler = (CommandHandler) event.getServer().getCommandManager();
+    public void serverStarting(FMLServerStartedEvent event) {
+        final MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+        final CommandHandler commandHandler = (CommandHandler) server.getCommandManager();
         CORE.registerCommands(commandHandler);
         SPEECHAT.registerCommands(commandHandler);
     }

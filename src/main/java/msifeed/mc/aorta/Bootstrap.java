@@ -5,7 +5,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStartedEvent;
 
 @Mod(modid = Aorta.MODID, name = Aorta.NAME, version = Aorta.VERSION)
 public class Bootstrap {
@@ -33,7 +33,7 @@ public class Bootstrap {
     }
 
     @Mod.EventHandler
-    public void serverStarting(FMLServerStartingEvent event) {
+    public void serverStarting(FMLServerStartedEvent event) {
         AORTA.serverStarting(event);
     }
 }
