@@ -7,79 +7,53 @@ import msifeed.mc.mellow.widgets.Widget;
 
 import java.util.Collection;
 
-public class GridLayout extends Layout {
-    public int spacing = 1;
+public class GridLayout implements Layout {
+    private int spacing = 1;
 
-    @Override
-    public Point getSizeOfContent(Widget widget) {
-        Point size = new Point(widget.getSizeHint());
-        size.y = 0;
+    public GridLayout() {
+    }
 
-        boolean valueCol = false;
-        for (Widget child : widget.getChildren()) {
-            if (valueCol)
-                size.y += child.getLayoutSizeHint().y + spacing;
-            valueCol = !valueCol;
-        }
-
-        return size;
+    public GridLayout(int spacing) {
+        this.spacing = spacing;
     }
 
     @Override
-    public void apply(Widget widget, Collection<Widget> children) {
-        int heightAcc = makeGrid(widget, children);
+    public Point layoutIndependent(Collection<Widget> children) {
+        final Point contentSize = new Point();
 
-        final Point size = widget.getSizeHint();
-        if (size.y != heightAcc) {
-            size.y = heightAcc;
-            widget.setDirty();
-            makeGrid(widget, children);
-        }
-    }
+        boolean labelWidget = true;
 
-    private int makeGrid(Widget widget, Collection<Widget> children) {
-        final Margins margin = widget.getMargin();
-        final Geom geometry = new Geom(widget.getGeometry());
-        geometry.offsetPos(margin);
-        geometry.offsetSize(margin);
-
-        boolean labelCol = true;
-
-        int minLabelWidth = 0;
+        int maxLabelWidth = 0;
         for (Widget child : children) {
-            int minWidth = child.getSizePolicy().horizontalPolicy.canGrow
-                    ? child.getSizeHint().x
-                    : 0;
-            if (labelCol && minWidth > minLabelWidth)
-                minLabelWidth = minWidth;
-            labelCol = !labelCol;
+            if (labelWidget)
+                maxLabelWidth = Math.max(maxLabelWidth, child.getSizeHint().x);
+            labelWidget = !labelWidget;
         }
 
-        int halfGeomWidth = geometry.w / 2 - spacing;
-        int labelWidth = Math.max(minLabelWidth, halfGeomWidth);
-        int valueWidth = geometry.w - labelWidth - spacing;
+        labelWidget = true;
+        int lineHeight = 0;
 
-        labelCol = true;
-        int heightAcc = 0;
         for (Widget child : children) {
-            final Point sh = child.getLayoutSizeHint();
             final Geom childGeom = child.getGeometry();
-            final int width = labelCol ? labelWidth : valueWidth;
-
-            childGeom.set(geometry);
-            childGeom.setSize(width, sh.y);
-            childGeom.translate(0, heightAcc, child.getZLevel());
-            if (!labelCol)
-                childGeom.translate(labelWidth + spacing, 0);
+            childGeom.reset();
+            childGeom.setSize(child.getSizeHint());
+            childGeom.translate(child.getPos(), child.getZLevel());
+            childGeom.translate(0, contentSize.y);
             child.setDirty();
 
-            if (!labelCol) {
-                heightAcc += childGeom.h;
-                heightAcc += spacing;
+            lineHeight = Math.max(lineHeight, childGeom.h);
+            contentSize.x = Math.max(contentSize.x, childGeom.w);
+
+            if (!labelWidget) {
+                childGeom.translate(maxLabelWidth + spacing, 0);
+
+                contentSize.y += lineHeight + spacing;
+                lineHeight = 0;
             }
-            labelCol = !labelCol;
+
+            labelWidget = !labelWidget;
         }
 
-        return heightAcc;
+        return contentSize;
     }
 }

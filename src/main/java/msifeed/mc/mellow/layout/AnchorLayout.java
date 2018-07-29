@@ -1,18 +1,17 @@
 package msifeed.mc.mellow.layout;
 
 import msifeed.mc.mellow.utils.Geom;
-import msifeed.mc.mellow.utils.Margins;
+import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.widgets.Widget;
 
 import java.util.Collection;
 
-public class AnchorLayout extends Layout {
-    protected Anchor horAnchor;
-    protected Anchor verAnchor;
+public class AnchorLayout implements Layout {
+    private Anchor horAnchor;
+    private Anchor verAnchor;
 
-    public AnchorLayout(Anchor both) {
-        this.horAnchor = both;
-        this.verAnchor = both;
+    public AnchorLayout() {
+        this.horAnchor = this.verAnchor = Anchor.CENTER;
     }
 
     public AnchorLayout(Anchor hor, Anchor ver) {
@@ -21,46 +20,44 @@ public class AnchorLayout extends Layout {
     }
 
     @Override
-    public void apply(Widget widget, Collection<Widget> children) {
+    public Point layoutIndependent(Collection<Widget> children) {
+        if (children.isEmpty())
+            return new Point();
+
+        final Widget child = children.iterator().next();
+        final Geom childGeom = child.getGeometry();
+        childGeom.reset();
+        childGeom.setSize(child.getSizeHint());
+        childGeom.translate(child.getPos(), child.getZLevel());
+        child.setDirty();
+
+        return new Point(child.getSizeHint());
+    }
+
+    @Override
+    public void layoutRelativeParent(Widget parent, Collection<Widget> children) {
         if (children.isEmpty())
             return;
 
-        final Margins margin = widget.getMargin();
-        final Geom geometry = new Geom(widget.getGeometry());
-        geometry.offsetPos(margin);
-//        geometry.offsetSize(margin);
-
+        final Geom geometry = LayoutUtils.getGeomWithMargin(parent);
         final Widget child = children.iterator().next();
-
         final Geom childGeom = child.getGeometry();
-        childGeom.set(geometry);
-        childGeom.setSize(child.getSizeHint());
-        childGeom.translate(child.getPos(), child.getZLevel());
-
-        switch (verAnchor) {
-            case CENTER:
-                childGeom.y += (geometry.h - childGeom.h) / 2;
-                break;
-            case TOP:
-                break;
-            default:
-                break;
-        }
 
         switch (horAnchor) {
             case CENTER:
                 childGeom.x += (geometry.w - childGeom.w) / 2;
                 break;
-            case LEFT:
-                break;
-            default:
+        }
+        switch (verAnchor) {
+            case CENTER:
+                childGeom.y += (geometry.h - childGeom.h) / 2;
                 break;
         }
 
-        child.setDirty();
+        childGeom.translate(geometry);
     }
 
     public enum Anchor {
-        CENTER, TOP, LEFT
+        TOP, BOTTOM, LEFT, RIGHT, CENTER
     }
 }

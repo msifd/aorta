@@ -1,32 +1,63 @@
 package msifeed.mc.mellow.widgets;
 
-import msifeed.mc.mellow.layout.FloatLayout;
+import msifeed.mc.mellow.layout.FreeLayout;
 import msifeed.mc.mellow.layout.Layout;
 import msifeed.mc.mellow.render.RenderShapes;
 import msifeed.mc.mellow.utils.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
-public class Widget extends WidgetContainer {
+public class Widget {
     public static Widget hoveredWidget = null;
     public static Widget pressedWidget = null;
     protected static Widget focusedWidget = null;
 
-    protected Layout layout = FloatLayout.INSTANCE;
-
-    protected boolean visible = true;
-    private Point pos = new Point();
-    private int zLevel = 0;
-    private Point sizeHint = new Point();
-    private SizePolicy sizePolicy = new SizePolicy();
-    private Margins margin = new Margins();
-
+    private boolean visible = true;
     private boolean dirty = true;
+
+    private int zLevel = 0;
+    private Point pos = new Point();
+    private Point sizeHint = new Point();
+    private Margins margin = new Margins();
+    private SizePolicy sizePolicy = new SizePolicy();
+
+    private Layout layout = FreeLayout.INSTANCE;
+    private Point contentSize = new Point();
     private Geom geometry = new Geom();
 
     private Widget parent;
     private int widgetTreeDepth = 0;
+    private ArrayList<Widget> children = new ArrayList<>();
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public boolean isDirtyTree() {
+        Widget wit = this;
+        do {
+            if (wit.dirty)
+                return true;
+            wit = wit.parent;
+        } while (wit != null);
+        return false;
+    }
+
+    public void setDirty() {
+        dirty = true;
+//        Widget wit = this;
+//        do {
+//            wit.dirty = true;
+//            wit = wit.parent;
+//        } while (wit != null && !wit.dirty);
+    }
 
     public Point getPos() {
         return pos;
@@ -59,13 +90,13 @@ public class Widget extends WidgetContainer {
         setDirty();
     }
 
-    public Point getLayoutSizeHint() {
-        return layout.getSizeOfContent(this);
-    }
-
     public void setSizeHint(int w, int h) {
         this.sizeHint.set(w, h);
         setDirty();
+    }
+
+    public Point getContentSize() {
+        return contentSize;
     }
 
     public SizePolicy getSizePolicy() {
@@ -108,8 +139,10 @@ public class Widget extends WidgetContainer {
     public void setParent(Widget parent) {
         if (parent != null) {
             this.parent = parent;
+            this.widgetTreeDepth = parent.widgetTreeDepth + 1;
         } else {
             this.parent = null;
+            this.widgetTreeDepth = 0;
         }
         setDirty();
     }
@@ -123,24 +156,54 @@ public class Widget extends WidgetContainer {
         setDirty();
     }
 
-    public void setDirty() {
-        this.dirty = true;
-    }
-
-    public boolean isVisible() {
-        return visible;
-    }
-
     public void update() {
-        if (dirty) {
-            dirty = false;
-            if (parent != null)
-                widgetTreeDepth = parent.widgetTreeDepth + 1;
-            updateLayout();
-            updateSelf();
-        }
-        for (Widget c : children)
-            c.update();
+//        if (dirty) {
+//            dirty = false;
+//            if (parent != null)
+//                widgetTreeDepth = parent.widgetTreeDepth + 1;
+//            layout.layoutRelativeParent(this, children);
+//            contentSize = layout.layoutIndependent(children);
+//            updateSelf();
+////            updateIndepenent();
+//        }
+//
+//        for (Widget c : children)
+//            c.update();
+
+//        setDirty();
+        dirty = true;
+
+        updateIndependentLayout();
+        updateRelativeLayout();
+
+        dirty = false;
+    }
+
+    protected void updateIndependentLayout() {
+        if (!isDirtyTree() || children.isEmpty())
+            return;
+
+        for (Widget child : children)
+            child.updateIndependentLayout();
+
+        contentSize = layout.layoutIndependent(children);
+    }
+
+    protected void updateRelativeLayout() {
+        if (!isDirtyTree() || children.isEmpty())
+            return;
+
+        layout.layoutRelativeParent(this, children);
+
+        for (Widget child : children)
+            child.updateRelativeLayout();
+
+        updateSelf();
+
+        dirty = false;
+    }
+
+    protected void updateSelf() {
     }
 
     public void render() {
@@ -156,13 +219,6 @@ public class Widget extends WidgetContainer {
         RenderShapes.frame(getGeometry(), 1, hashCode()); // for debug purposes
     }
 
-    protected void updateSelf() {
-    }
-
-    protected void updateLayout() {
-        layout.apply(this, children);
-    }
-
     protected void renderSelf() {
     }
 
@@ -171,22 +227,28 @@ public class Widget extends WidgetContainer {
             w.render();
     }
 
-    @Override
+    public Collection<Widget> getChildren() {
+        return children;
+    }
+
     public void addChild(Widget widget) {
-        super.addChild(widget);
+        children.add(widget);
         setDirty();
         if (widget.parent == null) {
             widget.setParent(this);
         }
     }
 
-    @Override
     public void removeChild(Widget widget) {
-        super.removeChild(widget);
+        children.remove(widget);
         setDirty();
     }
 
-    protected Collection<Widget> getLookupChildren() {
+    public void clearChildren() {
+        children.clear();
+    }
+
+    public Collection<Widget> getLookupChildren() {
         return getChildren();
     }
 
@@ -224,8 +286,23 @@ public class Widget extends WidgetContainer {
     protected void onFocusLoss() {
     }
 
-    public boolean isHigherThan(Widget another) {
-        return geometry.z > another.geometry.z
-                || (geometry.z == another.geometry.z && widgetTreeDepth > another.widgetTreeDepth);
+    public int isHigherThan(Widget another) {
+        return Comparator.comparingInt(Widget::getZLevel)
+            .thenComparing(Widget::getWidgetTreeDepth)
+            .compare(this, another);
+
+//        if (geometry.z > another.geometry.z)
+//            return 1;
+//        else if (geometry.z < another.geometry.z)
+//            return -1;
+//        else return Integer.compare(widgetTreeDepth, another.widgetTreeDepth);
+
+//        return geometry.z > another.geometry.z
+//                || (geometry.z == another.geometry.z && widgetTreeDepth > another.widgetTreeDepth);
     }
+
+//    public boolean isHigherThan(Widget another) {
+//        return geometry.z > another.geometry.z
+//                || (geometry.z == another.geometry.z && widgetTreeDepth > another.widgetTreeDepth);
+//    }
 }

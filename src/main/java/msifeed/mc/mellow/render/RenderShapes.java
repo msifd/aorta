@@ -14,10 +14,10 @@ public final class RenderShapes {
         final Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawing(GL11.GL_LINE_LOOP);
         tessellator.setColorRGBA_I(color, 255);
-        tessellator.addVertex(geom.x + 0, geom.y + h, 0);
-        tessellator.addVertex(geom.x + w, geom.y + h, 0);
-        tessellator.addVertex(geom.x + w, geom.y + 0, 0);
-        tessellator.addVertex(geom.x + .3, geom.y + 0, 0); // .3 to fix corner pixel
+        tessellator.addVertex(geom.x + 0, geom.y + h, geom.z);
+        tessellator.addVertex(geom.x + w, geom.y + h, geom.z);
+        tessellator.addVertex(geom.x + w, geom.y + 0, geom.z);
+        tessellator.addVertex(geom.x + .3, geom.y + 0, geom.z); // .3 to fix corner pixel
         tessellator.draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
     }

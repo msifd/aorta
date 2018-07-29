@@ -3,77 +3,66 @@ package msifeed.mc.mellow.layout;
 import msifeed.mc.mellow.utils.Geom;
 import msifeed.mc.mellow.utils.Margins;
 import msifeed.mc.mellow.utils.Point;
-import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
 
 import java.util.Collection;
 
-public class VerticalLayout extends Layout {
+public class VerticalLayout implements Layout {
     public static final VerticalLayout INSTANCE = new VerticalLayout(1);
 
-    public final int spacing;
+    private final int spacing;
 
     public VerticalLayout(int spacing) {
         this.spacing = spacing;
     }
 
     @Override
-    public Point getSizeOfContent(Widget widget) {
-        final Point size = new Point();
+    public Point layoutIndependent(Collection<Widget> children) {
+        int yOffset = 0;
+        int maxWidth = 0;
 
-        final Collection<Widget> children = widget.getChildren();
         for (Widget child : children) {
-            final Point sh = child.getLayoutSizeHint();
-            if (sh.x > size.x)
-                size.x = sh.x;
-            size.y += sh.y;
-//            size.y += spacing;
+            final Geom childGeom = child.getGeometry();
+            childGeom.reset();
+            childGeom.setSize(child.getSizeHint());
+            childGeom.translate(child.getPos(), child.getZLevel());
+            childGeom.translate(0, yOffset);
+            child.setDirty();
+
+            yOffset += childGeom.h + spacing;
+            maxWidth = Math.max(maxWidth, childGeom.w);
         }
 
-        final Margins margin = widget.getMargin();
-        size.x += margin.left + margin.right;
-        size.y += margin.top + margin.bottom;
-//        size.y += spacing * children.size();
-//        if (!children.isEmpty())
-//            size.y += spacing * (children.size() - 1);
-
-        return size;
+        return new Point(maxWidth, yOffset - spacing);
     }
 
     @Override
-    public void apply(Widget widget, Collection<Widget> children) {
-        final Geom geometry = new Geom(widget.getGeometry());
-        final Margins margin = widget.getMargin();
-        geometry.offsetPos(margin);
-        geometry.offsetSize(margin);
+    public void layoutRelativeParent(Widget parent, Collection<Widget> children) {
+        final Geom geometry = LayoutUtils.getGeomWithMargin(parent);
 
-        final int averageTargetChildHeight = geometry.h / children.size();
-        int fixedHeight = 0;
+        final int spacingsHeight = spacing * (children.size() - 1);
+        final int averageHeight = (geometry.h - spacingsHeight) / children.size();
+        int fixedHeight = spacingsHeight;
         int fixedChildren = 0;
         for (Widget child : children) {
-            final int preferred = getPreferredHeight(averageTargetChildHeight, child);
-            if (preferred != averageTargetChildHeight) {
-                fixedHeight += preferred;
+            final int h = LayoutUtils.getPreferredHeight(averageHeight, child);
+            if (h != averageHeight) {
+                fixedHeight += h;
                 fixedChildren++;
             }
         }
+
         final int freeChildren = Math.max(1, children.size() - fixedChildren);
         final int targetChildHeight = (geometry.h - fixedHeight) / freeChildren;
 
-        int yPos = 0;
+        int yOffset = geometry.y;
         for (Widget child : children) {
             final Geom childGeom = child.getGeometry();
-            final int width = getPreferredWidth(geometry.w, child);
-            final int height = getPreferredHeight(targetChildHeight, child);
+            childGeom.setPos(0, 0);
+            childGeom.translate(geometry.x, yOffset, geometry.z);
+            childGeom.setSize(LayoutUtils.getPreferredWidth(geometry.w, child), LayoutUtils.getPreferredHeight(targetChildHeight, child));
 
-            childGeom.set(geometry);
-            childGeom.translate(0, yPos, child.getZLevel());
-            childGeom.translate(child.getPos());
-            childGeom.setSize(width, height);
-            child.setDirty();
-
-            yPos += childGeom.h;
-            yPos += spacing;
+            yOffset += childGeom.h + spacing;
         }
     }
 }

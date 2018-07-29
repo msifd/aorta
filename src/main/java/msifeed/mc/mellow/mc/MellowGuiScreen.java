@@ -3,13 +3,14 @@ package msifeed.mc.mellow.mc;
 import msifeed.mc.mellow.handlers.MouseHandler;
 import msifeed.mc.mellow.render.RenderUtils;
 import msifeed.mc.mellow.utils.Point;
-import msifeed.mc.mellow.widgets.Scene;
+import msifeed.mc.mellow.widgets.scene.ProfilingScene;
+import msifeed.mc.mellow.widgets.scene.Scene;
 import msifeed.mc.mellow.widgets.Widget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
 public class MellowGuiScreen extends GuiScreen {
-    protected Scene scene = new Scene();
+    protected Scene scene = new ProfilingScene();
 
     @Override
     public void initGui() {

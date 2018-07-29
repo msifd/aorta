@@ -18,6 +18,14 @@ public class Geom implements Cloneable {
         set(geom);
     }
 
+    public void reset() {
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
+        this.w = 0;
+        this.h = 0;
+    }
+
     public void set(int x, int y, int w, int h) {
         this.x = x;
         this.y = y;
@@ -56,8 +64,8 @@ public class Geom implements Cloneable {
         translate(p.x, p.y, z);
     }
 
-    public void translate(Geom p) {
-        translate(p.x, p.y);
+    public void translate(Geom g) {
+        translate(g.x, g.y, g.z);
     }
 
     public void setSize(int w, int h) {
@@ -88,5 +96,19 @@ public class Geom implements Cloneable {
     public boolean contains(Point p) {
         return p.x >= this.x && p.x <= this.x + this.w
                 && p.y >= this.y && p.y <= this.y + this.h;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Geom) {
+            final Geom o = (Geom) obj;
+            return x == o.x && y == o.y && z == o.z && w == o.w && h == o.h;
+        }
+        return super.equals(obj);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Geom(%d_%d_%d %d_%d)", x, y, z, w, h);
     }
 }

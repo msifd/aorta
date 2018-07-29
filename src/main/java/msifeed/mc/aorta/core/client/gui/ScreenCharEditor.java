@@ -10,6 +10,12 @@ import msifeed.mc.mellow.layout.VerticalLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.*;
+import msifeed.mc.mellow.widgets.button.Button;
+import msifeed.mc.mellow.widgets.basic.Label;
+import msifeed.mc.mellow.widgets.basic.Separator;
+import msifeed.mc.mellow.widgets.button.ButtonLabel;
+import msifeed.mc.mellow.widgets.droplist.DropList;
+import msifeed.mc.mellow.widgets.window.Window;
 import net.minecraft.entity.EntityLivingBase;
 
 import java.util.Arrays;
@@ -18,9 +24,10 @@ import java.util.Map;
 
 public class ScreenCharEditor extends MellowGuiScreen {
     private final EntityLivingBase entity;
-    private final ScrollArea mainScroll = new ScrollArea();
-    private final Widget mainSection = mainScroll.getContent();
-    private final Button submitBtn = new Button("Submit");
+//    private final ScrollArea mainScroll = new ScrollArea();
+//    private final Widget mainSection = mainScroll.getContent();
+    private final Widget mainSection = new Widget();
+    private final Button submitBtn = new ButtonLabel("Submit");
 
     private Character character = null;
 
@@ -34,13 +41,14 @@ public class ScreenCharEditor extends MellowGuiScreen {
         scene.addChild(window);
 
         final Label entityName = new Label("Entity: " + entity.getCommandSenderName());
-        window.addChild(entityName);
-        window.addChild(new Separator());
-        window.addChild(mainScroll);
+        final Widget windowContent = window.getContent();
+        windowContent.addChild(entityName);
+        windowContent.addChild(new Separator());
 
         mainSection.setLayout(VerticalLayout.INSTANCE);
         mainSection.setSizeHint(window.getSizeHint());
         refillMainSection();
+        windowContent.addChild(mainSection);
 
         submitBtn.setVerSizePolicy(SizePolicy.Policy.MAXIMUM);
         submitBtn.setClickCallback(() -> {
@@ -49,7 +57,7 @@ public class ScreenCharEditor extends MellowGuiScreen {
             else if (character != null)
                 CharacterAttribute.INSTANCE.set(entity, character);
         });
-        window.addChild(submitBtn);
+        windowContent.addChild(submitBtn);
     }
 
     @Override
@@ -70,9 +78,9 @@ public class ScreenCharEditor extends MellowGuiScreen {
 
         if (character != null) {
             addFeatures();
-            addBodyParts();
+//            addBodyParts();
         } else {
-            final Button addDataBtn = new Button("Add data");
+            final Button addDataBtn = new ButtonLabel("Add data");
             addDataBtn.setVerSizePolicy(SizePolicy.Policy.MAXIMUM);
             addDataBtn.setClickCallback(() -> {
                 character = new Character();
@@ -90,7 +98,7 @@ public class ScreenCharEditor extends MellowGuiScreen {
         final List<Grade> gradeList = Arrays.asList(Grade.values());
         for (Map.Entry<Feature, Grade> entry : character.features.entrySet()) {
             features.addChild(new Label(entry.getKey().toString() + ':'));
-            final DropDownList<Grade> dropDown = new DropDownList<>(gradeList);
+            final DropList<Grade> dropDown = new DropList<>(gradeList);
             dropDown.selectItem(entry.getValue().ordinal());
             dropDown.setSelectCallback(grade -> character.features.put(entry.getKey(), grade));
             features.addChild(dropDown);
@@ -108,7 +116,7 @@ public class ScreenCharEditor extends MellowGuiScreen {
             bodyParts.addChild(new Label(bp.toLineString()));
         }
 
-        final Button setBodyBtn = new Button("Set body");
+        final Button setBodyBtn = new ButtonLabel("Set body");
         setBodyBtn.setVerSizePolicy(SizePolicy.Policy.FIXED);
         setBodyBtn.setClickCallback(() -> {
             character.bodyParts.clear();

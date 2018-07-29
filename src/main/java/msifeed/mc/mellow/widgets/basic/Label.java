@@ -1,16 +1,17 @@
-package msifeed.mc.mellow.widgets;
+package msifeed.mc.mellow.widgets.basic;
 
 import msifeed.mc.mellow.Mellow;
 import msifeed.mc.mellow.render.RenderWidgets;
 import msifeed.mc.mellow.utils.SizePolicy;
+import msifeed.mc.mellow.widgets.Widget;
 import net.minecraft.client.Minecraft;
 
 public class Label extends Widget {
     public int brightColor = Mellow.THEME.colors.get("text_bright");
     public int darkColor = Mellow.THEME.colors.get("text_dark");
 
-    protected String text = "";
-    protected int color = brightColor;
+    private String text = "";
+    private int color = brightColor;
 
     public Label() {
         this("");
