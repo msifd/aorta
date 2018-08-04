@@ -2,6 +2,7 @@ package msifeed.mc.aorta.genesis.blocks.templates;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import msifeed.mc.aorta.genesis.GenesisUnit;
 import msifeed.mc.aorta.genesis.blocks.BlockTraitCommons;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -17,11 +18,12 @@ import net.minecraft.world.World;
 import java.util.List;
 
 public class BlockTemplate extends Block implements BlockTraitCommons.Getter {
-    private BlockTraitCommons traits = new BlockTraitCommons();
+    private BlockTraitCommons traits;
 
-    public BlockTemplate(Material material, String id) {
+    public BlockTemplate(GenesisUnit unit, Material material) {
         super(material);
-        setBlockName(id);
+        traits = new BlockTraitCommons(unit);
+        setBlockName(unit.id);
     }
 
     @Override
@@ -40,8 +42,18 @@ public class BlockTemplate extends Block implements BlockTraitCommons.Getter {
     }
 
     @Override
+    public int getLightOpacity() {
+        return isOpaqueCube() ? 255 : 0;
+    }
+
+    @Override
     public boolean isBlockSolid(IBlockAccess access, int x, int y, int z, int side) {
         return traits.isSolid(side, access.getBlockMetadata(x, y, z));
+    }
+
+    @Override
+    public boolean renderAsNormalBlock() {
+        return traits.renderAsNormalBlock();
     }
 
     @Override

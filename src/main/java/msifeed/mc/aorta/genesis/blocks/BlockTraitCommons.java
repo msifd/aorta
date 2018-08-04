@@ -2,12 +2,16 @@ package msifeed.mc.aorta.genesis.blocks;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import msifeed.mc.aorta.genesis.GenesisTrait;
+import msifeed.mc.aorta.genesis.GenesisUnit;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.Facing;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import java.util.HashSet;
 
 public class BlockTraitCommons {
     private static final int[] ROTATION_MATRIX = new int[]{
@@ -19,17 +23,24 @@ public class BlockTraitCommons {
             0, 1, 4, 5, 3, 2
     };
 
+    public GenesisUnit unit;
     public BlockTextureLayout textureLayout = null;
-    public boolean rotatable = false;
-    public boolean pillar = false;
     public boolean half = false;
-    public boolean crossedSquares = false;
     public boolean not_collidable = false;
     public boolean transparent = false;
+    public Type type = Type.SIMPLE;
     public Size size = Size.MEDIUM;
 
+    public BlockTraitCommons(GenesisUnit unit) {
+        this.unit = unit;
+    }
+
     public boolean isOpaqueCube() {
-        return !half && !crossedSquares && !transparent;
+        return !half && type != Type.CROSS && !transparent;
+    }
+
+    public boolean renderAsNormalBlock() {
+        return isOpaqueCube();
     }
 
     public boolean isNotCollidable() {
@@ -45,23 +56,26 @@ public class BlockTraitCommons {
     }
 
     public int getRenderType() {
-        if (crossedSquares)
-            return 1;
-        if (rotatable)
-            return GenesisBlockRenderer.ROTATABLE;
-        if (pillar)
-            return 31;
-        return 0;
+        switch (type) {
+            case CROSS:
+                return 1;
+            case PILLAR:
+                return 31;
+            case ROTATABLE:
+                return GenesisBlockRenderer.ROTATABLE;
+            default:
+                return 0;
+        }
     }
 
     public int onBlockPlaced(int side, int meta) {
-        if (pillar)
+        if (type == Type.PILLAR)
             return getPillarMeta(side, meta);
         return meta;
     }
 
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity) {
-        if (rotatable) {
+        if (type == Type.ROTATABLE) {
             final int placedOrt = BlockPistonBase.determineOrientation(world, x, y, z, entity);
             final int layoutMeta = getRotatableMeta(placedOrt);
             world.setBlockMetadataWithNotify(x, y, z, layoutMeta, 0);
@@ -70,14 +84,16 @@ public class BlockTraitCommons {
 
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int meta) {
-        if (rotatable) {
-            if (meta == 0) // For item render
-                return textureLayout.getRotatableIcon(side, half ? 2 : 4);
-            return textureLayout.getRotatableIcon(side, meta);
+        switch (type) {
+            default:
+                return textureLayout.getIcon(side);
+            case PILLAR:
+                return textureLayout.getPillarIcon(side, meta);
+            case ROTATABLE:
+                if (meta == 0) // For item render
+                    return textureLayout.getRotatableIcon(side, half ? 2 : 4);
+                return textureLayout.getRotatableIcon(side, meta);
         }
-        if (pillar)
-            return textureLayout.getPillarIcon(side, meta);
-        return textureLayout.getIcon(side);
     }
 
     public void setBlockBoundsBasedOnState(IBlockAccess access, int x, int y, int z) {
@@ -112,11 +128,14 @@ public class BlockTraitCommons {
     }
 
     public int getOrt(int meta) {
-        if (rotatable)
-            return getRotatedOrt(meta);
-        if (pillar)
-            return getPillarOrt(meta);
-        return 1;
+        switch (type) {
+            default:
+                return 1;
+            case PILLAR:
+                return getPillarOrt(meta);
+            case ROTATABLE:
+                return getRotatedOrt(meta);
+        }
     }
 
     public static int getRotatedOrt(int meta) {
@@ -162,6 +181,10 @@ public class BlockTraitCommons {
                 break;
         }
         return meta | b;
+    }
+
+    public enum Type {
+        SIMPLE, CROSS, PILLAR, ROTATABLE
     }
 
     public enum Size {

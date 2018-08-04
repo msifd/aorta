@@ -27,7 +27,7 @@ public class ItemGenerator implements Generator {
     private void fillCommons(ItemGenesisUnit unit, Item item) {
         item.setCreativeTab(AortaCreativeTab.ITEMS);
 
-        if (unit.traits.contains(not_stackable)) {
+        if (unit.hasTrait(not_stackable)) {
             item.setMaxStackSize(1);
         }
 

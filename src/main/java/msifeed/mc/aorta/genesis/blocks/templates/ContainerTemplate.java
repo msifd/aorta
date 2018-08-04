@@ -4,6 +4,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import msifeed.mc.aorta.genesis.GenesisUnit;
 import msifeed.mc.aorta.genesis.blocks.BlockTraitCommons;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -33,14 +34,15 @@ public class ContainerTemplate extends BlockContainer implements BlockTraitCommo
         GameRegistry.registerTileEntity(TileEntityContainer.class, "AortaContainer");
     }
 
-    private BlockTraitCommons traits = new BlockTraitCommons();
+    private BlockTraitCommons traits;
 
     private final int rows;
 
-    public ContainerTemplate(Material material, String id, int rows) {
+    public ContainerTemplate(GenesisUnit unit, Material material, int rows) {
         super(material);
+        this.traits = new BlockTraitCommons(unit);
         this.rows = rows;
-        setBlockName(id);
+        setBlockName(unit.id);
     }
 
     @Override
@@ -56,6 +58,16 @@ public class ContainerTemplate extends BlockContainer implements BlockTraitCommo
     @Override
     public boolean isOpaqueCube() {
         return traits != null && traits.isOpaqueCube();
+    }
+
+    @Override
+    public boolean renderAsNormalBlock() {
+        return traits.renderAsNormalBlock();
+    }
+
+    @Override
+    public int getLightOpacity() {
+        return isOpaqueCube() ? 255 : 0;
     }
 
     @Override

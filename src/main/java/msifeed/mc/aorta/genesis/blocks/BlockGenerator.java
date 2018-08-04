@@ -7,10 +7,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import msifeed.mc.aorta.genesis.Generator;
 import msifeed.mc.aorta.genesis.GenesisTrait;
-import msifeed.mc.aorta.genesis.blocks.templates.BlockTemplate;
-import msifeed.mc.aorta.genesis.blocks.templates.ContainerTemplate;
-import msifeed.mc.aorta.genesis.blocks.templates.SlabTemplate;
-import msifeed.mc.aorta.genesis.blocks.templates.StairsTemplate;
+import msifeed.mc.aorta.genesis.blocks.templates.*;
 import msifeed.mc.aorta.things.AortaCreativeTab;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -26,47 +23,56 @@ public class BlockGenerator implements Generator {
 
         final Block block = makeBaseBlock(unit);
         fillCommons(unit, block);
-        applyBlockType(unit, ((BlockTraitCommons.Getter) block).getCommons());
+        if (block instanceof BlockTraitCommons.Getter)
+            applyBlockType(unit, ((BlockTraitCommons.Getter) block).getCommons());
 
-        GameRegistry.registerBlock(block, unit.id);
+        if (block instanceof SpecialBlockRegisterer)
+            ((SpecialBlockRegisterer) block).register(unit.id);
+        else {
+            block.setCreativeTab(AortaCreativeTab.BLOCKS);
+            GameRegistry.registerBlock(block, unit.id);
+        }
 
-        if (unit.traits.contains(add_stairs))
+        if (unit.hasTrait(add_stairs))
             generateStairs(unit, block);
-        if (unit.traits.contains(add_slabs))
+        if (unit.hasTrait(add_slabs))
             generateSlabs(unit, block);
     }
 
     private void applyBlockType(BlockGenesisUnit unit, BlockTraitCommons commons) {
-        if (unit.traits.contains(half)) {
+        if (unit.hasTrait(half)) {
             commons.half = true;
         }
-        if (unit.traits.contains(rotatable)) {
-            commons.rotatable = true;
-        }
-        else if (unit.traits.contains(pillar)) {
-            commons.pillar = true;
-            return;
-        }
-        if (unit.traits.contains(crossed_squares)) {
-            commons.crossedSquares = true;
-        }
+
+        if (unit.hasTrait(crossed_squares))
+            commons.type = BlockTraitCommons.Type.CROSS;
+        else if (unit.hasTrait(pillar))
+            commons.type = BlockTraitCommons.Type.PILLAR;
+        else if (unit.hasTrait(rotatable))
+            commons.type = BlockTraitCommons.Type.ROTATABLE;
     }
 
     private Block makeBaseBlock(BlockGenesisUnit unit) {
-        if (unit.traits.contains(container)) {
+        if (unit.hasTrait(container)) {
             final int rows;
-            if (unit.traits.contains(large))
+            if (unit.hasTrait(large))
                 rows = 6;
-            else if (unit.traits.contains(small))
+            else if (unit.hasTrait(small))
                 rows = 2;
-            else if (unit.traits.contains(tiny))
+            else if (unit.hasTrait(tiny))
                 rows = 1;
             else
                 rows = 3;
-            return new ContainerTemplate(getMaterial(unit), unit.id, rows);
+            return new ContainerTemplate(unit, getMaterial(unit), rows);
+        } else if (unit.hasTrait(chest)) {
+            return new ChestTemplate(unit);
+        } else if (unit.hasTrait(door)) {
+            return new DoorTemplate(unit, getMaterial(unit));
+        } else if (unit.hasTrait(torch)) {
+            return new TorchTemplate(unit);
+        } else {
+            return new BlockTemplate(unit, getMaterial(unit));
         }
-        else
-            return new BlockTemplate(getMaterial(unit), unit.id);
     }
 
     private void generateStairs(BlockGenesisUnit unit, Block parent) {
@@ -92,34 +98,47 @@ public class BlockGenerator implements Generator {
     }
 
     private Material getMaterial(BlockGenesisUnit unit) {
-        if (unit.traits.contains(wooden))
+        if (unit.hasTrait(wooden))
             return Material.wood;
-        else if (unit.traits.contains(stone))
+        else if (unit.hasTrait(stone))
             return Material.rock;
-        else if (unit.traits.contains(metal))
+        else if (unit.hasTrait(metal))
             return Material.iron;
         else
             return Material.wood;
     }
 
     private void fillCommons(BlockGenesisUnit unit, Block block) {
-        block.setCreativeTab(AortaCreativeTab.BLOCKS);
-
-        if (unit.traits.contains(unbreakable)) {
+        if (unit.hasTrait(unbreakable)) {
             block.setBlockUnbreakable();
             block.setResistance(6000000);
         }
-        if (unit.traits.contains(transparent))
-            ((BlockTraitCommons.Getter) block).getCommons().transparent = true;
-        if (unit.traits.contains(not_collidable))
-            ((BlockTraitCommons.Getter) block).getCommons().not_collidable = true;
 
-        if (unit.traits.contains(large))
-            ((BlockTraitCommons.Getter) block).getCommons().size = BlockTraitCommons.Size.LARGE;
-        else if (unit.traits.contains(small))
-            ((BlockTraitCommons.Getter) block).getCommons().size = BlockTraitCommons.Size.SMALL;
-        else if (unit.traits.contains(tiny))
-            ((BlockTraitCommons.Getter) block).getCommons().size = BlockTraitCommons.Size.TINY;
+        if (unit.hasTrait(transparent)) {
+            block.setLightOpacity(0);
+        }
+
+        if (unit.hasTrait(bright_light)) {
+            block.setLightLevel(0.9375f);
+        } else if (unit.hasTrait(dim_light)) {
+            block.setLightLevel(0.5f);
+        }
+
+        if (block instanceof BlockTraitCommons.Getter) {
+            final BlockTraitCommons traits = ((BlockTraitCommons.Getter) block).getCommons();
+
+            if (unit.hasTrait(transparent))
+                traits.transparent = true;
+            if (unit.hasTrait(not_collidable))
+                traits.not_collidable = true;
+
+            if (unit.hasTrait(large))
+                traits.size = BlockTraitCommons.Size.LARGE;
+            else if (unit.hasTrait(small))
+                traits.size = BlockTraitCommons.Size.SMALL;
+            else if (unit.hasTrait(tiny))
+                traits.size = BlockTraitCommons.Size.TINY;
+        }
 
         if (FMLCommonHandler.instance().getSide().isClient())
             fillTexture(unit, block);

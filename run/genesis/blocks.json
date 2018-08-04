@@ -1,6 +1,6 @@
 [
   {
-    "id": "barrel_apples",
+    "id": "test_barrel_apples",
     "texture": [
       "aorta:barrel_bottom",
       "aorta:barrel_apples",
@@ -15,7 +15,7 @@
     ]
   },
   {
-    "id": "basalt",
+    "id": "test_basalt",
     "traits": [
       "block",
       "stone",
@@ -25,7 +25,7 @@
     ]
   },
   {
-    "id": "xyz_test_block",
+    "id": "test_xyz_block",
     "texture": [
       "minecraft:pumpkin_face_off",
       "minecraft:pumpkin_face_on",
@@ -38,11 +38,13 @@
     "traits": [
       "block",
       "wooden",
-      "rotatable"
+      "rotatable",
+      "half",
+      "tiny"
     ]
   },
   {
-    "id": "rope",
+    "id": "test_rope",
     "texture": [
       "aorta:rope_top",
       "aorta:rope_side"
@@ -51,17 +53,27 @@
     "traits": [
       "block",
       "wooden",
-      "pillar"
+      "pillar",
+      "dim_light"
     ]
   },
   {
-    "id": "apple_cross",
+    "id": "test_apple_cross",
     "texture": "aorta:barrel_apples",
     "traits": [
       "block",
       "wooden",
       "crossed_squares",
       "not_collidable"
+    ]
+  },
+  {
+    "id": "test_torch",
+    "texture": "minecraft:torch_on",
+    "traits": [
+      "block",
+      "torch",
+      "dim_light"
     ]
   }
 ]
