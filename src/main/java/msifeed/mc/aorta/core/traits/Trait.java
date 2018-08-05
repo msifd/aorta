@@ -6,6 +6,7 @@ import com.google.common.hash.Hashing;
 public enum Trait {
     test,
 
+    gm,
     lang_common, lang_menala;
 
     public int code;

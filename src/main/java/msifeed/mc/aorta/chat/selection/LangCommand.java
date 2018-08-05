@@ -1,7 +1,7 @@
 package msifeed.mc.aorta.chat.selection;
 
 import msifeed.mc.aorta.chat.Language;
-import msifeed.mc.aorta.core.props.TraitsAttribute;
+import msifeed.mc.aorta.core.attributes.TraitsAttribute;
 import msifeed.mc.aorta.core.traits.Trait;
 import msifeed.mc.aorta.core.traits.TraitTypes;
 import msifeed.mc.commons.ExtCommand;

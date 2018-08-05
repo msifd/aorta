@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.core.props;
+package msifeed.mc.aorta.core.attributes;
 
 import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.attributes.EntityLivingAttribute;

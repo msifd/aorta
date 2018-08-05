@@ -19,6 +19,10 @@ public class AortaClient extends Aorta {
     public void init() {
         super.init();
 
+        initMellow();
+    }
+
+    private void initMellow() {
         final IResourcePack resourcePack = FMLClientHandler.instance().getResourcePackFor(Aorta.MODID);
         final ResourceLocation themeSprite = new ResourceLocation(Aorta.MODID + ":theme/theme.png");
         final ResourceLocation themeMeta = new ResourceLocation(Aorta.MODID + ":theme/theme.json");

@@ -2,7 +2,7 @@ package msifeed.mc.aorta.chat;
 
 import msifeed.mc.aorta.chat.net.SpeechMessage;
 import msifeed.mc.aorta.chat.obfuscation.LangObfuscator;
-import msifeed.mc.aorta.core.props.TraitsAttribute;
+import msifeed.mc.aorta.core.attributes.TraitsAttribute;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
