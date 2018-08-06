@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.chat.selection;
+package msifeed.mc.aorta.chat.usage;
 
 import msifeed.mc.aorta.chat.ChatHandler;
 import msifeed.mc.aorta.chat.Language;
@@ -23,38 +23,33 @@ public class OfftopCommand extends ExtCommand {
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "/o <message>";
+        return "/o <text>";
     }
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
         if (!(sender instanceof EntityPlayer)) {
-            send(sender, "You should be at least player!");
+            error(sender, "You should be at least player!");
             return;
         }
 
         if (args.length == 0)
             return;
 
-        final ChatComponentText rootComponent = new ChatComponentText("");
-        rootComponent.getChatStyle().setColor(EnumChatFormatting.GRAY);
-
         final EntityPlayer player = (EntityPlayer) sender;
         final String text = Arrays.stream(args).collect(Collectors.joining(" "));
-        rootComponent.appendText(text);
 
         final SpeechMessage message = new SpeechMessage();
         message.type = SpeechMessage.Type.OFFTOP;
         message.language = LangAttribute.INSTANCE.get(player).orElse(Language.VANILLA);
         message.radius = 20;
         message.speaker = sender.getCommandSenderName();
-        message.chatComponent = rootComponent;
+        message.text = text;
 
         if (player instanceof EntityPlayerMP)
             ChatHandler.sendSpeechMessage((EntityPlayerMP) player, message);
         else {
-            SpeechFormatter.formatSpeech(message);
-            Minecraft.getMinecraft().thePlayer.addChatMessage(message.chatComponent);
+            Minecraft.getMinecraft().thePlayer.addChatMessage(SpeechFormatter.formatSpeech(message));
         }
     }
 }

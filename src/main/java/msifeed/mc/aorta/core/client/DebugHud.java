@@ -1,7 +1,7 @@
 package msifeed.mc.aorta.core.client;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import msifeed.mc.aorta.chat.selection.LangAttribute;
+import msifeed.mc.aorta.chat.usage.LangAttribute;
 import msifeed.mc.aorta.core.character.BodyPart;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.character.Grade;

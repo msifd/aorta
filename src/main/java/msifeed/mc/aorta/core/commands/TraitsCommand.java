@@ -1,10 +1,13 @@
 package msifeed.mc.aorta.core.commands;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import msifeed.mc.aorta.core.attributes.TraitsAttribute;
 import msifeed.mc.aorta.core.traits.Trait;
 import msifeed.mc.commons.ExtCommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.WorldServer;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -17,7 +20,7 @@ public class TraitsCommand extends ExtCommand {
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "/trait [trait]";
+        return "/trait [@<player>] [trait]";
     }
 
     @Override
@@ -27,34 +30,57 @@ public class TraitsCommand extends ExtCommand {
             return;
         }
 
-        switch (args.length) {
-            case 0:
-                printTraits(sender);
-                break;
-            case 1:
-                toggleTrait(sender, args[0]);
-                break;
+        if (args.length == 0) {
+            printTraits(sender, (EntityLivingBase) sender);
+            return;
+        }
+
+        final boolean nameFlag = args[0].startsWith("@");
+
+        if (nameFlag) {
+            final String name = args[0].substring(1);
+            final EntityLivingBase player = findPlayer(name);
+            if (player != null) {
+                if (args.length > 1)
+                    toggleTrait(sender, player, args[1]);
+                else
+                    printTraits(sender, player);
+            } else {
+                error(sender, "Unknown player");
+            }
+        } else {
+            toggleTrait(sender, (EntityLivingBase) sender, args[0]);
         }
     }
 
-    private void printTraits(ICommandSender sender) {
-        final EntityLivingBase entity = (EntityLivingBase) sender;
+    private void printTraits(ICommandSender sender, EntityLivingBase entity) {
         TraitsAttribute.INSTANCE.get(entity).ifPresent(traits -> {
             final Set<String> names = traits.stream().map(Enum::toString).collect(Collectors.toSet());
             final String theNiceString = joinNiceStringFromCollection(names);
-            send(sender, "Here your traits (%d):", names.size());
+            title(sender, "Here %s's traits:", entity.getCommandSenderName());
             send(sender, "  " + theNiceString);
         });
     }
 
-    private void toggleTrait(ICommandSender sender, String traitName) {
+    private EntityLivingBase findPlayer(String name) {
+        final MinecraftServer mcServer = FMLCommonHandler.instance().getMinecraftServerInstance();
+        if (mcServer == null)
+            return null;
+        for (WorldServer server : mcServer.worldServers) {
+            final EntityLivingBase tmp = server.getPlayerEntityByName(name);
+            if (tmp != null)
+                return tmp;
+        }
+        return null;
+    }
+
+    private void toggleTrait(ICommandSender sender, EntityLivingBase entity, String traitName) {
         try {
             final Trait trait = Trait.valueOf(traitName);
-            final EntityLivingBase entity = (EntityLivingBase) sender;
             final boolean added = TraitsAttribute.INSTANCE.toggle(entity, trait);
-            send(sender, "Trait '%s' %s", traitName, added ? "added" : "removed");
+            info(sender, "Trait '%s' %s", traitName, added ? "added" : "removed");
         } catch (IllegalArgumentException e) {
-            send(sender, "Unknown trait '%s'", traitName);
+            error(sender, "Unknown trait '%s'", traitName);
         }
     }
 }

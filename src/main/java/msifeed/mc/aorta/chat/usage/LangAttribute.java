@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.chat.selection;
+package msifeed.mc.aorta.chat.usage;
 
 import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.attributes.PlayerAttribute;

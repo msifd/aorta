@@ -7,9 +7,9 @@ import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.attributes.AttributeHandler;
 import msifeed.mc.aorta.chat.net.SpeechMessage;
 import msifeed.mc.aorta.chat.net.SpeechMessageHandler;
-import msifeed.mc.aorta.chat.selection.LangAttribute;
-import msifeed.mc.aorta.chat.selection.LangCommand;
-import msifeed.mc.aorta.chat.selection.OfftopCommand;
+import msifeed.mc.aorta.chat.usage.LangAttribute;
+import msifeed.mc.aorta.chat.usage.LangCommand;
+import msifeed.mc.aorta.chat.usage.OfftopCommand;
 import net.minecraft.command.CommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 

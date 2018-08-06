@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.chat.selection;
+package msifeed.mc.aorta.chat.usage;
 
 import msifeed.mc.aorta.chat.Language;
 import msifeed.mc.aorta.core.attributes.TraitsAttribute;
@@ -27,7 +27,7 @@ public class LangCommand extends ExtCommand {
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
         if (!(sender instanceof EntityLivingBase)) {
-            send(sender, "You should be at least entity!");
+            error(sender, "You should be at least entity!");
             return;
         }
 
@@ -41,16 +41,17 @@ public class LangCommand extends ExtCommand {
         final EntityLivingBase entity = (EntityLivingBase) sender;
 
         LangAttribute.INSTANCE.get(entity).ifPresent(language -> {
-            send(sender, "Current language: %s", language);
+            info(sender, "Current language: %s", language);
         });
 
         final Set<Language> knownLanguages = getKnownLanguages(entity);
         if (knownLanguages.isEmpty())
-            send(sender, "You have no known languages, silly.");
+            error(sender, "You have no known languages, silly.");
         else {
             final Set<String> langStrings = knownLanguages.stream().map(Enum::toString).collect(Collectors.toSet());
             final String joinedLangs = joinNiceStringFromCollection(langStrings);
-            send(sender, "Known languages: %s", joinedLangs);
+            title(sender, "Known languages:");
+            send(sender, "  " + joinedLangs);
         }
     }
 
@@ -64,9 +65,9 @@ public class LangCommand extends ExtCommand {
                 throw new Exception();
 
             LangAttribute.INSTANCE.set(entity, lang);
-            send(sender, "Selected %s language", lang);
+            info(sender, "Selected %s language", lang);
         } catch (Exception e) {
-            send(sender, "Unknown language.");
+            error(sender, "Unknown language.");
         }
     }
 

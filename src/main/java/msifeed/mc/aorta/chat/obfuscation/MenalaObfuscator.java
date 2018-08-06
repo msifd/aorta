@@ -10,9 +10,8 @@ import java.util.Random;
 
 public class MenalaObfuscator implements LangObfuscator {
     @Override
-    public void obfuscate(List<ChatComponentText> components) {
-        for (ChatComponentText c : components)
-            ChatUtils.setText(c, shuffleWords(c.getUnformattedTextForChat()));
+    public String obfuscate(String message) {
+        return shuffleWords(message);
     }
 
     private String shuffleWords(String source) {

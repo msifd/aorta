@@ -28,8 +28,9 @@ public class ItemMeta {
         if (owner.isEmpty() && lines.length == 0)
             return;
 
-        event.toolTip.add(getRandomFormattingColor() + "Meta:");
-        event.toolTip.add("Owner: " + (owner.isEmpty() ? "???" : owner));
+//        final String header = " = Meta: " + "(owner: " + (owner.isEmpty() ? "???" : owner) + ')';
+        final String header = String.format("# Meta (%s)", (owner.isEmpty() ? "???" : owner));
+        event.toolTip.add(getRandomFormattingColor() + header);
         event.toolTip.addAll(Arrays.asList(lines));
     }
 

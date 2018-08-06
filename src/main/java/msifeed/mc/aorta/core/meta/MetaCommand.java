@@ -58,12 +58,12 @@ public class MetaCommand extends ExtCommand {
     }
 
     private void printHelp(ICommandSender sender) {
-        send(sender, "Meta help:");
-        send(sender, " Take item in hand.");
-        send(sender, " /meta owner <name> - Set owner");
-        send(sender, " /meta add <text> - Add new line");
-        send(sender, " /meta remove - Remove last line");
-        send(sender, " /meta clear - Clear meta data");
+        title(sender, "Meta help:");
+        info(sender, " Take item in hand.");
+        info(sender, " /meta owner <name> - Set owner");
+        info(sender, " /meta add <text> - Add new line");
+        info(sender, " /meta remove - Remove last line");
+        info(sender, " /meta clear - Clear meta data");
     }
 
     private String joinText(String[] args, int offset) {

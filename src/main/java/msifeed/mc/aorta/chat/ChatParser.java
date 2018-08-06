@@ -1,29 +1,36 @@
 package msifeed.mc.aorta.chat;
 
 import msifeed.mc.aorta.chat.net.SpeechMessage;
-import msifeed.mc.aorta.chat.selection.LangAttribute;
+import msifeed.mc.aorta.chat.usage.LangAttribute;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 
-public class ChatParser {
+class ChatParser {
     private static final int[] LOUDNESS_RADIUS = {2, 5, 15, 30, 60};
 
-    public static SpeechMessage parse(EntityPlayerMP sender, ChatComponentTranslation chatComponent) {
-        final IChatComponent messageComp = (IChatComponent) chatComponent.getFormatArgs()[1];
-
+    static SpeechMessage parse(EntityPlayerMP sender, ChatComponentTranslation chatComponent) {
+        final String text = getTextFromTranslation(chatComponent);
         final SpeechMessage message = new SpeechMessage();
         message.language = LangAttribute.INSTANCE.get(sender).orElse(Language.MENALA);
-        message.radius = getSpeechRadius(messageComp);
+        message.radius = getSpeechRadius(text);
         message.speaker = sender.getDisplayName();
-        message.chatComponent = messageComp;
+        message.text = text;
         return message;
     }
 
-    public static int getSpeechRadius(IChatComponent chatComponent) {
-        final String text = chatComponent.getUnformattedText();
+    private static String getTextFromTranslation(ChatComponentTranslation chatComponent) {
+        final Object formatObj = chatComponent.getFormatArgs()[1];
+        if (formatObj instanceof IChatComponent)
+            return ((IChatComponent) formatObj).getUnformattedText();
+        else if (formatObj instanceof String)
+            return (String) formatObj;
+        else
+            return chatComponent.getUnformattedText();
+    }
 
+    private static int getSpeechRadius(String text) {
         int loudness = (LOUDNESS_RADIUS.length - 1) / 2;
 
         int exclamations = 0;

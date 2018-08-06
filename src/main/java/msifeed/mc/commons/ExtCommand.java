@@ -11,17 +11,29 @@ public abstract class ExtCommand extends CommandBase {
         return 0;
     }
 
+    protected void title(ICommandSender sender, String format, Object... args) {
+        sendColored(sender, EnumChatFormatting.BLUE, format, args);
+    }
+
+    protected void info(ICommandSender sender, String format, Object... args) {
+        send(sender, format, args);
+    }
+
+    protected void success(ICommandSender sender, String format, Object... args) {
+        sendColored(sender, EnumChatFormatting.GREEN, format, args);
+    }
+
+    protected void error(ICommandSender sender, String format, Object... args) {
+        sendColored(sender, EnumChatFormatting.RED, format, args);
+    }
+
     protected void send(ICommandSender sender, String format, Object... args) {
-        send(sender, String.format(format, args));
+        sender.addChatMessage(new ChatComponentText(args.length == 0 ? format : String.format(format, args)));
     }
 
-    protected void send(ICommandSender sender, String message) {
-        sender.addChatMessage(new ChatComponentText(message));
-    }
-
-    protected void error(ICommandSender sender, String message) {
-        final ChatComponentText c = new ChatComponentText(message);
-        c.getChatStyle().setColor(EnumChatFormatting.RED);
+    protected void sendColored(ICommandSender sender, EnumChatFormatting color, String format, Object... args) {
+        final ChatComponentText c = new ChatComponentText(args.length == 0 ? format : String.format(format, args));
+        c.getChatStyle().setColor(color);
         sender.addChatMessage(c);
     }
 }
