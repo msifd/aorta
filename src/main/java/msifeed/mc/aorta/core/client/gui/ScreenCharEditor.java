@@ -1,18 +1,18 @@
 package msifeed.mc.aorta.core.client.gui;
 
+import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.character.BodyPart;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.character.Grade;
-import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.layout.VerticalLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.mellow.utils.SizePolicy;
-import msifeed.mc.mellow.widgets.*;
-import msifeed.mc.mellow.widgets.button.Button;
+import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.basic.Label;
 import msifeed.mc.mellow.widgets.basic.Separator;
+import msifeed.mc.mellow.widgets.button.Button;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
 import msifeed.mc.mellow.widgets.droplist.DropList;
 import msifeed.mc.mellow.widgets.window.Window;

@@ -2,7 +2,6 @@ package msifeed.mc.aorta.genesis.blocks;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import msifeed.mc.aorta.genesis.GenesisTrait;
 import msifeed.mc.aorta.genesis.GenesisUnit;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.EntityLivingBase;
@@ -10,8 +9,6 @@ import net.minecraft.util.Facing;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-
-import java.util.HashSet;
 
 public class BlockTraitCommons {
     private static final int[] ROTATION_MATRIX = new int[]{

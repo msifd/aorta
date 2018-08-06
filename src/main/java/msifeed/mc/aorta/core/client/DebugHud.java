@@ -2,11 +2,11 @@ package msifeed.mc.aorta.core.client;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.aorta.chat.usage.LangAttribute;
+import msifeed.mc.aorta.core.attributes.CharacterAttribute;
+import msifeed.mc.aorta.core.attributes.TraitsAttribute;
 import msifeed.mc.aorta.core.character.BodyPart;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.character.Grade;
-import msifeed.mc.aorta.core.attributes.CharacterAttribute;
-import msifeed.mc.aorta.core.attributes.TraitsAttribute;
 import msifeed.mc.aorta.core.things.ItemDebugTool;
 import msifeed.mc.aorta.core.traits.Trait;
 import net.minecraft.client.Minecraft;

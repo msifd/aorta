@@ -6,7 +6,6 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.aorta.chat.SpeechFormatter;
 import net.minecraft.util.IChatComponent;
-import net.minecraftforge.client.ForgeHooksClient;
 
 public class SpeechMessageHandler implements IMessageHandler<SpeechMessage, IMessage> {
     @Override

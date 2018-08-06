@@ -7,7 +7,8 @@ public enum Trait {
     test,
 
     gm,
-    lang_common, lang_menala;
+    lang_common, lang_menala, lang_gurhk, lang_machine
+    ;
 
     public int code;
 

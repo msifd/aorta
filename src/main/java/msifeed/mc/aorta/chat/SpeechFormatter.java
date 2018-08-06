@@ -1,6 +1,7 @@
 package msifeed.mc.aorta.chat;
 
 import msifeed.mc.aorta.chat.net.SpeechMessage;
+import msifeed.mc.aorta.chat.obfuscation.LangObfuscator;
 import msifeed.mc.aorta.core.attributes.TraitsAttribute;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
@@ -9,7 +10,7 @@ import net.minecraft.util.IChatComponent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class SpeechFormatter {
     public static IChatComponent formatSpeech(SpeechMessage message) {
@@ -31,7 +32,7 @@ public class SpeechFormatter {
 //        });
 
         if (!isMyNameIs(message.speaker) && !doIKnowLanguage(message.language))
-            text = message.language.obfuscator.obfuscate(text);
+            text = obfuscateWith(message.language.obfuscator, text);
 
         final ChatComponentText root = new ChatComponentText("");
         root.appendText(text);
@@ -55,5 +56,35 @@ public class SpeechFormatter {
 
     private static boolean doIKnowLanguage(Language language) {
         return language == Language.VANILLA || TraitsAttribute.INSTANCE.has(Minecraft.getMinecraft().thePlayer, language.trait);
+    }
+
+    private static String obfuscateWith(LangObfuscator obfuscator, String text) {
+        final List<String> parts = splitToParts(text);
+        return joinParts(obfuscator.obfuscate(parts));
+    }
+
+    private static List<String> splitToParts(String text) {
+        final ArrayList<String> parts = new ArrayList<>();
+        final StringBuilder sb = new StringBuilder();
+
+        boolean prevLetter = false;
+        for (int code : text.codePoints().toArray()) {
+            final boolean currLetter = Character.isLetter(code);
+            if (prevLetter != currLetter && sb.length() > 0) {
+                parts.add(sb.toString());
+                sb.setLength(0);
+            }
+            sb.appendCodePoint(code);
+            prevLetter = currLetter;
+        }
+
+        if (sb.length() > 0)
+            parts.add(sb.toString());
+
+        return parts;
+    }
+
+    private static String joinParts(List<String> words) {
+        return words.stream().collect(Collectors.joining());
     }
 }
