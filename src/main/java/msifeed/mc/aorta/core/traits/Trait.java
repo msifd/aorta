@@ -4,10 +4,13 @@ import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 
 public enum Trait {
-    test,
+    __lang_vanilla,
 
+    test,
     gm,
-    lang_common, lang_menala, lang_gurhk, lang_machine
+
+    lang_common, lang_menala, lang_gurhk, lang_machine, lang_umallan
+
     ;
 
     public int code;

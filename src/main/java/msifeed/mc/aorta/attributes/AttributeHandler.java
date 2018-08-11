@@ -52,4 +52,10 @@ public enum AttributeHandler {
         for (EntityAttribute a : attributes.values())
             a.onPlayerStartedTracking(e);
     }
+
+    @SubscribeEvent
+    public void onClonePlayer(PlayerEvent.Clone e) {
+        for (EntityAttribute a : attributes.values())
+            a.onClonePlayer(e);
+    }
 }

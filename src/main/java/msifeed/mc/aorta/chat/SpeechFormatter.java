@@ -31,7 +31,7 @@ public class SpeechFormatter {
 //            c.getChatStyle().setItalic(true);
 //        });
 
-        if (!isMyNameIs(message.speaker) && !doIKnowLanguage(message.language))
+//        if (!isMyNameIs(message.speaker) && !doIKnowLanguage(message.language))
             text = obfuscateWith(message.language.obfuscator, text);
 
         final ChatComponentText root = new ChatComponentText("");
@@ -55,7 +55,7 @@ public class SpeechFormatter {
     }
 
     private static boolean doIKnowLanguage(Language language) {
-        return language == Language.VANILLA || TraitsAttribute.INSTANCE.has(Minecraft.getMinecraft().thePlayer, language.trait);
+        return TraitsAttribute.INSTANCE.has(Minecraft.getMinecraft().thePlayer, language.trait);
     }
 
     private static String obfuscateWith(LangObfuscator obfuscator, String text) {

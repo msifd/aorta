@@ -41,7 +41,7 @@ public class LangCommand extends ExtCommand {
         final EntityLivingBase entity = (EntityLivingBase) sender;
 
         LangAttribute.INSTANCE.get(entity).ifPresent(language -> {
-            info(sender, "Current language: %s", language);
+            title(sender, "Current language: %s", language);
         });
 
         final Set<Language> knownLanguages = getKnownLanguages(entity);

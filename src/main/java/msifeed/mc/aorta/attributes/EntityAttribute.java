@@ -55,13 +55,21 @@ public abstract class EntityAttribute<T> {
     public void onPlayerStartedTracking(PlayerEvent.StartTracking event) {
     }
 
+    public void onClonePlayer(PlayerEvent.Clone event) {
+        if (event.wasDeath) {
+            final NBTTagCompound compound = new NBTTagCompound();
+            toNBT(event.original, compound);
+            fromNBT(event.entityPlayer, compound);
+        }
+    }
+
     public void sync(EntityPlayerMP playerMP, Entity entity) {
         final SyncAttrMessage msg = new SyncAttrMessage(entity, this);
         AttributeHandler.INSTANCE.CHANNEL.sendTo(msg, playerMP);
     }
 
     public void sync(Entity entity) {
-        if (FMLCommonHandler.instance().getEffectiveSide().isClient())
+        if (entity.worldObj.isRemote)
             syncServer(entity);
         else
             sync(entity.worldObj, entity);
