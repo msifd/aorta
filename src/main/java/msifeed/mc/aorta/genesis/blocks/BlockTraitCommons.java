@@ -3,6 +3,7 @@ package msifeed.mc.aorta.genesis.blocks;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import msifeed.mc.aorta.genesis.GenesisUnit;
+import msifeed.mc.aorta.genesis.blocks.client.GenesisBlockRenderer;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.Facing;

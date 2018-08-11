@@ -33,7 +33,7 @@ public class Aorta {
     public void init() {
         AttributeHandler.INSTANCE.init();
         CORE.init();
-        GENESIS.generate();
+        GENESIS.init();
         SPEECHAT.init();
     }
 

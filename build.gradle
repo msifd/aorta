@@ -16,7 +16,7 @@ apply plugin: 'idea'
 apply plugin: 'net.nemerosa.versioning'
 
 
-version = "0.10.2-$versioning.info.build"
+version = "0.10.3-$versioning.info.build"
 group = "msifeed.mc.aorta"
 archivesBaseName = "aorta"
 
@@ -53,4 +53,6 @@ processResources {
 
 sourceCompatibility = targetCompatibility = '1.8'
 compileJava { sourceCompatibility = targetCompatibility = '1.8' }
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
 idea { module { inheritOutputDirs = true } }

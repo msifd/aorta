@@ -23,6 +23,10 @@ public class Genesis {
             .put(GenesisTrait.item, new ItemGenerator())
             .build();
 
+    public void init() {
+        generate();
+    }
+
     public void generate() {
         final File mcRootDir = Loader.instance().getConfigDir().getParentFile();
         final File genesisDir = new File(mcRootDir, "genesis");
@@ -42,7 +46,7 @@ public class Genesis {
                 .filter(path -> path.toString().endsWith(".json"))
                 .map(this::parseJson)
                 .filter(JsonElement::isJsonArray)
-                .forEach(el -> el.getAsJsonArray().forEach(this::generate));
+                .forEach(el -> el.getAsJsonArray().forEach(this::generateFromFile));
     }
 
     private JsonElement parseJson(Path path) {
@@ -54,7 +58,7 @@ public class Genesis {
         }
     }
 
-    private void generate(JsonElement jsonElement) {
+    private void generateFromFile(JsonElement jsonElement) {
         if (jsonElement.isJsonObject()) {
             final JsonObject json = jsonElement.getAsJsonObject();
             final HashSet<GenesisTrait> traits = parseTraits(json);

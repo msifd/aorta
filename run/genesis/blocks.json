@@ -75,5 +75,13 @@
       "torch",
       "dim_light"
     ]
+  },
+  {
+    "id": "test_chest",
+    "texture": "aorta:chest_supplies",
+    "traits": [
+      "block",
+      "chest"
+    ]
   }
 ]
