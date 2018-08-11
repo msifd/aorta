@@ -12,6 +12,7 @@ import net.minecraft.item.Item;
 
 import java.util.HashSet;
 
+import static msifeed.mc.aorta.genesis.GenesisTrait.hold_like_tool;
 import static msifeed.mc.aorta.genesis.GenesisTrait.not_stackable;
 
 public class ItemGenerator implements Generator {
@@ -27,9 +28,10 @@ public class ItemGenerator implements Generator {
     private void fillCommons(ItemGenesisUnit unit, Item item) {
         item.setCreativeTab(AortaCreativeTab.ITEMS);
 
-        if (unit.hasTrait(not_stackable)) {
+        if (unit.hasTrait(not_stackable))
             item.setMaxStackSize(1);
-        }
+        if (unit.hasTrait(hold_like_tool))
+            item.setFull3D();
 
         if (FMLCommonHandler.instance().getSide().isClient()) {
             fillTexture(unit, item);

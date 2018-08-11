@@ -25,7 +25,7 @@ public enum GenesisTrait {
     add_slabs, add_stairs,
 
     // Items // // // // // // // //
-    not_stackable,
+    not_stackable, hold_like_tool,
 
     ;
 }
