@@ -4,8 +4,10 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import msifeed.mc.aorta.genesis.GenesisUnit;
 import msifeed.mc.aorta.genesis.blocks.client.GenesisBlockRenderer;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.Facing;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
@@ -26,6 +28,7 @@ public class BlockTraitCommons {
     public boolean half = false;
     public boolean not_collidable = false;
     public boolean transparent = false;
+    public boolean useAlphaChannel = false;
     public Type type = Type.SIMPLE;
     public Size size = Size.MEDIUM;
 
@@ -46,8 +49,6 @@ public class BlockTraitCommons {
     }
 
     public boolean isSolid(int side, int meta) {
-        if (transparent)
-            return false;
         if (half)
             return side == Facing.oppositeSide[getOrt(meta)];
         return true;
@@ -64,6 +65,27 @@ public class BlockTraitCommons {
             default:
                 return 0;
         }
+    }
+
+    public int getRenderBlockPass() {
+        return useAlphaChannel ? 1 : 0;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public boolean shouldSideBeRendered(IBlockAccess blockAccess, int x, int y, int z, int side) {
+        if (!transparent)
+            return true;
+
+        final Block block = blockAccess.getBlock(x, y, z);
+
+        final boolean otherTransparent;
+        if (block instanceof Getter) {
+            otherTransparent = ((Getter) block).getCommons().transparent;
+        } else {
+            otherTransparent = block == Blocks.glass || block == Blocks.stained_glass;
+        }
+
+        return !otherTransparent;
     }
 
     public int onBlockPlaced(int side, int meta) {

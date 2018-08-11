@@ -9,7 +9,8 @@ public enum GenesisTrait {
 
     // Blocks // // // // // // // //
     wooden, stone, metal,
-    unbreakable, transparent, not_collidable,
+    unbreakable, not_collidable,
+    transparent, with_alpha,
     bright_light, dim_light,
 
     // Appearance

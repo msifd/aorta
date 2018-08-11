@@ -79,6 +79,7 @@ public class BlockGenerator implements Generator {
         final String id = unit.id + "_stairs";
         final Block stairs = new StairsTemplate(parent, id, ((BlockTraitCommons.Getter) parent).getCommons());
         fillCommons(unit, stairs);
+        stairs.setCreativeTab(AortaCreativeTab.BLOCKS);
         GameRegistry.registerBlock(stairs, id);
     }
 
@@ -91,6 +92,7 @@ public class BlockGenerator implements Generator {
 
         fillCommons(unit, slabSingle);
         fillCommons(unit, slabDouble);
+        slabSingle.setCreativeTab(AortaCreativeTab.BLOCKS);
         slabDouble.setCreativeTab(null);
 
         GameRegistry.registerBlock(slabSingle, SlabTemplate.SlabItem.class, singleId, slabSingle, slabDouble);
@@ -129,6 +131,8 @@ public class BlockGenerator implements Generator {
 
             if (unit.hasTrait(transparent))
                 traits.transparent = true;
+            if (unit.hasTrait(with_alpha))
+                traits.useAlphaChannel = true;
             if (unit.hasTrait(not_collidable))
                 traits.not_collidable = true;
 

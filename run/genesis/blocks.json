@@ -16,6 +16,7 @@
   },
   {
     "id": "test_basalt",
+    "texture": "aorta:basalt",
     "traits": [
       "block",
       "stone",
@@ -82,6 +83,23 @@
     "traits": [
       "block",
       "chest"
+    ]
+  },
+  {
+    "id": "test_glass",
+    "texture": "aorta:glass_4",
+    "traits": [
+      "block",
+      "transparent"
+    ]
+  },
+  {
+    "id": "test_alpha_glass",
+    "texture": "aorta:glass_2",
+    "traits": [
+      "block",
+      "transparent",
+      "with_alpha"
     ]
   }
 ]

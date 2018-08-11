@@ -37,6 +37,11 @@ public class BlockTemplate extends Block implements BlockTraitCommons.Getter {
     }
 
     @Override
+    public int getRenderBlockPass() {
+        return traits.getRenderBlockPass();
+    }
+
+    @Override
     public boolean isOpaqueCube() {
         return traits != null && traits.isOpaqueCube();
     }
@@ -54,6 +59,11 @@ public class BlockTemplate extends Block implements BlockTraitCommons.Getter {
     @Override
     public boolean renderAsNormalBlock() {
         return traits.renderAsNormalBlock();
+    }
+
+    @SideOnly(Side.CLIENT)
+    public boolean shouldSideBeRendered(IBlockAccess blockAccess, int x, int y, int z, int side) {
+        return traits.shouldSideBeRendered(blockAccess, x, y, z, side);
     }
 
     @Override
@@ -78,6 +88,7 @@ public class BlockTemplate extends Block implements BlockTraitCommons.Getter {
         }
     }
 
+    @Override
     public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB mask, List list, Entity entity) {
         if (traits.half)
             this.setBlockBoundsBasedOnState(world, x, y, z);
