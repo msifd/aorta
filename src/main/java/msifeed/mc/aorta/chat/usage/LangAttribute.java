@@ -29,13 +29,8 @@ public class LangAttribute extends PlayerAttribute<Language> {
 
     @Override
     public Language init(Entity entity, World world, Language currentValue) {
-        if (currentValue == null || currentValue == Language.VANILLA) {
-            final Set<Trait> traits = TraitsAttribute.INSTANCE.get(entity).orElse(Collections.emptySet());
-            final Set<Trait> langTraits = TraitTypes.LANG.filter(traits);
-            return Arrays.stream(Language.values())
-                    .filter(language -> langTraits.contains(language.trait))
-                    .findFirst().orElse(Language.VANILLA);
-        }
+        if (currentValue == null || currentValue == Language.VANILLA)
+            return findLang(entity);
         return currentValue;
     }
 
@@ -60,15 +55,18 @@ public class LangAttribute extends PlayerAttribute<Language> {
         Optional<Language> result = super.get(entity);
 
         if (!result.isPresent() || result.get() == Language.VANILLA) {
-            final Set<Trait> traits = TraitsAttribute.INSTANCE.get(entity).orElse(Collections.emptySet());
-            final Set<Trait> langTraits = TraitTypes.LANG.filter(traits);
-            final Language firstLang = Arrays.stream(Language.values())
-                    .filter(language -> langTraits.contains(language.trait))
-                    .findFirst().orElse(Language.VANILLA);
-            set(entity, firstLang);
+            set(entity, findLang(entity));
             return super.get(entity);
         }
 
         return result;
+    }
+
+    private Language findLang(Entity entity) {
+        final Set<Trait> traits = TraitsAttribute.INSTANCE.get(entity).orElse(Collections.emptySet());
+        final Set<Trait> langTraits = TraitTypes.LANG.filter(traits);
+        return Arrays.stream(Language.values())
+                .filter(language -> langTraits.contains(language.trait))
+                .findFirst().orElse(Language.VANILLA);
     }
 }

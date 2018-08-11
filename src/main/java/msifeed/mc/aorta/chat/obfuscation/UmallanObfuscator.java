@@ -1,5 +1,7 @@
 package msifeed.mc.aorta.chat.obfuscation;
 
+import msifeed.mc.aorta.chat.parser.SpeechPart;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -8,25 +10,27 @@ import java.util.stream.IntStream;
 
 public class UmallanObfuscator implements LangObfuscator {
     @Override
-    public List<String> obfuscate(List<String> parts) {
+    public String obfuscate(List<SpeechPart> parts) {
         final String letters = getShuffledLetters(parts);
         final int[] offset = {0};
         return parts.stream()
                 .map(part -> {
-                    if (ObfuscationUtils.isWordPart(part)) {
-                        final String sub = letters.substring(offset[0], part.length());
-                        offset[0] += part.length();
+                    final String text = part.text;
+                    if (part.isWord()) {
+                        final String sub = letters.substring(offset[0], text.length());
+                        offset[0] += text.length();
                         return sub;
                     } else {
-                        return part;
+                        return text;
                     }
                 })
-                .collect(Collectors.toList());
+                .collect(Collectors.joining());
     }
 
-    private static String getShuffledLetters(List<String> parts) {
+    private static String getShuffledLetters(List<SpeechPart> parts) {
         final List<Integer> codes = parts.stream()
-                .filter(ObfuscationUtils::isWordPart)
+                .filter(SpeechPart::isWord)
+                .map(part -> part.text)
                 .map(CharSequence::codePoints)
                 .flatMap(IntStream::boxed)
                 .collect(Collectors.toList());

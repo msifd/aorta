@@ -2,6 +2,8 @@ package msifeed.mc.aorta.chat;
 
 import msifeed.mc.aorta.chat.net.SpeechMessage;
 import msifeed.mc.aorta.chat.obfuscation.LangObfuscator;
+import msifeed.mc.aorta.chat.parser.SpeechPart;
+import msifeed.mc.aorta.chat.parser.SpeechPartParser;
 import msifeed.mc.aorta.core.attributes.TraitsAttribute;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
@@ -59,32 +61,9 @@ public class SpeechFormatter {
     }
 
     private static String obfuscateWith(LangObfuscator obfuscator, String text) {
-        final List<String> parts = splitToParts(text);
-        return joinParts(obfuscator.obfuscate(parts));
+        final List<SpeechPart> parts = SpeechPartParser.parse(text);
+        return obfuscator.obfuscate(parts);
     }
 
-    private static List<String> splitToParts(String text) {
-        final ArrayList<String> parts = new ArrayList<>();
-        final StringBuilder sb = new StringBuilder();
 
-        boolean prevLetter = false;
-        for (int code : text.codePoints().toArray()) {
-            final boolean currLetter = Character.isLetter(code);
-            if (prevLetter != currLetter && sb.length() > 0) {
-                parts.add(sb.toString());
-                sb.setLength(0);
-            }
-            sb.appendCodePoint(code);
-            prevLetter = currLetter;
-        }
-
-        if (sb.length() > 0)
-            parts.add(sb.toString());
-
-        return parts;
-    }
-
-    private static String joinParts(List<String> words) {
-        return words.stream().collect(Collectors.joining());
-    }
 }

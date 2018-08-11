@@ -9,7 +9,7 @@ public enum Trait {
     test,
     gm,
 
-    lang_common, lang_menala, lang_gurhk, lang_machine, lang_umallan
+    lang_common, lang_menala, lang_gurhk, lang_umallan, lang_tervilian, lang_machine
 
     ;
 

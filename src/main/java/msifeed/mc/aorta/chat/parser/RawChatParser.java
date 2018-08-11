@@ -1,5 +1,6 @@
-package msifeed.mc.aorta.chat;
+package msifeed.mc.aorta.chat.parser;
 
+import msifeed.mc.aorta.chat.Language;
 import msifeed.mc.aorta.chat.net.SpeechMessage;
 import msifeed.mc.aorta.chat.usage.LangAttribute;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -7,10 +8,10 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 
-class ChatParser {
+public class RawChatParser {
     private static final int[] LOUDNESS_RADIUS = {2, 5, 15, 30, 60};
 
-    static SpeechMessage parse(EntityPlayerMP sender, ChatComponentTranslation chatComponent) {
+    public static SpeechMessage parse(EntityPlayerMP sender, ChatComponentTranslation chatComponent) {
         final String text = getTextFromTranslation(chatComponent);
         final SpeechMessage message = new SpeechMessage();
         message.language = LangAttribute.INSTANCE.get(sender).orElse(Language.MENALA);

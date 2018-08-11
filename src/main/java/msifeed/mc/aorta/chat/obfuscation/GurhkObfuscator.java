@@ -1,5 +1,7 @@
 package msifeed.mc.aorta.chat.obfuscation;
 
+import msifeed.mc.aorta.chat.parser.SpeechPart;
+
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -8,10 +10,10 @@ public class GurhkObfuscator implements LangObfuscator {
     private static final String LETTERS = "укгхашщирко";
 
     @Override
-    public List<String> obfuscate(List<String> parts) {
+    public String obfuscate(List<SpeechPart> parts) {
         return parts.stream()
-                .map(part -> ObfuscationUtils.isWordPart(part) ? randomLetters(part) : part)
-                .collect(Collectors.toList());
+                .map(part -> part.isWord() ? randomLetters(part.text) : part.text)
+                .collect(Collectors.joining());
     }
 
     private static String randomLetters(String word) {

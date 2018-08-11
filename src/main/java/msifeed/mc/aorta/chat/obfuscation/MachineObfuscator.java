@@ -1,5 +1,7 @@
 package msifeed.mc.aorta.chat.obfuscation;
 
+import msifeed.mc.aorta.chat.parser.SpeechPart;
+
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -13,10 +15,10 @@ public class MachineObfuscator implements LangObfuscator {
     };
 
     @Override
-    public List<String> obfuscate(List<String> parts) {
+    public String obfuscate(List<SpeechPart> parts) {
         return parts.stream()
-                .map(part -> ObfuscationUtils.isWordPart(part) ? randomBeep(part) : part)
-                .collect(Collectors.toList());
+                .map(part -> part.isWord() ? randomBeep(part.text) : part.text)
+                .collect(Collectors.joining());
     }
 
     private static String randomBeep(String word) {
