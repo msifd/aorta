@@ -70,6 +70,8 @@ public class BlockGenerator implements Generator {
             return new DoorTemplate(unit, getMaterial(unit));
         } else if (unit.hasTrait(torch)) {
             return new TorchTemplate(unit);
+        } else if (unit.hasTrait(pane)) {
+            return new PaneTemplate(unit, getMaterial(unit));
         } else {
             return new BlockTemplate(unit, getMaterial(unit));
         }
@@ -150,16 +152,12 @@ public class BlockGenerator implements Generator {
 
     @SideOnly(Side.CLIENT)
     private void fillTexture(BlockGenesisUnit unit, Block block) {
-        if (unit.textureString != null) {
-            block.setBlockTextureName(unit.textureString);
-            return;
-        }
-
         if (unit.textureArray != null && unit.textureLayout != null) {
             ((BlockTraitCommons.Getter) block).getCommons().textureLayout = new BlockTextureLayout(unit.textureArray, unit.textureLayout);
-            return;
+        } else if (unit.textureString != null) {
+            block.setBlockTextureName(unit.textureString);
+        } else {
+            block.setBlockTextureName("aorta:" + unit.id);
         }
-
-        block.setBlockTextureName("aorta:" + unit.id);
     }
 }

@@ -19,7 +19,7 @@ public enum GenesisTrait {
     without_particles,
 
     // Logic
-    container, chest, door, torch,
+    container, chest, door, torch, pane,
 
     // Extensions
     add_slabs, add_stairs,

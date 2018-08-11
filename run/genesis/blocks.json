@@ -101,5 +101,13 @@
       "transparent",
       "with_alpha"
     ]
+  },
+  {
+    "id": "test_pane",
+    "texture": "aorta:pane_2",
+    "traits": [
+      "block",
+      "pane"
+    ]
   }
 ]

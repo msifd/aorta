@@ -12,10 +12,10 @@ import java.util.stream.StreamSupport;
 
 public class BlockGenesisUnit extends GenesisUnit {
     public String textureString = null;
-    public List<String> textureArray = null;
-    public int[] textureLayout = null;
+    List<String> textureArray = null;
+    int[] textureLayout = null;
 
-    public BlockGenesisUnit(JsonObject json, HashSet<GenesisTrait> traits) {
+    BlockGenesisUnit(JsonObject json, HashSet<GenesisTrait> traits) {
         super(json, traits);
 
         if (json.has(Props.texture)) {
@@ -27,6 +27,7 @@ public class BlockGenesisUnit extends GenesisUnit {
                         .limit(6)
                         .map(e -> e.getAsJsonPrimitive().getAsString())
                         .collect(Collectors.toList());
+                textureString = textureArray.get(0);
             }
         }
 
