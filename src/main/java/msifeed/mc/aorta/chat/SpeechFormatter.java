@@ -27,14 +27,12 @@ public class SpeechFormatter {
     }
 
     private static IChatComponent formatSpeechMessage(SpeechMessage message) {
-        String text = message.text;
+        final String text;
 
-//        changeGroups(chatComponent, '*', '*', c -> {
-//            c.getChatStyle().setItalic(true);
-//        });
-
-//        if (!isMyNameIs(message.speaker) && !doIKnowLanguage(message.language))
-            text = obfuscateWith(message.language.obfuscator, text);
+        if (!isMyNameIs(message.speaker) && !doIKnowLanguage(message.language))
+            text = obfuscateWith(message.language.obfuscator, message.text);
+        else
+            text = message.text;
 
         final ChatComponentText root = new ChatComponentText("");
         root.appendText(text);

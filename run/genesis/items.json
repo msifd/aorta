@@ -1,7 +1,7 @@
 [
   {
-    "id": "aorta_item",
-    "texture": "aorta:tab_aorta",
+    "id": "test_chainsaw",
+    "texture": "aorta:chainsaw",
     "traits": [
       "item"
     ]

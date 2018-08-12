@@ -13,10 +13,10 @@ public class SpeechPartParser {
         final StringBuilder sb = new StringBuilder();
 
         boolean ignoreBlock = false;
-        PartType prevType = null;
+        SpeechPart.PartType prevType = null;
         for (int code : text.codePoints().toArray()) {
-            final PartType currCodeType = getPart(code);
-            if (prevType != PartType.IGNORE_CODE && currCodeType == PartType.IGNORE_CODE)
+            final SpeechPart.PartType currCodeType = getPart(code);
+            if (prevType != SpeechPart.PartType.IGNORE_CODE && currCodeType == SpeechPart.PartType.IGNORE_CODE)
                 ignoreBlock = !ignoreBlock;
 
             if (prevType != currCodeType && sb.length() > 0) {
@@ -24,7 +24,7 @@ public class SpeechPartParser {
                 sb.setLength(0);
             }
             sb.appendCodePoint(code);
-            prevType = ignoreBlock && currCodeType != PartType.IGNORE_CODE ? PartType.IGNORE : currCodeType;
+            prevType = ignoreBlock && currCodeType != SpeechPart.PartType.IGNORE_CODE ? SpeechPart.PartType.IGNORE : currCodeType;
         }
 
         if (sb.length() > 0)
@@ -33,15 +33,15 @@ public class SpeechPartParser {
         return parts;
     }
 
-    private static PartType getPart(int codePoint) {
+    private static SpeechPart.PartType getPart(int codePoint) {
         if (Character.isLetter(codePoint))
-            return PartType.WORD;
+            return SpeechPart.PartType.WORD;
         if (Character.isWhitespace(codePoint))
-            return PartType.WHITESPACE;
+            return SpeechPart.PartType.WHITESPACE;
         else if (IGNORE_CODES.contains(codePoint))
-            return PartType.IGNORE_CODE;
+            return SpeechPart.PartType.IGNORE_CODE;
         else
-            return PartType.PUNCTUATION;
+            return SpeechPart.PartType.PUNCTUATION;
     }
 
     private static String joinParts(List<SpeechPart> parts) {
@@ -50,7 +50,4 @@ public class SpeechPartParser {
                 .collect(Collectors.joining());
     }
 
-    public enum PartType {
-        WORD, WHITESPACE, PUNCTUATION, IGNORE_CODE, IGNORE;
-    }
 }

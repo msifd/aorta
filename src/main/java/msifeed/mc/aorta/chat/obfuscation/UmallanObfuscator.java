@@ -12,19 +12,20 @@ public class UmallanObfuscator implements LangObfuscator {
     @Override
     public String obfuscate(List<SpeechPart> parts) {
         final String letters = getShuffledLetters(parts);
-        final int[] offset = {0};
-        return parts.stream()
-                .map(part -> {
-                    final String text = part.text;
-                    if (part.isWord()) {
-                        final String sub = letters.substring(offset[0], text.length());
-                        offset[0] += text.length();
-                        return sub;
-                    } else {
-                        return text;
-                    }
-                })
-                .collect(Collectors.joining());
+
+        final StringBuilder sb = new StringBuilder();
+        int offset = 0;
+        for (SpeechPart part : parts) {
+            if (part.isWord()) {
+                final String sub = letters.substring(offset, offset + part.text.length());
+                offset += sub.length();
+                sb.append(sub);
+            } else {
+                sb.append(part.text);
+            }
+        }
+
+        return sb.toString();
     }
 
     private static String getShuffledLetters(List<SpeechPart> parts) {
@@ -40,6 +41,7 @@ public class UmallanObfuscator implements LangObfuscator {
 
         return codes.stream()
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-                .toString();
+                .toString()
+                .toLowerCase();
     }
 }

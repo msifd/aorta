@@ -25,7 +25,7 @@ public class CommonObfuscator implements LangObfuscator {
 //            final int minLen = Math.max(3, wordLength);
 //            final int randLen = random.nextInt(maxLen - minLen) + minLen;
 //            final int len = Math.max(randLen, letters.length() - offset);
-//            final String sub = letters.substring(offset, len);
+//            final String sub = letters.substring(offset, offset + len);
 //            words.add(sub);
 //            offset += len;
 //        }
