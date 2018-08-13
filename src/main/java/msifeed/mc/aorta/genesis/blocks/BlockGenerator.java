@@ -154,10 +154,7 @@ public class BlockGenerator implements Generator {
     private void fillTexture(BlockGenesisUnit unit, Block block) {
         if (unit.textureArray != null && unit.textureLayout != null) {
             ((BlockTraitCommons.Getter) block).getCommons().textureLayout = new BlockTextureLayout(unit.textureArray, unit.textureLayout);
-        } else if (unit.textureString != null) {
-            block.setBlockTextureName(unit.textureString);
-        } else {
-            block.setBlockTextureName("aorta:" + unit.id);
         }
+        block.setBlockTextureName(unit.textureString);
     }
 }

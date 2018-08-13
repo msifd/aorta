@@ -29,6 +29,8 @@ public class BlockGenesisUnit extends GenesisUnit {
                         .collect(Collectors.toList());
                 textureString = textureArray.get(0);
             }
+        } else {
+            textureString = "aorta:" + id;
         }
 
         if (json.has(Props.textureLayout)) {
