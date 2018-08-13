@@ -17,8 +17,11 @@ public class MenalaObfuscator implements LangObfuscator {
 
     private static String shuffleWord(String word) {
         final Random random = ObfuscationUtils.stringSeededRandom(word);
-        final List<Integer> codes = word.toLowerCase().codePoints().boxed().collect(Collectors.toList());
+        final List<Integer> codes = word.codePoints().boxed().collect(Collectors.toList());
         Collections.shuffle(codes, random);
-        return codes.stream().collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();
+        return codes.stream()
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString()
+                .toLowerCase();
     }
 }

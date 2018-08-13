@@ -2,6 +2,7 @@ package msifeed.mc.mellow.utils;
 
 public class SizePolicy {
     public static final SizePolicy DEFAULT = new SizePolicy(Policy.PREFERRED);
+    public static final SizePolicy FIXED = new SizePolicy(Policy.FIXED);
 
     public Policy horizontalPolicy = Policy.PREFERRED;
     public Policy verticalPolicy = Policy.PREFERRED;

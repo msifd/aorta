@@ -27,7 +27,7 @@ public class AnchorLayout implements Layout {
         final Widget child = children.iterator().next();
         final Geom childGeom = child.getGeometry();
         childGeom.reset();
-        childGeom.setSize(child.getSizeHint());
+        childGeom.setSize(LayoutUtils.getPreferredSize(child));
         childGeom.translate(child.getPos(), child.getZLevel());
         child.setDirty();
 

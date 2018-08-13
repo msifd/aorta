@@ -23,6 +23,6 @@ public class GurhkObfuscator implements LangObfuscator {
             final int ci = random.nextInt(LETTERS.length());
             sb.appendCodePoint(LETTERS.codePointAt(ci));
         }
-        return sb.toString();
+        return sb.toString().toLowerCase();
     }
 }

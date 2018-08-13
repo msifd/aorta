@@ -8,7 +8,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import msifeed.mc.aorta.genesis.Generator;
 import msifeed.mc.aorta.genesis.GenesisTrait;
 import msifeed.mc.aorta.things.AortaCreativeTab;
-import net.minecraft.item.Item;
 
 import java.util.HashSet;
 
@@ -20,12 +19,12 @@ public class ItemGenerator implements Generator {
     public void generate(JsonObject json, HashSet<GenesisTrait> traits) {
         final ItemGenesisUnit unit = new ItemGenesisUnit(json, traits);
 
-        final ItemTemplate item = new ItemTemplate(unit.id);
+        final ItemTemplate item = new ItemTemplate(unit);
         fillCommons(unit, item);
         GameRegistry.registerItem(item, unit.id);
     }
 
-    private void fillCommons(ItemGenesisUnit unit, Item item) {
+    private void fillCommons(ItemGenesisUnit unit, ItemTemplate item) {
         item.setCreativeTab(AortaCreativeTab.ITEMS);
 
         if (unit.hasTrait(not_stackable))
@@ -39,7 +38,7 @@ public class ItemGenerator implements Generator {
     }
 
     @SideOnly(Side.CLIENT)
-    private void fillTexture(ItemGenesisUnit unit, Item item) {
+    private void fillTexture(ItemGenesisUnit unit, ItemTemplate item) {
         if (unit.texture != null) {
             item.setTextureName(unit.texture);
         }

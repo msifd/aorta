@@ -1,7 +1,6 @@
 package msifeed.mc.mellow.layout;
 
 import msifeed.mc.mellow.utils.Geom;
-import msifeed.mc.mellow.utils.Margins;
 import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.widgets.Widget;
 
@@ -24,7 +23,7 @@ public class VerticalLayout implements Layout {
         for (Widget child : children) {
             final Geom childGeom = child.getGeometry();
             childGeom.reset();
-            childGeom.setSize(child.getSizeHint());
+            childGeom.setSize(LayoutUtils.getPreferredSize(child));
             childGeom.translate(child.getPos(), child.getZLevel());
             childGeom.translate(0, yOffset);
             child.setDirty();

@@ -27,5 +27,8 @@ public enum GenesisTrait {
     // Items // // // // // // // //
     not_stackable, hold_like_tool,
 
+    // Rarity
+    poor, common, uncommon, rare, epic, legendary,
+
     ;
 }

@@ -16,7 +16,7 @@ public class FreeLayout implements Layout {
         for (Widget child : children) {
             final Geom childGeom = child.getGeometry();
             childGeom.reset();
-            childGeom.setSize(child.getContentSize());
+            childGeom.setSize(LayoutUtils.getPreferredSize(child));
             childGeom.translate(child.getPos(), child.getZLevel());
             child.setDirty();
 

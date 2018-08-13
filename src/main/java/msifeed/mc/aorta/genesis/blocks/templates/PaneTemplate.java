@@ -13,6 +13,7 @@ public class PaneTemplate extends BlockPane implements BlockTraitCommons.Getter 
     public PaneTemplate(BlockGenesisUnit unit, Material material) {
         super(unit.textureString, unit.textureString + "_top", material, false);
         traits = new BlockTraitCommons(unit);
+        setBlockName(unit.id);
     }
 
     @Override

@@ -3,7 +3,8 @@
     "id": "test_chainsaw",
     "texture": "aorta:chainsaw",
     "traits": [
-      "item"
+      "item",
+      "epic"
     ]
   }
 ]

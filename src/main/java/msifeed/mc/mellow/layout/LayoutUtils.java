@@ -15,7 +15,7 @@ public class LayoutUtils {
         return geometry;
     }
 
-    public static Point getPreferredContentSize(Widget widget) {
+    public static Point getPreferredSize(Widget widget) {
         final Point target = widget.getContentSize();
         final Point p = new Point();
         p.x = getPreferredWidth(target.x, widget);

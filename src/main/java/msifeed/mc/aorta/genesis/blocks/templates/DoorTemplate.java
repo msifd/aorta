@@ -1,7 +1,7 @@
 package msifeed.mc.aorta.genesis.blocks.templates;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import msifeed.mc.aorta.genesis.GenesisUnit;
+import msifeed.mc.aorta.genesis.blocks.BlockGenesisUnit;
 import msifeed.mc.aorta.genesis.blocks.BlockTraitCommons;
 import msifeed.mc.aorta.genesis.blocks.SpecialBlockRegisterer;
 import msifeed.mc.aorta.things.AortaCreativeTab;
@@ -19,10 +19,10 @@ public class DoorTemplate extends BlockDoor implements BlockTraitCommons.Getter,
     private BlockTraitCommons traits;
     private final Item item;
 
-    public DoorTemplate(GenesisUnit unit, Material material) {
+    public DoorTemplate(BlockGenesisUnit unit, Material material) {
         super(material);
         traits = new BlockTraitCommons(unit);
-        item = new Item(unit.id, this);
+        item = new Item(unit, this);
 
         disableStats();
         setHardness(3);
@@ -55,12 +55,12 @@ public class DoorTemplate extends BlockDoor implements BlockTraitCommons.Getter,
     public static class Item extends ItemDoor {
         private final DoorTemplate block;
 
-        Item(String id, DoorTemplate block) {
+        Item(BlockGenesisUnit unit, DoorTemplate block) {
             super(Material.wood);
             this.block = block;
 
-            setUnlocalizedName(id + "_item");
-            setTextureName(id + "_item");
+            setUnlocalizedName(unit.id);
+            setTextureName(unit.textureString + "_item");
         }
 
         public boolean onItemUse(ItemStack p_77648_1_, EntityPlayer p_77648_2_, World p_77648_3_, int p_77648_4_, int p_77648_5_, int p_77648_6_, int p_77648_7_, float p_77648_8_, float p_77648_9_, float p_77648_10_) {

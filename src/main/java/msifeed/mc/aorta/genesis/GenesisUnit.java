@@ -6,7 +6,7 @@ import java.util.HashSet;
 
 public class GenesisUnit {
     public String id;
-    private HashSet<GenesisTrait> traits;
+    public HashSet<GenesisTrait> traits;
 
     public GenesisUnit(JsonObject json, HashSet<GenesisTrait> traits) {
         this.id = json.getAsJsonPrimitive("id").getAsString();
