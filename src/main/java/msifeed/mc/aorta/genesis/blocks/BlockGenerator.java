@@ -8,6 +8,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import msifeed.mc.aorta.genesis.Generator;
 import msifeed.mc.aorta.genesis.GenesisTrait;
 import msifeed.mc.aorta.genesis.blocks.templates.*;
+import msifeed.mc.aorta.genesis.blocks.templates.special.SpecialBushTemplate;
+import msifeed.mc.aorta.genesis.blocks.templates.special.SpecialLogTemplate;
 import msifeed.mc.aorta.things.AortaCreativeTab;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -72,6 +74,10 @@ public class BlockGenerator implements Generator {
             return new TorchTemplate(unit);
         } else if (unit.hasTrait(pane)) {
             return new PaneTemplate(unit, getMaterial(unit));
+        } else if (unit.hasTrait(special_log)) {
+            return new SpecialLogTemplate(unit, getMaterial(unit));
+        } else if (unit.hasTrait(special_bush)) {
+            return new SpecialBushTemplate(unit, getMaterial(unit));
         } else {
             return new BlockTemplate(unit, getMaterial(unit));
         }

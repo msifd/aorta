@@ -24,6 +24,9 @@ public enum GenesisTrait {
     // Extensions
     add_slabs, add_stairs,
 
+    // Special subtypes
+    special_log, special_bush,
+
     // Items // // // // // // // //
     not_stackable, hold_like_tool,
 
