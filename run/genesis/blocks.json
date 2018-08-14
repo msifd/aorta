@@ -117,5 +117,13 @@
       "block",
       "door"
     ]
+  },
+  {
+    "id": "test_bed",
+    "texture": "aorta:misca_bed_1",
+    "traits": [
+      "block",
+      "bed"
+    ]
   }
 ]

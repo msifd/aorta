@@ -73,7 +73,9 @@ public class BlockGenerator implements Generator {
         } else if (unit.hasTrait(torch)) {
             return new TorchTemplate(unit);
         } else if (unit.hasTrait(pane)) {
-            return new PaneTemplate(unit, getMaterial(unit));
+            return new TorchTemplate(unit);
+        } else if (unit.hasTrait(bed)) {
+            return new BedTemplate(unit);
         } else if (unit.hasTrait(special_log)) {
             return new SpecialLogTemplate(unit, getMaterial(unit));
         } else if (unit.hasTrait(special_bush)) {
