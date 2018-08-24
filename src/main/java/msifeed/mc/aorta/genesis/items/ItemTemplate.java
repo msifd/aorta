@@ -1,7 +1,11 @@
 package msifeed.mc.aorta.genesis.items;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
+import java.util.Collections;
+import java.util.List;
 
 public class ItemTemplate extends Item {
     private final ItemGenesisUnit unit;
@@ -13,6 +17,15 @@ public class ItemTemplate extends Item {
 
     @Override
     public String getItemStackDisplayName(ItemStack itemStack) {
-        return unit.rarity.color.toString() + super.getItemStackDisplayName(itemStack);
+        final String name = unit.title != null
+                ? unit.title
+                : super.getItemStackDisplayName(itemStack);
+        return unit.rarity.color.toString() + name;
+    }
+
+    @Override
+    public void addInformation(ItemStack itemStack, EntityPlayer player, List lines, boolean debug) {
+        if (unit.desc != null)
+            Collections.addAll(lines, unit.desc);
     }
 }

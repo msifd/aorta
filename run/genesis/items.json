@@ -1,6 +1,8 @@
 [
   {
     "id": "test_chainsaw",
+    "title": "Тестовая цепная пила",
+    "description": "Многострочное описание\n   с отступами и §4форматами",
     "texture": "aorta:chainsaw",
     "traits": [
       "item",
