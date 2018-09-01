@@ -5,7 +5,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import msifeed.mc.aorta.attributes.AttributeHandler;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.attributes.TraitsAttribute;
-import msifeed.mc.aorta.core.commands.TraitsCommand;
+import msifeed.mc.aorta.core.commands.TraitListCommand;
+import msifeed.mc.aorta.core.commands.TraitSetCommand;
 import msifeed.mc.aorta.core.meta.MetaCommand;
 import msifeed.mc.aorta.core.things.ItemBattleTool;
 import msifeed.mc.aorta.core.things.ItemCharTool;
@@ -32,7 +33,8 @@ public class Core {
     }
 
     public void registerCommands(CommandHandler handler) {
-        handler.registerCommand(new TraitsCommand());
+        handler.registerCommand(new TraitListCommand());
+        handler.registerCommand(new TraitSetCommand());
         handler.registerCommand(new MetaCommand());
     }
 }

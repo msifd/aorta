@@ -11,6 +11,13 @@ public abstract class ExtCommand extends CommandBase {
         return 0;
     }
 
+    @Override
+    public boolean canCommandSenderUseCommand(ICommandSender sender) {
+        if (getRequiredPermissionLevel() <= 0)
+            return true;
+        return super.canCommandSenderUseCommand(sender);
+    }
+
     protected void title(ICommandSender sender, String format, Object... args) {
         sendColored(sender, EnumChatFormatting.BLUE, format, args);
     }

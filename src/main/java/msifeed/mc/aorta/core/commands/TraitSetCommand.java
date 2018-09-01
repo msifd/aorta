@@ -12,7 +12,7 @@ import net.minecraft.world.WorldServer;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class TraitsCommand extends ExtCommand {
+public class TraitSetCommand extends ExtCommand {
     @Override
     public String getCommandName() {
         return "trait";
@@ -24,6 +24,11 @@ public class TraitsCommand extends ExtCommand {
     }
 
     @Override
+    public int getRequiredPermissionLevel() {
+        return 2;
+    }
+
+    @Override
     public void processCommand(ICommandSender sender, String[] args) {
         if (!(sender instanceof EntityLivingBase)) {
             send(sender, "You should be at least entity!");
@@ -31,7 +36,7 @@ public class TraitsCommand extends ExtCommand {
         }
 
         if (args.length == 0) {
-            printTraits(sender, (EntityLivingBase) sender);
+            error(sender, "Usage: " + getCommandUsage(sender));
             return;
         }
 
