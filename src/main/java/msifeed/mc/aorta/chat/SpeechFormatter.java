@@ -4,15 +4,13 @@ import msifeed.mc.aorta.chat.net.SpeechMessage;
 import msifeed.mc.aorta.chat.obfuscation.LangObfuscator;
 import msifeed.mc.aorta.chat.parser.SpeechPart;
 import msifeed.mc.aorta.chat.parser.SpeechPartParser;
-import msifeed.mc.aorta.core.attributes.TraitsAttribute;
+import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class SpeechFormatter {
     public static IChatComponent formatSpeech(SpeechMessage message) {
@@ -55,7 +53,7 @@ public class SpeechFormatter {
     }
 
     private static boolean doIKnowLanguage(Language language) {
-        return TraitsAttribute.INSTANCE.has(Minecraft.getMinecraft().thePlayer, language.trait);
+        return CharacterAttribute.INSTANCE.has(Minecraft.getMinecraft().thePlayer, language.trait);
     }
 
     private static String obfuscateWith(LangObfuscator obfuscator, String text) {

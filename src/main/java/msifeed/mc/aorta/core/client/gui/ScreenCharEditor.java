@@ -120,12 +120,12 @@ public class ScreenCharEditor extends MellowGuiScreen {
         setBodyBtn.setVerSizePolicy(SizePolicy.Policy.FIXED);
         setBodyBtn.setClickCallback(() -> {
             character.bodyParts.clear();
-            character.bodyParts.add(new BodyPart("head", BodyPart.Type.HEAD, 25, 50, 100));
-            character.bodyParts.add(new BodyPart("body", BodyPart.Type.BODY, 75, 75, 100));
-            character.bodyParts.add(new BodyPart("lhand", BodyPart.Type.HAND, 35, 60, 0));
-            character.bodyParts.add(new BodyPart("rhand", BodyPart.Type.HAND, 35, 60, 0));
-            character.bodyParts.add(new BodyPart("lleg", BodyPart.Type.LEG, 35, 60, 0));
-            character.bodyParts.add(new BodyPart("rleg", BodyPart.Type.LEG, 35, 60, 0));
+            character.bodyParts.add(new BodyPart("head", BodyPart.Type.HEAD, 25, 50, true));
+            character.bodyParts.add(new BodyPart("body", BodyPart.Type.BODY, 75, 75, false));
+            character.bodyParts.add(new BodyPart("lhand", BodyPart.Type.HAND, 35, 60, false));
+            character.bodyParts.add(new BodyPart("rhand", BodyPart.Type.HAND, 35, 60, false));
+            character.bodyParts.add(new BodyPart("lleg", BodyPart.Type.LEG, 35, 60, false));
+            character.bodyParts.add(new BodyPart("rleg", BodyPart.Type.LEG, 35, 60, false));
         });
         bodyParts.addChild(setBodyBtn);
 

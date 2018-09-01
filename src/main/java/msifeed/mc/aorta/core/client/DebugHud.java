@@ -3,10 +3,10 @@ package msifeed.mc.aorta.core.client;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.aorta.chat.usage.LangAttribute;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
-import msifeed.mc.aorta.core.attributes.TraitsAttribute;
-import msifeed.mc.aorta.core.character.BodyPart;
+import msifeed.mc.aorta.core.attributes.StatusAttribute;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.character.Grade;
+import msifeed.mc.aorta.core.character.BodyPart;
 import msifeed.mc.aorta.core.things.ItemDebugTool;
 import msifeed.mc.aorta.core.traits.Trait;
 import net.minecraft.client.Minecraft;
@@ -44,8 +44,7 @@ public enum DebugHud {
         final ArrayList<String> lines = new ArrayList<>();
         lines.add("[Aorta debug]");
         lines.add("Entity: " + entity.getCommandSenderName());
-        addCharProp(lines, entity);
-        addTraits(lines, entity);
+        addCharProps(lines, entity);
         addLang(lines, entity);
 
         GL11.glPushMatrix();
@@ -58,49 +57,52 @@ public enum DebugHud {
         GL11.glPopMatrix();
     }
 
-    private void addCharProp(ArrayList<String> lines, EntityLivingBase entity) {
+    private void addCharProps(ArrayList<String> lines, EntityLivingBase entity) {
         CharacterAttribute.INSTANCE.get(entity).ifPresent(character -> {
             lines.add("Character {");
+
             lines.add("  features: {");
             for (EnumMap.Entry<Feature, Grade> e : character.features.entrySet()) {
                 lines.add("    " + e.getKey().toString().toLowerCase() + ": " + (e.getValue().ordinal() + 1));
             }
             lines.add("  }");
+
             lines.add("  bodyParts: {");
             for (BodyPart bodyPart : character.bodyParts) {
                 lines.add("    " + bodyPart.toLineString());
             }
             lines.add("  }");
-            lines.add("}");
-        });
-    }
 
-    private void addTraits(ArrayList<String> lines, EntityLivingBase entity) {
-        TraitsAttribute.INSTANCE.get(entity).ifPresent(traits -> {
-            lines.add("Traits [");
-
-            final StringBuilder sb = new StringBuilder("  ");
-            for (Trait t : traits) {
+            lines.add("  traits [");
+            final StringBuilder sb = new StringBuilder("    ");
+            for (Trait t : character.traits) {
                 sb.append(t);
                 sb.append(", ");
                 if (sb.length() > 50) {
                     lines.add(sb.toString());
                     sb.setLength(0);
-                    sb.append("  ");
+                    sb.append("    ");
                 }
             }
             if (sb.length() > 0) {
                 lines.add(sb.toString());
             }
+            lines.add("  ]");
 
-            lines.add("]");
+            lines.add("}");
+        });
+    }
+
+    private void addStatusProp(ArrayList<String> lines, EntityLivingBase entity) {
+        StatusAttribute.INSTANCE.get(entity).ifPresent(health -> {
+            lines.add("Status {");
+            lines.add("  shields: " + health.shields);
+            lines.add("}");
         });
     }
 
     private void addLang(ArrayList<String> lines, EntityLivingBase entity) {
-        LangAttribute.INSTANCE.get(entity).ifPresent(lang -> {
-            lines.add("Language: " + lang);
-        });
+        LangAttribute.INSTANCE.get(entity).ifPresent(lang -> lines.add("Language: " + lang));
     }
 
     @Nullable

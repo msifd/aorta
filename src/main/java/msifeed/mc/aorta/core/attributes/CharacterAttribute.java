@@ -3,10 +3,16 @@ package msifeed.mc.aorta.core.attributes;
 import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.attributes.EntityLivingAttribute;
 import msifeed.mc.aorta.core.character.Character;
+import msifeed.mc.aorta.core.traits.Trait;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+
+import java.util.Collections;
+import java.util.Optional;
+import java.util.Set;
 
 public class CharacterAttribute extends EntityLivingAttribute<Character> {
     public static final CharacterAttribute INSTANCE = new CharacterAttribute();
@@ -41,5 +47,25 @@ public class CharacterAttribute extends EntityLivingAttribute<Character> {
         final Character character = new Character();
         character.fromNBT(root.getCompoundTag(PROP_NAME));
         return character;
+    }
+
+    public boolean has(EntityLivingBase entity, Trait trait) {
+        return get(entity)
+                .map(c -> c.traits)
+                .orElse(Collections.emptySet())
+                .contains(trait);
+    }
+
+    public boolean toggle(EntityLivingBase entity, Trait trait) {
+        final Optional<Character> charOpt = get(entity);
+        if (charOpt.isPresent()) {
+            final Set<Trait> traits = charOpt.get().traits;
+            final boolean removed = traits.remove(trait);
+            if (!removed)
+                traits.add(trait);
+            sync(entity);
+            return !removed;
+        }
+        return false;
     }
 }

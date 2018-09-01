@@ -3,9 +3,10 @@ package msifeed.mc.aorta.chat.usage;
 import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.attributes.PlayerAttribute;
 import msifeed.mc.aorta.chat.Language;
-import msifeed.mc.aorta.core.attributes.TraitsAttribute;
+import msifeed.mc.aorta.core.attributes.CharacterAttribute;
+import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.traits.Trait;
-import msifeed.mc.aorta.core.traits.TraitTypes;
+import msifeed.mc.aorta.core.traits.TraitType;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -63,8 +64,8 @@ public class LangAttribute extends PlayerAttribute<Language> {
     }
 
     private Language findLang(Entity entity) {
-        final Set<Trait> traits = TraitsAttribute.INSTANCE.get(entity).orElse(Collections.emptySet());
-        final Set<Trait> langTraits = TraitTypes.LANG.filter(traits);
+        final Set<Trait> traits = CharacterAttribute.INSTANCE.get(entity).map(Character::traits).orElse(Collections.emptySet());
+        final Set<Trait> langTraits = TraitType.LANG.filter(traits);
         return Arrays.stream(Language.values())
                 .filter(language -> langTraits.contains(language.trait))
                 .findFirst().orElse(Language.VANILLA);

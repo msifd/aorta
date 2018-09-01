@@ -2,7 +2,7 @@ package msifeed.mc.aorta.core.meta;
 
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import msifeed.mc.aorta.core.attributes.TraitsAttribute;
+import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.traits.Trait;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -35,9 +35,7 @@ public class ItemMeta {
     }
 
     private boolean isGameMaster(EntityPlayer player) {
-        return TraitsAttribute.INSTANCE.get(player)
-                .map(traits -> traits.contains(Trait.gm))
-                .orElse(false);
+        return CharacterAttribute.INSTANCE.has(player, Trait.gm);
     }
 
     private boolean isOwner(EntityPlayer player, ItemStack itemStack) {

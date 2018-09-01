@@ -1,6 +1,7 @@
 package msifeed.mc.aorta.core.commands;
 
-import msifeed.mc.aorta.core.attributes.TraitsAttribute;
+import msifeed.mc.aorta.core.attributes.CharacterAttribute;
+import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.commons.ExtCommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.EntityLivingBase;
@@ -29,7 +30,7 @@ public class TraitListCommand extends ExtCommand {
     }
 
     private void printTraits(ICommandSender sender, EntityLivingBase entity) {
-        TraitsAttribute.INSTANCE.get(entity).ifPresent(traits -> {
+        CharacterAttribute.INSTANCE.get(entity).map(Character::traits).ifPresent(traits -> {
             final Set<String> names = traits.stream().map(Enum::toString).collect(Collectors.toSet());
             final String theNiceString = joinNiceStringFromCollection(names);
             title(sender, "Your traits:", entity.getCommandSenderName());

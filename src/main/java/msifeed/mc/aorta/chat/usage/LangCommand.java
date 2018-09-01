@@ -1,9 +1,10 @@
 package msifeed.mc.aorta.chat.usage;
 
 import msifeed.mc.aorta.chat.Language;
-import msifeed.mc.aorta.core.attributes.TraitsAttribute;
+import msifeed.mc.aorta.core.attributes.CharacterAttribute;
+import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.traits.Trait;
-import msifeed.mc.aorta.core.traits.TraitTypes;
+import msifeed.mc.aorta.core.traits.TraitType;
 import msifeed.mc.commons.ExtCommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.EntityLivingBase;
@@ -72,8 +73,8 @@ public class LangCommand extends ExtCommand {
     }
 
     private Set<Language> getKnownLanguages(EntityLivingBase entity) {
-        final Set<Trait> traits = TraitsAttribute.INSTANCE.get(entity).orElse(Collections.emptySet());
-        final Set<Trait> langTraits = TraitTypes.LANG.filter(traits);
+        final Set<Trait> traits = CharacterAttribute.INSTANCE.get(entity).map(Character::traits).orElse(Collections.emptySet());
+        final Set<Trait> langTraits = TraitType.LANG.filter(traits);
         return Arrays.stream(Language.values())
                 .filter(language -> langTraits.contains(language.trait))
                 .collect(Collectors.toSet());

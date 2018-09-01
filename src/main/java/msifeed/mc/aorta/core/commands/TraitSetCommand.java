@@ -1,7 +1,8 @@
 package msifeed.mc.aorta.core.commands;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import msifeed.mc.aorta.core.attributes.TraitsAttribute;
+import msifeed.mc.aorta.core.attributes.CharacterAttribute;
+import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.traits.Trait;
 import msifeed.mc.commons.ExtCommand;
 import net.minecraft.command.ICommandSender;
@@ -59,7 +60,7 @@ public class TraitSetCommand extends ExtCommand {
     }
 
     private void printTraits(ICommandSender sender, EntityLivingBase entity) {
-        TraitsAttribute.INSTANCE.get(entity).ifPresent(traits -> {
+        CharacterAttribute.INSTANCE.get(entity).map(Character::traits).ifPresent(traits -> {
             final Set<String> names = traits.stream().map(Enum::toString).collect(Collectors.toSet());
             final String theNiceString = joinNiceStringFromCollection(names);
             title(sender, "Here %s's traits:", entity.getCommandSenderName());
@@ -82,7 +83,7 @@ public class TraitSetCommand extends ExtCommand {
     private void toggleTrait(ICommandSender sender, EntityLivingBase entity, String traitName) {
         try {
             final Trait trait = Trait.valueOf(traitName);
-            final boolean added = TraitsAttribute.INSTANCE.toggle(entity, trait);
+            final boolean added = CharacterAttribute.INSTANCE.toggle(entity, trait);
             info(sender, "Trait '%s' %s", traitName, added ? "added" : "removed");
         } catch (IllegalArgumentException e) {
             error(sender, "Unknown trait '%s'", traitName);

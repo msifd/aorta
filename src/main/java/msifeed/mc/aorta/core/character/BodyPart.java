@@ -7,17 +7,17 @@ public class BodyPart {
     public Type type;
     public short max;
     public short disfunction;
-    public short death;
+    public boolean fatal;
 
     public BodyPart() {
     }
 
-    public BodyPart(String name, Type type, int max, int disfunction, int death) {
+    public BodyPart(String name, Type type, int max, int disfunction, boolean fatal) {
         this.name = name;
         this.type = type;
         this.max = (short) max;
         this.disfunction = (short) disfunction;
-        this.death = (short) death;
+        this.fatal = fatal;
     }
 
     public NBTTagCompound toNBT() {
@@ -26,7 +26,7 @@ public class BodyPart {
         compound.setByte("type", (byte) type.ordinal());
         compound.setShort("max", max);
         compound.setShort("disfunction", disfunction);
-        compound.setShort("death", death);
+        compound.setBoolean("fatal", fatal);
         return compound;
     }
 
@@ -35,12 +35,12 @@ public class BodyPart {
         type = Type.values()[compound.getByte("type")];
         max = compound.getShort("max");
         disfunction = compound.getShort("disfunction");
-        death = compound.getShort("death");
+        fatal = compound.getBoolean("fatal");
     }
 
     public String toLineString() {
-        // head [head] 25/5/0
-        return String.format("%s [%s] %d/%d/%d", name, type.toString().toLowerCase(), max, disfunction, death);
+        // head [head] 25/5 fatal
+        return String.format("%s [%s] %d/%d %s", name, type.toString().toLowerCase(), max, disfunction, fatal ? "fatal" : "");
     }
 
     public enum Type {
