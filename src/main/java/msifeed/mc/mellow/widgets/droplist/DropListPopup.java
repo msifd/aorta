@@ -4,6 +4,7 @@ import msifeed.mc.mellow.Mellow;
 import msifeed.mc.mellow.layout.VerticalLayout;
 import msifeed.mc.mellow.render.RenderParts;
 import msifeed.mc.mellow.theme.Part;
+import msifeed.mc.mellow.utils.Geom;
 import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
@@ -14,10 +15,7 @@ class DropListPopup extends Widget {
 
     DropListPopup(DropList parent) {
         this.parent = parent;
-        setPos(1, 0);
-        getMargin().set(1, 1, 6, 1);
-        setSizeHint(10, parent.getItems().size() * 11 + 2);
-        setSizePolicy(SizePolicy.Policy.FIXED, SizePolicy.Policy.FIXED);
+        getMargin().set(1, 1, 2, 1);
         setLayout(VerticalLayout.INSTANCE);
 
         for (int i = 0; i < parent.getItems().size(); i++) {
@@ -27,10 +25,8 @@ class DropListPopup extends Widget {
     }
 
     @Override
-    public Point getSizeHint() {
-        final Point p = super.getSizeHint();
-        p.x = parent.header.getTextBgWidth() - 2;
-        return p;
+    public Point getPos() {
+        return new Point(1, parent.getContentSize().y);
     }
 
     @Override

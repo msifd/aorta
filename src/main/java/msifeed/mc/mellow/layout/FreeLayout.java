@@ -10,8 +10,8 @@ public class FreeLayout implements Layout {
     public static final FreeLayout INSTANCE = new FreeLayout();
 
     @Override
-    public Point layoutIndependent(Collection<Widget> children) {
-        final Point contentSize = new Point();
+    public Point layoutIndependent(Widget parent, Collection<Widget> children) {
+//        final Point contentSize = new Point();
 
         for (Widget child : children) {
             final Geom childGeom = child.getGeometry();
@@ -20,9 +20,9 @@ public class FreeLayout implements Layout {
             childGeom.translate(child.getPos(), child.getZLevel());
             child.setDirty();
 
-            contentSize.translate(childGeom.w, childGeom.h);
+//            contentSize.translate(childGeom.w, childGeom.h);
         }
 
-        return contentSize;
+        return parent.getSizeHint();
     }
 }

@@ -13,15 +13,14 @@ public class Window extends Widget {
     private Widget content = new Widget();
 
     public Window() {
-        setLayout(VerticalLayout.INSTANCE);
+        setLayout(new VerticalLayout(0));
         getMargin().set(1);
 
-        header.setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.MAXIMUM);
-        header.setSizeHint(10, 13);
-//        header.getMargin().set(3, 0);
+        header.setVerSizePolicy(SizePolicy.Policy.FIXED);
+        header.setSizeHint(0, 13);
         header.setZLevel(1);
 
-        content.getMargin().set(1, 3, 9, 3);
+        content.getMargin().set(0, 2, 4, 2);
         content.setLayout(VerticalLayout.INSTANCE);
 
         super.addChild(header);

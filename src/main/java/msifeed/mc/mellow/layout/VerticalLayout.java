@@ -1,6 +1,7 @@
 package msifeed.mc.mellow.layout;
 
 import msifeed.mc.mellow.utils.Geom;
+import msifeed.mc.mellow.utils.Margins;
 import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.widgets.Widget;
 
@@ -16,7 +17,7 @@ public class VerticalLayout implements Layout {
     }
 
     @Override
-    public Point layoutIndependent(Collection<Widget> children) {
+    public Point layoutIndependent(Widget parent, Collection<Widget> children) {
         int yOffset = 0;
         int maxWidth = 0;
 
@@ -32,7 +33,11 @@ public class VerticalLayout implements Layout {
             maxWidth = Math.max(maxWidth, childGeom.w);
         }
 
-        return new Point(maxWidth, yOffset - spacing);
+        final Point contentSize = new Point(maxWidth, yOffset - spacing);
+        final Margins margin = parent.getMargin();
+        contentSize.translate(margin.horizontal(), margin.vertical());
+
+        return contentSize;
     }
 
     @Override

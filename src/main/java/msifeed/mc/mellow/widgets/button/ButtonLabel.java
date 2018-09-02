@@ -4,6 +4,7 @@ import msifeed.mc.mellow.Mellow;
 import msifeed.mc.mellow.layout.AnchorLayout;
 import msifeed.mc.mellow.render.RenderParts;
 import msifeed.mc.mellow.theme.Part;
+import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.basic.Label;
 
 public class ButtonLabel extends Button {
@@ -15,7 +16,7 @@ public class ButtonLabel extends Button {
     protected Label label = new Label();
 
     public ButtonLabel() {
-        setSizeHint(50, 20);
+        getMargin().set(3, 3, 6, 3);
         setLayout(new AnchorLayout());
 
         label.setZLevel(Math.max(1, label.getZLevel()));

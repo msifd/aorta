@@ -1,10 +1,12 @@
 package msifeed.mc.mellow.widgets.droplist;
 
 import msifeed.mc.mellow.Mellow;
+import msifeed.mc.mellow.layout.AnchorLayout;
 import msifeed.mc.mellow.layout.FreeLayout;
 import msifeed.mc.mellow.render.RenderParts;
 import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.utils.Geom;
+import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
 
@@ -21,12 +23,17 @@ class DropListHeader extends ButtonLabel {
 
     DropListHeader(DropList parent) {
         this.parent = parent;
-        setSizeHint(100, 11);
-        setVerSizePolicy(SizePolicy.Policy.MINIMUM);
-        setLayout(FreeLayout.INSTANCE);
-        getMargin().set(1, 0, 0, 3);
+        getMargin().set(1, 0, 1, 3);
+        setLayout(new AnchorLayout(AnchorLayout.Anchor.LEFT, AnchorLayout.Anchor.CENTER));
 
         label.setColor(label.darkColor);
+    }
+
+    @Override
+    public Point getContentSize() {
+        final Point p = super.getContentSize();
+        p.x = parent.popupList.getContentSize().x + buttonNormalPart.size.x + 4;
+        return p;
     }
 
     @Override

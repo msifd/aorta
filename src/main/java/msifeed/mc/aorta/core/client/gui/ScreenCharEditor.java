@@ -24,7 +24,7 @@ import java.util.Map;
 
 public class ScreenCharEditor extends MellowGuiScreen {
     private final EntityLivingBase entity;
-//    private final ScrollArea mainScroll = new ScrollArea();
+    //    private final ScrollArea mainScroll = new ScrollArea();
 //    private final Widget mainSection = mainScroll.getContent();
     private final Widget mainSection = new Widget();
     private final Button submitBtn = new ButtonLabel("Submit");
@@ -50,7 +50,6 @@ public class ScreenCharEditor extends MellowGuiScreen {
         refillMainSection();
         windowContent.addChild(mainSection);
 
-        submitBtn.setVerSizePolicy(SizePolicy.Policy.MAXIMUM);
         submitBtn.setClickCallback(() -> {
             if (!entity.isEntityAlive())
                 System.out.println("entity is actually dead");
@@ -81,19 +80,18 @@ public class ScreenCharEditor extends MellowGuiScreen {
 //            addBodyParts();
         } else {
             final Button addDataBtn = new ButtonLabel("Add data");
-            addDataBtn.setVerSizePolicy(SizePolicy.Policy.MAXIMUM);
             addDataBtn.setClickCallback(() -> {
                 character = new Character();
                 refillMainSection();
             });
             mainSection.addChild(addDataBtn);
+            mainSection.addChild(new Separator());
         }
     }
 
     private void addFeatures() {
         final Widget features = new Widget();
         features.setLayout(new GridLayout());
-        features.setVerSizePolicy(SizePolicy.Policy.MAXIMUM);
 
         final List<Grade> gradeList = Arrays.asList(Grade.values());
         for (Map.Entry<Feature, Grade> entry : character.features.entrySet()) {

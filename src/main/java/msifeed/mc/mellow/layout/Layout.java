@@ -1,15 +1,13 @@
 package msifeed.mc.mellow.layout;
 
 import msifeed.mc.mellow.utils.Geom;
-import msifeed.mc.mellow.utils.Margins;
 import msifeed.mc.mellow.utils.Point;
-import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
 
 import java.util.Collection;
 
 public interface Layout {
-    Point layoutIndependent(Collection<Widget> children);
+    Point layoutIndependent(Widget parent, Collection<Widget> children);
 
     default void layoutRelativeParent(Widget parent, Collection<Widget> children) {
         final Geom geometry = LayoutUtils.getGeomWithMargin(parent);

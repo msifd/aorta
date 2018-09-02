@@ -18,42 +18,54 @@ public class GridLayout implements Layout {
     }
 
     @Override
-    public Point layoutIndependent(Collection<Widget> children) {
-        final Point contentSize = new Point();
+    public Point layoutIndependent(Widget parent, Collection<Widget> children) {
+        int yOffset = 0;
+        int maxWidth = 0;
 
         boolean labelWidget = true;
-
-        int maxLabelWidth = 0;
-        for (Widget child : children) {
-            if (labelWidget)
-                maxLabelWidth = Math.max(maxLabelWidth, child.getSizeHint().x);
-            labelWidget = !labelWidget;
-        }
-
-        labelWidget = true;
+        int labelWidth = 0;
         int lineHeight = 0;
 
         for (Widget child : children) {
-            final Geom childGeom = child.getGeometry();
-            childGeom.reset();
-            childGeom.setSize(child.getSizeHint());
-            childGeom.translate(child.getPos(), child.getZLevel());
-            childGeom.translate(0, contentSize.y);
             child.setDirty();
 
-            lineHeight = Math.max(lineHeight, childGeom.h);
-            contentSize.x = Math.max(contentSize.x, childGeom.w);
+            final Geom childGeom = child.getGeometry();
+            childGeom.reset();
+            childGeom.setSize(LayoutUtils.getPreferredSize(child));
+            childGeom.translate(child.getPos(), child.getZLevel());
+            childGeom.translate(0, yOffset);
 
-            if (!labelWidget) {
-                childGeom.translate(maxLabelWidth + spacing, 0);
-
-                contentSize.y += lineHeight + spacing;
-                lineHeight = 0;
+            if (labelWidget) {
+                labelWidth = childGeom.w + spacing;
+                lineHeight = childGeom.h;
+            } else {
+                childGeom.translate(labelWidth, 0);
+                maxWidth = Math.max(maxWidth, labelWidth + childGeom.w);
+                lineHeight = Math.max(lineHeight, childGeom.h);
+                yOffset += lineHeight + spacing;
             }
 
             labelWidget = !labelWidget;
         }
 
+        final Point contentSize = new Point(maxWidth, yOffset - spacing);
+        final Margins margin = parent.getMargin();
+        contentSize.translate(margin.horizontal(), margin.vertical());
+
         return contentSize;
+    }
+
+    @Override
+    public void layoutRelativeParent(Widget parent, Collection<Widget> children) {
+        final Geom geometry = LayoutUtils.getGeomWithMargin(parent);
+
+        boolean labelWidget = true;
+        for (Widget child : children) {
+            final Geom childGeom = child.getGeometry();
+            childGeom.translate(geometry.x, geometry.y, geometry.z);
+            if (!labelWidget)
+                childGeom.x = geometry.x + geometry.w - childGeom.w;
+            labelWidget = !labelWidget;
+        }
     }
 }

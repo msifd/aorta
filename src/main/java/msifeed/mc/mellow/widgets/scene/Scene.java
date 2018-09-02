@@ -47,6 +47,12 @@ public class Scene extends Widget {
             fr.drawString(o.toString(), 5, y, 0xffffff);
             y += fr.FONT_HEIGHT + 2;
         }
+
+        if (Widget.hoveredWidget != null) {
+            y += fr.FONT_HEIGHT * 2;
+            fr.drawString(Widget.hoveredWidget.toString(), 5, y, 0xffffff);
+        }
+
         GL11.glPopMatrix();
         //
 

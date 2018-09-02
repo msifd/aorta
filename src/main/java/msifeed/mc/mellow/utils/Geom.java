@@ -46,6 +46,12 @@ public class Geom implements Cloneable {
         this.y = y;
     }
 
+    public void setPos(int x, int y, int z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
     public void translate(int x, int y) {
         translate(x, y, 0);
     }

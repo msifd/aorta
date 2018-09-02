@@ -186,7 +186,7 @@ public class Widget {
         for (Widget child : children)
             child.updateIndependentLayout();
 
-        contentSize = layout.layoutIndependent(children);
+        contentSize = layout.layoutIndependent(this, children);
     }
 
     protected void updateRelativeLayout() {

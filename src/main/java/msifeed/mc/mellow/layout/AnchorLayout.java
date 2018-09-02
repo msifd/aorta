@@ -1,6 +1,7 @@
 package msifeed.mc.mellow.layout;
 
 import msifeed.mc.mellow.utils.Geom;
+import msifeed.mc.mellow.utils.Margins;
 import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.widgets.Widget;
 
@@ -20,7 +21,7 @@ public class AnchorLayout implements Layout {
     }
 
     @Override
-    public Point layoutIndependent(Collection<Widget> children) {
+    public Point layoutIndependent(Widget parent, Collection<Widget> children) {
         if (children.isEmpty())
             return new Point();
 
@@ -31,7 +32,11 @@ public class AnchorLayout implements Layout {
         childGeom.translate(child.getPos(), child.getZLevel());
         child.setDirty();
 
-        return new Point(child.getSizeHint());
+        final Point contentSize = new Point(child.getSizeHint());
+        final Margins margin = parent.getMargin();
+        contentSize.translate(margin.horizontal(), margin.vertical());
+
+        return contentSize;
     }
 
     @Override

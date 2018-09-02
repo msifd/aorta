@@ -13,8 +13,7 @@ class WindowHeader extends ButtonLabel implements MouseHandler.AllBasic {
 
     WindowHeader(Window window) {
         this.dragHandler = new DragHandler(window);
-
-        getMargin().set(3);
+        getMargin().set(2, 0);
         setLayout(new AnchorLayout(AnchorLayout.Anchor.LEFT, AnchorLayout.Anchor.CENTER));
     }
 

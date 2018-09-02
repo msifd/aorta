@@ -1,5 +1,6 @@
 package msifeed.mc.mellow.widgets.droplist;
 
+import msifeed.mc.mellow.layout.FreeLayout;
 import msifeed.mc.mellow.layout.VerticalLayout;
 import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.widgets.Widget;
@@ -9,7 +10,7 @@ import java.util.function.Consumer;
 
 public class DropList<T> extends Widget {
     final DropListHeader header = new DropListHeader(this);
-    private final DropListPopup popupList;
+    final DropListPopup popupList;
 
     private int selectedItem;
     private final List<T> items;
@@ -21,17 +22,24 @@ public class DropList<T> extends Widget {
         this.items = items;
         this.popupList = new DropListPopup(this);
 
-        setSizeHint(header.getSizeHint());
+//        setSizeHint(header.getSizeHint());
         setSizePolicy(header.getSizePolicy());
-        setLayout(new VerticalLayout(0));
+        setLayout(FreeLayout.INSTANCE);
 
         selectItem(0);
         header.setZLevel(1);
-        popupList.setZLevel(2);
+        popupList.setZLevel(10); // Over other headers
         popupList.setVisible(false);
 
         addChild(header);
         addChild(popupList);
+    }
+
+    @Override
+    public Point getContentSize() {
+//        return new Point(popupList.getContentSize().x, header.getContentSize().y);
+
+        return header.getContentSize();
     }
 
     public void selectItem(int i) {

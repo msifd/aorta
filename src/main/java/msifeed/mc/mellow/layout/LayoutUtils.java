@@ -16,11 +16,7 @@ public class LayoutUtils {
     }
 
     public static Point getPreferredSize(Widget widget) {
-        final Point target = widget.getContentSize();
-        final Point p = new Point();
-        p.x = getPreferredWidth(target.x, widget);
-        p.y = getPreferredHeight(target.y, widget);
-        return p;
+        return getPreferredSize(widget.getContentSize(), widget);
     }
 
     public static Point getPreferredSize(Point target, Widget widget) {
@@ -31,11 +27,13 @@ public class LayoutUtils {
     }
 
     public static int getPreferredWidth(int target, Widget widget) {
-        return getPreferred(target, widget.getSizeHint().x, widget.getSizePolicy().horizontalPolicy);
+        final int width = widget.getSizeHint().x;
+        return getPreferred(target, width, widget.getSizePolicy().horizontalPolicy);
     }
 
     public static int getPreferredHeight(int target, Widget widget) {
-        return getPreferred(target, widget.getSizeHint().y, widget.getSizePolicy().verticalPolicy);
+        final int height = widget.getSizeHint().y;
+        return getPreferred(target, height, widget.getSizePolicy().verticalPolicy);
     }
 
     private static int getPreferred(int target, int hint, SizePolicy.Policy policy) {

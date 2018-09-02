@@ -40,4 +40,12 @@ public class Margins {
         this.bottom = o.bottom;
         this.left = o.left;
     }
+
+    public int horizontal() {
+        return left + right;
+    }
+
+    public int vertical() {
+        return top + bottom;
+    }
 }
