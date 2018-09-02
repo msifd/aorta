@@ -14,7 +14,7 @@ public class RawChatParser {
     public static SpeechMessage parse(EntityPlayerMP sender, ChatComponentTranslation chatComponent) {
         final String text = getTextFromTranslation(chatComponent);
         final SpeechMessage message = new SpeechMessage();
-        message.language = LangAttribute.INSTANCE.get(sender).orElse(Language.MENALA);
+        message.language = LangAttribute.get(sender).orElse(Language.MENALA);
         message.radius = getSpeechRadius(text);
         message.speaker = sender.getDisplayName();
         message.text = text;

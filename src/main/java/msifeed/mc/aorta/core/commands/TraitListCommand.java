@@ -30,7 +30,7 @@ public class TraitListCommand extends ExtCommand {
     }
 
     private void printTraits(ICommandSender sender, EntityLivingBase entity) {
-        CharacterAttribute.INSTANCE.get(entity).map(Character::traits).ifPresent(traits -> {
+        CharacterAttribute.get(entity).map(Character::traits).ifPresent(traits -> {
             final Set<String> names = traits.stream().map(Enum::toString).collect(Collectors.toSet());
             final String theNiceString = joinNiceStringFromCollection(names);
             title(sender, "Your traits:", entity.getCommandSenderName());

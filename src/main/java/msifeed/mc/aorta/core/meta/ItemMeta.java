@@ -35,7 +35,7 @@ public class ItemMeta {
     }
 
     private boolean isGameMaster(EntityPlayer player) {
-        return CharacterAttribute.INSTANCE.has(player, Trait.gm);
+        return CharacterAttribute.has(player, Trait.gm);
     }
 
     private boolean isOwner(EntityPlayer player, ItemStack itemStack) {

@@ -26,6 +26,10 @@ public class Character {
         return this.traits;
     }
 
+    public boolean has(Trait trait) {
+        return traits.contains(trait);
+    }
+
     public NBTTagCompound toNBT() {
         final NBTTagCompound compound = new NBTTagCompound();
 

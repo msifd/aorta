@@ -1,6 +1,5 @@
 package msifeed.mc.aorta.attributes;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,7 +23,7 @@ public abstract class EntityAttribute<T> {
 
     public abstract T loadNBTData(NBTTagCompound root);
 
-    public Optional<T> get(Entity entity) {
+    public Optional<T> getValue(Entity entity) {
         final AttrProp<T> attr = getProp(entity);
         if (attr == null)
             return Optional.empty();

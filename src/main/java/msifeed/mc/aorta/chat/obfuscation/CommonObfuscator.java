@@ -1,22 +1,22 @@
 package msifeed.mc.aorta.chat.obfuscation;
 
-import msifeed.mc.aorta.chat.parser.SpeechPart;
+import msifeed.mc.aorta.chat.parser.SpeechToken;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class CommonObfuscator implements LangObfuscator {
     @Override
-    public String obfuscate(List<SpeechPart> parts) {
+    public String obfuscate(List<SpeechToken> tokens) {
         // TODO
-        return parts.stream()
+        return tokens.stream()
                 .map(part -> part.text)
                 .collect(Collectors.joining());
 
 //        final String letters = joinLetters(parts);
 //        final Random random = ObfuscationUtils.stringSeededRandom(letters);
 //
-//        final int wordCount = (int) parts.stream().filter(SpeechPart::isWord).count();
+//        final int wordCount = (int) parts.stream().filter(SpeechToken::isWord).count();
 //        final int wordLength = Math.floorDiv(letters.length(), wordCount);
 //
 //        final LinkedList<String> words = new LinkedList<>();
@@ -35,9 +35,9 @@ public class CommonObfuscator implements LangObfuscator {
 //                .collect(Collectors.joining());
     }
 
-    private static String joinLetters(List<SpeechPart> parts) {
-        return parts.stream()
-                .filter(SpeechPart::isWord)
+    private static String joinLetters(List<SpeechToken> tokens) {
+        return tokens.stream()
+                .filter(SpeechToken::isWord)
                 .map(part -> part.text)
                 .collect(Collectors.joining());
     }

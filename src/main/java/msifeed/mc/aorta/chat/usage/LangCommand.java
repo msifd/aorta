@@ -41,7 +41,7 @@ public class LangCommand extends ExtCommand {
     private void printMyLanguages(ICommandSender sender) {
         final EntityLivingBase entity = (EntityLivingBase) sender;
 
-        LangAttribute.INSTANCE.get(entity).ifPresent(language -> {
+        LangAttribute.get(entity).ifPresent(language -> {
             title(sender, "Current language: %s", language);
         });
 
@@ -73,7 +73,7 @@ public class LangCommand extends ExtCommand {
     }
 
     private Set<Language> getKnownLanguages(EntityLivingBase entity) {
-        final Set<Trait> traits = CharacterAttribute.INSTANCE.get(entity).map(Character::traits).orElse(Collections.emptySet());
+        final Set<Trait> traits = CharacterAttribute.get(entity).map(Character::traits).orElse(Collections.emptySet());
         final Set<Trait> langTraits = TraitType.LANG.filter(traits);
         return Arrays.stream(Language.values())
                 .filter(language -> langTraits.contains(language.trait))

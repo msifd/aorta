@@ -1,9 +1,9 @@
 package msifeed.mc.aorta.chat.obfuscation;
 
-import msifeed.mc.aorta.chat.parser.SpeechPart;
+import msifeed.mc.aorta.chat.parser.SpeechToken;
 
 import java.util.List;
 
 public interface LangObfuscator {
-    String obfuscate(List<SpeechPart> parts);
+    String obfuscate(List<SpeechToken> tokens);
 }

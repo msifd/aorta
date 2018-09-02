@@ -4,9 +4,11 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.aorta.chat.usage.LangAttribute;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.attributes.StatusAttribute;
+import msifeed.mc.aorta.core.character.BodyPart;
+import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.character.Grade;
-import msifeed.mc.aorta.core.character.BodyPart;
+import msifeed.mc.aorta.core.status.StatusCalc;
 import msifeed.mc.aorta.core.things.ItemDebugTool;
 import msifeed.mc.aorta.core.traits.Trait;
 import net.minecraft.client.Minecraft;
@@ -22,6 +24,7 @@ import org.lwjgl.opengl.GL11;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.Map;
 
 public enum DebugHud {
     INSTANCE;
@@ -58,7 +61,7 @@ public enum DebugHud {
     }
 
     private void addCharProps(ArrayList<String> lines, EntityLivingBase entity) {
-        CharacterAttribute.INSTANCE.get(entity).ifPresent(character -> {
+        CharacterAttribute.get(entity).ifPresent(character -> {
             lines.add("Character {");
 
             lines.add("  features: {");
@@ -90,19 +93,31 @@ public enum DebugHud {
             lines.add("  ]");
 
             lines.add("}");
+
+            addStatusProp(lines, entity, character);
         });
     }
 
-    private void addStatusProp(ArrayList<String> lines, EntityLivingBase entity) {
-        StatusAttribute.INSTANCE.get(entity).ifPresent(health -> {
+    private void addStatusProp(ArrayList<String> lines, EntityLivingBase entity, Character character) {
+        StatusAttribute.get(entity).ifPresent(status -> {
             lines.add("Status {");
-            lines.add("  shields: " + health.shields);
+
+            lines.add("  damage to death: " + StatusCalc.damageToDeath(character, status));
+
+            lines.add("  damage: {");
+            for (Map.Entry<String, Short> e : status.damage.entrySet()) {
+                lines.add("    " + e.getKey().toLowerCase() + ": " + e.getValue());
+            }
+            lines.add("  }");
+
+            lines.add("  shields: " + status.shields);
+
             lines.add("}");
         });
     }
 
     private void addLang(ArrayList<String> lines, EntityLivingBase entity) {
-        LangAttribute.INSTANCE.get(entity).ifPresent(lang -> lines.add("Language: " + lang));
+        LangAttribute.get(entity).ifPresent(lang -> lines.add("Language: " + lang));
     }
 
     @Nullable

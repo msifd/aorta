@@ -1,8 +1,8 @@
 package msifeed.mc.aorta.core.things;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.aorta.things.AortaCreativeTab;
-import msifeed.mc.aorta.utils.SideUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,7 +31,7 @@ public class ItemBattleTool extends Item {
 
     @Override
     public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity target) {
-        if (SideUtils.isClient() || !(target instanceof EntityLivingBase))
+        if (FMLCommonHandler.instance().getSide().isClient() || !(target instanceof EntityLivingBase))
             return true;
 
         System.out.println("entity in");
@@ -49,7 +49,7 @@ public class ItemBattleTool extends Item {
 
     @SubscribeEvent
     public void onEntityInteract(EntityInteractEvent event) {
-        if (SideUtils.isClient())
+        if (FMLCommonHandler.instance().getSide().isClient())
             return;
         final ItemStack heldItem = event.entityPlayer.getHeldItem();
         if (heldItem == null || !(heldItem.getItem() instanceof ItemBattleTool))

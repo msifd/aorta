@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import msifeed.mc.aorta.genesis.GenesisTrait;
 import msifeed.mc.aorta.genesis.GenesisUnit;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Optional;
 

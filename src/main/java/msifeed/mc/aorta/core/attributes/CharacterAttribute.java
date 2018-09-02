@@ -1,7 +1,7 @@
 package msifeed.mc.aorta.core.attributes;
 
 import msifeed.mc.aorta.Aorta;
-import msifeed.mc.aorta.attributes.EntityLivingAttribute;
+import msifeed.mc.aorta.attributes.flavors.EntityLivingAttribute;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.traits.Trait;
 import net.minecraft.entity.Entity;
@@ -10,7 +10,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
@@ -28,9 +27,11 @@ public class CharacterAttribute extends EntityLivingAttribute<Character> {
 
     @Override
     public Character init(Entity entity, World world, Character character) {
-        if (entity instanceof EntityPlayer && character == null)
+        if (character != null)
+            return character;
+        if (entity instanceof EntityPlayer)
             return new Character();
-        return character;
+        return null;
     }
 
     @Override
@@ -49,21 +50,22 @@ public class CharacterAttribute extends EntityLivingAttribute<Character> {
         return character;
     }
 
-    public boolean has(EntityLivingBase entity, Trait trait) {
-        return get(entity)
-                .map(c -> c.traits)
-                .orElse(Collections.emptySet())
-                .contains(trait);
+    public static Optional<Character> get(Entity e) {
+        return INSTANCE.getValue(e);
     }
 
-    public boolean toggle(EntityLivingBase entity, Trait trait) {
-        final Optional<Character> charOpt = get(entity);
+    public static boolean has(EntityLivingBase entity, Trait trait) {
+        return INSTANCE.getValue(entity).map(c -> c.has(trait)).orElse(false);
+    }
+
+    public static boolean toggle(EntityLivingBase entity, Trait trait) {
+        final Optional<Character> charOpt = INSTANCE.getValue(entity);
         if (charOpt.isPresent()) {
             final Set<Trait> traits = charOpt.get().traits;
             final boolean removed = traits.remove(trait);
             if (!removed)
                 traits.add(trait);
-            sync(entity);
+            INSTANCE.sync(entity);
             return !removed;
         }
         return false;

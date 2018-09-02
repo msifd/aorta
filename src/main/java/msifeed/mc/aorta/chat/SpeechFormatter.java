@@ -2,8 +2,8 @@ package msifeed.mc.aorta.chat;
 
 import msifeed.mc.aorta.chat.net.SpeechMessage;
 import msifeed.mc.aorta.chat.obfuscation.LangObfuscator;
-import msifeed.mc.aorta.chat.parser.SpeechPart;
-import msifeed.mc.aorta.chat.parser.SpeechPartParser;
+import msifeed.mc.aorta.chat.parser.SpeechToken;
+import msifeed.mc.aorta.chat.parser.SpeechTokenParser;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
@@ -53,11 +53,11 @@ public class SpeechFormatter {
     }
 
     private static boolean doIKnowLanguage(Language language) {
-        return CharacterAttribute.INSTANCE.has(Minecraft.getMinecraft().thePlayer, language.trait);
+        return CharacterAttribute.has(Minecraft.getMinecraft().thePlayer, language.trait);
     }
 
     private static String obfuscateWith(LangObfuscator obfuscator, String text) {
-        final List<SpeechPart> parts = SpeechPartParser.parse(text);
+        final List<SpeechToken> parts = SpeechTokenParser.parse(text);
         return obfuscator.obfuscate(parts);
     }
 

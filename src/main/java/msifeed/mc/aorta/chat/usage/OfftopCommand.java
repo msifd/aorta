@@ -39,7 +39,7 @@ public class OfftopCommand extends ExtCommand {
 
         final SpeechMessage message = new SpeechMessage();
         message.type = SpeechMessage.Type.OFFTOP;
-        message.language = LangAttribute.INSTANCE.get(player).orElse(Language.VANILLA);
+        message.language = LangAttribute.get(player).orElse(Language.VANILLA);
         message.radius = 20;
         message.speaker = sender.getCommandSenderName();
         message.text = text;

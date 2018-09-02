@@ -1,6 +1,6 @@
 package msifeed.mc.aorta.chat.obfuscation;
 
-import msifeed.mc.aorta.chat.parser.SpeechPart;
+import msifeed.mc.aorta.chat.parser.SpeechToken;
 
 import java.util.Collections;
 import java.util.List;
@@ -10,12 +10,12 @@ import java.util.stream.IntStream;
 
 public class UmallanObfuscator implements LangObfuscator {
     @Override
-    public String obfuscate(List<SpeechPart> parts) {
-        final String letters = getShuffledLetters(parts);
+    public String obfuscate(List<SpeechToken> tokens) {
+        final String letters = getShuffledLetters(tokens);
 
         final StringBuilder sb = new StringBuilder();
         int offset = 0;
-        for (SpeechPart part : parts) {
+        for (SpeechToken part : tokens) {
             if (part.isWord()) {
                 final String sub = letters.substring(offset, offset + part.text.length());
                 offset += sub.length();
@@ -28,9 +28,9 @@ public class UmallanObfuscator implements LangObfuscator {
         return sb.toString();
     }
 
-    private static String getShuffledLetters(List<SpeechPart> parts) {
+    private static String getShuffledLetters(List<SpeechToken> parts) {
         final List<Integer> codes = parts.stream()
-                .filter(SpeechPart::isWord)
+                .filter(SpeechToken::isWord)
                 .map(part -> part.text)
                 .map(CharSequence::codePoints)
                 .flatMap(IntStream::boxed)

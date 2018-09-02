@@ -6,10 +6,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 
 public class AttrProp<T> implements IExtendedEntityProperties {
-    public T value = null;
+    T value = null;
     private final EntityAttribute<T> attribute;
 
-    AttrProp(EntityAttribute<T> attribute) {
+    public AttrProp(EntityAttribute<T> attribute) {
         this.attribute = attribute;
     }
 
@@ -25,6 +25,8 @@ public class AttrProp<T> implements IExtendedEntityProperties {
 
     @Override
     public void loadNBTData(NBTTagCompound root) {
-        value = attribute.loadNBTData(root);
+        final T tmp = attribute.loadNBTData(root);
+        if (tmp != null)
+            value = tmp;
     }
 }

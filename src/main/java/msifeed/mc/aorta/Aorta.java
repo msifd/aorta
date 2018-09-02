@@ -30,6 +30,10 @@ public class Aorta {
 
     public static Speechat SPEECHAT = new Speechat();
 
+    public void preInit() {
+        CORE.preInit();
+    }
+
     public void init() {
         AttributeHandler.INSTANCE.init();
         CORE.init();

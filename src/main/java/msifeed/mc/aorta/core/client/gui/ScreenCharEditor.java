@@ -74,7 +74,7 @@ public class ScreenCharEditor extends MellowGuiScreen {
     private void refillMainSection() {
         mainSection.clearChildren();
 
-        CharacterAttribute.INSTANCE.get(entity).ifPresent(c -> this.character = c);
+        CharacterAttribute.get(entity).ifPresent(c -> this.character = c);
 
         if (character != null) {
             addFeatures();

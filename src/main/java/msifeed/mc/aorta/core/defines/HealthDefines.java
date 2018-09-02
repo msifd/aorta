@@ -1,7 +1,7 @@
 package msifeed.mc.aorta.core.defines;
 
 public class HealthDefines {
-    public double regularDeath = 0.4;
-    public double toughDeath = 0.75;
-    public double weakDeath = 0.3;
+    public double regularFatal = 0.4;
+    public double toughFatal = 0.6;
+    public double weakFatal = 0.3;
 }

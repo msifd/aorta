@@ -1,6 +1,6 @@
 package msifeed.mc.aorta.chat.obfuscation;
 
-import msifeed.mc.aorta.chat.parser.SpeechPart;
+import msifeed.mc.aorta.chat.parser.SpeechToken;
 
 import java.util.List;
 import java.util.Random;
@@ -15,8 +15,8 @@ public class MachineObfuscator implements LangObfuscator {
     };
 
     @Override
-    public String obfuscate(List<SpeechPart> parts) {
-        return parts.stream()
+    public String obfuscate(List<SpeechToken> tokens) {
+        return tokens.stream()
                 .map(part -> part.isWord() ? randomBeep(part.text) : part.text)
                 .collect(Collectors.joining());
     }
