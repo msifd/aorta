@@ -20,9 +20,13 @@ public class LayoutUtils {
     }
 
     public static Point getPreferredSize(Point target, Widget widget) {
+        return getPreferredSize(target.x, target.y, widget);
+    }
+
+    public static Point getPreferredSize(int targetX, int targetY, Widget widget) {
         final Point p = new Point();
-        p.x = getPreferredWidth(target.x, widget);
-        p.y = getPreferredHeight(target.y, widget);
+        p.x = getPreferredWidth(targetX, widget);
+        p.y = getPreferredHeight(targetY, widget);
         return p;
     }
 

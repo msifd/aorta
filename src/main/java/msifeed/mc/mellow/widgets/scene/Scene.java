@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Scene extends Widget {
 
@@ -43,16 +44,11 @@ public class Scene extends Widget {
         GL11.glScalef(0.5f, 0.5f, 0.5f);
         FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
         int y = 5;
-        for (Object o : active.stream().filter(widget -> widget.containsPoint(p)).sorted(Widget::isHigherThan).toArray()) {
-            fr.drawString(o.toString(), 5, y, 0xffffff);
+        for (Widget w : active.stream().filter(widget -> widget.containsPoint(p)).sorted(Widget::isHigherThan).collect(Collectors.toList())) {
+            final String s = String.format("%s (z: %d, d: %d)", w.toString(), w.getGeometry().z, w.getWidgetTreeDepth());
+            fr.drawString(s, 5, y, 0xffffff);
             y += fr.FONT_HEIGHT + 2;
         }
-
-        if (Widget.hoveredWidget != null) {
-            y += fr.FONT_HEIGHT * 2;
-            fr.drawString(Widget.hoveredWidget.toString(), 5, y, 0xffffff);
-        }
-
         GL11.glPopMatrix();
         //
 

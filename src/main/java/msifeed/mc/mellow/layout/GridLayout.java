@@ -62,7 +62,7 @@ public class GridLayout implements Layout {
         boolean labelWidget = true;
         for (Widget child : children) {
             final Geom childGeom = child.getGeometry();
-            childGeom.translate(geometry.x, geometry.y, geometry.z);
+            childGeom.translate(geometry);
             if (!labelWidget)
                 childGeom.x = geometry.x + geometry.w - childGeom.w;
             labelWidget = !labelWidget;

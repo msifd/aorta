@@ -11,7 +11,6 @@ class ListEntryButton extends ButtonLabel {
 
     ListEntryButton(DropList parent, int n) {
         this.itemN = n;
-        setZLevel(1);
         getMargin().set(2, 0);
         setLayout(new AnchorLayout(AnchorLayout.Anchor.LEFT, AnchorLayout.Anchor.CENTER));
 

@@ -24,7 +24,7 @@ public class Separator extends Widget {
         final int endX = geom.x + geom.w;
         final int partWidth = horizontalPart.pos.x / RenderUtils.getScreenScaleFactor() + 1;
         for (int x = geom.x; x < endX; x += partWidth) {
-            RenderParts.slice(horizontalPart, x, geom.y);
+            RenderParts.slice(horizontalPart, x, geom.y, geom.z);
         }
         RenderWidgets.endCropped();
     }

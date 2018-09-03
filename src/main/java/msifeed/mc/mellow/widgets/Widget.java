@@ -132,6 +132,10 @@ public class Widget {
         return geometry;
     }
 
+    public int getGeometryZ() {
+        return getGeometry().z;
+    }
+
     public Widget getParent() {
         return parent;
     }
@@ -139,10 +143,10 @@ public class Widget {
     public void setParent(Widget parent) {
         if (parent != null) {
             this.parent = parent;
-            this.widgetTreeDepth = parent.widgetTreeDepth + 1;
+//            this.widgetTreeDepth = parent.widgetTreeDepth + 1;
         } else {
             this.parent = null;
-            this.widgetTreeDepth = 0;
+//            this.widgetTreeDepth = 0;
         }
         setDirty();
     }
@@ -180,7 +184,8 @@ public class Widget {
     }
 
     protected void updateIndependentLayout() {
-        if (!isDirtyTree() || children.isEmpty())
+//        if (!isDirtyTree() || children.isEmpty())
+        if (children.isEmpty())
             return;
 
         for (Widget child : children)
@@ -190,8 +195,11 @@ public class Widget {
     }
 
     protected void updateRelativeLayout() {
-        if (!isDirtyTree() || children.isEmpty())
+//        if (!isDirtyTree() || children.isEmpty())
+        if (children.isEmpty())
             return;
+
+        updateWidgetTreeDepth();
 
         layout.layoutRelativeParent(this, children);
 
@@ -200,7 +208,16 @@ public class Widget {
 
         updateSelf();
 
+//        System.out.println(toString());
+
         dirty = false;
+    }
+
+    protected void updateWidgetTreeDepth() {
+        if (parent != null)
+            this.widgetTreeDepth = parent.widgetTreeDepth + 1;
+        else
+            this.widgetTreeDepth = 0;
     }
 
     protected void updateSelf() {
@@ -287,22 +304,8 @@ public class Widget {
     }
 
     public int isHigherThan(Widget another) {
-        return Comparator.comparingInt(Widget::getZLevel)
+        return Comparator.comparingInt(Widget::getGeometryZ)
             .thenComparing(Widget::getWidgetTreeDepth)
             .compare(this, another);
-
-//        if (geometry.z > another.geometry.z)
-//            return 1;
-//        else if (geometry.z < another.geometry.z)
-//            return -1;
-//        else return Integer.compare(widgetTreeDepth, another.widgetTreeDepth);
-
-//        return geometry.z > another.geometry.z
-//                || (geometry.z == another.geometry.z && widgetTreeDepth > another.widgetTreeDepth);
     }
-
-//    public boolean isHigherThan(Widget another) {
-//        return geometry.z > another.geometry.z
-//                || (geometry.z == another.geometry.z && widgetTreeDepth > another.widgetTreeDepth);
-//    }
 }

@@ -12,6 +12,6 @@ public interface Layout {
     default void layoutRelativeParent(Widget parent, Collection<Widget> children) {
         final Geom geometry = LayoutUtils.getGeomWithMargin(parent);
         for (Widget w : children)
-            w.getGeometry().translate(geometry.x, geometry.y, geometry.z);
+            w.getGeometry().translate(geometry);
     }
 }

@@ -58,7 +58,7 @@ class DropListHeader extends ButtonLabel {
         else
             RenderParts.nineSlice(buttonNormalPart, buttonBgGeom);
 
-        RenderParts.slice(downIconPart, iconGeom.x, iconGeom.y);
+        RenderParts.slice(downIconPart, iconGeom);
     }
 
     @Override

@@ -20,7 +20,7 @@ public class Window extends Widget {
         header.setSizeHint(0, 13);
         header.setZLevel(1);
 
-        content.getMargin().set(0, 2, 4, 2);
+        content.getMargin().set(1, 3, 4, 3);
         content.setLayout(VerticalLayout.INSTANCE);
 
         super.addChild(header);

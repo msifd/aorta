@@ -44,29 +44,10 @@ public class VerticalLayout implements Layout {
     public void layoutRelativeParent(Widget parent, Collection<Widget> children) {
         final Geom geometry = LayoutUtils.getGeomWithMargin(parent);
 
-        final int spacingsHeight = spacing * (children.size() - 1);
-        final int averageHeight = (geometry.h - spacingsHeight) / children.size();
-        int fixedHeight = spacingsHeight;
-        int fixedChildren = 0;
-        for (Widget child : children) {
-            final int h = LayoutUtils.getPreferredHeight(averageHeight, child);
-            if (h != averageHeight) {
-                fixedHeight += h;
-                fixedChildren++;
-            }
-        }
-
-        final int freeChildren = Math.max(1, children.size() - fixedChildren);
-        final int targetChildHeight = (geometry.h - fixedHeight) / freeChildren;
-
-        int yOffset = geometry.y;
         for (Widget child : children) {
             final Geom childGeom = child.getGeometry();
-            childGeom.setPos(0, 0);
-            childGeom.translate(geometry.x, yOffset, geometry.z);
-            childGeom.setSize(LayoutUtils.getPreferredWidth(geometry.w, child), LayoutUtils.getPreferredHeight(targetChildHeight, child));
-
-            yOffset += childGeom.h + spacing;
+            childGeom.translate(geometry);
+            childGeom.setSize(LayoutUtils.getPreferredSize(geometry.w, child.getContentSize().y, child));
         }
     }
 }

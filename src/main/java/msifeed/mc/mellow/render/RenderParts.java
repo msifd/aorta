@@ -31,12 +31,16 @@ public final class RenderParts {
         tessellator.draw();
     }
 
-    public static void slice(Part part, int x, int y) {
+    public static void slice(Part part, Geom geom) {
+        slice(part, geom.x, geom.y, geom.z);
+    }
+
+    public static void slice(Part part, int x, int y, int z) {
         if (part == null || part.size == null)
             return;
 
         bindThemeTexture();
-        slice(x, y, 0, part.size.x, part.size.y, part.pos.x, part.pos.y, part.size.x, part.size.y);
+        slice(x, y, z, part.size.x, part.size.y, part.pos.x, part.pos.y, part.size.x, part.size.y);
     }
 
     public static void nineSlice(Part part, Geom geom) {

@@ -17,6 +17,7 @@ import msifeed.mc.mellow.widgets.button.ButtonLabel;
 import msifeed.mc.mellow.widgets.droplist.DropList;
 import msifeed.mc.mellow.widgets.window.Window;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -78,6 +79,8 @@ public class ScreenCharEditor extends MellowGuiScreen {
         if (character != null) {
             addFeatures();
 //            addBodyParts();
+            if (!(entity instanceof EntityPlayer))
+                addClearButton(entity);
         } else {
             final Button addDataBtn = new ButtonLabel("Add data");
             addDataBtn.setClickCallback(() -> {
@@ -128,6 +131,17 @@ public class ScreenCharEditor extends MellowGuiScreen {
         bodyParts.addChild(setBodyBtn);
 
         mainSection.addChild(bodyParts);
+        mainSection.addChild(new Separator());
+    }
+
+    private void addClearButton(EntityLivingBase entity) {
+        final Button btn = new ButtonLabel("Clear");
+        btn.setClickCallback(() -> {
+            CharacterAttribute.INSTANCE.set(entity, null);
+            character = null;
+            refillMainSection();
+        });
+        mainSection.addChild(btn);
         mainSection.addChild(new Separator());
     }
 }
