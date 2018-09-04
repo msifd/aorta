@@ -8,5 +8,16 @@
       "item",
       "epic"
     ]
+  },
+  {
+    "id": "test_food",
+    "title": "Тестовая хавка",
+    "texture": "minecraft:mushroom_stew",
+    "traits": [
+      "item",
+      "consumable",
+      "no_saturation",
+      "uncommon"
+    ]
   }
 ]

@@ -30,6 +30,9 @@ public enum GenesisTrait {
     // Items // // // // // // // //
     not_stackable, hold_like_tool,
 
+    // Food
+    consumable, no_saturation,
+
     // Rarity
     poor, common, uncommon, rare, epic, legendary,
 

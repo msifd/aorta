@@ -7,24 +7,32 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import msifeed.mc.aorta.genesis.Generator;
 import msifeed.mc.aorta.genesis.GenesisTrait;
+import msifeed.mc.aorta.genesis.items.templates.FoodTemplate;
+import msifeed.mc.aorta.genesis.items.templates.ItemTemplate;
 import msifeed.mc.aorta.things.AortaCreativeTab;
+import net.minecraft.item.Item;
 
 import java.util.HashSet;
 
-import static msifeed.mc.aorta.genesis.GenesisTrait.hold_like_tool;
-import static msifeed.mc.aorta.genesis.GenesisTrait.not_stackable;
+import static msifeed.mc.aorta.genesis.GenesisTrait.*;
 
 public class ItemGenerator implements Generator {
     @Override
     public void generate(JsonObject json, HashSet<GenesisTrait> traits) {
         final ItemGenesisUnit unit = new ItemGenesisUnit(json, traits);
 
-        final ItemTemplate item = new ItemTemplate(unit);
+        final Item item = getItemTemplate(unit);
         fillCommons(unit, item);
         GameRegistry.registerItem(item, unit.id);
     }
 
-    private void fillCommons(ItemGenesisUnit unit, ItemTemplate item) {
+    private Item getItemTemplate(ItemGenesisUnit unit) {
+        if (unit.hasTrait(consumable))
+            return new FoodTemplate(unit);
+        return new ItemTemplate(unit);
+    }
+
+    private void fillCommons(ItemGenesisUnit unit, Item item) {
         item.setCreativeTab(AortaCreativeTab.ITEMS);
 
         if (unit.hasTrait(not_stackable))
@@ -38,7 +46,7 @@ public class ItemGenerator implements Generator {
     }
 
     @SideOnly(Side.CLIENT)
-    private void fillTexture(ItemGenesisUnit unit, ItemTemplate item) {
+    private void fillTexture(ItemGenesisUnit unit, Item item) {
         if (unit.texture != null) {
             item.setTextureName(unit.texture);
         }

@@ -8,6 +8,7 @@ import msifeed.mc.aorta.chat.Speechat;
 import msifeed.mc.aorta.core.Core;
 import msifeed.mc.aorta.genesis.Genesis;
 import msifeed.mc.aorta.tweaks.EnableDesertRain;
+import msifeed.mc.aorta.tweaks.MakeFoodEdible;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.server.MinecraftServer;
 
@@ -43,6 +44,7 @@ public class Aorta {
 
     public void postInit() {
         EnableDesertRain.apply();
+        MakeFoodEdible.apply();
     }
 
     public void serverStarting(FMLServerStartedEvent event) {
