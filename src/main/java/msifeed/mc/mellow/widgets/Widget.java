@@ -3,7 +3,10 @@ package msifeed.mc.mellow.widgets;
 import msifeed.mc.mellow.layout.FreeLayout;
 import msifeed.mc.mellow.layout.Layout;
 import msifeed.mc.mellow.render.RenderShapes;
-import msifeed.mc.mellow.utils.*;
+import msifeed.mc.mellow.utils.Geom;
+import msifeed.mc.mellow.utils.Margins;
+import msifeed.mc.mellow.utils.Point;
+import msifeed.mc.mellow.utils.SizePolicy;
 
 import java.util.ArrayList;
 import java.util.Collection;

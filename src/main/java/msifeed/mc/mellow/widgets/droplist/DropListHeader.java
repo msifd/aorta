@@ -2,12 +2,11 @@ package msifeed.mc.mellow.widgets.droplist;
 
 import msifeed.mc.mellow.Mellow;
 import msifeed.mc.mellow.layout.AnchorLayout;
-import msifeed.mc.mellow.layout.FreeLayout;
 import msifeed.mc.mellow.render.RenderParts;
+import msifeed.mc.mellow.render.RenderWidgets;
 import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.utils.Geom;
 import msifeed.mc.mellow.utils.Point;
-import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
 
 class DropListHeader extends ButtonLabel {
@@ -48,6 +47,13 @@ class DropListHeader extends ButtonLabel {
         iconGeom.set(buttonBgGeom);
         iconGeom.setSize(downIconPart.size);
         iconGeom.translate((buttonNormalPart.size.x - iconGeom.w) / 2, (buttonNormalPart.size.y - iconGeom.h) / 2, 1);
+    }
+
+    @Override
+    public void render() {
+        if (parent.isOpened()) RenderWidgets.toggleCropping();
+        super.render();
+        if (parent.isOpened()) RenderWidgets.toggleCropping();
     }
 
     @Override

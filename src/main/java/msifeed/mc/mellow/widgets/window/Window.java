@@ -20,11 +20,11 @@ public class Window extends Widget {
         header.setSizeHint(0, 13);
         header.setZLevel(1);
 
-        content.getMargin().set(1, 3, 4, 3);
+        content.getMargin().set(2, 3, 5, 3);
         content.setLayout(VerticalLayout.INSTANCE);
 
-        super.addChild(header);
-        super.addChild(content);
+        addChild(header);
+        addChild(content);
     }
 
     public void setTitle(String text) {

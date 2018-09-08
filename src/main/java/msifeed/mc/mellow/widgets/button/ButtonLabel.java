@@ -4,7 +4,6 @@ import msifeed.mc.mellow.Mellow;
 import msifeed.mc.mellow.layout.AnchorLayout;
 import msifeed.mc.mellow.render.RenderParts;
 import msifeed.mc.mellow.theme.Part;
-import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.basic.Label;
 
 public class ButtonLabel extends Button {

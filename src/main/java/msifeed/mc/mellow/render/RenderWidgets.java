@@ -6,6 +6,9 @@ import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
 public final class RenderWidgets {
+    private static boolean croppingActive = false;
+    private static boolean croppingPaused = false;
+
     public static void beginCropped(Geom geom) {
         final Minecraft mc = Minecraft.getMinecraft();
         final int sf = RenderUtils.getScreenScaleFactor();
@@ -13,12 +16,25 @@ public final class RenderWidgets {
         final int y = geom.y * sf;
         final int w = geom.w * sf;
         final int h = geom.h * sf;
-        GL11.glScissor(x, mc.displayHeight - h - y, w, h);
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
+        GL11.glScissor(x, mc.displayHeight - h - y, w, h);
+        RenderShapes.rect(new Geom(x, mc.displayHeight - h - y, w, h), 0, 0xff);
+        croppingActive = true;
     }
 
     public static void endCropped() {
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
+        croppingActive = false;
+    }
+
+    public static void toggleCropping() {
+        if (!croppingActive)
+            return;
+        if (croppingPaused)
+            GL11.glEnable(GL11.GL_SCISSOR_TEST);
+        else
+            GL11.glDisable(GL11.GL_SCISSOR_TEST);
+        croppingPaused = !croppingPaused;
     }
 
     public static void cropped(Widget widget, Geom geom) {

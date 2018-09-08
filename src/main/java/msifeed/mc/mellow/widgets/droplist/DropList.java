@@ -1,7 +1,6 @@
 package msifeed.mc.mellow.widgets.droplist;
 
 import msifeed.mc.mellow.layout.FreeLayout;
-import msifeed.mc.mellow.layout.VerticalLayout;
 import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.widgets.Widget;
 

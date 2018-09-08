@@ -25,8 +25,6 @@ import java.util.Map;
 
 public class ScreenCharEditor extends MellowGuiScreen {
     private final EntityLivingBase entity;
-    //    private final ScrollArea mainScroll = new ScrollArea();
-//    private final Widget mainSection = mainScroll.getContent();
     private final Widget mainSection = new Widget();
     private final Button submitBtn = new ButtonLabel("Submit");
 
@@ -36,18 +34,16 @@ public class ScreenCharEditor extends MellowGuiScreen {
         this.entity = entity;
 
         final Window window = new Window();
-        window.setSizeHint(200, 200);
-        window.setLayout(VerticalLayout.INSTANCE);
         window.setTitle("Char Editor");
         scene.addChild(window);
 
-        final Label entityName = new Label("Entity: " + entity.getCommandSenderName());
         final Widget windowContent = window.getContent();
+
+        final Label entityName = new Label("Entity: " + entity.getCommandSenderName());
         windowContent.addChild(entityName);
         windowContent.addChild(new Separator());
 
         mainSection.setLayout(VerticalLayout.INSTANCE);
-        mainSection.setSizeHint(window.getSizeHint());
         refillMainSection();
         windowContent.addChild(mainSection);
 

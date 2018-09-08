@@ -1,7 +1,6 @@
 package msifeed.mc.mellow.widgets.button;
 
 import msifeed.mc.mellow.handlers.MouseHandler;
-import msifeed.mc.mellow.render.RenderWidgets;
 import msifeed.mc.mellow.widgets.Widget;
 
 import java.util.Collection;
@@ -21,13 +20,6 @@ public abstract class Button extends Widget implements MouseHandler.Click {
 
     public void setClickCallback(Runnable callback) {
         this.clickCallback = callback;
-    }
-
-    @Override
-    protected void renderChildren() {
-        RenderWidgets.beginCropped(getGeometry());
-        super.renderChildren();
-        RenderWidgets.endCropped();
     }
 
     @Override

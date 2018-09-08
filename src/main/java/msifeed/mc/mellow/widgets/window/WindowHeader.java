@@ -5,7 +5,6 @@ import msifeed.mc.mellow.handlers.MouseHandler;
 import msifeed.mc.mellow.layout.AnchorLayout;
 import msifeed.mc.mellow.render.RenderShapes;
 import msifeed.mc.mellow.utils.Point;
-import msifeed.mc.mellow.widgets.button.Button;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
 
 class WindowHeader extends ButtonLabel implements MouseHandler.AllBasic {

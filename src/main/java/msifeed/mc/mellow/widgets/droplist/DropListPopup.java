@@ -3,10 +3,9 @@ package msifeed.mc.mellow.widgets.droplist;
 import msifeed.mc.mellow.Mellow;
 import msifeed.mc.mellow.layout.VerticalLayout;
 import msifeed.mc.mellow.render.RenderParts;
+import msifeed.mc.mellow.render.RenderWidgets;
 import msifeed.mc.mellow.theme.Part;
-import msifeed.mc.mellow.utils.Geom;
 import msifeed.mc.mellow.utils.Point;
-import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
 
 class DropListPopup extends Widget {
@@ -32,6 +31,13 @@ class DropListPopup extends Widget {
     @Override
     public boolean isVisible() {
         return parent.isOpened();
+    }
+
+    @Override
+    public void render() {
+        RenderWidgets.toggleCropping();
+        super.render();
+        RenderWidgets.toggleCropping();
     }
 
     @Override

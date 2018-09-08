@@ -2,8 +2,6 @@ package msifeed.mc.mellow.widgets.droplist;
 
 import msifeed.mc.mellow.layout.AnchorLayout;
 import msifeed.mc.mellow.render.RenderShapes;
-import msifeed.mc.mellow.widgets.button.Button;
-import msifeed.mc.mellow.widgets.basic.Label;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
 
 class ListEntryButton extends ButtonLabel {
