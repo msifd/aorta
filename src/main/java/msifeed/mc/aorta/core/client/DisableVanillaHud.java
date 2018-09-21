@@ -12,15 +12,15 @@ public class DisableVanillaHud {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onRenderOverlay(RenderGameOverlayEvent.Pre event) {
-//        switch (event.type) {
-//            case HEALTH:
+        switch (event.type) {
+            case HEALTH:
 //                renderHud(event);
-//            case ARMOR:
-//            case FOOD:
-//            case EXPERIENCE:
-//                event.setCanceled(true);
-//                break;
-//        }
+            case ARMOR:
+            case FOOD:
+            case EXPERIENCE:
+                event.setCanceled(true);
+                break;
+        }
     }
 
     private static void renderHud(RenderGameOverlayEvent event) {

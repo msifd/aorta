@@ -8,6 +8,7 @@ import msifeed.mc.aorta.chat.Speechat;
 import msifeed.mc.aorta.core.Core;
 import msifeed.mc.aorta.genesis.Genesis;
 import msifeed.mc.aorta.tweaks.EnableDesertRain;
+import msifeed.mc.aorta.tweaks.MakeEveryoneHealthy;
 import msifeed.mc.aorta.tweaks.MakeFoodEdible;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.server.MinecraftServer;
@@ -40,6 +41,8 @@ public class Aorta {
         CORE.init();
         GENESIS.init();
         SPEECHAT.init();
+
+        MakeEveryoneHealthy.apply();
     }
 
     public void postInit() {
