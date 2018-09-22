@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.chat.parser;
+package msifeed.mc.aorta.chat.composer.parser;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,9 +1,9 @@
 package msifeed.mc.aorta.chat.usage;
 
 import msifeed.mc.aorta.chat.ChatHandler;
-import msifeed.mc.aorta.chat.Language;
-import msifeed.mc.aorta.chat.SpeechFormatter;
-import msifeed.mc.aorta.chat.net.SpeechMessage;
+import msifeed.mc.aorta.chat.composer.ChatMessageComposer;
+import msifeed.mc.aorta.chat.composer.SpeechType;
+import msifeed.mc.aorta.chat.net.ChatMessage;
 import msifeed.mc.commons.ExtCommand;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
@@ -36,18 +36,12 @@ public class OfftopCommand extends ExtCommand {
 
         final EntityPlayer player = (EntityPlayer) sender;
         final String text = Arrays.stream(args).collect(Collectors.joining(" "));
-
-        final SpeechMessage message = new SpeechMessage();
-        message.type = SpeechMessage.Type.OFFTOP;
-        message.language = LangAttribute.get(player).orElse(Language.VANILLA);
-        message.radius = 20;
-        message.speaker = sender.getCommandSenderName();
-        message.text = text;
+        final ChatMessage message = ChatMessageComposer.makeMessage(SpeechType.OFFTOP, player, text);
 
         if (player instanceof EntityPlayerMP)
             ChatHandler.sendSpeechMessage((EntityPlayerMP) player, message);
         else {
-            Minecraft.getMinecraft().thePlayer.addChatMessage(SpeechFormatter.formatSpeech(message));
+            Minecraft.getMinecraft().thePlayer.addChatMessage(ChatMessageComposer.formatMessage(message));
         }
     }
 }

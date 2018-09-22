@@ -4,9 +4,10 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import io.netty.buffer.ByteBuf;
 import msifeed.mc.aorta.chat.Language;
+import msifeed.mc.aorta.chat.composer.SpeechType;
 
-public class SpeechMessage implements IMessage {
-    public Type type = Type.SPEECH;
+public class ChatMessage implements IMessage {
+    public SpeechType type;
     public int radius;
     public String speaker;
     public Language language;
@@ -14,7 +15,7 @@ public class SpeechMessage implements IMessage {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        type = Type.values()[buf.readByte()];
+        type = SpeechType.values()[buf.readByte()];
         language = Language.values()[buf.readByte()];
         speaker = ByteBufUtils.readUTF8String(buf);
         text = ByteBufUtils.readUTF8String(buf);
@@ -28,7 +29,4 @@ public class SpeechMessage implements IMessage {
         ByteBufUtils.writeUTF8String(buf, text);
     }
 
-    public enum Type {
-        SPEECH, OFFTOP
-    }
 }

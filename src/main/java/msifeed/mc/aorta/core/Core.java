@@ -1,6 +1,5 @@
 package msifeed.mc.aorta.core;
 
-import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.registry.GameRegistry;
 import msifeed.mc.aorta.attributes.AttributeHandler;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
@@ -17,11 +16,6 @@ import msifeed.mc.aorta.core.traits.TraitDecoder;
 import net.minecraft.command.CommandHandler;
 
 public class Core {
-    @SidedProxy(
-            serverSide = "msifeed.mc.aorta.core.CoreGuiHandler",
-            clientSide = "msifeed.mc.aorta.core.client.CoreGuiHandlerClient"
-    )
-    public static CoreGuiHandler GUI_EXEC;
     public static CoreDefines DEFINES;
 
     public void preInit() {

@@ -4,13 +4,13 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import msifeed.mc.aorta.chat.SpeechFormatter;
+import msifeed.mc.aorta.chat.composer.ChatMessageComposer;
 import net.minecraft.util.IChatComponent;
 
-public class SpeechMessageHandler implements IMessageHandler<SpeechMessage, IMessage> {
+public class SpeechMessageHandler implements IMessageHandler<ChatMessage, IMessage> {
     @Override
-    public IMessage onMessage(SpeechMessage message, MessageContext ctx) {
-        final IChatComponent chatComponent = SpeechFormatter.formatSpeech(message);
+    public IMessage onMessage(ChatMessage message, MessageContext ctx) {
+        final IChatComponent chatComponent = ChatMessageComposer.formatMessage(message);
         FMLClientHandler.instance().getClientPlayerEntity().addChatMessage(chatComponent);
         return null;
     }

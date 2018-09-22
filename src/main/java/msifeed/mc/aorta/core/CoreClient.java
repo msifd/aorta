@@ -1,8 +1,8 @@
 package msifeed.mc.aorta.core;
 
 import msifeed.mc.aorta.chat.net.SpeechMessageHandler;
-import msifeed.mc.aorta.core.client.DebugHud;
-import msifeed.mc.aorta.core.client.DisableVanillaHud;
+import msifeed.mc.aorta.client.hud.DebugHud;
+import msifeed.mc.aorta.client.hud.DisableVanillaHud;
 import msifeed.mc.aorta.core.meta.ItemMeta;
 import net.minecraftforge.common.MinecraftForge;
 

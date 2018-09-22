@@ -12,11 +12,13 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.URI;
 
-public class DRM {
+public enum  DRM {
+    INSTANCE;
+
     private static final InetAddress SERVER = InetAddresses.forString("149.202.87.159");
 
-    public DRM() {
-        MinecraftForge.EVENT_BUS.register(this);
+    public static void apply() {
+        MinecraftForge.EVENT_BUS.register(INSTANCE);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)

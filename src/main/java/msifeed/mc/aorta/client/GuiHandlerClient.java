@@ -1,12 +1,12 @@
-package msifeed.mc.aorta.core.client;
+package msifeed.mc.aorta.client;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import msifeed.mc.aorta.core.CoreGuiHandler;
-import msifeed.mc.aorta.core.client.gui.ScreenCharEditor;
+import msifeed.mc.aorta.client.gui.ScreenCharEditor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 
-public class CoreGuiHandlerClient extends CoreGuiHandler {
+public class GuiHandlerClient extends GuiHandler {
     @Override
     public void openCharEditor(EntityLivingBase entity) {
         if (entity.worldObj.isRemote)

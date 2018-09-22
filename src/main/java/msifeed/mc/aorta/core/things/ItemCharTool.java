@@ -1,7 +1,7 @@
 package msifeed.mc.aorta.core.things;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import msifeed.mc.aorta.core.Core;
+import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.things.AortaCreativeTab;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -47,6 +47,6 @@ public class ItemCharTool extends Item {
     }
 
     private void handleEntity(EntityLivingBase entity) {
-        Core.GUI_EXEC.openCharEditor(entity);
+        Aorta.GUI_HANDLER.openCharEditor(entity);
     }
 }

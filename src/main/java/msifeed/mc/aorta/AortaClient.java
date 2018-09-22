@@ -2,6 +2,7 @@ package msifeed.mc.aorta;
 
 import com.google.common.io.CharStreams;
 import cpw.mods.fml.client.FMLClientHandler;
+import msifeed.mc.aorta.client.Keybinds;
 import msifeed.mc.aorta.utils.DRM;
 import msifeed.mc.mellow.Mellow;
 import net.minecraft.client.resources.IResourcePack;
@@ -13,13 +14,13 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 public class AortaClient extends Aorta {
-    private DRM drm = new DRM();
-
     @Override
     public void init() {
         super.init();
 
+        DRM.apply();
         initMellow();
+        Keybinds.register();
     }
 
     private void initMellow() {

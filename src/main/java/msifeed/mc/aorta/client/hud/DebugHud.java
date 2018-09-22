@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.core.client;
+package msifeed.mc.aorta.client.hud;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.aorta.chat.usage.LangAttribute;

@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.core.client.gui;
+package msifeed.mc.aorta.client.gui;
 
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.character.BodyPart;

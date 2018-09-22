@@ -5,6 +5,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import msifeed.mc.aorta.attributes.AttributeHandler;
 import msifeed.mc.aorta.chat.Speechat;
+import msifeed.mc.aorta.client.GuiHandler;
 import msifeed.mc.aorta.core.Core;
 import msifeed.mc.aorta.genesis.Genesis;
 import msifeed.mc.aorta.tweaks.EnableDesertRain;
@@ -29,6 +30,12 @@ public class Aorta {
             clientSide = "msifeed.mc.aorta.genesis.GenesisClient"
     )
     public static Genesis GENESIS;
+
+    @SidedProxy(
+            serverSide = "msifeed.mc.aorta.client.GuiHandler",
+            clientSide = "msifeed.mc.aorta.client.GuiHandlerClient"
+    )
+    public static GuiHandler GUI_HANDLER;
 
     public static Speechat SPEECHAT = new Speechat();
 
