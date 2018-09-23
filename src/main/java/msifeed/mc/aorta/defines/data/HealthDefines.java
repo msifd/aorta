@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.core.defines;
+package msifeed.mc.aorta.defines.data;
 
 public class HealthDefines {
     public double regularFatal = 0.4;

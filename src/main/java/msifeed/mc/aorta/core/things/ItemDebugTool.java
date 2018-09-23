@@ -1,6 +1,6 @@
 package msifeed.mc.aorta.core.things;
 
-import msifeed.mc.aorta.things.AortaCreativeTab;
+import msifeed.mc.aorta.genesis.AortaCreativeTab;
 import net.minecraft.item.Item;
 
 public class ItemDebugTool extends Item {

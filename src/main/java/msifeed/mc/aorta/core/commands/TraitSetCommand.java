@@ -1,13 +1,16 @@
 package msifeed.mc.aorta.core.commands;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.traits.Trait;
+import msifeed.mc.aorta.core.traits.TraitType;
 import msifeed.mc.commons.ExtCommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.world.WorldServer;
 
 import java.util.Set;
@@ -31,19 +34,12 @@ public class TraitSetCommand extends ExtCommand {
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
-        if (!(sender instanceof EntityLivingBase)) {
-            send(sender, "You should be at least entity!");
-            return;
-        }
-
         if (args.length == 0) {
             error(sender, "Usage: " + getCommandUsage(sender));
             return;
         }
 
-        final boolean nameFlag = args[0].startsWith("@");
-
-        if (nameFlag) {
+        if (args[0].startsWith("@")) {
             final String name = args[0].substring(1);
             final EntityLivingBase player = findPlayer(name);
             if (player != null) {
@@ -55,6 +51,10 @@ public class TraitSetCommand extends ExtCommand {
                 error(sender, "Unknown player");
             }
         } else {
+            if (!(sender instanceof EntityLivingBase)) {
+                send(sender, "You should be at least entity!");
+                return;
+            }
             toggleTrait(sender, (EntityLivingBase) sender, args[0]);
         }
     }
@@ -83,10 +83,28 @@ public class TraitSetCommand extends ExtCommand {
     private void toggleTrait(ICommandSender sender, EntityLivingBase entity, String traitName) {
         try {
             final Trait trait = Trait.valueOf(traitName);
-            final boolean added = CharacterAttribute.INSTANCE.toggle(entity, trait);
+            if (!isAllowedToSet(sender, trait)) {
+                error(sender, "You are are not allowed to set this trait!");
+                return;
+            }
+
+            final boolean added = CharacterAttribute.toggle(entity, trait);
             info(sender, "Trait '%s' %s", traitName, added ? "added" : "removed");
         } catch (IllegalArgumentException e) {
             error(sender, "Unknown trait '%s'", traitName);
+        }
+    }
+
+    private boolean isAllowedToSet(ICommandSender sender, Trait trait) {
+        if (FMLCommonHandler.instance().getSide().isClient())
+            return true;
+        switch (trait.type) {
+            case SYSTEM:
+                return sender instanceof MinecraftServer
+                        || (sender instanceof EntityLivingBase
+                        && CharacterAttribute.has((EntityLivingBase) sender, Trait.__admin));
+            default:
+                return true;
         }
     }
 }

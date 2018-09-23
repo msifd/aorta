@@ -1,0 +1,112 @@
+package msifeed.mc.aorta.defines;
+
+import com.google.gson.Gson;
+import msifeed.mc.aorta.Aorta;
+import msifeed.mc.aorta.core.attributes.CharacterAttribute;
+import msifeed.mc.aorta.core.traits.Trait;
+import msifeed.mc.aorta.defines.data.AortaDefines;
+import msifeed.mc.commons.ExtCommand;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.lang.reflect.Field;
+import java.util.Map;
+import java.util.Optional;
+
+public class DefineCommand extends ExtCommand {
+    @Override
+    public String getCommandName() {
+        return "define";
+    }
+
+    @Override
+    public String getCommandUsage(ICommandSender sender) {
+        return "/define [key] [value]";
+    }
+
+    @Override
+    public int getRequiredPermissionLevel() {
+        return 2;
+    }
+
+    @Override
+    public void processCommand(ICommandSender sender, String[] args) {
+        if (sender instanceof EntityPlayer && !CharacterAttribute.has((EntityPlayer) sender, Trait.__admin)) {
+            error(sender, "Not enough permissions!");
+            return;
+        }
+
+        switch (args.length) {
+            case 0:
+                break;
+            case 1:
+                printValue(sender, args[0]);
+                break;
+            case 2:
+                setValue(sender, args[0], args[1]);
+                break;
+        }
+    }
+
+    private void printValue(ICommandSender sender, String path) {
+        final Optional<Object> opt = getValue(path);
+        if (opt.isPresent()) {
+            final String s = (new Gson()).toJson(opt.get());
+            title(sender, "#define %s %s", path, s);
+        } else {
+            error(sender, "No such field!");
+        }
+    }
+
+    private void setValue(ICommandSender sender, String path, String valueStr) {
+        final Optional<Pair<Field, Object>> opt = getField(path);
+        if (opt.isPresent()) {
+            final Pair<Field, Object> pair = opt.get();
+            final Class<?> type = pair.getLeft().getType();
+            try {
+                final Object value = (new Gson()).fromJson(valueStr, type);
+                pair.getLeft().set(pair.getRight(), value);
+                printValue(sender, path);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (IllegalArgumentException e) {
+                error(sender, "Invalid type!");
+            }
+        } else {
+            error(sender, "No such field!");
+        }
+    }
+
+    private Optional<Object> getValue(String path) {
+        final Optional<Pair<Field, Object>> opt = getField(path);
+        if (opt.isPresent()) {
+            try {
+                return Optional.of(opt.get().getLeft().get(opt.get().getRight()));
+            } catch (IllegalAccessException ignored) {
+            }
+        }
+        return Optional.empty();
+    }
+
+    private Optional<Pair<Field, Object>> getField(String path) {
+        final String[] parts = path.split("\\.");
+
+        try {
+            Object currentObject = Aorta.DEFINES;
+            Field currentField = Aorta.class.getDeclaredField("DEFINES");
+            for (String p : parts) {
+                    if (currentField != null)
+                        currentObject = currentField.get(currentObject);
+                    currentField = currentObject.getClass().getDeclaredField(p);
+            }
+
+//            if (currentField == null)
+//                return Optional.empty();
+
+            return Optional.of(Pair.of(currentField, currentObject));
+        } catch (ReflectiveOperationException e) {
+            return Optional.empty();
+        }
+    }
+}

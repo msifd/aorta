@@ -4,7 +4,7 @@ import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 
 public enum Trait {
-    __lang_vanilla,
+    __admin, __lang_vanilla,
 
     test,
     gm,

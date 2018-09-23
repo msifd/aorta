@@ -1,6 +1,5 @@
-package msifeed.mc.aorta.attributes.flavors;
+package msifeed.mc.aorta.attributes;
 
-import msifeed.mc.aorta.attributes.AttrProp;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.entity.EntityEvent;

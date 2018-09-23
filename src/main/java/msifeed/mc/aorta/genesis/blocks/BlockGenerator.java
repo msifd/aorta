@@ -10,7 +10,7 @@ import msifeed.mc.aorta.genesis.GenesisTrait;
 import msifeed.mc.aorta.genesis.blocks.templates.*;
 import msifeed.mc.aorta.genesis.blocks.templates.special.SpecialBushTemplate;
 import msifeed.mc.aorta.genesis.blocks.templates.special.SpecialLogTemplate;
-import msifeed.mc.aorta.things.AortaCreativeTab;
+import msifeed.mc.aorta.genesis.AortaCreativeTab;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 

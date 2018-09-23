@@ -6,8 +6,6 @@ import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.attributes.StatusAttribute;
 import msifeed.mc.aorta.core.commands.TraitListCommand;
 import msifeed.mc.aorta.core.commands.TraitSetCommand;
-import msifeed.mc.aorta.core.defines.CoreDefines;
-import msifeed.mc.aorta.core.defines.DefinesProvider;
 import msifeed.mc.aorta.core.meta.MetaCommand;
 import msifeed.mc.aorta.core.things.ItemBattleTool;
 import msifeed.mc.aorta.core.things.ItemCharTool;
@@ -16,12 +14,6 @@ import msifeed.mc.aorta.core.traits.TraitDecoder;
 import net.minecraft.command.CommandHandler;
 
 public class Core {
-    public static CoreDefines DEFINES;
-
-    public void preInit() {
-        DEFINES = DefinesProvider.load();
-    }
-
     public void init() {
         AttributeHandler.INSTANCE.registerAttribute(CharacterAttribute.INSTANCE);
         AttributeHandler.INSTANCE.registerAttribute(StatusAttribute.INSTANCE);

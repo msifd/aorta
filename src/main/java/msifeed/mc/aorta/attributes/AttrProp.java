@@ -5,7 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 
-public class AttrProp<T> implements IExtendedEntityProperties {
+class AttrProp<T> implements IExtendedEntityProperties {
     T value = null;
     private final EntityAttribute<T> attribute;
 

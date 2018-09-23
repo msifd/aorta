@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.things;
+package msifeed.mc.aorta.genesis;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;

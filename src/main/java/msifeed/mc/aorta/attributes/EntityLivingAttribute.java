@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.attributes.flavors;
+package msifeed.mc.aorta.attributes;
 
 import msifeed.mc.aorta.attributes.AttrProp;
 import msifeed.mc.aorta.attributes.EntityAttribute;

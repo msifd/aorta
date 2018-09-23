@@ -2,7 +2,7 @@ package msifeed.mc.aorta.core.things;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.aorta.Aorta;
-import msifeed.mc.aorta.things.AortaCreativeTab;
+import msifeed.mc.aorta.genesis.AortaCreativeTab;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;

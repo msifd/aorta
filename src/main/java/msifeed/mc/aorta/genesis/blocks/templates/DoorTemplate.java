@@ -4,7 +4,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import msifeed.mc.aorta.genesis.blocks.BlockGenesisUnit;
 import msifeed.mc.aorta.genesis.blocks.BlockTraitCommons;
 import msifeed.mc.aorta.genesis.blocks.SpecialBlockRegisterer;
-import msifeed.mc.aorta.things.AortaCreativeTab;
+import msifeed.mc.aorta.genesis.AortaCreativeTab;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;

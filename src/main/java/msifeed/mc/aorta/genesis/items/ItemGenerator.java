@@ -9,7 +9,7 @@ import msifeed.mc.aorta.genesis.Generator;
 import msifeed.mc.aorta.genesis.GenesisTrait;
 import msifeed.mc.aorta.genesis.items.templates.FoodTemplate;
 import msifeed.mc.aorta.genesis.items.templates.ItemTemplate;
-import msifeed.mc.aorta.things.AortaCreativeTab;
+import msifeed.mc.aorta.genesis.AortaCreativeTab;
 import net.minecraft.item.Item;
 
 import java.util.HashSet;
