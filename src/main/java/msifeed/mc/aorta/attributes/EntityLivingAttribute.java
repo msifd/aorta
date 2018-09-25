@@ -1,7 +1,5 @@
 package msifeed.mc.aorta.attributes;
 
-import msifeed.mc.aorta.attributes.AttrProp;
-import msifeed.mc.aorta.attributes.EntityAttribute;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.entity.EntityEvent;

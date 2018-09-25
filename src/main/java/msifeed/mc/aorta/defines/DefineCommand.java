@@ -2,17 +2,18 @@ package msifeed.mc.aorta.defines;
 
 import com.google.gson.Gson;
 import msifeed.mc.aorta.Aorta;
+import msifeed.mc.aorta.config.ConfigManager;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.traits.Trait;
-import msifeed.mc.aorta.defines.data.AortaDefines;
 import msifeed.mc.commons.ExtCommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.lang.reflect.Field;
-import java.util.Map;
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class DefineCommand extends ExtCommand {
     @Override
@@ -43,8 +44,8 @@ public class DefineCommand extends ExtCommand {
             case 1:
                 printValue(sender, args[0]);
                 break;
-            case 2:
-                setValue(sender, args[0], args[1]);
+            default:
+                setValue(sender, args[0], Arrays.stream(args, 1, args.length).collect(Collectors.joining(" ")));
                 break;
         }
     }
@@ -68,10 +69,11 @@ public class DefineCommand extends ExtCommand {
                 final Object value = (new Gson()).fromJson(valueStr, type);
                 pair.getLeft().set(pair.getRight(), value);
                 printValue(sender, path);
+                ConfigManager.INSTANCE.broadcastConfig();
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (IllegalArgumentException e) {
-                error(sender, "Invalid type!");
+                error(sender, "Invalid type! Expect '%s'.", type.getSimpleName());
             }
         } else {
             error(sender, "No such field!");
@@ -93,16 +95,16 @@ public class DefineCommand extends ExtCommand {
         final String[] parts = path.split("\\.");
 
         try {
-            Object currentObject = Aorta.DEFINES;
-            Field currentField = Aorta.class.getDeclaredField("DEFINES");
+            Object currentObject = Aorta.DEFINES.get();
+            Field currentField = null;
             for (String p : parts) {
-                    if (currentField != null)
-                        currentObject = currentField.get(currentObject);
-                    currentField = currentObject.getClass().getDeclaredField(p);
+                if (currentField != null)
+                    currentObject = currentField.get(currentObject);
+                currentField = currentObject.getClass().getDeclaredField(p);
             }
 
-//            if (currentField == null)
-//                return Optional.empty();
+            if (currentField == null)
+                return Optional.empty();
 
             return Optional.of(Pair.of(currentField, currentObject));
         } catch (ReflectiveOperationException e) {

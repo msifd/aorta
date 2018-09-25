@@ -5,11 +5,11 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import msifeed.mc.aorta.genesis.AortaCreativeTab;
 import msifeed.mc.aorta.genesis.Generator;
 import msifeed.mc.aorta.genesis.GenesisTrait;
 import msifeed.mc.aorta.genesis.items.templates.FoodTemplate;
 import msifeed.mc.aorta.genesis.items.templates.ItemTemplate;
-import msifeed.mc.aorta.genesis.AortaCreativeTab;
 import net.minecraft.item.Item;
 
 import java.util.HashSet;

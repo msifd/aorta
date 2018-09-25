@@ -20,7 +20,7 @@ public class Bootstrap {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        AORTA.preInit();
+        AORTA.preInit(event);
     }
 
     @Mod.EventHandler

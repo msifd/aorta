@@ -1,5 +1,6 @@
 package msifeed.mc.aorta.chat.composer;
 
+import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.chat.ChatComponentComposer;
 import msifeed.mc.aorta.chat.Language;
 import msifeed.mc.aorta.chat.composer.parser.SpeechToken;
@@ -18,7 +19,6 @@ import java.util.List;
 
 class SpeechComposer extends ChatMessageComposer {
     static SpeechComposer INSTANCE = new SpeechComposer();
-    private static final int[] LOUDNESS_RADIUS = {2, 5, 15, 30, 60};
 
     @Override
     ChatMessage compose(SpeechType type, EntityPlayer player, String text) {
@@ -63,7 +63,8 @@ class SpeechComposer extends ChatMessageComposer {
     }
 
     private static int getSpeechRadius(String text) {
-        int loudness = (LOUDNESS_RADIUS.length - 1) / 2;
+        final int[] speechRadius = Aorta.DEFINES.get().chat.speechRadius;
+        int loudness = (speechRadius.length - 1) / 2;
 
         int exclamations = 0;
         for (int i = text.length() - 1; i >= 0; --i) {
@@ -88,8 +89,8 @@ class SpeechComposer extends ChatMessageComposer {
             loudness -= silencers;
         }
 
-        loudness = MathHelper.clamp_int(loudness, 0, LOUDNESS_RADIUS.length - 1);
+        loudness = MathHelper.clamp_int(loudness, 0, speechRadius.length - 1);
 
-        return LOUDNESS_RADIUS[loudness];
+        return speechRadius[loudness];
     }
 }

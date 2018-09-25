@@ -5,12 +5,12 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import msifeed.mc.aorta.genesis.AortaCreativeTab;
 import msifeed.mc.aorta.genesis.Generator;
 import msifeed.mc.aorta.genesis.GenesisTrait;
 import msifeed.mc.aorta.genesis.blocks.templates.*;
 import msifeed.mc.aorta.genesis.blocks.templates.special.SpecialBushTemplate;
 import msifeed.mc.aorta.genesis.blocks.templates.special.SpecialLogTemplate;
-import msifeed.mc.aorta.genesis.AortaCreativeTab;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 

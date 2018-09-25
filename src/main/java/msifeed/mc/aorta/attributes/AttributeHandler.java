@@ -25,10 +25,10 @@ public enum AttributeHandler {
     )
     private static SyncAttrHandler syncAttrHandler;
 
-    public void init() {
+    public static void init() {
         MinecraftForge.EVENT_BUS.register(INSTANCE);
-        CHANNEL.registerMessage(syncAttrHandler, SyncAttrMessage.class, 0x00, Side.SERVER);
-        CHANNEL.registerMessage(syncAttrHandler, SyncAttrMessage.class, 0x01, Side.CLIENT);
+        INSTANCE.CHANNEL.registerMessage(syncAttrHandler, SyncAttrMessage.class, 0x00, Side.SERVER);
+        INSTANCE.CHANNEL.registerMessage(syncAttrHandler, SyncAttrMessage.class, 0x01, Side.CLIENT);
     }
 
     public void registerAttribute(EntityAttribute attribute) {

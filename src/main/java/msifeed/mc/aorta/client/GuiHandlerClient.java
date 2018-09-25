@@ -4,7 +4,6 @@ import cpw.mods.fml.client.FMLClientHandler;
 import msifeed.mc.aorta.client.gui.ScreenCharEditor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 
 public class GuiHandlerClient extends GuiHandler {
     @Override

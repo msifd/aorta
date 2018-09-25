@@ -3,7 +3,6 @@ package msifeed.mc.aorta.client;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import org.apache.commons.lang3.ArrayUtils;
-import org.lwjgl.input.Keyboard;
 
 public class Keybinds {
 //    public static final KeyBinding gmsayScreen = new KeyBinding("key.aorta.gmsay", Keyboard.KEY_LEFT, "key.aorta");

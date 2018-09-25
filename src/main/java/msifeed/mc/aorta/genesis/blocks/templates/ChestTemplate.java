@@ -1,11 +1,11 @@
 package msifeed.mc.aorta.genesis.blocks.templates;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import msifeed.mc.aorta.genesis.AortaCreativeTab;
 import msifeed.mc.aorta.genesis.GenesisUnit;
 import msifeed.mc.aorta.genesis.blocks.BlockTraitCommons;
 import msifeed.mc.aorta.genesis.blocks.SpecialBlockRegisterer;
 import msifeed.mc.aorta.genesis.blocks.client.GenesisChestRenderer;
-import msifeed.mc.aorta.genesis.AortaCreativeTab;
 import net.minecraft.block.BlockChest;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;

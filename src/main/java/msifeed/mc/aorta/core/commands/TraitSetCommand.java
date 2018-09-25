@@ -1,16 +1,13 @@
 package msifeed.mc.aorta.core.commands;
 
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.traits.Trait;
-import msifeed.mc.aorta.core.traits.TraitType;
 import msifeed.mc.commons.ExtCommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.world.WorldServer;
 
 import java.util.Set;

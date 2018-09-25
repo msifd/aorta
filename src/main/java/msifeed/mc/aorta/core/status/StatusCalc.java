@@ -1,7 +1,6 @@
 package msifeed.mc.aorta.core.status;
 
 import msifeed.mc.aorta.Aorta;
-import msifeed.mc.aorta.core.Core;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.traits.Trait;
 import msifeed.mc.aorta.defines.data.HealthDefines;
@@ -25,7 +24,7 @@ public class StatusCalc {
     }
 
     private static double getFatalRate(Character c) {
-        final HealthDefines defines = Aorta.DEFINES.health;
+        final HealthDefines defines = Aorta.DEFINES.get().health;
         if (c.has(Trait.tough))
             return defines.toughFatal;
         if (c.has(Trait.weak))

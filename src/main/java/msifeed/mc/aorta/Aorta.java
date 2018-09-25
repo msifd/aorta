@@ -2,19 +2,21 @@ package msifeed.mc.aorta;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import msifeed.mc.aorta.attributes.AttributeHandler;
 import msifeed.mc.aorta.chat.Speechat;
 import msifeed.mc.aorta.client.GuiHandler;
+import msifeed.mc.aorta.config.ConfigManager;
+import msifeed.mc.aorta.config.ReloadCommand;
 import msifeed.mc.aorta.core.Core;
-import msifeed.mc.aorta.core.commands.TraitListCommand;
 import msifeed.mc.aorta.defines.DefineCommand;
-import msifeed.mc.aorta.defines.data.AortaDefines;
-import msifeed.mc.aorta.defines.DefinesProvider;
+import msifeed.mc.aorta.defines.Defines;
 import msifeed.mc.aorta.genesis.Genesis;
 import msifeed.mc.aorta.tweaks.EnableDesertRain;
 import msifeed.mc.aorta.tweaks.MakeEveryoneHealthy;
 import msifeed.mc.aorta.tweaks.MakeFoodEdible;
+import msifeed.mc.aorta.tweaks.EntityControl;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.server.MinecraftServer;
 
@@ -23,7 +25,7 @@ public class Aorta {
     public static final String NAME = "Aorta";
     public static final String VERSION = "@VERSION@";
 
-    public static AortaDefines DEFINES;
+    public static Defines DEFINES = new Defines();
 
     @SidedProxy(
             serverSide = "msifeed.mc.aorta.core.Core",
@@ -43,17 +45,19 @@ public class Aorta {
     )
     public static GuiHandler GUI_HANDLER;
 
-    public static Speechat SPEECHAT = new Speechat();
+    private Speechat speechat = new Speechat();
+    private EntityControl entityControl = new EntityControl();
 
-    public void preInit() {
-        DEFINES = DefinesProvider.load();
+    public void preInit(FMLPreInitializationEvent event) {
+        ConfigManager.init(event);
+        AttributeHandler.init();
     }
 
     public void init() {
-        AttributeHandler.INSTANCE.init();
         CORE.init();
         GENESIS.init();
-        SPEECHAT.init();
+
+        speechat.init();
 
         MakeEveryoneHealthy.apply();
     }
@@ -66,8 +70,11 @@ public class Aorta {
     public void serverStarting(FMLServerStartedEvent event) {
         final MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
         final CommandHandler commandHandler = (CommandHandler) server.getCommandManager();
+
+        commandHandler.registerCommand(new ReloadCommand());
         commandHandler.registerCommand(new DefineCommand());
+
         CORE.registerCommands(commandHandler);
-        SPEECHAT.registerCommands(commandHandler);
+        speechat.registerCommands(commandHandler);
     }
 }
