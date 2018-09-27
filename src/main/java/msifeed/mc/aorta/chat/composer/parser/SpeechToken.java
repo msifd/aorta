@@ -12,4 +12,13 @@ public class SpeechToken {
     public boolean isWord() {
         return type == TokenType.WORD;
     }
+
+    public boolean isWhitespace() {
+        return type == TokenType.WHITESPACE;
+    }
+
+    @Override
+    public String toString() {
+        return "'" + text + "'";
+    }
 }

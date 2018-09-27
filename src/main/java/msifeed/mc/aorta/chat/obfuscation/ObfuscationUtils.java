@@ -6,8 +6,12 @@ import com.google.common.hash.Hashing;
 
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 class ObfuscationUtils {
+    static final Set<Integer> VOWELS = "ауоыиэяюёе".chars().boxed().collect(Collectors.toSet());
+    static final Set<Integer> CONSONANTS = "бвгджзйклмнпрстфхцчшщ".chars().boxed().collect(Collectors.toSet());
     private static final HashFunction hasher = Hashing.murmur3_128(0);
 
     static Random nonrandomRandom() {
