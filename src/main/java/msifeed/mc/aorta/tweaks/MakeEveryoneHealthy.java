@@ -25,7 +25,8 @@ public enum MakeEveryoneHealthy {
         if (event.phase == TickEvent.Phase.END) {
             event.player.setHealth(event.player.getMaxHealth());
             final FoodStats stats = event.player.getFoodStats();
-            stats.setFoodLevel(10);
+            if (stats.getFoodLevel() != 10)
+                stats.addStats(10 - stats.getFoodLevel(), 0);
         }
     }
 
