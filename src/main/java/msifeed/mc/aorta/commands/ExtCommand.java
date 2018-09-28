@@ -1,4 +1,4 @@
-package msifeed.mc.commons;
+package msifeed.mc.aorta.commands;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;

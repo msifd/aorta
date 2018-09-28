@@ -7,16 +7,16 @@ import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import msifeed.mc.aorta.attributes.AttributeHandler;
 import msifeed.mc.aorta.chat.Speechat;
 import msifeed.mc.aorta.client.GuiHandler;
+import msifeed.mc.aorta.commands.AortaCommand;
 import msifeed.mc.aorta.config.ConfigManager;
-import msifeed.mc.aorta.config.ReloadCommand;
 import msifeed.mc.aorta.core.Core;
 import msifeed.mc.aorta.defines.DefineCommand;
 import msifeed.mc.aorta.defines.Defines;
 import msifeed.mc.aorta.genesis.Genesis;
 import msifeed.mc.aorta.tweaks.EnableDesertRain;
+import msifeed.mc.aorta.tweaks.EntityControl;
 import msifeed.mc.aorta.tweaks.MakeEveryoneHealthy;
 import msifeed.mc.aorta.tweaks.MakeFoodEdible;
-import msifeed.mc.aorta.tweaks.EntityControl;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.server.MinecraftServer;
 
@@ -71,7 +71,7 @@ public class Aorta {
         final MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
         final CommandHandler commandHandler = (CommandHandler) server.getCommandManager();
 
-        commandHandler.registerCommand(new ReloadCommand());
+        commandHandler.registerCommand(new AortaCommand());
         commandHandler.registerCommand(new DefineCommand());
 
         CORE.registerCommands(commandHandler);

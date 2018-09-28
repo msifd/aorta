@@ -4,7 +4,6 @@ import msifeed.mc.aorta.chat.obfuscation.*;
 import msifeed.mc.aorta.core.traits.Trait;
 
 public enum Language {
-    // TODO: forgotten_lang, enlimian_lang, transcriptor_lang, underwater_lang, kshemin_lang
     VANILLA(Trait.__lang_vanilla, new VanillaObfuscator()),
     COMMON(Trait.lang_common, new CommonObfuscator()),
     MENALA(Trait.lang_menala, new MenalaObfuscator()),
@@ -13,6 +12,11 @@ public enum Language {
     TERVILIAN(Trait.lang_tervilian, new TervilianObfuscator()),
     MACHINE(Trait.lang_machine, new MachineObfuscator()),
     AISTEMIA(Trait.lang_aistemia, new AistemiaObfuscator()),
+    FORGOTTEN(Trait.lang_forgotten, new ForgottenObfuscator()),
+    ENLIMIAN(Trait.lang_enlimian, new EnlimianObfuscator()),
+    TRANSCRIPTOR(Trait.lang_transcriptor, new TranscriptorObfuscator()),
+    UNDERWATER(Trait.lang_underwater, new UnderwaterObfuscator()),
+    KSHEMIN(Trait.lang_kshemin, new KsheminObfuscator()),
     ;
 
     public Trait trait;

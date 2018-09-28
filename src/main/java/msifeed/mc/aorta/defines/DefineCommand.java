@@ -2,10 +2,10 @@ package msifeed.mc.aorta.defines;
 
 import com.google.gson.Gson;
 import msifeed.mc.aorta.Aorta;
+import msifeed.mc.aorta.commands.ExtCommand;
 import msifeed.mc.aorta.config.ConfigManager;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.traits.Trait;
-import msifeed.mc.commons.ExtCommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import org.apache.commons.lang3.tuple.Pair;

@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class AistemiaObfuscator implements LangObfuscator {
+public class EnlimianObfuscator implements LangObfuscator {
+    private static final List<Integer> VOWELS_REPLACEMENT = "ауие".chars().boxed().collect(Collectors.toList());
+    private static final List<Integer> CONSONANTS_REPLACEMENT = "лмкзв".chars().boxed().collect(Collectors.toList());
+
     @Override
     public String obfuscate(List<SpeechToken> tokens) {
         return tokens.stream()
@@ -19,12 +22,13 @@ public class AistemiaObfuscator implements LangObfuscator {
         final Random random = ObfuscationUtils.stringSeededRandom(word);
         final StringBuilder sb = new StringBuilder();
 
-        for (int code : word.codePoints().toArray()) {
-            sb.appendCodePoint(code);
+        for (int code : word.toLowerCase().codePoints().toArray()) {
             if (ObfuscationUtils.VOWELS_SET.contains(code))
-                sb.appendCodePoint(ObfuscationUtils.CONSONANTS.get(random.nextInt(ObfuscationUtils.CONSONANTS.size())));
+                sb.appendCodePoint(VOWELS_REPLACEMENT.get(random.nextInt(VOWELS_REPLACEMENT.size())));
             else if (ObfuscationUtils.CONSONANTS_SET.contains(code))
-                sb.appendCodePoint(ObfuscationUtils.VOWELS.get(random.nextInt(ObfuscationUtils.VOWELS.size())));
+                sb.appendCodePoint(CONSONANTS_REPLACEMENT.get(random.nextInt(CONSONANTS_REPLACEMENT.size())));
+            else
+                sb.appendCodePoint(code);
         }
 
         return sb.toString();

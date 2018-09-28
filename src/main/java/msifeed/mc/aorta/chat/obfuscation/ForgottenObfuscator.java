@@ -2,11 +2,14 @@ package msifeed.mc.aorta.chat.obfuscation;
 
 import msifeed.mc.aorta.chat.composer.parser.SpeechToken;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-public class AistemiaObfuscator implements LangObfuscator {
+public class ForgottenObfuscator implements LangObfuscator {
+    private static final ArrayList<Integer> RUS_CHARS = new ArrayList<>(ObfuscationUtils.RUS_CHARS);
+
     @Override
     public String obfuscate(List<SpeechToken> tokens) {
         return tokens.stream()
@@ -20,11 +23,10 @@ public class AistemiaObfuscator implements LangObfuscator {
         final StringBuilder sb = new StringBuilder();
 
         for (int code : word.codePoints().toArray()) {
-            sb.appendCodePoint(code);
             if (ObfuscationUtils.VOWELS_SET.contains(code))
-                sb.appendCodePoint(ObfuscationUtils.CONSONANTS.get(random.nextInt(ObfuscationUtils.CONSONANTS.size())));
-            else if (ObfuscationUtils.CONSONANTS_SET.contains(code))
-                sb.appendCodePoint(ObfuscationUtils.VOWELS.get(random.nextInt(ObfuscationUtils.VOWELS.size())));
+                sb.appendCodePoint(RUS_CHARS.get(random.nextInt(RUS_CHARS.size())));
+            else
+                sb.appendCodePoint(code);
         }
 
         return sb.toString();

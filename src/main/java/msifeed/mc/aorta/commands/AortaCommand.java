@@ -1,10 +1,10 @@
-package msifeed.mc.aorta.config;
+package msifeed.mc.aorta.commands;
 
-import msifeed.mc.commons.ExtCommand;
+import msifeed.mc.aorta.config.ConfigManager;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
 
-public class ReloadCommand extends ExtCommand {
+public class AortaCommand extends ExtCommand {
     @Override
     public String getCommandName() {
         return "aorta";

@@ -15,7 +15,7 @@ public class CommonObfuscator implements LangObfuscator {
     public String obfuscate(List<SpeechToken> tokens) {
         return makeGroups(tokens).stream()
                 .map(group -> {
-                    if (isGroupWithWords(group)) return splitToWords(joinText(group));
+                    if (isGroupWithWords(group)) return splitToWords(joinText(group).toLowerCase());
                     else return joinText(group);
                 })
                 .collect(Collectors.joining());
@@ -81,6 +81,6 @@ public class CommonObfuscator implements LangObfuscator {
                 sb.append(' ');
         }
 
-        return sb.toString().toLowerCase();
+        return sb.toString();
     }
 }
