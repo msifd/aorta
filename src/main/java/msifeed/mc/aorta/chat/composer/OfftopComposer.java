@@ -8,11 +8,9 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
-class OfftopComposer extends ChatMessageComposer {
-    static OfftopComposer INSTANCE = new OfftopComposer();
-
+class OfftopComposer implements ChatComposer {
     @Override
-    ChatMessage compose(SpeechType type, EntityPlayer player, String text) {
+    public ChatMessage compose(EntityPlayer player, String text) {
         final ChatMessage message = new ChatMessage();
         message.type = SpeechType.OFFTOP;
         message.language = Language.VANILLA;
@@ -23,7 +21,7 @@ class OfftopComposer extends ChatMessageComposer {
     }
 
     @Override
-    IChatComponent format(ChatMessage message) {
+    public IChatComponent format(EntityPlayer self, ChatMessage message) {
         final String prefix = String.format("[OFF] %s: %s", message.speaker, message.text);
         final ChatComponentText compPrefix = new ChatComponentText(prefix);
         compPrefix.getChatStyle().setColor(EnumChatFormatting.GRAY);

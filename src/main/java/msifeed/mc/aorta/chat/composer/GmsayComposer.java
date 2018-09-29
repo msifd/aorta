@@ -9,11 +9,9 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
-class GmsayComposer extends ChatMessageComposer {
-    static GmsayComposer INSTANCE = new GmsayComposer();
-
+class GmsayComposer implements ChatComposer {
     @Override
-    ChatMessage compose(SpeechType type, EntityPlayer player, String text) {
+    public ChatMessage compose(EntityPlayer player, String text) {
         final GmsaySettings settings = GmSpeech.get(player.getCommandSenderName());
 
         final boolean prefixWithColorOnly = settings.prefix.isEmpty() != EnumChatFormatting.getTextWithoutFormattingCodes(settings.prefix).isEmpty();
@@ -30,7 +28,7 @@ class GmsayComposer extends ChatMessageComposer {
     }
 
     @Override
-    IChatComponent format(ChatMessage message) {
+    public IChatComponent format(EntityPlayer self, ChatMessage message) {
         return new ChatComponentText(message.text);
     }
 }

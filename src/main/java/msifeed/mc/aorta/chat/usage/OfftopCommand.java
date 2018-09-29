@@ -1,11 +1,10 @@
 package msifeed.mc.aorta.chat.usage;
 
 import msifeed.mc.aorta.chat.ChatHandler;
-import msifeed.mc.aorta.chat.composer.ChatMessageComposer;
+import msifeed.mc.aorta.chat.composer.Composer;
 import msifeed.mc.aorta.chat.composer.SpeechType;
 import msifeed.mc.aorta.chat.net.ChatMessage;
 import msifeed.mc.aorta.commands.ExtCommand;
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -36,12 +35,12 @@ public class OfftopCommand extends ExtCommand {
 
         final EntityPlayer player = (EntityPlayer) sender;
         final String text = Arrays.stream(args).collect(Collectors.joining(" "));
-        final ChatMessage message = ChatMessageComposer.makeMessage(SpeechType.OFFTOP, player, text);
+        final ChatMessage message = Composer.makeMessage(SpeechType.OFFTOP, player, text);
 
         if (player instanceof EntityPlayerMP)
             ChatHandler.sendSpeechMessage((EntityPlayerMP) player, message);
         else {
-            Minecraft.getMinecraft().thePlayer.addChatMessage(ChatMessageComposer.formatMessage(message));
+            player.addChatMessage(Composer.formatMessage(player, message));
         }
     }
 }

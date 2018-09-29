@@ -28,4 +28,6 @@ public class Speechat {
         handler.registerCommand(new OfftopCommand());
         handler.registerCommand(new GmsayCommand());
     }
+
+
 }

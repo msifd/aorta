@@ -9,7 +9,6 @@ import msifeed.mc.aorta.chat.net.ChatMessage;
 import msifeed.mc.aorta.chat.obfuscation.LangObfuscator;
 import msifeed.mc.aorta.chat.usage.LangAttribute;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
@@ -17,11 +16,9 @@ import net.minecraft.util.MathHelper;
 
 import java.util.List;
 
-class SpeechComposer extends ChatMessageComposer {
-    static SpeechComposer INSTANCE = new SpeechComposer();
-
+public class SpeechComposer implements ChatComposer {
     @Override
-    ChatMessage compose(SpeechType type, EntityPlayer player, String text) {
+    public ChatMessage compose(EntityPlayer player, String text) {
         final ChatMessage message = new ChatMessage();
         message.type = SpeechType.SPEECH;
         message.language = LangAttribute.get(player).orElse(Language.MENALA);
@@ -32,10 +29,10 @@ class SpeechComposer extends ChatMessageComposer {
     }
 
     @Override
-    IChatComponent format(ChatMessage message) {
+    public IChatComponent format(EntityPlayer self, ChatMessage message) {
         final String text;
 
-        if (!isMyNameIs(message.speaker) && !doIKnowLanguage(message.language))
+        if (!isMyNameIs(self, message.speaker) && !doIKnowLanguage(self, message.language))
             text = obfuscateWith(message.language.obfuscator, message.text);
         else
             text = message.text;
@@ -44,17 +41,17 @@ class SpeechComposer extends ChatMessageComposer {
         root.appendText(text);
 
         if (!message.speaker.isEmpty())
-            ChatComponentComposer.addNamePrefix(root, message.speaker, isMyNameIs(message.speaker));
+            ChatComponentComposer.addNamePrefix(root, message.speaker, isMyNameIs(self, message.speaker));
 
         return root;
     }
 
-    private static boolean isMyNameIs(String name) {
-        return Minecraft.getMinecraft().thePlayer.getCommandSenderName().equalsIgnoreCase(name);
+    private static boolean isMyNameIs(EntityPlayer self, String name) {
+        return self.getCommandSenderName().equalsIgnoreCase(name);
     }
 
-    private static boolean doIKnowLanguage(Language language) {
-        return CharacterAttribute.has(Minecraft.getMinecraft().thePlayer, language.trait);
+    private static boolean doIKnowLanguage(EntityPlayer self, Language language) {
+        return CharacterAttribute.has(self, language.trait);
     }
 
     private static String obfuscateWith(LangObfuscator obfuscator, String text) {

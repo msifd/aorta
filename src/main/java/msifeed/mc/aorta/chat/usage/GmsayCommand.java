@@ -1,7 +1,7 @@
 package msifeed.mc.aorta.chat.usage;
 
 import msifeed.mc.aorta.chat.ChatHandler;
-import msifeed.mc.aorta.chat.composer.ChatMessageComposer;
+import msifeed.mc.aorta.chat.composer.Composer;
 import msifeed.mc.aorta.chat.composer.SpeechType;
 import msifeed.mc.aorta.chat.gm.GmSpeech;
 import msifeed.mc.aorta.chat.gm.GmsaySettings;
@@ -9,7 +9,6 @@ import msifeed.mc.aorta.chat.net.ChatMessage;
 import msifeed.mc.aorta.commands.ExtCommand;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.traits.Trait;
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -76,12 +75,12 @@ public class GmsayCommand extends ExtCommand {
         }
 
         final String text = Arrays.stream(args).collect(Collectors.joining(" "));
-        final ChatMessage message = ChatMessageComposer.makeMessage(SpeechType.GM, player, text);
+        final ChatMessage message = Composer.makeMessage(SpeechType.GM, player, text);
 
         if (player instanceof EntityPlayerMP)
             ChatHandler.sendSpeechMessage((EntityPlayerMP) player, message);
         else {
-            Minecraft.getMinecraft().thePlayer.addChatMessage(ChatMessageComposer.formatMessage(message));
+            player.addChatMessage(Composer.formatMessage(player, message));
         }
     }
 

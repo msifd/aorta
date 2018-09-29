@@ -3,7 +3,7 @@ package msifeed.mc.aorta.chat;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
-import msifeed.mc.aorta.chat.composer.ChatMessageComposer;
+import msifeed.mc.aorta.chat.composer.Composer;
 import msifeed.mc.aorta.chat.composer.SpeechType;
 import msifeed.mc.aorta.chat.gm.GmSpeech;
 import msifeed.mc.aorta.chat.net.ChatMessage;
@@ -14,7 +14,7 @@ public class ChatHandler {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onChatMessageSent(ServerChatEvent event) {
         final SpeechType type = GmSpeech.shouldUseGmsay(event.player) ? SpeechType.GM : SpeechType.SPEECH;
-        final ChatMessage message = ChatMessageComposer.makeMessage(type, event.player, event.component);
+        final ChatMessage message = Composer.makeMessage(type, event.player, event.component);
         sendSpeechMessage(event.player, message);
         event.component = null;
         event.setCanceled(true);
