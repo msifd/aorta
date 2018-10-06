@@ -1,12 +1,11 @@
 package msifeed.mc.aorta.genesis.items;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import msifeed.mc.aorta.genesis.GenesisTrait;
 import msifeed.mc.aorta.genesis.GenesisUnit;
+import msifeed.mc.aorta.genesis.JsonUtils;
 
 import java.util.HashSet;
-import java.util.Optional;
 
 import static msifeed.mc.aorta.genesis.GenesisTrait.*;
 
@@ -18,9 +17,9 @@ public class ItemGenesisUnit extends GenesisUnit {
 
     public ItemGenesisUnit(JsonObject json, HashSet<GenesisTrait> traits) {
         super(json, traits);
-        title = getOptString(json, Props.title).orElse(null);
-        desc = getOptString(json, Props.desc).map(ItemGenesisUnit::parseDescription).orElse(null);
-        texture = getOptString(json, Props.texture).orElse(null);
+        title = JsonUtils.getOptString(json, Props.title).orElse(null);
+        desc = JsonUtils.getOptString(json, Props.desc).map(ItemGenesisUnit::parseDescription).orElse(null);
+        texture = JsonUtils.getOptString(json, Props.texture).orElse(null);
 
         rarity = getRarity();
         if (rarity == ItemRarity.COMMON)
@@ -44,16 +43,6 @@ public class ItemGenesisUnit extends GenesisUnit {
             return ItemRarity.POOR;
         else
             return ItemRarity.COMMON;
-    }
-
-    private static Optional<String> getOptString(JsonObject obj, String key) {
-        if (obj.has(key)) {
-            final JsonElement t = obj.get(key);
-            if (t.isJsonPrimitive() && t.getAsJsonPrimitive().isString()) {
-                return Optional.of(t.getAsJsonPrimitive().getAsString());
-            }
-        }
-        return Optional.empty();
     }
 
     private static class Props {

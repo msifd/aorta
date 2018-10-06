@@ -19,5 +19,16 @@
       "no_saturation",
       "uncommon"
     ]
+  },
+  {
+    "id": "test_helmet",
+    "title": "Тестовый шлем",
+    "texture": "minecraft:iron_helmet",
+    "armor_texture": "minecraft:textures/models/armor/iron_layer",
+    "traits": [
+      "item",
+      "armor",
+      "helmet"
+    ]
   }
 ]

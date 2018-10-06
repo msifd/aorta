@@ -8,6 +8,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import msifeed.mc.aorta.genesis.AortaCreativeTab;
 import msifeed.mc.aorta.genesis.Generator;
 import msifeed.mc.aorta.genesis.GenesisTrait;
+import msifeed.mc.aorta.genesis.items.data.ArmorData;
+import msifeed.mc.aorta.genesis.items.templates.ArmorTemplate;
 import msifeed.mc.aorta.genesis.items.templates.FoodTemplate;
 import msifeed.mc.aorta.genesis.items.templates.ItemTemplate;
 import net.minecraft.item.Item;
@@ -21,12 +23,14 @@ public class ItemGenerator implements Generator {
     public void generate(JsonObject json, HashSet<GenesisTrait> traits) {
         final ItemGenesisUnit unit = new ItemGenesisUnit(json, traits);
 
-        final Item item = getItemTemplate(unit);
+        final Item item = getItemTemplate(json, unit);
         fillCommons(unit, item);
         GameRegistry.registerItem(item, unit.id);
     }
 
-    private Item getItemTemplate(ItemGenesisUnit unit) {
+    private Item getItemTemplate(JsonObject json, ItemGenesisUnit unit) {
+        if (unit.hasTrait(armor))
+            return new ArmorTemplate(unit, new ArmorData(json));
         if (unit.hasTrait(consumable))
             return new FoodTemplate(unit);
         return new ItemTemplate(unit);

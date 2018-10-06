@@ -89,6 +89,8 @@ public class EntityControl {
         void compile() {
             classes.clear();
             for (String s : entities) {
+                if (s == null)
+                    continue;
                 try {
                     classes.add(Class.forName(s));
                 } catch (ClassNotFoundException e) {
