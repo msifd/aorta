@@ -6,8 +6,8 @@ import msifeed.mc.aorta.genesis.GenesisTrait;
 import msifeed.mc.aorta.genesis.GenesisUnit;
 import msifeed.mc.aorta.genesis.JsonUtils;
 
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static msifeed.mc.aorta.genesis.GenesisTrait.*;
@@ -15,7 +15,7 @@ import static msifeed.mc.aorta.genesis.GenesisTrait.*;
 public class ItemGenesisUnit extends GenesisUnit {
     public String title;
     public String[] desc;
-    public HashMap<String, String> values = new HashMap<>();
+    public LinkedHashMap<String, String> values = new LinkedHashMap<>();
     public String texture;
     public ItemRarity rarity;
 

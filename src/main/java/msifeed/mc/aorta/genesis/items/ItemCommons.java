@@ -4,7 +4,7 @@ import msifeed.mc.aorta.genesis.rename.RenameProvider;
 import net.minecraft.item.ItemStack;
 
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,9 +15,9 @@ public class ItemCommons {
         else if (unit.desc != null)
             Collections.addAll(lines, unit.desc);
 
-        final Map<String, String> values = new HashMap<>(unit.values);
+        final LinkedHashMap<String, String> values = new LinkedHashMap<>(unit.values);
         values.putAll(RenameProvider.getOverriddenValues(itemStack));
         for (Map.Entry<String, String> entry : values.entrySet())
-            lines.add(entry.getKey() + ": " + entry.getValue());
+            lines.add("\u00A7r" + entry.getKey() + "\u00A7r: " + entry.getValue());
     }
 }
