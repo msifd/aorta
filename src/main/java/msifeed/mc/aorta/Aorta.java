@@ -13,6 +13,7 @@ import msifeed.mc.aorta.core.Core;
 import msifeed.mc.aorta.defines.DefineCommand;
 import msifeed.mc.aorta.defines.Defines;
 import msifeed.mc.aorta.genesis.Genesis;
+import msifeed.mc.aorta.genesis.rename.RenameCommand;
 import msifeed.mc.aorta.tweaks.EnableDesertRain;
 import msifeed.mc.aorta.tweaks.EntityControl;
 import msifeed.mc.aorta.tweaks.MakeEveryoneHealthy;
@@ -73,6 +74,7 @@ public class Aorta {
 
         commandHandler.registerCommand(new AortaCommand());
         commandHandler.registerCommand(new DefineCommand());
+        commandHandler.registerCommand(new RenameCommand());
 
         CORE.registerCommands(commandHandler);
         speechat.registerCommands(commandHandler);

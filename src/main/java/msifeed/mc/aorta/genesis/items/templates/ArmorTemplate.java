@@ -2,6 +2,7 @@ package msifeed.mc.aorta.genesis.items.templates;
 
 import msifeed.mc.aorta.genesis.GenesisTrait;
 import msifeed.mc.aorta.genesis.items.IItemTemplate;
+import msifeed.mc.aorta.genesis.items.ItemCommons;
 import msifeed.mc.aorta.genesis.items.ItemGenesisUnit;
 import msifeed.mc.aorta.genesis.items.data.ArmorData;
 import net.minecraft.entity.Entity;
@@ -9,7 +10,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 
-import java.util.Collections;
 import java.util.List;
 
 public class ArmorTemplate extends ItemArmor implements IItemTemplate {
@@ -20,6 +20,7 @@ public class ArmorTemplate extends ItemArmor implements IItemTemplate {
         super(ArmorMaterial.CHAIN, 0, getArmorType(unit));
         this.unit = unit;
         this.armorData = armorData;
+        setUnlocalizedName(unit.id);
     }
 
     @Override
@@ -32,8 +33,7 @@ public class ArmorTemplate extends ItemArmor implements IItemTemplate {
 
     @Override
     public void addInformation(ItemStack itemStack, EntityPlayer player, List lines, boolean debug) {
-        if (unit.desc != null)
-            Collections.addAll(lines, unit.desc);
+        ItemCommons.addInformation(unit, itemStack, lines);
     }
 
     @Override

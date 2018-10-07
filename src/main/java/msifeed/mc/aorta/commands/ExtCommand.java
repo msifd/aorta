@@ -43,4 +43,14 @@ public abstract class ExtCommand extends CommandBase {
         c.getChatStyle().setColor(color);
         sender.addChatMessage(c);
     }
+
+    protected static String joinText(String[] args, int offset) {
+        final StringBuilder sb = new StringBuilder();
+        for (int i = offset; i < args.length; i++) {
+            sb.append(args[i]);
+            if (i < args.length - 1)
+                sb.append(' ');
+        }
+        return sb.toString();
+    }
 }

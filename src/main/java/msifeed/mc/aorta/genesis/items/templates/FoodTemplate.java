@@ -1,12 +1,12 @@
 package msifeed.mc.aorta.genesis.items.templates;
 
 import msifeed.mc.aorta.genesis.items.IItemTemplate;
+import msifeed.mc.aorta.genesis.items.ItemCommons;
 import msifeed.mc.aorta.genesis.items.ItemGenesisUnit;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 
-import java.util.Collections;
 import java.util.List;
 
 import static msifeed.mc.aorta.genesis.GenesisTrait.*;
@@ -30,8 +30,7 @@ public class FoodTemplate extends ItemFood implements IItemTemplate {
 
     @Override
     public void addInformation(ItemStack itemStack, EntityPlayer player, List lines, boolean debug) {
-        if (unit.desc != null)
-            Collections.addAll(lines, unit.desc);
+        ItemCommons.addInformation(unit, itemStack, lines);
     }
 
     @Override

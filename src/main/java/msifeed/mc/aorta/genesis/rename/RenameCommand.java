@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.core.meta;
+package msifeed.mc.aorta.genesis.rename;
 
 import msifeed.mc.aorta.commands.ExtCommand;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
@@ -7,15 +7,15 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
-public class MetaCommand extends ExtCommand {
+public class RenameCommand extends ExtCommand {
     @Override
     public String getCommandName() {
-        return "meta";
+        return "rename";
     }
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "/meta < owner <name> | add <text> | remove | clear >";
+        return "/rename [title|remove|clear|set <key> [:]] [text]";
     }
 
     @Override
@@ -47,33 +47,39 @@ public class MetaCommand extends ExtCommand {
         }
 
         switch (args[0]) {
-            case "owner":
-                if (args.length > 1)
-                    MetaProvider.setOwner(itemStack, args[1]);
-                else
-                    error(sender, "You should pass a name");
-                break;
-            case "add":
-                MetaProvider.addLine(itemStack, joinText(args, 1));
-                break;
-            case "remove":
-                MetaProvider.removeLine(itemStack);
-                break;
-            case "clear":
-                MetaProvider.clear(itemStack);
+            case "title":
+                RenameProvider.setTitle(itemStack, args.length > 1 ? joinText(args, 1) : null);
                 break;
             default:
-                printHelp(sender);
+                RenameProvider.addDescription(itemStack, joinText(args, 0));
+                break;
+            case "remove":
+                RenameProvider.removeDescriptionLine(itemStack);
+                break;
+            case "clear":
+                RenameProvider.clearDescription(itemStack);
+                break;
+            case "set":
+                if (args.length < 2) {
+                    error(sender, "You should pass a key!");
+                    return;
+                }
+                final String[] parts = joinText(args, 1).split(":");
+                final String key = parts[0].trim();
+                final String value = parts.length > 1 ? parts[1].trim() : null;
+                RenameProvider.setValue(itemStack, key, value);
                 break;
         }
     }
 
     private void printHelp(ICommandSender sender) {
-        title(sender, "Meta help:");
+        title(sender, "Rename help:");
         info(sender, " Take item in hand.");
-        info(sender, " /meta owner <name> - Set owner");
-        info(sender, " /meta add <text> - Add new line");
-        info(sender, " /meta remove - Remove last line");
-        info(sender, " /meta clear - Clear meta data");
+        info(sender, " Adding title or description hides default one.");
+        info(sender, " /rename title <text> - Set item's title. Resets if empty.");
+        info(sender, " /rename <text> - Add new line to desctiprion.");
+        info(sender, " /rename remove - Remove last line");
+        info(sender, " /rename clear - Clear description");
+        info(sender, " /rename set <key> : [value] - Set custom field. ':' breaks key and value.");
     }
 }

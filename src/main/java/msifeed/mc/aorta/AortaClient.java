@@ -20,7 +20,7 @@ public class AortaClient extends Aorta {
 
         DRM.apply();
         initMellow();
-        Keybinds.register();
+        Keybinds.INSTANCE.init();
     }
 
     private void initMellow() {

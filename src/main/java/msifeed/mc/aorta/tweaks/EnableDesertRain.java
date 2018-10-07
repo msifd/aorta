@@ -2,7 +2,9 @@ package msifeed.mc.aorta.tweaks;
 
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.launchwrapper.Launch;
-import net.minecraft.world.biome.*;
+import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.BiomeGenEnd;
+import net.minecraft.world.biome.BiomeGenHell;
 
 public class EnableDesertRain {
     public static void apply() {

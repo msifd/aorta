@@ -1,17 +1,21 @@
 package msifeed.mc.aorta.genesis.items;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import msifeed.mc.aorta.genesis.GenesisTrait;
 import msifeed.mc.aorta.genesis.GenesisUnit;
 import msifeed.mc.aorta.genesis.JsonUtils;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import static msifeed.mc.aorta.genesis.GenesisTrait.*;
 
 public class ItemGenesisUnit extends GenesisUnit {
     public String title;
     public String[] desc;
+    public HashMap<String, String> values = new HashMap<>();
     public String texture;
     public ItemRarity rarity;
 
@@ -19,11 +23,24 @@ public class ItemGenesisUnit extends GenesisUnit {
         super(json, traits);
         title = JsonUtils.getOptString(json, Props.title).orElse(null);
         desc = JsonUtils.getOptString(json, Props.desc).map(ItemGenesisUnit::parseDescription).orElse(null);
+        loadDescriptionValues(json);
         texture = JsonUtils.getOptString(json, Props.texture).orElse(null);
 
         rarity = getRarity();
         if (rarity == ItemRarity.COMMON)
             traits.add(common);
+    }
+
+    private void loadDescriptionValues(JsonObject json) {
+        if (!json.has(Props.values) || !json.get(Props.values).isJsonObject())
+            return;
+
+        final JsonObject values = json.get(Props.values).getAsJsonObject();
+        for (Map.Entry<String, JsonElement> entry : values.entrySet()) {
+            if (!entry.getValue().isJsonPrimitive() || !entry.getValue().getAsJsonPrimitive().isString())
+                continue;
+            this.values.put(entry.getKey(), entry.getValue().getAsString());
+        }
     }
 
     private static String[] parseDescription(String raw) {
@@ -48,6 +65,7 @@ public class ItemGenesisUnit extends GenesisUnit {
     private static class Props {
         static final String title = "title";
         static final String desc = "description";
+        static final String values = "values";
         static final String texture = "texture";
     }
 }
