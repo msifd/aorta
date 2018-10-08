@@ -28,7 +28,7 @@ public enum GenesisTrait {
     special_log, special_bush,
 
     // Items // // // // // // // //
-    not_stackable, hold_like_tool,
+    not_stackable, hold_like_tool, double_sized,
 
     // Armor
     armor, helmet, plate, legs, boots,

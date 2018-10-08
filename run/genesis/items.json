@@ -11,7 +11,9 @@
     "texture": "aorta:chainsaw",
     "traits": [
       "item",
-      "epic"
+      "epic",
+      "hold_like_tool",
+      "double_sized"
     ]
   },
   {

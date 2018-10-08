@@ -45,14 +45,9 @@ public class ItemGenerator implements Generator {
             item.setFull3D();
 
         if (FMLCommonHandler.instance().getSide().isClient()) {
-            fillTexture(unit, item);
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
-    private void fillTexture(ItemGenesisUnit unit, Item item) {
-        if (unit.texture != null) {
-            item.setTextureName(unit.texture);
+            ClientGenerator.fillTexture(unit, item);
+            if (unit.hasTrait(double_sized))
+                ClientGenerator.setDoubleSized(item);
         }
     }
 }
