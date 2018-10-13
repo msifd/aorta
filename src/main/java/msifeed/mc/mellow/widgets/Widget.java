@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class Widget {
     public static Widget hoveredWidget = null;
     public static Widget pressedWidget = null;
-    protected static Widget focusedWidget = null;
+    public static Widget focusedWidget = null;
 
     private boolean visible = true;
     private boolean dirty = true;
@@ -164,20 +164,6 @@ public class Widget {
     }
 
     public void update() {
-//        if (dirty) {
-//            dirty = false;
-//            if (parent != null)
-//                widgetTreeDepth = parent.widgetTreeDepth + 1;
-//            layout.layoutRelativeParent(this, children);
-//            contentSize = layout.layoutIndependent(children);
-//            updateSelf();
-////            updateIndepenent();
-//        }
-//
-//        for (Widget c : children)
-//            c.update();
-
-//        setDirty();
         dirty = true;
 
         updateIndependentLayout();
@@ -187,7 +173,6 @@ public class Widget {
     }
 
     protected void updateIndependentLayout() {
-//        if (!isDirtyTree() || children.isEmpty())
         if (children.isEmpty())
             return;
 
@@ -198,11 +183,10 @@ public class Widget {
     }
 
     protected void updateRelativeLayout() {
-//        if (!isDirtyTree() || children.isEmpty())
+        updateWidgetTreeDepth();
+
         if (children.isEmpty())
             return;
-
-        updateWidgetTreeDepth();
 
         layout.layoutRelativeParent(this, children);
 
@@ -211,16 +195,14 @@ public class Widget {
 
         updateSelf();
 
-//        System.out.println(toString());
-
         dirty = false;
     }
 
     protected void updateWidgetTreeDepth() {
-        if (parent != null)
-            this.widgetTreeDepth = parent.widgetTreeDepth + 1;
-        else
+        if (parent == null)
             this.widgetTreeDepth = 0;
+        else
+            this.widgetTreeDepth = parent.widgetTreeDepth + 1;
     }
 
     protected void updateSelf() {
@@ -230,8 +212,8 @@ public class Widget {
         if (isVisible()) {
             renderSelf();
             renderChildren();
-            if (isHovered())
-                renderDebug();
+//            if (isHovered())
+//                renderDebug();
         }
     }
 

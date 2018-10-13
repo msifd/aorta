@@ -19,7 +19,7 @@ public class Label extends Widget {
 
     public Label(String text) {
         setText(text);
-        setSizePolicy(SizePolicy.FIXED);
+        setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.MINIMUM);
     }
 
     public String getText() {

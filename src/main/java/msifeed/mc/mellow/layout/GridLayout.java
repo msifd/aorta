@@ -8,7 +8,7 @@ import msifeed.mc.mellow.widgets.Widget;
 import java.util.Collection;
 
 public class GridLayout implements Layout {
-    private int spacing = 1;
+    protected int spacing = 2;
 
     public GridLayout() {
     }
@@ -48,7 +48,7 @@ public class GridLayout implements Layout {
             labelWidget = !labelWidget;
         }
 
-        final Point contentSize = new Point(maxWidth, yOffset - spacing);
+        final Point contentSize = new Point(maxWidth + spacing, yOffset - spacing);
         final Margins margin = parent.getMargin();
         contentSize.translate(margin.horizontal(), margin.vertical());
 
@@ -59,13 +59,31 @@ public class GridLayout implements Layout {
     public void layoutRelativeParent(Widget parent, Collection<Widget> children) {
         final Geom geometry = LayoutUtils.getGeomWithMargin(parent);
 
-        boolean labelWidget = true;
+        int maxLeftWidth = 0;
+        int maxRightWidth = 0;
+        int maxRowHeight = 0;
+
+        boolean isLeftWidget = true;
+        for (Widget child : children) {
+            final Geom childGeom = child.getGeometry();
+            if (isLeftWidget && childGeom.w > maxLeftWidth)
+                maxLeftWidth = childGeom.w;
+            if (!isLeftWidget && childGeom.w > maxRightWidth)
+                maxRightWidth = childGeom.w;
+            if (childGeom.h > maxRowHeight)
+                maxRowHeight = childGeom.h;
+            isLeftWidget = !isLeftWidget;
+        }
+
+        isLeftWidget = true;
         for (Widget child : children) {
             final Geom childGeom = child.getGeometry();
             childGeom.translate(geometry);
-            if (!labelWidget)
-                childGeom.x = geometry.x + geometry.w - childGeom.w;
-            labelWidget = !labelWidget;
+            childGeom.y += (maxRowHeight - childGeom.h) / 2;
+            childGeom.w = isLeftWidget ? maxLeftWidth : maxRightWidth;
+            if (!isLeftWidget)
+                childGeom.x = geometry.x + maxLeftWidth + spacing;
+            isLeftWidget = !isLeftWidget;
         }
     }
 }

@@ -1,5 +1,7 @@
 package msifeed.mc.mellow.mc;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import msifeed.mc.mellow.handlers.KeyHandler;
 import msifeed.mc.mellow.handlers.MouseHandler;
 import msifeed.mc.mellow.render.RenderUtils;
 import msifeed.mc.mellow.utils.Point;
@@ -8,6 +10,7 @@ import msifeed.mc.mellow.widgets.scene.ProfilingScene;
 import msifeed.mc.mellow.widgets.scene.Scene;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import org.lwjgl.input.Keyboard;
 
 public class MellowGuiScreen extends GuiScreen {
     protected Scene scene = new ProfilingScene();
@@ -65,7 +68,20 @@ public class MellowGuiScreen extends GuiScreen {
     }
 
     @Override
-    protected void keyTyped(char c, int key) {
-        super.keyTyped(c, key);
+    public void handleKeyboardInput() {
+        Keyboard.enableRepeatEvents(true);
+        if (!Keyboard.getEventKeyState())
+            return;
+
+        final char c = Keyboard.getEventCharacter();
+        final int k = Keyboard.getEventKey();
+
+        if (k == Keyboard.KEY_ESCAPE) {
+            Minecraft.getMinecraft().displayGuiScreen(null);
+            return;
+        }
+
+        if (Widget.focusedWidget instanceof KeyHandler)
+            ((KeyHandler) Widget.focusedWidget).onKeyboard(c, k);
     }
 }
