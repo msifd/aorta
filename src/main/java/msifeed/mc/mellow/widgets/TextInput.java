@@ -2,7 +2,6 @@ package msifeed.mc.mellow.widgets;
 
 import msifeed.mc.mellow.Mellow;
 import msifeed.mc.mellow.handlers.KeyHandler;
-import msifeed.mc.mellow.layout.AnchorLayout;
 import msifeed.mc.mellow.render.RenderParts;
 import msifeed.mc.mellow.render.RenderShapes;
 import msifeed.mc.mellow.render.RenderWidgets;
@@ -11,7 +10,6 @@ import msifeed.mc.mellow.utils.Geom;
 import msifeed.mc.mellow.utils.SizePolicy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.input.Keyboard;
 
@@ -118,7 +116,7 @@ public class TextInput extends Widget implements KeyHandler {
     }
 
     private void putChar(char c) {
-        final boolean hasCharsOnRight = cursor < text.length() - 1;
+        final boolean hasCharsOnRight = cursor < text.length();
         final String s = text.substring(0, cursor) + c + (hasCharsOnRight ? text.substring(cursor) : "");
         tryChange(s, 1);
     }
@@ -151,7 +149,7 @@ public class TextInput extends Widget implements KeyHandler {
             onChange.accept(text);
     }
 
-    public static boolean isDigitParts(String s) {
+    public static boolean isDigitPart(String s) {
         if (s.isEmpty() || s.equals("-"))
             return true;
         try {

@@ -7,14 +7,6 @@ import msifeed.mc.mellow.render.RenderWidgets;
 import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
-import net.minecraft.client.Minecraft;
-import net.minecraft.profiler.Profiler;
-import net.minecraft.util.ChatAllowedCharacters;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.util.Point;
-
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class TextInput extends Widget implements MouseHandler.All {
     private static final int CURSOR_BLINK_MS = 500;

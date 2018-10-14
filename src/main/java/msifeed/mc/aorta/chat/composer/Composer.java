@@ -14,6 +14,7 @@ public class Composer {
         COMPOSERS.put(SpeechType.SPEECH, new SpeechComposer());
         COMPOSERS.put(SpeechType.OFFTOP, new OfftopComposer());
         COMPOSERS.put(SpeechType.GM, new GmsayComposer());
+        COMPOSERS.put(SpeechType.ROLL, new RollComposer());
     }
 
     public static ChatMessage makeMessage(SpeechType type, EntityPlayer player, ChatComponentTranslation comp) {

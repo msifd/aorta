@@ -7,6 +7,7 @@ import msifeed.mc.aorta.core.attributes.StatusAttribute;
 import msifeed.mc.aorta.core.commands.TraitListCommand;
 import msifeed.mc.aorta.core.commands.TraitSetCommand;
 import msifeed.mc.aorta.core.meta.MetaCommand;
+import msifeed.mc.aorta.core.net.RollRequests;
 import msifeed.mc.aorta.core.things.ItemBattleTool;
 import msifeed.mc.aorta.core.things.ItemCharTool;
 import msifeed.mc.aorta.core.things.ItemDebugTool;
@@ -18,6 +19,7 @@ public class Core {
         AttributeHandler.INSTANCE.registerAttribute(CharacterAttribute.INSTANCE);
         AttributeHandler.INSTANCE.registerAttribute(StatusAttribute.INSTANCE);
 
+        RollRequests.init();
         TraitDecoder.init();
 
         GameRegistry.registerItem(new ItemDebugTool(), ItemDebugTool.ITEM_NAME);

@@ -5,3 +5,8 @@ itemGroup.aorta.tools=Aorta Tools
 item.tool_battle.name=Battle tool
 item.tool_char.name=Char tool
 item.tool_debug.name=Debug tool
+
+aorta.feature.strength=Тренированность
+aorta.feature.dexterity=Выучка
+aorta.feature.tenacity=Упорство
+aorta.feature.intelligence=Интеллект

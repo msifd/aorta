@@ -1,6 +1,7 @@
 package msifeed.mc.aorta.client.gui;
 
 import msifeed.mc.aorta.core.character.Feature;
+import msifeed.mc.aorta.core.net.RollRequests;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.mellow.widgets.TextInput;
@@ -11,6 +12,7 @@ import msifeed.mc.mellow.widgets.window.Window;
 
 public class ScreenRoller extends MellowGuiScreen {
     private static int lastModifier = 0;
+    private static long lastRolled = 0;
 
     public ScreenRoller() {
         final Window window = new Window();
@@ -39,7 +41,7 @@ public class ScreenRoller extends MellowGuiScreen {
         modInput.getSizeHint().x = 29;
         if (lastModifier != 0)
             modInput.setText(Integer.toString(lastModifier));
-        modInput.setFilter(s -> s.length() < 5 && TextInput.isDigitParts(s));
+        modInput.setFilter(s -> s.length() < 5 && TextInput.isDigitPart(s));
         modInput.setCallback(this::parseNumber);
         modifiers.addChild(modInput);
     }
@@ -50,7 +52,11 @@ public class ScreenRoller extends MellowGuiScreen {
     }
 
     private void roll(Feature feature, int mod) {
-        System.out.println("roll " + feature + " + " + mod);
+        if (System.currentTimeMillis() - lastRolled < 1000)
+            return;
+
+        RollRequests.rollFeature(feature, mod);
+        lastRolled = System.currentTimeMillis();
     }
 
     private void parseNumber(String s) {

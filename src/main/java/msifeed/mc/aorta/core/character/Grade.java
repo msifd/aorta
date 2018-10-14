@@ -12,6 +12,10 @@ public enum Grade {
             .map(Object::toString)
             .collect(Collectors.toList()));
 
+    public int getValue() {
+        return ordinal() + 1;
+    }
+
     @Override
     public String toString() {
         switch (this) {

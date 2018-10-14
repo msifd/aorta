@@ -15,12 +15,12 @@ public class ChatHandler {
     public void onChatMessageSent(ServerChatEvent event) {
         final SpeechType type = GmSpeech.shouldUseGmsay(event.player) ? SpeechType.GM : SpeechType.SPEECH;
         final ChatMessage message = Composer.makeMessage(type, event.player, event.component);
-        sendSpeechMessage(event.player, message);
+        sendChatMessage(event.player, message);
         event.component = null;
         event.setCanceled(true);
     }
 
-    public static void sendSpeechMessage(EntityPlayerMP sender, ChatMessage message) {
+    public static void sendChatMessage(EntityPlayerMP sender, ChatMessage message) {
         final NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(sender.dimension, sender.posX, sender.posY, sender.posZ, message.radius);
         Speechat.CHANNEL.sendToAllAround(message, point);
     }

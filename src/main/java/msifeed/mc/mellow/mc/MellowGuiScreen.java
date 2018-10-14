@@ -1,6 +1,5 @@
 package msifeed.mc.mellow.mc;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import msifeed.mc.mellow.handlers.KeyHandler;
 import msifeed.mc.mellow.handlers.MouseHandler;
 import msifeed.mc.mellow.render.RenderUtils;

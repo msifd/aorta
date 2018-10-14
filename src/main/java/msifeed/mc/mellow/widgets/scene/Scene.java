@@ -3,13 +3,9 @@ package msifeed.mc.mellow.widgets.scene;
 import msifeed.mc.mellow.layout.AnchorLayout;
 import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.widgets.Widget;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class Scene extends Widget {
 
