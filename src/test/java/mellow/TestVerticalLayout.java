@@ -1,6 +1,6 @@
 package mellow;
 
-import msifeed.mc.mellow.layout.VerticalLayout;
+import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
 import org.junit.Ignore;
@@ -11,7 +11,7 @@ public class TestVerticalLayout extends LayoutFixture {
     @Override
     public void init() {
         super.init();
-        container.setLayout(new VerticalLayout(1));
+        container.setLayout(new ListLayout(ListLayout.Direction.VERTICAL, 1));
         container.setPos(10, 10);
         container.setSizeHint(100, 100);
     }

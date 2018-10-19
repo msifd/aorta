@@ -1,7 +1,7 @@
 package msifeed.mc.mellow.widgets.droplist;
 
 import msifeed.mc.mellow.Mellow;
-import msifeed.mc.mellow.layout.VerticalLayout;
+import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.render.RenderParts;
 import msifeed.mc.mellow.render.RenderWidgets;
 import msifeed.mc.mellow.theme.Part;
@@ -15,7 +15,7 @@ class DropListPopup extends Widget {
     DropListPopup(DropList parent) {
         this.parent = parent;
         getMargin().set(1, 1, 2, 1);
-        setLayout(VerticalLayout.INSTANCE);
+        setLayout(ListLayout.VERTICAL);
 
         for (int i = 0; i < parent.getItems().size(); i++) {
             final ListEntryButton entry = new ListEntryButton(parent, i);

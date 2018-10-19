@@ -1,7 +1,7 @@
 package mellow;
 
 import msifeed.mc.mellow.layout.FreeLayout;
-import msifeed.mc.mellow.layout.VerticalLayout;
+import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
@@ -35,7 +35,7 @@ public class TestNestedLayout extends LayoutFixture {
         final Point cPos = new Point(10, 10);
         final Point wSize = new Point(50, 50);
 
-        container.setLayout(new VerticalLayout(cSpacing));
+        container.setLayout(new ListLayout(ListLayout.Direction.VERTICAL, cSpacing));
         container.setPos(cPos);
 
         checkGeom(container, 10, 10, 0, 0);

@@ -1,7 +1,7 @@
 package msifeed.mc.mellow.widgets.window;
 
 import msifeed.mc.mellow.Mellow;
-import msifeed.mc.mellow.layout.VerticalLayout;
+import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.render.RenderParts;
 import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.utils.SizePolicy;
@@ -13,7 +13,7 @@ public class Window extends Widget {
     private Widget content = new Widget();
 
     public Window() {
-        setLayout(new VerticalLayout(0));
+        setLayout(new ListLayout(ListLayout.Direction.VERTICAL, 0));
         getMargin().set(1);
 
         header.setVerSizePolicy(SizePolicy.Policy.FIXED);
@@ -21,7 +21,7 @@ public class Window extends Widget {
         header.setZLevel(1);
 
         content.getMargin().set(2, 3, 5, 3);
-        content.setLayout(VerticalLayout.INSTANCE);
+        content.setLayout(ListLayout.VERTICAL);
 
         addChild(header);
         addChild(content);

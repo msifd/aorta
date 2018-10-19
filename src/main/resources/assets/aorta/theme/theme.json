@@ -63,6 +63,14 @@
     "scrollbar_thumb_hover": {
       "pos": [8,40],
       "9slice": [[2,2], [2,2], [2,2]]
+    },
+    "flat_button_normal": {
+      "pos": [64,16],
+      "9slice": [[2,2], [4,6], [2,2]]
+    },
+    "flat_button_hover": {
+      "pos": [72,16],
+      "9slice": [[2,2], [4,6], [2,2]]
     }
   },
   "colors": {

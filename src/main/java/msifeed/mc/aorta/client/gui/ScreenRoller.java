@@ -4,10 +4,10 @@ import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.net.RollRequests;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
-import msifeed.mc.mellow.widgets.TextInput;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.basic.Label;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
+import msifeed.mc.mellow.widgets.input.TextInput;
 import msifeed.mc.mellow.widgets.window.Window;
 
 public class ScreenRoller extends MellowGuiScreen {
@@ -41,7 +41,7 @@ public class ScreenRoller extends MellowGuiScreen {
         modInput.getSizeHint().x = 29;
         if (lastModifier != 0)
             modInput.setText(Integer.toString(lastModifier));
-        modInput.setFilter(s -> s.length() < 5 && TextInput.isDigitPart(s));
+        modInput.setFilter(s -> s.length() < 5 && TextInput.isSignedDigit(s));
         modInput.setCallback(this::parseNumber);
         modifiers.addChild(modInput);
     }

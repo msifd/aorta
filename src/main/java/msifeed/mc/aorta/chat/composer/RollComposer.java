@@ -30,7 +30,7 @@ public class RollComposer implements ChatComposer {
     }
 
     public static String makeText(EntityPlayer player, Feature feature, int mod, int result) {
-        final String featStr = L10n.string("aorta.feature." + feature.name().toLowerCase());
+        final String featStr = L10n.tr("aorta.feature." + feature.name().toLowerCase());
         final String modStr;
         if (mod > 0)
             modStr = " + " + mod;

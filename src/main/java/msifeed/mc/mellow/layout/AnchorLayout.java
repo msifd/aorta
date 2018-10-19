@@ -25,14 +25,28 @@ public class AnchorLayout implements Layout {
         if (children.isEmpty())
             return new Point();
 
-        final Widget child = children.iterator().next();
-        final Geom childGeom = child.getGeometry();
-        childGeom.reset();
-        childGeom.setSize(LayoutUtils.getPreferredSize(child));
-        childGeom.translate(child.getPos(), child.getZLevel());
-        child.setDirty();
+        final Point topLeft = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
+        final Point bottomRight = new Point(0, 0);
 
-        final Point contentSize = new Point(child.getSizeHint());
+        for (Widget child : children) {
+            final Geom childGeom = child.getGeometry();
+            childGeom.reset();
+            childGeom.setSize(LayoutUtils.getPreferredSize(child));
+            childGeom.translate(child.getPos(), child.getZLevel());
+            child.setDirty();
+
+            if (childGeom.x < topLeft.x)
+                topLeft.x = childGeom.x;
+            if (childGeom.y < topLeft.y)
+                topLeft.y = childGeom.y;
+
+            if (childGeom.x + childGeom.w > bottomRight.x)
+                bottomRight.x = childGeom.x + childGeom.w;
+            if (childGeom.y + childGeom.h > bottomRight.y)
+                bottomRight.y = childGeom.y + childGeom.h;
+        }
+
+        final Point contentSize = new Point(bottomRight.x - topLeft.x, bottomRight.y - topLeft.y);
         final Margins margin = parent.getMargin();
         contentSize.translate(margin.horizontal(), margin.vertical());
 
@@ -45,21 +59,21 @@ public class AnchorLayout implements Layout {
             return;
 
         final Geom geometry = LayoutUtils.getGeomWithMargin(parent);
-        final Widget child = children.iterator().next();
-        final Geom childGeom = child.getGeometry();
 
-        switch (horAnchor) {
-            case CENTER:
-                childGeom.x += (geometry.w - childGeom.w) / 2;
-                break;
+        for (Widget child : children) {
+            final Geom childGeom = child.getGeometry();
+            switch (horAnchor) {
+                case CENTER:
+                    childGeom.x += (geometry.w - childGeom.w) / 2;
+                    break;
+            }
+            switch (verAnchor) {
+                case CENTER:
+                    childGeom.y += (geometry.h - childGeom.h) / 2;
+                    break;
+            }
+            childGeom.translate(geometry);
         }
-        switch (verAnchor) {
-            case CENTER:
-                childGeom.y += (geometry.h - childGeom.h) / 2;
-                break;
-        }
-
-        childGeom.translate(geometry);
     }
 
     public enum Anchor {

@@ -20,10 +20,11 @@ public class GridLayout implements Layout {
     @Override
     public Point layoutIndependent(Widget parent, Collection<Widget> children) {
         int yOffset = 0;
-        int maxWidth = 0;
+        int maxLeftWidth = 0;
+        int maxRightWidth = 0;
 
-        boolean labelWidget = true;
-        int labelWidth = 0;
+        boolean leftWidget = true;
+        int leftWidth = 0;
         int lineHeight = 0;
 
         for (Widget child : children) {
@@ -35,20 +36,21 @@ public class GridLayout implements Layout {
             childGeom.translate(child.getPos(), child.getZLevel());
             childGeom.translate(0, yOffset);
 
-            if (labelWidget) {
-                labelWidth = childGeom.w + spacing;
+            if (leftWidget) {
+                leftWidth = childGeom.w + spacing;
                 lineHeight = childGeom.h;
+                maxLeftWidth = Math.max(maxLeftWidth, childGeom.w);
             } else {
-                childGeom.translate(labelWidth, 0);
-                maxWidth = Math.max(maxWidth, labelWidth + childGeom.w);
+                childGeom.translate(leftWidth, 0);
                 lineHeight = Math.max(lineHeight, childGeom.h);
                 yOffset += lineHeight + spacing;
+                maxRightWidth = Math.max(maxRightWidth, childGeom.w);
             }
 
-            labelWidget = !labelWidget;
+            leftWidget = !leftWidget;
         }
 
-        final Point contentSize = new Point(maxWidth + spacing, yOffset - spacing);
+        final Point contentSize = new Point(maxLeftWidth + maxRightWidth + spacing, yOffset - spacing);
         final Margins margin = parent.getMargin();
         contentSize.translate(margin.horizontal(), margin.vertical());
 

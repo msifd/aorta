@@ -7,7 +7,7 @@ import msifeed.mc.aorta.defines.data.HealthDefines;
 
 public class StatusCalc {
     public static int maxHealth(Character c) {
-        return c.bodyParts.stream().mapToInt(b -> b.max).sum();
+        return c.bodyParts.values().stream().mapToInt(b -> b.max).sum();
     }
 
     public static int totalDamage(CharStatus status) {

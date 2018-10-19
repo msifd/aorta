@@ -7,12 +7,13 @@ import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 public class Character {
     public EnumMap<Feature, Grade> features = new EnumMap<>(Feature.class);
-    public HashSet<BodyPart> bodyParts = new HashSet<>();
+    public HashMap<String, BodyPart> bodyParts = new HashMap<>();
     public Set<Trait> traits = new HashSet<>();
 
     public Character() {
@@ -20,6 +21,12 @@ public class Character {
         for (Feature f : featureEnum) {
             features.put(f, Grade.NORMAL);
         }
+    }
+
+    public Character(Character c) {
+        features.putAll(c.features);
+        bodyParts.putAll(c.bodyParts);
+        traits.addAll(c.traits);
     }
 
     public Set<Trait> traits() {
@@ -39,7 +46,7 @@ public class Character {
         compound.setTag(Tags.features, features);
 
         final NBTTagList bodyParts = new NBTTagList();
-        for (BodyPart p : this.bodyParts)
+        for (BodyPart p : this.bodyParts.values())
             bodyParts.appendTag(p.toNBT());
         compound.setTag(Tags.bodyParts, bodyParts);
 
@@ -63,7 +70,7 @@ public class Character {
         for (int i = 0; i < bodyParts.tagCount(); i++) {
             final BodyPart part = new BodyPart();
             part.fromNBT(bodyParts.getCompoundTagAt(i));
-            this.bodyParts.add(part);
+            this.bodyParts.put(part.name, part);
         }
 
         final int[] codes = compound.getIntArray(Tags.traits);

@@ -15,11 +15,10 @@ public class ButtonLabel extends Button {
     protected Label label = new Label();
 
     public ButtonLabel() {
-        getMargin().set(3, 3, 6, 3);
+        getMargin().set(3, 4, 6, 4);
         setLayout(new AnchorLayout());
 
-        label.setZLevel(Math.max(1, label.getZLevel()));
-
+        label.setZLevel(1);
         addChild(label);
     }
 

@@ -143,6 +143,13 @@ public class Widget {
         return parent;
     }
 
+    public Widget getTopParent() {
+        Widget w = getParent();
+        while (w != null && w.getParent() != null)
+            w = w.getParent();
+        return w;
+    }
+
     public void setParent(Widget parent) {
         if (parent != null) {
             this.parent = parent;
@@ -184,9 +191,6 @@ public class Widget {
 
     protected void updateRelativeLayout() {
         updateWidgetTreeDepth();
-
-        if (children.isEmpty())
-            return;
 
         layout.layoutRelativeParent(this, children);
 
@@ -248,6 +252,7 @@ public class Widget {
 
     public void clearChildren() {
         children.clear();
+        setDirty();
     }
 
     public Collection<Widget> getLookupChildren() {

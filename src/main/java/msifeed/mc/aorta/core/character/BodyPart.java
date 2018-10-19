@@ -12,6 +12,14 @@ public class BodyPart {
     public BodyPart() {
     }
 
+    public BodyPart(BodyPart bp) {
+        this.name = bp.name;
+        this.type = bp.type;
+        this.max = bp.max;
+        this.disfunction = bp.disfunction;
+        this.fatal = bp.fatal;
+    }
+
     public BodyPart(String name, Type type, int max, int disfunction, boolean fatal) {
         this.name = name;
         this.type = type;

@@ -3,9 +3,13 @@ package msifeed.mc.mellow.widgets.scene;
 import msifeed.mc.mellow.layout.AnchorLayout;
 import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.widgets.Widget;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Scene extends Widget {
 
@@ -36,16 +40,16 @@ public class Scene extends Widget {
         }
 
         // Debug list
-//        GL11.glPushMatrix();
-//        GL11.glScalef(0.5f, 0.5f, 0.5f);
-//        FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
-//        int y = 5;
-//        for (Widget w : active.stream().filter(widget -> widget.containsPoint(p)).sorted(Widget::isHigherThan).collect(Collectors.toList())) {
-//            final String s = String.format("%s (z: %d, d: %d)", w.toString(), w.getGeometry().z, w.getWidgetTreeDepth());
-//            fr.drawString(s, 5, y, 0xffffff);
-//            y += fr.FONT_HEIGHT + 2;
-//        }
-//        GL11.glPopMatrix();
+        GL11.glPushMatrix();
+        GL11.glScalef(0.5f, 0.5f, 0.5f);
+        FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
+        int y = 5;
+        for (Widget w : active.stream().filter(widget -> widget.containsPoint(p)).sorted(Widget::isHigherThan).collect(Collectors.toList())) {
+            final String s = String.format("%s (z: %d, d: %d)", w.toString(), w.getGeometry().z, w.getWidgetTreeDepth());
+            fr.drawString(s, 5, y, 0xffffff);
+            y += fr.FONT_HEIGHT + 2;
+        }
+        GL11.glPopMatrix();
         //
 
         if (active.isEmpty())
