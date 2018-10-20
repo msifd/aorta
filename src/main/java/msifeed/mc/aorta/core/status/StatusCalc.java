@@ -11,7 +11,8 @@ public class StatusCalc {
     }
 
     public static int totalDamage(CharStatus status) {
-        return status.damage.values().stream().mapToInt(Short::intValue).sum();
+        return status.health.values().stream()
+                .mapToInt(bph -> (int) bph.health).sum();
     }
 
     public static int fatalDamage(Character c) {

@@ -13,7 +13,6 @@ import java.util.stream.Stream;
 
 public class BodypartManageView extends Widget {
     private final Character character;
-
     private final Widget bodypartList = new Widget();
 
     BodypartManageView(Character character) {
@@ -61,8 +60,7 @@ public class BodypartManageView extends Widget {
             b.setClickCallback(() -> {
                 getTopParent().addChild(new EditBodypartDialog(bp, nbp -> {
                     character.bodyParts.remove(bp.name);
-                    if (nbp != null)
-                        character.bodyParts.put(nbp.name, nbp);
+                    character.bodyParts.put(nbp.name, nbp);
                     refillList();
                 }));
             });

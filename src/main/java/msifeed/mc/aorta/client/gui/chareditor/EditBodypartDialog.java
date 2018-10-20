@@ -31,6 +31,7 @@ class EditBodypartDialog extends Window {
         this.consumer = consumer;
         setTitle("Edit bodypart");
         setZLevel(5);
+        setFocused(this);
 
         final Widget content = getContent();
         content.setLayout(ListLayout.VERTICAL);

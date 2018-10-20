@@ -7,6 +7,7 @@ import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.scene.ProfilingScene;
 import msifeed.mc.mellow.widgets.scene.Scene;
+import msifeed.mc.mellow.widgets.window.Window;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
@@ -26,6 +27,10 @@ public class MellowGuiScreen extends GuiScreen {
         scene.update();
         scene.render();
         Widget.hoveredWidget = scene.lookupWidget(new Point(xMouse, yMouse)).orElse(null);
+
+        if (scene.getChildren().isEmpty()) {
+            Minecraft.getMinecraft().displayGuiScreen(null);
+        }
     }
 
     @Override
@@ -76,7 +81,24 @@ public class MellowGuiScreen extends GuiScreen {
         final int k = Keyboard.getEventKey();
 
         if (k == Keyboard.KEY_ESCAPE) {
-            Minecraft.getMinecraft().displayGuiScreen(null);
+            Widget focusedWindow = Widget.focusedWidget;
+
+            if (focusedWindow != null) {
+                while (focusedWindow != null && !(focusedWindow instanceof Window))
+                    focusedWindow = focusedWindow.getParent();
+            } else {
+                for (Widget w : scene.getChildren()) {
+                    if (w instanceof Window) {
+                        focusedWindow = w;
+                        break;
+                    }
+                }
+            }
+
+            if (focusedWindow != null) {
+                focusedWindow.getParent().removeChild(focusedWindow);
+                Widget.setFocused(null);
+            }
             return;
         }
 

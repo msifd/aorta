@@ -8,6 +8,7 @@ import msifeed.mc.aorta.core.character.BodyPart;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.character.Grade;
+import msifeed.mc.aorta.core.status.BodyPartHealth;
 import msifeed.mc.aorta.core.status.StatusCalc;
 import msifeed.mc.aorta.core.things.ItemDebugTool;
 import msifeed.mc.aorta.core.traits.Trait;
@@ -102,15 +103,15 @@ public enum DebugHud {
         StatusAttribute.get(entity).ifPresent(status -> {
             lines.add("Status {");
 
-            lines.add("  damage to death: " + StatusCalc.damageToDeath(character, status));
+            lines.add("  health to death: " + StatusCalc.damageToDeath(character, status));
 
-            lines.add("  damage: {");
-            for (Map.Entry<String, Short> e : status.damage.entrySet()) {
-                lines.add("    " + e.getKey().toLowerCase() + ": " + e.getValue());
+            lines.add("  health: {");
+            for (Map.Entry<String, BodyPartHealth> e : status.health.entrySet()) {
+                lines.add("    " + e.getKey().toLowerCase() + ": " + e.getValue().toString());
             }
             lines.add("  }");
 
-            lines.add("  shields: " + status.shields);
+            lines.add("  shield: " + status.shield);
 
             lines.add("}");
         });

@@ -17,6 +17,10 @@ public class CharacterAttribute extends EntityLivingAttribute<Character> {
     public static final CharacterAttribute INSTANCE = new CharacterAttribute();
     private static final String PROP_NAME = Aorta.MODID + ".core.char";
 
+    public static Optional<Character> get(Entity e) {
+        return INSTANCE.getValue(e);
+    }
+
     private CharacterAttribute() {
     }
 
@@ -48,10 +52,6 @@ public class CharacterAttribute extends EntityLivingAttribute<Character> {
         final Character character = new Character();
         character.fromNBT(root.getCompoundTag(PROP_NAME));
         return character;
-    }
-
-    public static Optional<Character> get(Entity e) {
-        return INSTANCE.getValue(e);
     }
 
     public static boolean has(EntityLivingBase entity, Trait trait) {
