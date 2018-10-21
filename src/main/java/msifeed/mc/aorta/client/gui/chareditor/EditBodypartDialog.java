@@ -1,6 +1,7 @@
 package msifeed.mc.aorta.client.gui.chareditor;
 
 import msifeed.mc.aorta.core.character.BodyPart;
+import msifeed.mc.aorta.core.status.StatusCalc;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.widgets.Widget;
@@ -15,20 +16,21 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 
 class EditBodypartDialog extends Window {
-    private final Consumer<BodyPart> consumer;
     private final BodyPart bodypart;
 
+    private final Label disfuncLabel = new Label();
     private final ButtonLabel doneBtn = new ButtonLabel();
 
     EditBodypartDialog(Consumer<BodyPart> consumer) {
         this(new BodyPart(), consumer);
         setTitle("New bodypart");
         doneBtn.setLabel("Add part");
+
+        bodypart.type = BodyPart.Type.HEAD; // Fix droplist
     }
 
     EditBodypartDialog(BodyPart bodyPart, Consumer<BodyPart> consumer) {
         this.bodypart = new BodyPart(bodyPart);
-        this.consumer = consumer;
         setTitle("Edit bodypart");
         setZLevel(5);
         setFocused(this);
@@ -58,15 +60,17 @@ class EditBodypartDialog extends Window {
         final TextInput healthInput = new TextInput();
         healthInput.setText(String.valueOf(bodyPart.max));
         healthInput.setFilter(EditBodypartDialog::healthFilter);
-        healthInput.setCallback(s -> bodypart.max = (short) healthInput.getInt());
+        healthInput.setCallback(s -> {
+            bodypart.max = (short) healthInput.getInt();
+            updateDisfunc();
+        });
         params.addChild(healthInput);
 
-        params.addChild(new Label("Disfunction"));
-        final TextInput disfuncInput = new TextInput();
-        disfuncInput.setText(String.valueOf(bodyPart.disfunction));
-        disfuncInput.setFilter(EditBodypartDialog::healthFilter);
-        disfuncInput.setCallback(s -> bodypart.disfunction = (short) disfuncInput.getInt());
-        params.addChild(disfuncInput);
+        final Label disfuncTextLabel = new Label("Disfunction");
+        disfuncTextLabel.getSizeHint().y += 2;
+        params.addChild(disfuncTextLabel);
+        updateDisfunc();
+        params.addChild(disfuncLabel);
 
         params.addChild(new Label("Fatal"));
         final DropList<Boolean> fatalList = new DropList<>(Arrays.asList(Boolean.TRUE, Boolean.FALSE));
@@ -109,16 +113,19 @@ class EditBodypartDialog extends Window {
         doneBtn.setDisabled(isBodypartInvalid());
     }
 
+    private void updateDisfunc() {
+        disfuncLabel.setText(String.valueOf(StatusCalc.disfunction(bodypart.max)));
+        disfuncLabel.getSizeHint().y += 2;
+    }
+
     private boolean isBodypartInvalid() {
         return bodypart.name == null
                 || bodypart.name.isEmpty()
                 || bodypart.type == null
-                || bodypart.max < 1
-                || bodypart.disfunction < 0
-                || bodypart.max <= bodypart.disfunction;
+                || bodypart.max < 1;
     }
 
     private static boolean healthFilter(String s) {
-        return s.length() < 5 && TextInput.isSignedDigit(s);
+        return s.length() < 5 && TextInput.isUnsignedDigit(s);
     }
 }

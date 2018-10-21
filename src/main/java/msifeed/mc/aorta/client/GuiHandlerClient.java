@@ -3,17 +3,11 @@ package msifeed.mc.aorta.client;
 import cpw.mods.fml.client.FMLClientHandler;
 import msifeed.mc.aorta.client.gui.ScreenRoller;
 import msifeed.mc.aorta.client.gui.chareditor.ScreenCharEditor;
-import msifeed.mc.aorta.client.gui.fighter.ScreenFightHelper;
+import msifeed.mc.aorta.client.gui.status_editor.ScreenFightHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 
 public class GuiHandlerClient extends GuiHandler {
-    @Override
-    public void openCharEditor(EntityLivingBase entity) {
-        if (entity.worldObj.isRemote)
-            FMLClientHandler.instance().displayGuiScreen(Minecraft.getMinecraft().thePlayer, new ScreenCharEditor(entity));
-    }
-
     @Override
     public void toggleRoller() {
         final Minecraft mc = Minecraft.getMinecraft();
@@ -25,7 +19,15 @@ public class GuiHandlerClient extends GuiHandler {
     }
 
     @Override
-    public void toggleFightHelper(EntityLivingBase entity) {
+    public void openCharEditor(EntityLivingBase entity) {
+        if (entity.worldObj.isRemote)
+            FMLClientHandler.instance().displayGuiScreen(Minecraft.getMinecraft().thePlayer, new ScreenCharEditor(entity));
+    }
+
+    @Override
+    public void toggleStatusEditor(EntityLivingBase entity) {
+        if (!entity.worldObj.isRemote)
+            return;
         final Minecraft mc = Minecraft.getMinecraft();
         if (mc.currentScreen instanceof ScreenFightHelper) {
             mc.displayGuiScreen(null);

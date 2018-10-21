@@ -8,9 +8,9 @@ import msifeed.mc.aorta.core.commands.TraitListCommand;
 import msifeed.mc.aorta.core.commands.TraitSetCommand;
 import msifeed.mc.aorta.core.meta.MetaCommand;
 import msifeed.mc.aorta.core.net.RollRequests;
-import msifeed.mc.aorta.core.things.ItemBattleTool;
 import msifeed.mc.aorta.core.things.ItemCharTool;
 import msifeed.mc.aorta.core.things.ItemDebugTool;
+import msifeed.mc.aorta.core.things.ItemStatusTool;
 import msifeed.mc.aorta.core.traits.TraitDecoder;
 import net.minecraft.command.CommandHandler;
 
@@ -24,7 +24,7 @@ public class Core {
 
         GameRegistry.registerItem(new ItemDebugTool(), ItemDebugTool.ITEM_NAME);
         GameRegistry.registerItem(new ItemCharTool(), ItemCharTool.ITEM_NAME);
-        GameRegistry.registerItem(new ItemBattleTool(), ItemBattleTool.ITEM_NAME);
+        GameRegistry.registerItem(new ItemStatusTool(), ItemStatusTool.ITEM_NAME);
     }
 
     public void registerCommands(CommandHandler handler) {

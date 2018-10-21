@@ -2,7 +2,7 @@ itemGroup.aorta.blocks=Aorta Blocks
 itemGroup.aorta.items=Aorta Items
 itemGroup.aorta.tools=Aorta Tools
 
-item.tool_battle.name=Battle tool
+item.tool_status.name=Status tool
 item.tool_char.name=Char tool
 item.tool_debug.name=Debug tool
 

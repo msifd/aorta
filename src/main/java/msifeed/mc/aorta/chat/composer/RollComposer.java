@@ -3,7 +3,7 @@ package msifeed.mc.aorta.chat.composer;
 import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.chat.Language;
 import msifeed.mc.aorta.chat.net.ChatMessage;
-import msifeed.mc.aorta.core.character.Feature;
+import msifeed.mc.aorta.core.rules.FeatureRollResult;
 import msifeed.mc.aorta.utils.L10n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
@@ -29,15 +29,19 @@ public class RollComposer implements ChatComposer {
         return comp;
     }
 
-    public static String makeText(EntityPlayer player, Feature feature, int mod, int result) {
-        final String featStr = L10n.tr("aorta.feature." + feature.name().toLowerCase());
-        final String modStr;
+    public static String makeText(EntityPlayer player, FeatureRollResult result) {
+        final String featStr = L10n.tr("aorta.feature." + result.feature.name().toLowerCase());
+        final String modStr = formatMod(result.mod);
+        final String sanityStr = formatMod(result.sanityMod);
+        return String.format("[ROLL] \u00a7r%s\u00a76: %s%s%s = %d", player.getDisplayName(), featStr, modStr, sanityStr, result.result);
+    }
+
+    private static String formatMod(int mod) {
         if (mod > 0)
-            modStr = " + " + mod;
+            return " + " + mod;
         else if (mod < 0)
-            modStr = " - " + mod;
+            return " - " + Math.abs(mod);
         else
-            modStr = "";
-        return String.format("[%s] %s%s = %d", player.getDisplayName(), featStr, modStr, result);
+            return "";
     }
 }

@@ -9,6 +9,7 @@ import java.util.Set;
 public class CharStatus {
     public HashMap<String, BodyPartHealth> health = new HashMap<>();
     public BodyShield shield = new BodyShield();
+    public byte sanity = 100;
 
     public CharStatus() {
 
@@ -18,6 +19,7 @@ public class CharStatus {
         for (Map.Entry<String, BodyPartHealth> e : s.health.entrySet())
             health.put(e.getKey(), new BodyPartHealth(e.getValue()));
         shield = new BodyShield(s.shield);
+        sanity = s.sanity;
     }
 
     public NBTTagCompound toNBT() {
@@ -29,6 +31,7 @@ public class CharStatus {
         }
         c.setTag(Tags.health, hc);
         c.setTag(Tags.shield, shield.toNBT());
+        c.setByte(Tags.sanity, sanity);
 
         return c;
     }
@@ -43,10 +46,12 @@ public class CharStatus {
         }
 
         shield.fromNBT(compound.getCompoundTag(Tags.shield));
+        sanity = compound.getByte(Tags.sanity);
     }
 
     private static class Tags {
         static final String health = "health";
         static final String shield = "shield";
+        static final String sanity = "sanity";
     }
 }

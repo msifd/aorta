@@ -66,6 +66,9 @@ public class AnchorLayout implements Layout {
                 case CENTER:
                     childGeom.x += (geometry.w - childGeom.w) / 2;
                     break;
+                case RIGHT:
+                    childGeom.x += geometry.w - childGeom.w;
+                    break;
             }
             switch (verAnchor) {
                 case CENTER:

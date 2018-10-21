@@ -10,9 +10,15 @@ import msifeed.mc.aorta.chat.composer.RollComposer;
 import msifeed.mc.aorta.chat.composer.SpeechType;
 import msifeed.mc.aorta.chat.net.ChatMessage;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
+import msifeed.mc.aorta.core.attributes.StatusAttribute;
+import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.rules.FeatureRoll;
+import msifeed.mc.aorta.core.rules.FeatureRollResult;
+import msifeed.mc.aorta.core.status.CharStatus;
 import net.minecraft.entity.player.EntityPlayerMP;
+
+import java.util.Optional;
 
 public class FeatureRollMessage implements IMessage, IMessageHandler<FeatureRollMessage, IMessage> {
     public Feature feature;
@@ -33,12 +39,16 @@ public class FeatureRollMessage implements IMessage, IMessageHandler<FeatureRoll
     @Override
     public IMessage onMessage(FeatureRollMessage message, MessageContext ctx) {
         final EntityPlayerMP player = ctx.getServerHandler().playerEntity;
-        CharacterAttribute.get(player).ifPresent(c -> {
-            final int result = FeatureRoll.roll(c, message.feature, message.mod);
-            final String text = RollComposer.makeText(player, message.feature, message.mod, result);
+
+        final Optional<Character> charOpt = CharacterAttribute.get(player);
+        final Optional<CharStatus> statusOpt = StatusAttribute.get(player);
+        if (charOpt.isPresent() && statusOpt.isPresent()) {
+            final FeatureRollResult result = FeatureRoll.roll(charOpt.get(), statusOpt.get(), message.feature, message.mod);
+            final String text = RollComposer.makeText(player, result);
             final ChatMessage m = Composer.makeMessage(SpeechType.ROLL, player, text);
             ChatHandler.sendChatMessage(player, m);
-        });
+        }
+
         return null;
     }
 }

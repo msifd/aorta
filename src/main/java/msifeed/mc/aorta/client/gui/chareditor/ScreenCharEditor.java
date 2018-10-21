@@ -1,9 +1,11 @@
 package msifeed.mc.aorta.client.gui.chareditor;
 
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
+import msifeed.mc.aorta.core.attributes.StatusAttribute;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.character.Grade;
+import msifeed.mc.aorta.core.status.CharStatus;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
@@ -23,10 +25,14 @@ import java.util.Map;
 
 public class ScreenCharEditor extends MellowGuiScreen {
     private final EntityLivingBase entity;
+
     private final Widget mainSection = new Widget();
+    private final Widget leftSection = new Widget();
+    private final Widget rightSection = new Widget();
     private final Button submitBtn = new ButtonLabel("Submit");
 
     private Character character = null;
+    private CharStatus charStatus = null;
 
     public ScreenCharEditor(EntityLivingBase entity) {
         this.entity = entity;
@@ -35,24 +41,16 @@ public class ScreenCharEditor extends MellowGuiScreen {
         window.setTitle("Char Editor");
         scene.addChild(window);
 
-        final Widget windowContent = window.getContent();
+        final Widget content = window.getContent();
 
-        final Label entityName = new Label("Entity: " + entity.getCommandSenderName());
-        windowContent.addChild(entityName);
+        leftSection.setLayout(ListLayout.VERTICAL);
+        rightSection.setLayout(ListLayout.VERTICAL);
+        mainSection.setLayout(new ListLayout(ListLayout.Direction.HORIZONTAL, 2));
+        mainSection.addChild(leftSection);
+        mainSection.addChild(rightSection);
+        content.addChild(mainSection);
 
-        mainSection.setLayout(ListLayout.VERTICAL);
-        refillMainSection();
-        windowContent.addChild(mainSection);
-
-        submitBtn.setClickCallback(() -> {
-            if (!entity.isEntityAlive())
-                System.out.println("entity is actually dead");
-            else if (character != null)
-                CharacterAttribute.INSTANCE.set(entity, character);
-        });
-
-        windowContent.addChild(new Separator());
-        windowContent.addChild(submitBtn);
+        refill();
     }
 
     @Override
@@ -66,25 +64,46 @@ public class ScreenCharEditor extends MellowGuiScreen {
         super.drawScreen(xMouse, yMouse, tick);
     }
 
-    private void refillMainSection() {
-        mainSection.clearChildren();
-
+    private void refill() {
         CharacterAttribute.get(entity).ifPresent(c -> this.character = new Character(c));
+        StatusAttribute.get(entity).ifPresent(s -> this.charStatus = new CharStatus(s));
 
-        if (character != null) {
-            addFeatures();
-            addBodyParts();
-            if (!(entity instanceof EntityPlayer))
-                addClearButton(entity);
-        } else {
+        refillLeft();
+        refillRight();
+    }
+
+    private void refillLeft() {
+        leftSection.clearChildren();
+
+        leftSection.addChild(new Label("Entity: " + entity.getCommandSenderName()));
+
+        if (character == null) {
             final Button addDataBtn = new ButtonLabel("Add data");
             addDataBtn.setClickCallback(() -> {
                 character = new Character();
-                refillMainSection();
+                charStatus = new CharStatus();
+                refill();
             });
-            mainSection.addChild(new Separator());
-            mainSection.addChild(addDataBtn);
+            leftSection.addChild(addDataBtn);
+            return;
+        } else {
+            addFeatures();
         }
+
+        leftSection.addChild(new Separator());
+
+        if (!(entity instanceof EntityPlayer))
+            addClearButton(entity);
+
+        submitBtn.setClickCallback(() -> {
+            if (!entity.isEntityAlive())
+                System.out.println("entity is actually dead");
+            else if (character != null) {
+                CharacterAttribute.INSTANCE.set(entity, character);
+                StatusAttribute.INSTANCE.set(entity, charStatus);
+            }
+        });
+        leftSection.addChild(submitBtn);
     }
 
     private void addFeatures() {
@@ -100,22 +119,27 @@ public class ScreenCharEditor extends MellowGuiScreen {
             features.addChild(dropDown);
         }
 
-        mainSection.addChild(new Separator());
-        mainSection.addChild(features);
-    }
-
-    private void addBodyParts() {
-        mainSection.addChild(new Separator());
-        mainSection.addChild(new BodypartManageView(character));
+        leftSection.addChild(new Separator());
+        leftSection.addChild(features);
     }
 
     private void addClearButton(EntityLivingBase entity) {
-        final Button btn = new ButtonLabel("Clear char data");
+        final Button btn = new ButtonLabel("Clear all data");
         btn.setClickCallback(() -> {
             CharacterAttribute.INSTANCE.set(entity, null);
+            StatusAttribute.INSTANCE.set(entity, null);
             character = null;
-            refillMainSection();
+            charStatus = null;
+            refill();
         });
-        mainSection.addChild(btn);
+        leftSection.addChild(btn);
+    }
+
+    private void refillRight() {
+        rightSection.clearChildren();
+        rightSection.setDirty();
+
+        if (character != null && charStatus != null)
+            rightSection.addChild(new BodypartManageView(character, charStatus));
     }
 }

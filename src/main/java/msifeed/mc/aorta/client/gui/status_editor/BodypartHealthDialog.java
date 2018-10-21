@@ -1,22 +1,20 @@
-package msifeed.mc.aorta.client.gui.fighter;
+package msifeed.mc.aorta.client.gui.status_editor;
 
 import msifeed.mc.aorta.core.character.BodyPart;
 import msifeed.mc.aorta.core.status.BodyPartHealth;
+import msifeed.mc.aorta.core.status.StatusCalc;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.basic.Label;
 import msifeed.mc.mellow.widgets.basic.Separator;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
-import msifeed.mc.mellow.widgets.droplist.DropList;
 import msifeed.mc.mellow.widgets.input.TextInput;
 import msifeed.mc.mellow.widgets.window.Window;
 
-import java.util.Arrays;
 import java.util.function.Consumer;
 
 class BodypartHealthDialog extends Window {
-    private final Consumer<BodyPartHealth> consumer;
     private final BodyPart bodypart;
     private final BodyPartHealth health;
 
@@ -25,7 +23,6 @@ class BodypartHealthDialog extends Window {
     BodypartHealthDialog(BodyPart bodyPart, BodyPartHealth health, Consumer<BodyPartHealth> consumer) {
         this.bodypart = new BodyPart(bodyPart);
         this.health = new BodyPartHealth(health);
-        this.consumer = consumer;
         setTitle("Edit health");
         setZLevel(5);
         setFocused(this);
@@ -40,7 +37,7 @@ class BodypartHealthDialog extends Window {
         partInfo.addChild(new Label("Max health"));
         partInfo.addChild(new Label(String.valueOf(bodyPart.max)));
         partInfo.addChild(new Label("Disfunction"));
-        partInfo.addChild(new Label(String.valueOf(bodyPart.disfunction)));
+        partInfo.addChild(new Label(String.valueOf(StatusCalc.disfunction(bodypart.max))));
         content.addChild(partInfo);
 
         content.addChild(new Separator());
@@ -98,6 +95,6 @@ class BodypartHealthDialog extends Window {
     }
 
     private static boolean healthFilter(String s) {
-        return s.length() < 5 && TextInput.isSignedDigit(s);
+        return s.length() < 5 && TextInput.isUnsignedDigit(s);
     }
 }

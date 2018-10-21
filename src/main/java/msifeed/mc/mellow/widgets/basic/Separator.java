@@ -2,7 +2,6 @@ package msifeed.mc.mellow.widgets.basic;
 
 import msifeed.mc.mellow.Mellow;
 import msifeed.mc.mellow.render.RenderParts;
-import msifeed.mc.mellow.render.RenderUtils;
 import msifeed.mc.mellow.render.RenderWidgets;
 import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.utils.Geom;
@@ -22,7 +21,8 @@ public class Separator extends Widget {
         final Geom geom = getGeometry();
         RenderWidgets.beginCropped(geom);
         final int endX = geom.x + geom.w;
-        final int partWidth = horizontalPart.pos.x / RenderUtils.getScreenScaleFactor() + 1;
+//        final int partWidth = horizontalPart.size.x / RenderUtils.getScreenScaleFactor() + 1;
+        final int partWidth = horizontalPart.size.x;
         for (int x = geom.x; x < endX; x += partWidth) {
             RenderParts.slice(horizontalPart, x, geom.y, geom.z);
         }

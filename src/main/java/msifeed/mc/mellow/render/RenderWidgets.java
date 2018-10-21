@@ -18,7 +18,7 @@ public final class RenderWidgets {
         final int h = geom.h * sf;
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         GL11.glScissor(x, mc.displayHeight - h - y, w, h);
-        RenderShapes.rect(new Geom(x, mc.displayHeight - h - y, w, h), 0, 0xff);
+//        RenderShapes.rect(new Geom(x, mc.displayHeight - h - y, w, h), 0, 0);
         croppingActive = true;
     }
 

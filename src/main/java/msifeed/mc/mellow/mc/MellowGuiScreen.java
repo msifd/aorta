@@ -1,5 +1,6 @@
 package msifeed.mc.mellow.mc;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import msifeed.mc.mellow.handlers.KeyHandler;
 import msifeed.mc.mellow.handlers.MouseHandler;
 import msifeed.mc.mellow.render.RenderUtils;
@@ -104,5 +105,8 @@ public class MellowGuiScreen extends GuiScreen {
 
         if (Widget.focusedWidget instanceof KeyHandler)
             ((KeyHandler) Widget.focusedWidget).onKeyboard(c, k);
+        else {
+            FMLCommonHandler.instance().fireKeyInput();
+        }
     }
 }

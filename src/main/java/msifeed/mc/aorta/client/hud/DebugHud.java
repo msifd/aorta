@@ -4,7 +4,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.aorta.chat.usage.LangAttribute;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.attributes.StatusAttribute;
-import msifeed.mc.aorta.core.character.BodyPart;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.character.Grade;
@@ -72,9 +71,9 @@ public enum DebugHud {
             lines.add("  }");
 
             lines.add("  bodyParts: {");
-            for (BodyPart bodyPart : character.bodyParts.values()) {
-                lines.add("    " + bodyPart.toLineString());
-            }
+            character.bodyParts.values().stream().sorted().forEach(bp -> {
+                lines.add("    " + bp.toLineString());
+            });
             lines.add("  }");
 
             lines.add("  traits [");
@@ -112,6 +111,7 @@ public enum DebugHud {
             lines.add("  }");
 
             lines.add("  shield: " + status.shield);
+            lines.add("  sanity: " + status.sanity);
 
             lines.add("}");
         });

@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.client.gui.fighter;
+package msifeed.mc.aorta.client.gui.status_editor;
 
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.attributes.StatusAttribute;
@@ -38,6 +38,8 @@ public class ScreenFightHelper extends MellowGuiScreen {
             return;
         }
 
+        windowContent.addChild(new Label("Entity: " + entity.getCommandSenderName()));
+        windowContent.addChild(new Separator());
         windowContent.addChild(new BodypartHealthView(character, charStatus));
 
         final ButtonLabel submitBtn = new ButtonLabel("Apply");

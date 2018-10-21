@@ -1,10 +1,10 @@
-package msifeed.mc.aorta.client.gui.fighter;
+package msifeed.mc.aorta.client.gui.status_editor;
 
-import msifeed.mc.aorta.core.character.BodyPart;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.status.BodyPartHealth;
 import msifeed.mc.aorta.core.status.BodyShield;
 import msifeed.mc.aorta.core.status.CharStatus;
+import msifeed.mc.mellow.layout.AnchorLayout;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.widgets.Widget;
@@ -40,41 +40,54 @@ class BodypartHealthView extends Widget {
             return;
         }
 
-        for (BodyPart bp : character.bodyParts.values()) {
+        character.bodyParts.values().stream().sorted().forEach(bp -> {
             final BodyPartHealth bph = charStatus.health.getOrDefault(bp.name, new BodyPartHealth(bp.max, (short) 0));
 
             final FlatButtonLabel b = new FlatButtonLabel();
             b.setLabel(String.format("\"%s\" - %d/%d + %d", bp.name, bph.health, bp.max, bph.armor));
+            b.setLayout(new AnchorLayout(AnchorLayout.Anchor.RIGHT, AnchorLayout.Anchor.CENTER));
             b.setClickCallback(() -> getTopParent().addChild(new BodypartHealthDialog(bp, bph, h -> {
                 charStatus.health.put(bp.name, h);
                 refill();
             })));
             bodypartList.addChild(b);
-        }
+        });
 
         bodypartList.addChild(new Separator());
 
-        final Widget shield = new Widget();
-        shield.setLayout(new GridLayout());
+        final Widget params = new Widget();
+        params.setLayout(new GridLayout());
 
-        shield.addChild(new Label("Shield type"));
+        params.addChild(new Label("Shield type"));
         final DropList<BodyShield.Type> shieldType = new DropList<>(Arrays.asList(BodyShield.Type.values()));
         shieldType.selectItem(charStatus.shield.type.ordinal());
         shieldType.setSelectCallback(type -> charStatus.shield.type = type);
-        shield.addChild(shieldType);
+        params.addChild(shieldType);
 
-        shield.addChild(new Label("Shield power"));
+        params.addChild(new Label("Shield power"));
         final TextInput shieldPower = new TextInput();
         shieldPower.getSizeHint().x = 30;
         shieldPower.setText(String.valueOf(charStatus.shield.power));
         shieldPower.setFilter(BodypartHealthView::shieldPowerFilter);
         shieldPower.setCallback(s -> charStatus.shield.power = (short) shieldPower.getInt());
-        shield.addChild(shieldPower);
+        params.addChild(shieldPower);
 
-        bodypartList.addChild(shield);
+        params.addChild(new Label("Sanity"));
+        final TextInput sanityInput = new TextInput();
+//        sanityInput.getSizeHint().x = 30;
+        sanityInput.setText(String.valueOf(charStatus.sanity));
+        sanityInput.setFilter(BodypartHealthView::sanityFilter);
+        sanityInput.setCallback(s -> charStatus.sanity = (byte) sanityInput.getInt());
+        params.addChild(sanityInput);
+
+        bodypartList.addChild(params);
     }
 
     private static boolean shieldPowerFilter(String s) {
-        return s.length() < 5 && TextInput.isSignedDigit(s);
+        return s.length() < 5 && TextInput.isUnsignedDigit(s);
+    }
+
+    private static boolean sanityFilter(String s) {
+        return s.length() <= 3 && TextInput.isUnsignedDigit(s) && (s.length() <= 0 || Short.parseShort(s) <= 125);
     }
 }
