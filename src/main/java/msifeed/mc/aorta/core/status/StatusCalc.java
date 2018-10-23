@@ -24,9 +24,8 @@ public class StatusCalc {
         return totalDamage(status) - fatalDamage(c);
     }
 
-    public static int disfunction(int max) {
-        final HealthDefines defines = Aorta.DEFINES.get().health;
-        return (int) Math.max(1, Math.floor((double) max * defines.disfunction));
+    public static int disfunction(Character c, int max) {
+        return (int) Math.max(1, Math.floor((double) max * c.disfunctionRate));
     }
 
     private static double getFatalRate(Character c) {

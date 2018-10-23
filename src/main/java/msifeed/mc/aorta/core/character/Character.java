@@ -15,6 +15,7 @@ public class Character {
     public EnumMap<Feature, Grade> features = new EnumMap<>(Feature.class);
     public HashMap<String, BodyPart> bodyParts = new HashMap<>();
     public Set<Trait> traits = new HashSet<>();
+    public double disfunctionRate = 0.2;
 
     public Character() {
         final Feature[] featureEnum = Feature.values();

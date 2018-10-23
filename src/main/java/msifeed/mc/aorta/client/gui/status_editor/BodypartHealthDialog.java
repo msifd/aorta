@@ -1,6 +1,7 @@
 package msifeed.mc.aorta.client.gui.status_editor;
 
 import msifeed.mc.aorta.core.character.BodyPart;
+import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.status.BodyPartHealth;
 import msifeed.mc.aorta.core.status.StatusCalc;
 import msifeed.mc.mellow.layout.GridLayout;
@@ -20,7 +21,7 @@ class BodypartHealthDialog extends Window {
 
     private final ButtonLabel doneBtn = new ButtonLabel();
 
-    BodypartHealthDialog(BodyPart bodyPart, BodyPartHealth health, Consumer<BodyPartHealth> consumer) {
+    BodypartHealthDialog(Character c, BodyPart bodyPart, BodyPartHealth health, Consumer<BodyPartHealth> consumer) {
         this.bodypart = new BodyPart(bodyPart);
         this.health = new BodyPartHealth(health);
         setTitle("Edit health");
@@ -37,7 +38,7 @@ class BodypartHealthDialog extends Window {
         partInfo.addChild(new Label("Max health"));
         partInfo.addChild(new Label(String.valueOf(bodyPart.max)));
         partInfo.addChild(new Label("Disfunction"));
-        partInfo.addChild(new Label(String.valueOf(StatusCalc.disfunction(bodypart.max))));
+        partInfo.addChild(new Label(String.valueOf(StatusCalc.disfunction(c, bodypart.max))));
         content.addChild(partInfo);
 
         content.addChild(new Separator());

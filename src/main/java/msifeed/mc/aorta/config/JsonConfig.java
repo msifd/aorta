@@ -45,8 +45,12 @@ public class JsonConfig<T> {
     @Subscribe
     public void onOverrideEvent(ConfigEvent.Override event) {
         final String s = event.configs.get(filename);
-        if (s != null)
-            value = gson.fromJson(s, type.getType());
+        try {
+            if (s != null)
+                value = gson.fromJson(s, type.getType());
+        } catch (Exception e) {
+            ConfigManager.logger.error(e);
+        }
     }
 
     private void read(File configFile) {

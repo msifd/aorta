@@ -46,7 +46,7 @@ class BodypartHealthView extends Widget {
             final FlatButtonLabel b = new FlatButtonLabel();
             b.setLabel(String.format("\"%s\" - %d/%d + %d", bp.name, bph.health, bp.max, bph.armor));
             b.setLayout(new AnchorLayout(AnchorLayout.Anchor.RIGHT, AnchorLayout.Anchor.CENTER));
-            b.setClickCallback(() -> getTopParent().addChild(new BodypartHealthDialog(bp, bph, h -> {
+            b.setClickCallback(() -> getTopParent().addChild(new BodypartHealthDialog(character, bp, bph, h -> {
                 charStatus.health.put(bp.name, h);
                 refill();
             })));

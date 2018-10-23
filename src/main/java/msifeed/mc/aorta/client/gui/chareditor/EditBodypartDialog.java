@@ -1,6 +1,7 @@
 package msifeed.mc.aorta.client.gui.chareditor;
 
 import msifeed.mc.aorta.core.character.BodyPart;
+import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.status.StatusCalc;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.layout.ListLayout;
@@ -16,20 +17,22 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 
 class EditBodypartDialog extends Window {
+    private final Character character;
     private final BodyPart bodypart;
 
     private final Label disfuncLabel = new Label();
     private final ButtonLabel doneBtn = new ButtonLabel();
 
-    EditBodypartDialog(Consumer<BodyPart> consumer) {
-        this(new BodyPart(), consumer);
+    EditBodypartDialog(Character character, Consumer<BodyPart> consumer) {
+        this(character, new BodyPart(), consumer);
         setTitle("New bodypart");
         doneBtn.setLabel("Add part");
 
         bodypart.type = BodyPart.Type.HEAD; // Fix droplist
     }
 
-    EditBodypartDialog(BodyPart bodyPart, Consumer<BodyPart> consumer) {
+    EditBodypartDialog(Character character, BodyPart bodyPart, Consumer<BodyPart> consumer) {
+        this.character = character;
         this.bodypart = new BodyPart(bodyPart);
         setTitle("Edit bodypart");
         setZLevel(5);
@@ -114,7 +117,7 @@ class EditBodypartDialog extends Window {
     }
 
     private void updateDisfunc() {
-        disfuncLabel.setText(String.valueOf(StatusCalc.disfunction(bodypart.max)));
+        disfuncLabel.setText(String.valueOf(StatusCalc.disfunction(character, bodypart.max)));
         disfuncLabel.getSizeHint().y += 2;
     }
 

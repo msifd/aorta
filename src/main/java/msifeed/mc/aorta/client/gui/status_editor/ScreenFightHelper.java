@@ -13,13 +13,10 @@ import msifeed.mc.mellow.widgets.window.Window;
 import net.minecraft.entity.EntityLivingBase;
 
 public class ScreenFightHelper extends MellowGuiScreen {
-    private final EntityLivingBase entity;
     private Character character;
     private CharStatus charStatus;
 
     public ScreenFightHelper(EntityLivingBase entity) {
-        this.entity = entity;
-
         final Window window = new Window();
         window.setTitle("Fight Helper");
         scene.addChild(window);

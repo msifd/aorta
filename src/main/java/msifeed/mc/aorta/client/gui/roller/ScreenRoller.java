@@ -1,35 +1,40 @@
-package msifeed.mc.aorta.client.gui;
+package msifeed.mc.aorta.client.gui.roller;
 
-import msifeed.mc.aorta.core.character.Feature;
-import msifeed.mc.aorta.core.net.RollRequests;
 import msifeed.mc.mellow.layout.GridLayout;
+import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.basic.Label;
-import msifeed.mc.mellow.widgets.button.ButtonLabel;
+import msifeed.mc.mellow.widgets.basic.Separator;
 import msifeed.mc.mellow.widgets.input.TextInput;
 import msifeed.mc.mellow.widgets.window.Window;
+import net.minecraft.entity.EntityLivingBase;
 
 public class ScreenRoller extends MellowGuiScreen {
-    private static int lastModifier = 0;
-    private static long lastRolled = 0;
+    static int lastModifier = 0;
+    static long lastRolled = 0;
 
-    public ScreenRoller() {
+//    private Character character;
+//    private CharStatus charStatus;
+
+    public ScreenRoller(EntityLivingBase entity) {
         final Window window = new Window();
         window.setTitle("Dice Roller");
         scene.addChild(window);
 
         final Widget windowContent = window.getContent();
 
-        final Widget buttons = new Widget();
-        buttons.setLayout(new GridLayout());
-        windowContent.addChild(buttons);
+//        CharacterAttribute.get(entity).ifPresent(c -> character = new Character(c));
+//        StatusAttribute.get(entity).ifPresent(c -> charStatus = new CharStatus(c));
 
-        for (Feature f : Feature.values()) {
-            final ButtonLabel b = new ButtonLabel(f.toString());
-            b.setClickCallback(() -> roll(f, lastModifier));
-            buttons.addChild(b);
-        }
+        final Widget buttons = new Widget();
+        buttons.setLayout(ListLayout.HORIZONTAL);
+        buttons.addChild(new FeatureRollsView(entity));
+        buttons.addChild(new Separator());
+        buttons.addChild(new FightRollView(entity));
+
+        windowContent.addChild(buttons);
+        windowContent.addChild(new Separator());
 
         final Widget modifiers = new Widget();
         modifiers.setLayout(new GridLayout());
@@ -49,14 +54,6 @@ public class ScreenRoller extends MellowGuiScreen {
     @Override
     public boolean doesGuiPauseGame() {
         return false;
-    }
-
-    private void roll(Feature feature, int mod) {
-        if (System.currentTimeMillis() - lastRolled < 1000)
-            return;
-
-        RollRequests.rollFeature(feature, mod);
-        lastRolled = System.currentTimeMillis();
     }
 
     private void parseNumber(String s) {

@@ -1,7 +1,7 @@
 package msifeed.mc.aorta.core.character;
 
 public enum Feature {
-    STRENGTH, DEXTERITY, TENACITY, INTELLIGENCE;
+    STRENGTH, DEXTERITY, ENDURANCE, INTELLIGENCE;
 
     @Override
     public String toString() {
@@ -10,8 +10,8 @@ public enum Feature {
                 return "Strength";
             case DEXTERITY:
                 return "Dexterity";
-            case TENACITY:
-                return "Tenacity";
+            case ENDURANCE:
+                return "Endurance";
             case INTELLIGENCE:
                 return "Intelligence";
             default:

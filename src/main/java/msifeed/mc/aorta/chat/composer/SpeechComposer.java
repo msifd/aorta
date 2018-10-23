@@ -21,7 +21,7 @@ public class SpeechComposer implements ChatComposer {
     public ChatMessage compose(EntityPlayer player, String text) {
         final ChatMessage message = new ChatMessage();
         message.type = SpeechType.SPEECH;
-        message.language = LangAttribute.get(player).orElse(Language.MENALA);
+        message.language = LangAttribute.get(player).orElse(Language.VANILLA);
         message.radius = getSpeechRadius(text);
         message.speaker = player.getDisplayName();
         message.text = text;

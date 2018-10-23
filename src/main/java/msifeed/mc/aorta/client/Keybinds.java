@@ -20,7 +20,7 @@ public enum Keybinds {
     private final HashMap<KeyBinding, Runnable> callbacks = new HashMap<>();
 
     public void init() {
-        callbacks.put(rollerScreen, Aorta.GUI_HANDLER::toggleRoller);
+        callbacks.put(rollerScreen, () -> Aorta.GUI_HANDLER.toggleRoller(Minecraft.getMinecraft().thePlayer));
         callbacks.put(statusScreen, () -> Aorta.GUI_HANDLER.toggleStatusEditor(Minecraft.getMinecraft().thePlayer));
 
         KeyBinding[] keyBindings = new KeyBinding[callbacks.size()];
