@@ -3,6 +3,7 @@ package msifeed.mc.aorta.client.gui.roller;
 import msifeed.mc.aorta.core.net.RollRequests;
 import msifeed.mc.aorta.core.rules.FightAction;
 import msifeed.mc.aorta.utils.L10n;
+import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.basic.Separator;
@@ -16,16 +17,23 @@ class FightRollView extends Widget {
         this.entity = entity;
         setLayout(ListLayout.VERTICAL);
 
-        addChild(makeActionButton(FightAction.HIT));
-        addChild(makeActionButton(FightAction.SPECIAL_HIT));
-        addChild(makeActionButton(FightAction.SHOT));
-        addChild(makeActionButton(FightAction.SPECIAL_SHOT));
+        final Widget attack = new Widget();
+        attack.setLayout(new GridLayout());
+        attack.addChild(makeActionButton(FightAction.HIT));
+        attack.addChild(makeActionButton(FightAction.SPECIAL_HIT));
+        attack.addChild(makeActionButton(FightAction.SHOT));
+        attack.addChild(makeActionButton(FightAction.SPECIAL_SHOT));
+        addChild(attack);
+
         addChild(new Separator());
-        addChild(makeActionButton(FightAction.SELF_USE));
-        addChild(makeActionButton(FightAction.ENEMY_USE));
-        addChild(new Separator());
-        addChild(makeActionButton(FightAction.BLOCK));
-        addChild(makeActionButton(FightAction.DODGE));
+
+        final Widget other = new Widget();
+        other.setLayout(new GridLayout());
+        other.addChild(makeActionButton(FightAction.SELF_USE));
+        other.addChild(makeActionButton(FightAction.ENEMY_USE));
+        other.addChild(makeActionButton(FightAction.BLOCK));
+        other.addChild(makeActionButton(FightAction.DODGE));
+        addChild(other);
     }
 
     private Widget makeActionButton(FightAction action) {

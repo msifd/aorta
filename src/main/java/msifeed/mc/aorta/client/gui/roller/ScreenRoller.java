@@ -28,7 +28,7 @@ public class ScreenRoller extends MellowGuiScreen {
 //        StatusAttribute.get(entity).ifPresent(c -> charStatus = new CharStatus(c));
 
         final Widget buttons = new Widget();
-        buttons.setLayout(ListLayout.HORIZONTAL);
+        buttons.setLayout(ListLayout.VERTICAL);
         buttons.addChild(new FeatureRollsView(entity));
         buttons.addChild(new Separator());
         buttons.addChild(new FightRollView(entity));
