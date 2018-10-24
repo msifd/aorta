@@ -1,6 +1,7 @@
 package msifeed.mc.aorta.core.character;
 
 import com.google.common.collect.ImmutableList;
+import msifeed.mc.aorta.core.rules.Dices;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -12,8 +13,12 @@ public enum Grade {
             .map(Object::toString)
             .collect(Collectors.toList()));
 
-    public int getValue() {
+    public int value() {
         return ordinal() + 1;
+    }
+
+    public int roll() {
+        return Dices.feature(value());
     }
 
     @Override

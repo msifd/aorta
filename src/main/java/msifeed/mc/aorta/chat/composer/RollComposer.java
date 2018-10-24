@@ -32,20 +32,25 @@ public class RollComposer implements ChatComposer {
     }
 
     public static String makeText(EntityLivingBase entity, FeatureRoll result) {
-        final String featStr = L10n.tr("aorta.feature." + result.feature.name().toLowerCase());
-        final String name = getName(entity);
-        final String modStr = formatMod(result.mod);
-        final String sanityStr = formatMod(result.sanity);
-        return String.format("[ROLL] \u00a7r%s\u00a76: %s%s%s = %d", name, featStr, modStr, sanityStr, result.result);
+        final String action = L10n.tr("aorta.feature." + result.feature.name().toLowerCase());
+        return makeText("ROLL", getName(entity), action, result.roll, result.mod, result.sanity, result.result);
     }
 
     public static String makeText(EntityLivingBase entity, FightRoll result) {
-        final String actionStr = L10n.tr("aorta.action." + result.action.name().toLowerCase());
-        final String name = getName(entity);
-        final String randStr = "10";
-        final String modStr = formatMod(result.mod);
-        final String sanityStr = formatMod(result.sanity);
-        return String.format("[ACTION] \u00a7r%s\u00a76: %s%s%s = %d", name, actionStr, modStr, sanityStr, result.result);
+        final String action = L10n.tr("aorta.action." + result.action.name().toLowerCase());
+        return makeText("ACTION", getName(entity), action, result.roll, result.mod, result.sanity, result.result);
+    }
+
+    private static String makeText(String type, String name, String action, int roll, int mod, int sanity, int result) {
+        if (mod != 0 || sanity != 0) {
+            final String modStr = formatMod(mod);
+            final String sanityStr = formatMod(sanity);
+            // [ACTION] username Hit: [5] - 1 - 1 = 3
+            return String.format("[%s] \u00a7r%s\u00a76 %s: %d%s%s = %d", type, name, action, roll, modStr, sanityStr, result);
+        } else {
+            // [ACTION] username Hit: [5]
+            return String.format("[%s] \u00a7r%s\u00a76 %s: %d", type, name, action, result);
+        }
     }
 
     private static String getName(EntityLivingBase entity) {
