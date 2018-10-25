@@ -1,0 +1,30 @@
+aorta=Аорта
+
+itemGroup.aorta.blocks=Аорта Блоки
+itemGroup.aorta.items=Аорта Предметы
+itemGroup.aorta.tools=Аорта Тулсы
+
+item.tool_debug.name=Дэбаг-тул
+item.tool_char.name=Чар-тул
+item.tool_status.name=Статус-тул
+item.tool_roller.name=Роллер-тул
+
+aorta.gui.roller=Роллер
+aorta.gui.status_editor=Статус
+aorta.gui.char_editor=Персодулятор
+aorta.gui.lang_selector=Языковыбиратель
+
+aorta.feature.strength=Тренированность
+aorta.feature.dexterity=Выучка
+aorta.feature.endurance=Упорство
+aorta.feature.intelligence=Интеллект
+
+aorta.action.hit=Удар
+aorta.action.special_hit=Особый удар
+aorta.action.shot=Выстрел
+aorta.action.special_shot=Особый выстрел
+aorta.action.self_use=Применение
+aorta.action.enemy_use=Использование
+aorta.action.block=Блокирование
+aorta.action.dodge=Уклонение
+aorta.action.psionics=Псионика
