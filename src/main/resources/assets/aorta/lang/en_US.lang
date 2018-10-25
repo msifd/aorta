@@ -1,3 +1,5 @@
+aorta=Aorta
+
 itemGroup.aorta.blocks=Aorta Blocks
 itemGroup.aorta.items=Aorta Items
 itemGroup.aorta.tools=Aorta Tools
@@ -6,6 +8,11 @@ item.tool_debug.name=Debug tool
 item.tool_char.name=Char tool
 item.tool_status.name=Status tool
 item.tool_roller.name=Roller tool
+
+aorta.gui.roller=Роллер
+aorta.gui.status_editor=Статус
+aorta.gui.char_editor=Персодулятор
+aorta.gui.lang_selector=Языковыбиратель
 
 aorta.feature.strength=Тренированность
 aorta.feature.dexterity=Выучка

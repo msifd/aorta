@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.client.gui.status_editor;
+package msifeed.mc.aorta.client.gui.statuseditor;
 
 import msifeed.mc.aorta.core.character.BodyPart;
 import msifeed.mc.aorta.core.status.BodyPartHealth;

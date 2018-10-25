@@ -6,4 +6,5 @@ public class GuiHandler {
     public void toggleRoller(EntityLivingBase entity) { }
     public void openCharEditor(EntityLivingBase entity) { }
     public void toggleStatusEditor(EntityLivingBase entity) { }
+    public void toggleLangSelector(EntityLivingBase entity) { }
 }

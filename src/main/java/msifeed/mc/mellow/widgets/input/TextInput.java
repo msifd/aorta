@@ -9,8 +9,8 @@ import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.utils.Geom;
 import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.input.Keyboard;
 
@@ -88,7 +88,7 @@ public class TextInput extends Widget implements KeyHandler {
         if (System.currentTimeMillis() % 1000 < 500)
             return;
 
-        final FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
+        final FontRenderer fr = RenderManager.instance.getFontRenderer();
         final Geom geom = getGeometry();
         final Geom cursorGeom = new Geom(geom.x, geom.y, 2, fr.FONT_HEIGHT - 2);
         cursorGeom.translate(3 + fr.getStringWidth(text.substring(0, cursor)), 3, geom.z);

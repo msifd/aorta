@@ -1,23 +1,21 @@
 package msifeed.mc.aorta.client;
 
 import cpw.mods.fml.client.FMLClientHandler;
+import msifeed.mc.aorta.client.gui.ScreenLangSelector;
 import msifeed.mc.aorta.client.gui.chareditor.ScreenCharEditor;
 import msifeed.mc.aorta.client.gui.roller.ScreenRoller;
-import msifeed.mc.aorta.client.gui.status_editor.ScreenFightHelper;
+import msifeed.mc.aorta.client.gui.statuseditor.ScreenStatusEditor;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityLivingBase;
+
+import java.util.function.Supplier;
 
 public class GuiHandlerClient extends GuiHandler {
     @Override
     public void toggleRoller(EntityLivingBase entity) {
-        if (!entity.worldObj.isRemote)
-            return;
-        final Minecraft mc = Minecraft.getMinecraft();
-        if (mc.currentScreen instanceof ScreenRoller) {
-            mc.displayGuiScreen(null);
-        } else {
-            FMLClientHandler.instance().displayGuiScreen(mc.thePlayer, new ScreenRoller(entity));
-        }
+        if (entity.worldObj.isRemote)
+            toggleGui(ScreenRoller.class, () -> new ScreenRoller(entity));
     }
 
     @Override
@@ -28,13 +26,22 @@ public class GuiHandlerClient extends GuiHandler {
 
     @Override
     public void toggleStatusEditor(EntityLivingBase entity) {
-        if (!entity.worldObj.isRemote)
-            return;
+        if (entity.worldObj.isRemote)
+            toggleGui(ScreenStatusEditor.class, () -> new ScreenStatusEditor(entity));
+    }
+
+    @Override
+    public void toggleLangSelector(EntityLivingBase entity) {
+        if (entity.worldObj.isRemote)
+            toggleGui(ScreenLangSelector.class, () -> new ScreenLangSelector(entity));
+    }
+
+    private void toggleGui(Class<?> c, Supplier<GuiScreen> screenSupplier) {
         final Minecraft mc = Minecraft.getMinecraft();
-        if (mc.currentScreen instanceof ScreenFightHelper) {
+        if (c.isInstance(mc.currentScreen)) {
             mc.displayGuiScreen(null);
         } else {
-            FMLClientHandler.instance().displayGuiScreen(mc.thePlayer, new ScreenFightHelper(entity));
+            FMLClientHandler.instance().displayGuiScreen(mc.thePlayer, screenSupplier.get());
         }
     }
 }

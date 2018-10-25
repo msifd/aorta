@@ -11,10 +11,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public class LangAttribute extends PlayerAttribute<Language> {
     public static final LangAttribute INSTANCE = new LangAttribute();
@@ -59,19 +58,32 @@ public class LangAttribute extends PlayerAttribute<Language> {
     public Optional<Language> getValue(Entity entity) {
         Optional<Language> result = super.getValue(entity);
 
-        if (!result.isPresent() || result.get() == Language.VANILLA) {
-            set(entity, findLang(entity));
-            return super.getValue(entity);
+        if (!result.isPresent())
+            return Optional.empty();
+
+        if (!isLangKnown(entity, result.get())) {
+            final Language newLang = findLang(entity);
+            if (newLang != result.get())
+                set(entity, newLang);
+            return Optional.of(newLang);
         }
 
         return result;
     }
 
+    private boolean isLangKnown(Entity entity, Language language) {
+        final Character character = CharacterAttribute.get(entity).orElse(null);
+        return character != null && character.traits.contains(language.trait);
+    }
+
     private Language findLang(Entity entity) {
-        final Set<Trait> traits = CharacterAttribute.get(entity).map(Character::traits).orElse(Collections.emptySet());
-        final Set<Trait> langTraits = TraitType.LANG.filter(traits);
-        return Arrays.stream(Language.values())
-                .filter(language -> langTraits.contains(language.trait))
-                .findFirst().orElse(Language.VANILLA);
+        final Character character = CharacterAttribute.get(entity).orElse(null);
+        if (character == null)
+            return Language.VANILLA;
+
+        final Set<Trait> langTraits = TraitType.LANG.filter(character.traits);
+        return Stream.of(Language.values())
+                .filter(l -> langTraits.contains(l.trait))
+                .findAny().orElse(Language.VANILLA);
     }
 }

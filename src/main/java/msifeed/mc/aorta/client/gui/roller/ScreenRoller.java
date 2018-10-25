@@ -1,5 +1,6 @@
 package msifeed.mc.aorta.client.gui.roller;
 
+import msifeed.mc.aorta.utils.L10n;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
@@ -14,18 +15,12 @@ public class ScreenRoller extends MellowGuiScreen {
     static int lastModifier = 0;
     static long lastRolled = 0;
 
-//    private Character character;
-//    private CharStatus charStatus;
-
     public ScreenRoller(EntityLivingBase entity) {
         final Window window = new Window();
-        window.setTitle("Dice Roller");
+        window.setTitle(L10n.tr("aorta.gui.roller"));
         scene.addChild(window);
 
         final Widget windowContent = window.getContent();
-
-//        CharacterAttribute.get(entity).ifPresent(c -> character = new Character(c));
-//        StatusAttribute.get(entity).ifPresent(c -> charStatus = new CharStatus(c));
 
         final Widget buttons = new Widget();
         buttons.setLayout(ListLayout.VERTICAL);

@@ -6,6 +6,7 @@ import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.character.Grade;
 import msifeed.mc.aorta.core.status.CharStatus;
+import msifeed.mc.aorta.utils.L10n;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
@@ -26,7 +27,6 @@ import java.util.Map;
 public class ScreenCharEditor extends MellowGuiScreen {
     private final EntityLivingBase entity;
 
-    private final Widget mainSection = new Widget();
     private final Widget leftSection = new Widget();
     private final Widget rightSection = new Widget();
     private final Button submitBtn = new ButtonLabel("Submit");
@@ -38,13 +38,14 @@ public class ScreenCharEditor extends MellowGuiScreen {
         this.entity = entity;
 
         final Window window = new Window();
-        window.setTitle("Char Editor");
+        window.setTitle(L10n.tr("aorta.gui.char_editor"));
         scene.addChild(window);
 
         final Widget content = window.getContent();
 
         leftSection.setLayout(ListLayout.VERTICAL);
         rightSection.setLayout(ListLayout.VERTICAL);
+        Widget mainSection = new Widget();
         mainSection.setLayout(new ListLayout(ListLayout.Direction.HORIZONTAL, 2));
         mainSection.addChild(leftSection);
         mainSection.addChild(rightSection);

@@ -13,6 +13,7 @@ import msifeed.mc.aorta.core.things.ItemDebugTool;
 import msifeed.mc.aorta.core.traits.Trait;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,8 +33,11 @@ public enum DebugHud {
     @SubscribeEvent
     public void onRenderOverlay(RenderGameOverlayEvent.Text event) {
         final Minecraft mc = Minecraft.getMinecraft();
-        final FontRenderer fr = mc.fontRenderer;
+        final FontRenderer fr = RenderManager.instance.getFontRenderer();
         final EntityPlayer player = mc.thePlayer;
+
+        if (fr == null)
+            return;
 
         final ItemStack heldItem = player.getHeldItem();
         if (heldItem == null || !(heldItem.getItem() instanceof ItemDebugTool))

@@ -1,9 +1,10 @@
-package msifeed.mc.aorta.client.gui.status_editor;
+package msifeed.mc.aorta.client.gui.statuseditor;
 
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.attributes.StatusAttribute;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.status.CharStatus;
+import msifeed.mc.aorta.utils.L10n;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.basic.Label;
@@ -12,13 +13,13 @@ import msifeed.mc.mellow.widgets.button.ButtonLabel;
 import msifeed.mc.mellow.widgets.window.Window;
 import net.minecraft.entity.EntityLivingBase;
 
-public class ScreenFightHelper extends MellowGuiScreen {
+public class ScreenStatusEditor extends MellowGuiScreen {
     private Character character;
     private CharStatus charStatus;
 
-    public ScreenFightHelper(EntityLivingBase entity) {
+    public ScreenStatusEditor(EntityLivingBase entity) {
         final Window window = new Window();
-        window.setTitle("Fight Helper");
+        window.setTitle(L10n.tr("aorta.gui.status_editor"));
         scene.addChild(window);
 
         final Widget windowContent = window.getContent();

@@ -4,7 +4,8 @@ import msifeed.mc.mellow.Mellow;
 import msifeed.mc.mellow.render.RenderWidgets;
 import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.entity.RenderManager;
 
 public class Label extends Widget {
     public int brightColor = Mellow.THEME.colors.get("text_bright");
@@ -28,9 +29,9 @@ public class Label extends Widget {
     }
 
     public void setText(String text) {
-        final Minecraft mc = Minecraft.getMinecraft();
+        final FontRenderer fr = RenderManager.instance.getFontRenderer();
         this.text = text;
-        setSizeHint(mc.fontRenderer.getStringWidth(text), mc.fontRenderer.FONT_HEIGHT);
+        setSizeHint(fr.getStringWidth(text), fr.FONT_HEIGHT);
     }
 
     protected int getColor() {

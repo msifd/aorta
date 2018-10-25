@@ -15,13 +15,15 @@ import java.util.HashMap;
 public enum Keybinds {
     INSTANCE;
 
-    private final KeyBinding rollerScreen = new KeyBinding("key.aorta.roller", Keyboard.KEY_C, "key.aorta");
-    private final KeyBinding statusScreen = new KeyBinding("key.aorta.status", Keyboard.KEY_V, "key.aorta");
+    private final KeyBinding rollerScreen = new KeyBinding("aorta.gui.roller", Keyboard.KEY_C, "aorta");
+    private final KeyBinding statusScreen = new KeyBinding("aorta.gui.status", Keyboard.KEY_V, "aorta");
+    private final KeyBinding langScreen = new KeyBinding("aorta.gui.lang_selector", Keyboard.KEY_Y, "aorta");
     private final HashMap<KeyBinding, Runnable> callbacks = new HashMap<>();
 
     public void init() {
         callbacks.put(rollerScreen, () -> Aorta.GUI_HANDLER.toggleRoller(Minecraft.getMinecraft().thePlayer));
         callbacks.put(statusScreen, () -> Aorta.GUI_HANDLER.toggleStatusEditor(Minecraft.getMinecraft().thePlayer));
+        callbacks.put(langScreen, () -> Aorta.GUI_HANDLER.toggleLangSelector(Minecraft.getMinecraft().thePlayer));
 
         KeyBinding[] keyBindings = new KeyBinding[callbacks.size()];
         callbacks.keySet().toArray(keyBindings);
@@ -34,7 +36,6 @@ public enum Keybinds {
     @SubscribeEvent
     public void onKeyPressed(InputEvent.KeyInputEvent event) {
         for (HashMap.Entry<KeyBinding, Runnable> e : callbacks.entrySet()) {
-//            if (e.getKey().isPressed())
             if (Keyboard.isKeyDown(e.getKey().getKeyCode()))
                 e.getValue().run();
         }
