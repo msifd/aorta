@@ -9,7 +9,7 @@ import msifeed.mc.aorta.defines.data.FightRules;
 
 public class Defines {
     private JsonConfig<AortaDefines> config = ConfigManager.getConfig(ConfigMode.SYNC, TypeToken.get(AortaDefines.class), "defines.json");
-    private JsonConfig<FightRules> rules = ConfigManager.getConfig(ConfigMode.CLIENT, TypeToken.get(FightRules.class), "rules.json");
+    private JsonConfig<FightRules> rules = ConfigManager.getConfig(ConfigMode.SYNC, TypeToken.get(FightRules.class), "rules.json");
 
     public AortaDefines get() {
         return config.get();
