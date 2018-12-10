@@ -9,7 +9,7 @@ import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.widgets.Widget;
 
 class DropListPopup extends Widget {
-    private final Part listPart = Mellow.THEME.parts.get("dropdown_list");
+    private final Part listPart = Mellow.getPart("dropdown_list");
     private final DropList parent;
 
     DropListPopup(DropList parent) {

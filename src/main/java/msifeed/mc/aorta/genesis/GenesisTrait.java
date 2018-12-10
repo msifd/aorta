@@ -36,6 +36,9 @@ public enum GenesisTrait {
     // Food
     consumable, no_saturation,
 
+    // Books
+    book,
+
     // Rarity
     poor, common, uncommon, rare, epic, legendary,
 

@@ -10,7 +10,7 @@ import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
 
 public class ScrollArea extends Widget {
-    private Part scrollbarBgPart = Mellow.THEME.parts.get("scrollbar_bg");
+    private Part scrollbarBgPart = Mellow.getPart("scrollbar_bg");
 
     ScrollAreaThumb thumb = new ScrollAreaThumb(this);
     Widget content = new Widget();

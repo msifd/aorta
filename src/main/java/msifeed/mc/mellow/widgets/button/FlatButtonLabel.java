@@ -5,8 +5,8 @@ import msifeed.mc.mellow.render.RenderParts;
 import msifeed.mc.mellow.theme.Part;
 
 public class FlatButtonLabel extends ButtonLabel {
-    private Part flatNormalPart = Mellow.THEME.parts.get("flat_button_normal");
-    private Part flatHoverPart = Mellow.THEME.parts.get("flat_button_hover");
+    private Part flatNormalPart = Mellow.getPart("flat_button_normal");
+    private Part flatHoverPart = Mellow.getPart("flat_button_hover");
 
     public FlatButtonLabel() {
         super();

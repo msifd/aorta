@@ -9,7 +9,7 @@ import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
 
 public class Separator extends Widget {
-    protected Part horizontalPart = Mellow.THEME.parts.get("separator_hor");
+    protected Part horizontalPart = Mellow.getPart("separator_hor");
 
     public Separator() {
         setSizeHint(horizontalPart.size.x, horizontalPart.size.y);

@@ -5,6 +5,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import msifeed.mc.aorta.attributes.AttributeHandler;
+import msifeed.mc.aorta.books.RemoteBookManager;
 import msifeed.mc.aorta.chat.Speechat;
 import msifeed.mc.aorta.client.GuiHandler;
 import msifeed.mc.aorta.commands.AortaCommand;
@@ -57,6 +58,7 @@ public class Aorta {
     public void init() {
         CORE.init();
         GENESIS.init();
+        RemoteBookManager.init();
 
         speechat.init();
 

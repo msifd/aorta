@@ -37,5 +37,15 @@
       "armor",
       "helmet"
     ]
+  },
+  {
+    "id": "test_book",
+    "title": "Мемуары Мсяйши",
+    "texture": "minecraft:book_normal",
+    "index": "memuars",
+    "traits": [
+      "item",
+      "book"
+    ]
   }
 ]

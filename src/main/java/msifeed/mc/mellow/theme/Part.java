@@ -2,11 +2,14 @@ package msifeed.mc.mellow.theme;
 
 import com.google.gson.*;
 import msifeed.mc.mellow.utils.Point;
+import net.minecraft.util.ResourceLocation;
 
 import java.lang.reflect.Type;
 import java.util.Arrays;
 
 public class Part {
+    public transient ResourceLocation sprite;
+
     public Point pos;
     public Point size = null;
 

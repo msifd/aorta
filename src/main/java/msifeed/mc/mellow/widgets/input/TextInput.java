@@ -18,8 +18,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class TextInput extends Widget implements KeyHandler {
-    protected Part normalPart = Mellow.THEME.parts.get("sunken");
-    protected Part focusedPart = Mellow.THEME.parts.get("sunken_focused");
+    protected Part normalPart = Mellow.getPart("sunken");
+    protected Part focusedPart = Mellow.getPart("sunken_focused");
     protected int darkColor = Mellow.THEME.colors.get("text_dark");
 
     private Function<String, Boolean> filter = s -> true;

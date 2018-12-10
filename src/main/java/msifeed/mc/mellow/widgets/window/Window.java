@@ -8,7 +8,7 @@ import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
 
 public class Window extends Widget {
-    private Part backgroundPart = Mellow.THEME.parts.get("window");
+    private Part backgroundPart = Mellow.getPart("window");
     private WindowHeader header = new WindowHeader(this);
     private Widget content = new Widget();
 

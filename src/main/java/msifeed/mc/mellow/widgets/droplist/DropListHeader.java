@@ -10,10 +10,10 @@ import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
 
 class DropListHeader extends ButtonLabel {
-    private Part textPart = Mellow.THEME.parts.get("dropdown_text");
-    private Part downIconPart = Mellow.THEME.parts.get("dropdown_icon");
-    private Part buttonNormalPart = Mellow.THEME.parts.get("dropdown_button");
-    private Part buttonHoverPart = Mellow.THEME.parts.get("dropdown_button_hover");
+    private Part textPart = Mellow.getPart("dropdown_text");
+    private Part downIconPart = Mellow.getPart("dropdown_icon");
+    private Part buttonNormalPart = Mellow.getPart("dropdown_button");
+    private Part buttonHoverPart = Mellow.getPart("dropdown_button_hover");
 
     private DropList parent;
     private Geom textBgGeom = new Geom();

@@ -9,12 +9,11 @@ import net.minecraft.util.ResourceLocation;
 import java.util.HashMap;
 
 public class Theme {
-    public transient ResourceLocation sprite;
     public HashMap<String, Part> parts;
     public transient HashMap<String, Integer> colors = new HashMap<>();
 
     @SerializedName("colors")
-    private HashMap<String, String> colorsStr; // Used for reading hex values
+    private HashMap<String, String> colorsHex; // Using to read hex values instead of ints
 
     public static Theme load(ResourceLocation sprite, String metaJson) {
         final Gson gson = (new GsonBuilder())
@@ -23,8 +22,9 @@ public class Theme {
                 .create();
 
         final Theme theme = gson.fromJson(metaJson, Theme.class);
-        theme.sprite = sprite;
-        for (HashMap.Entry<String, String> e : theme.colorsStr.entrySet())
+        for (Part p : theme.parts.values())
+            p.sprite = sprite;
+        for (HashMap.Entry<String, String> e : theme.colorsHex.entrySet())
             theme.colors.put(e.getKey(), Integer.parseInt(e.getValue(), 16));
 
         return theme;

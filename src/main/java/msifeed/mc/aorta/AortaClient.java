@@ -2,6 +2,7 @@ package msifeed.mc.aorta;
 
 import com.google.common.io.CharStreams;
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import msifeed.mc.aorta.client.Keybinds;
 import msifeed.mc.aorta.utils.DRM;
 import msifeed.mc.mellow.Mellow;
@@ -15,11 +16,15 @@ import java.nio.charset.StandardCharsets;
 
 public class AortaClient extends Aorta {
     @Override
+    public void preInit(FMLPreInitializationEvent event) {
+        super.preInit(event);
+        initMellow();
+    }
+
+    @Override
     public void init() {
         super.init();
-
         DRM.apply();
-        initMellow();
         Keybinds.INSTANCE.init();
     }
 

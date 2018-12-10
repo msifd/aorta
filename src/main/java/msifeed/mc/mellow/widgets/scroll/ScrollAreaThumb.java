@@ -11,8 +11,8 @@ import msifeed.mc.mellow.widgets.button.Button;
 import net.minecraft.util.MathHelper;
 
 class ScrollAreaThumb extends Button implements MouseHandler.AllBasic {
-    private Part thumbPart = Mellow.THEME.parts.get("scrollbar_thumb");
-    private Part thumbHoverPart = Mellow.THEME.parts.get("scrollbar_thumb_hover");
+    private Part thumbPart = Mellow.getPart("scrollbar_thumb");
+    private Part thumbHoverPart = Mellow.getPart("scrollbar_thumb_hover");
 
     private final ScrollArea scrollArea;
     private final DragHandler dragHandler = new DragHandler(this);

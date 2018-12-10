@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class BlockTextureLayout {
-
     private List<String> rawTextures;
     private IIcon[] textures;
     private int[] textureLayout;

@@ -7,7 +7,9 @@ import msifeed.mc.aorta.genesis.AortaCreativeTab;
 import msifeed.mc.aorta.genesis.Generator;
 import msifeed.mc.aorta.genesis.GenesisTrait;
 import msifeed.mc.aorta.genesis.items.data.ArmorData;
+import msifeed.mc.aorta.genesis.items.data.BookData;
 import msifeed.mc.aorta.genesis.items.templates.ArmorTemplate;
+import msifeed.mc.aorta.genesis.items.templates.BookTemplate;
 import msifeed.mc.aorta.genesis.items.templates.FoodTemplate;
 import msifeed.mc.aorta.genesis.items.templates.ItemTemplate;
 import net.minecraft.item.Item;
@@ -31,6 +33,8 @@ public class ItemGenerator implements Generator {
             return new ArmorTemplate(unit, new ArmorData(json));
         if (unit.hasTrait(consumable))
             return new FoodTemplate(unit);
+        if (unit.hasTrait(book))
+            return new BookTemplate(unit, new BookData(json));
         return new ItemTemplate(unit);
     }
 

@@ -7,10 +7,10 @@ import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.widgets.basic.Label;
 
 public class ButtonLabel extends Button {
-    private Part normalPart = Mellow.THEME.parts.get("button_normal");
-    private Part hoverPart = Mellow.THEME.parts.get("button_hover");
-    private Part pressPart = Mellow.THEME.parts.get("button_press");
-    private Part disabledPart = Mellow.THEME.parts.get("button_disabled");
+    private Part normalPart = Mellow.getPart("button_normal");
+    private Part hoverPart = Mellow.getPart("button_hover");
+    private Part pressPart = Mellow.getPart("button_press");
+    private Part disabledPart = Mellow.getPart("button_disabled");
 
     protected Label label = new Label();
 

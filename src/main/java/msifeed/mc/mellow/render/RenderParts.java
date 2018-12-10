@@ -1,6 +1,5 @@
 package msifeed.mc.mellow.render;
 
-import msifeed.mc.mellow.Mellow;
 import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.utils.Geom;
 import msifeed.mc.mellow.utils.Point;
@@ -18,7 +17,7 @@ public final class RenderParts {
         if (w <= 0 || h <= 0)
             return;
 
-        // 256:256 texture aspect ratio
+        // 256:256 sprite aspect ratio
         final double f = 0.00390625;
         final double f1 = 0.00390625;
         Tessellator tessellator = Tessellator.instance;
@@ -38,7 +37,7 @@ public final class RenderParts {
         if (part == null || part.size == null)
             return;
 
-        bindThemeTexture();
+        bindThemeTexture(part);
         slice(x, y, z, part.size.x, part.size.y, part.pos.x, part.pos.y, part.size.x, part.size.y);
     }
 
@@ -46,7 +45,7 @@ public final class RenderParts {
         if (part == null || part.slicesSize == null)
             return;
 
-        bindThemeTexture();
+        bindThemeTexture(part);
 
         final double midWidth = Math.max(geom.w - part.slicesSize[0].x - part.slicesSize[3].x, 0);
         final double midHeight = Math.max(geom.h - part.slicesSize[0].y - part.slicesSize[6].y, 0);
@@ -74,7 +73,7 @@ public final class RenderParts {
         }
     }
 
-    private static void bindThemeTexture() {
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Mellow.THEME.sprite);
+    private static void bindThemeTexture(Part part) {
+        Minecraft.getMinecraft().getTextureManager().bindTexture(part.sprite);
     }
 }
