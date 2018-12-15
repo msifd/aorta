@@ -60,7 +60,7 @@ public class BookView extends Widget {
     }
 
     private void setStyle(RemoteBook.Style style) {
-        if (style == RemoteBook.Style.RICH_BOOK)
+        if (style == RemoteBook.Style.RICH)
             bookParts = BookParts.RICH_BOOK;
         else if (style == RemoteBook.Style.PAD)
             bookParts = BookParts.PAD;

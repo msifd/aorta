@@ -32,13 +32,6 @@ public class ScreenBookViewer extends MellowGuiScreen {
             }
         }
 
-//        final RemoteBook.Style style;
-//        try {
-//            style = RemoteBook.Style.valueOf(tc.getString("style"));
-//        } catch (Exception ignored) {
-//            return;
-//        }
-
         scene.addChild(bookView);
 
         RemoteBookManager.INSTANCE.fetchBook(name, book -> {
@@ -47,8 +40,6 @@ public class ScreenBookViewer extends MellowGuiScreen {
                 closeGui();
                 return;
             }
-//            if (book.style == null)
-//                book.style = style;
             bookView.setBook(book);
         });
     }

@@ -8,7 +8,7 @@ public class RemoteBook {
     public String text = "";
 
     public enum Style {
-        REGULAR("book_regular"), RICH_BOOK("book_rich"), PAD("book_pad"), NOTE("book_note");
+        REGULAR("book_regular"), RICH("book_rich"), PAD("book_pad"), NOTE("book_note");
 
         public final ResourceLocation sprite;
 
