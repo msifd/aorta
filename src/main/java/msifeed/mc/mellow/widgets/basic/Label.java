@@ -8,8 +8,8 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
 
 public class Label extends Widget {
-    public int brightColor = Mellow.THEME.colors.get("text_bright");
-    public int darkColor = Mellow.THEME.colors.get("text_dark");
+    public int brightColor = Mellow.getColor("text_bright");
+    public int darkColor = Mellow.getColor("text_dark");
 
     private String text = "";
     private int color = brightColor;

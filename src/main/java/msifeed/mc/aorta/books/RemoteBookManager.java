@@ -60,6 +60,10 @@ public enum RemoteBookManager {
         CHANNEL.sendToServer(new MessageRemoteBook(MessageRemoteBook.Type.CHECK, name));
     }
 
+    public void sendSign(String name) {
+        CHANNEL.sendToServer(new MessageRemoteBook(MessageRemoteBook.Type.SIGN, name));
+    }
+
     public void receiveResponse(String rawBook) {
         if (fetchConsumer == null) return;
 

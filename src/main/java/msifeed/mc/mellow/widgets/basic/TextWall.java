@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class TextWall extends Widget {
-    public int darkColor = Mellow.THEME.colors.get("text_dark");
+    public int darkColor = Mellow.getColor("text_dark");
     private List<String> lines = Collections.emptyList();
     private int startLine = 0;
     private int maxLines = 10;

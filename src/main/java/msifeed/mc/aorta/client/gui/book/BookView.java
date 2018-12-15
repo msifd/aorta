@@ -2,6 +2,7 @@ package msifeed.mc.aorta.client.gui.book;
 
 import msifeed.mc.aorta.books.RemoteBook;
 import msifeed.mc.mellow.layout.AnchorLayout;
+import msifeed.mc.mellow.layout.FreeLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.render.RenderParts;
 import msifeed.mc.mellow.theme.Part;
@@ -29,17 +30,20 @@ public class BookView extends Widget {
         setSizeHint(192, 192);
         setSizePolicy(SizePolicy.FIXED);
         getMargin().set(36, 10);
-        setLayout(ListLayout.VERTICAL);
+        setLayout(FreeLayout.INSTANCE);
 
         textWall.setLines(Collections.singletonList("Looking for book..."));
         textWall.setMaxLines(BOOK_MAX_LINES);
         flipPage(0);
 
-        addChild(controls);
+        controls.setPos(0, 140);
+
         addChild(textWall);
+        addChild(controls);
     }
 
     public void setBook(RemoteBook book) {
+        setStyle(book.style);
         textWall.setLines(breakLines(book.text));
         flipPage(0);
     }
@@ -53,6 +57,22 @@ public class BookView extends Widget {
     @Override
     protected void renderSelf() {
         RenderParts.slice(bookParts.bookBg, getGeometry());
+    }
+
+    private void setStyle(RemoteBook.Style style) {
+        if (style == RemoteBook.Style.RICH_BOOK)
+            bookParts = BookParts.RICH_BOOK;
+        else if (style == RemoteBook.Style.PAD)
+            bookParts = BookParts.PAD;
+        else if (style == RemoteBook.Style.NOTE)
+            bookParts = BookParts.NOTE;
+        else
+            bookParts = BookParts.REGULAR;
+
+        controls.leftButton.normal = bookParts.leftBtn;
+        controls.leftButton.hover = bookParts.leftBtnHover;
+        controls.rightButton.normal = bookParts.rightBtn;
+        controls.rightButton.hover = bookParts.rightBtnHover;
     }
 
     private static List<String> breakLines(String text) {

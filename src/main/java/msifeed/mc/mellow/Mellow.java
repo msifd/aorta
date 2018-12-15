@@ -11,6 +11,10 @@ public class Mellow {
         return THEME.parts.get(name);
     }
 
+    public static int getColor(String name) {
+        return THEME.colors.get(name);
+    }
+
     public static void loadTheme(ResourceLocation sprite, String metaJson) {
         THEME = Theme.load(sprite, metaJson);
     }

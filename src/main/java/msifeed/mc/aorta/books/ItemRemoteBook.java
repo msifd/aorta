@@ -2,6 +2,7 @@ package msifeed.mc.aorta.books;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.genesis.AortaCreativeTab;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,18 +22,16 @@ public class ItemRemoteBook extends Item {
     }
 
     @Override
-    public boolean hasEffect(ItemStack par1ItemStack, int pass) {
-        return true;
-    }
-
-    @Override
     public boolean getShareTag() {
         return true;
     }
 
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-
+        if (itemStack.hasTagCompound())
+            Aorta.GUI_HANDLER.toggleBookViewer(player);
+        else
+            Aorta.GUI_HANDLER.toggleBookEditor(player);
         return itemStack;
     }
 
@@ -45,13 +44,15 @@ public class ItemRemoteBook extends Item {
 
     @Override
     public void addInformation(ItemStack itemStack, EntityPlayer player, List lines, boolean advanced) {
-        if (!advanced || !itemStack.hasTagCompound()) return;
+        if (!advanced || !itemStack.hasTagCompound())
+            return;
         lines.add("Index: " + itemStack.getTagCompound().getString("name"));
     }
 
     @Override
     public IIcon getIconFromDamage(int meta) {
-        if (meta == 0) return itemIcon;
+        if (meta == 0)
+            return itemIcon;
         return icons[meta - 1];
     }
 

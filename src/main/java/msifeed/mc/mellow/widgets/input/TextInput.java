@@ -20,11 +20,13 @@ import java.util.function.Function;
 public class TextInput extends Widget implements KeyHandler {
     protected Part normalPart = Mellow.getPart("sunken");
     protected Part focusedPart = Mellow.getPart("sunken_focused");
-    protected int darkColor = Mellow.THEME.colors.get("text_dark");
+    protected int darkColor = Mellow.getColor("text_dark");
+    protected int brightColor = Mellow.getColor("text_bright");
 
     private Function<String, Boolean> filter = s -> true;
     private Consumer<String> onChange = s -> {};
 
+    private String placeholderText = "";
     private String text = "";
     private int cursor = text.length();
 
@@ -41,6 +43,14 @@ public class TextInput extends Widget implements KeyHandler {
 
     public String getText() {
         return text;
+    }
+
+    public void setPlaceholderText(String text) {
+        this.placeholderText = text;
+    }
+
+    public String getPlaceholderText() {
+        return placeholderText;
     }
 
     public int getInt() {
@@ -81,7 +91,11 @@ public class TextInput extends Widget implements KeyHandler {
         final Geom geom = getGeometry();
         final Geom textGeom = new Geom(geom);
         textGeom.translate(3, 2, 1);
-        RenderWidgets.string(textGeom, text, darkColor);
+
+        if (text.isEmpty())
+            RenderWidgets.string(textGeom, placeholderText, darkColor);
+        else
+            RenderWidgets.string(textGeom, text, darkColor);
     }
 
     protected void renderCursor() {

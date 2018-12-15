@@ -2,6 +2,7 @@ package msifeed.mc.aorta.client;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import msifeed.mc.aorta.client.gui.ScreenLangSelector;
+import msifeed.mc.aorta.client.gui.book.ScreenBookEditor;
 import msifeed.mc.aorta.client.gui.book.ScreenBookViewer;
 import msifeed.mc.aorta.client.gui.chareditor.ScreenCharEditor;
 import msifeed.mc.aorta.client.gui.roller.ScreenRoller;
@@ -42,6 +43,12 @@ public class GuiHandlerClient extends GuiHandler {
     public void toggleBookViewer(EntityPlayer player) {
         if (player.worldObj.isRemote)
             toggleGui(ScreenBookViewer.class, () -> new ScreenBookViewer(player));
+    }
+
+    @Override
+    public void toggleBookEditor(EntityPlayer player) {
+        if (player.worldObj.isRemote)
+            toggleGui(ScreenBookEditor.class, () -> new ScreenBookEditor(player));
     }
 
     private void toggleGui(Class<?> c, Supplier<GuiScreen> screenSupplier) {

@@ -8,6 +8,7 @@ item.tool_debug.name=Дэбаг-тул
 item.tool_char.name=Чар-тул
 item.tool_status.name=Статус-тул
 item.tool_roller.name=Роллер-тул
+item.remote_book.name=Загрузчик текстов инфосферы
 
 aorta.gui.roller=Роллер
 aorta.gui.status_editor=Статус

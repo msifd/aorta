@@ -7,6 +7,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import java.util.List;
+
 public class BookTemplate extends ItemTemplate {
     private final BookData data;
 
@@ -23,5 +25,12 @@ public class BookTemplate extends ItemTemplate {
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
         Aorta.GUI_HANDLER.toggleBookViewer(player);
         return itemStack;
+    }
+
+    @Override
+    public void addInformation(ItemStack itemStack, EntityPlayer player, List lines, boolean debug) {
+        super.addInformation(itemStack, player, lines, debug);
+        if (debug)
+            lines.add("Index: " + data.index);
     }
 }
