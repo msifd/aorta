@@ -1,10 +1,15 @@
 package msifeed.mc.aorta.client.gui.book;
 
 import msifeed.mc.aorta.books.RemoteBook;
+import msifeed.mc.mellow.layout.AnchorLayout;
+import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.render.RenderParts;
+import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
+import msifeed.mc.mellow.widgets.basic.Label;
 import msifeed.mc.mellow.widgets.basic.TextWall;
+import msifeed.mc.mellow.widgets.button.Button;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 
@@ -14,26 +19,40 @@ import java.util.List;
 
 public class BookView extends Widget {
     private static final int BOOK_TEXT_WIDTH = 115;
-    private static final int BOOK_MAX_LINES = 17;
+    private static final int BOOK_MAX_LINES = 15;
 
+    private BookParts bookParts = BookParts.REGULAR;
     private TextWall textWall = new TextWall();
+    private Controls controls = new Controls(this);
 
     BookView() {
         setSizeHint(192, 192);
         setSizePolicy(SizePolicy.FIXED);
         getMargin().set(36, 10);
+        setLayout(ListLayout.VERTICAL);
 
         textWall.setLines(Collections.singletonList("Looking for book..."));
+        textWall.setMaxLines(BOOK_MAX_LINES);
+        flipPage(0);
+
+        addChild(controls);
         addChild(textWall);
     }
 
     public void setBook(RemoteBook book) {
         textWall.setLines(breakLines(book.text));
-}
+        flipPage(0);
+    }
+
+    public void flipPage(int n) {
+        final int target = Math.max(0, textWall.getStartLine() + BOOK_MAX_LINES * n);
+        textWall.setStartLine(target);
+        controls.updateControls(target / BOOK_MAX_LINES + 1, textWall.getLines().size() / BOOK_MAX_LINES + 1);
+    }
 
     @Override
     protected void renderSelf() {
-        RenderParts.slice(BookParts.regular.bookBg, getGeometry());
+        RenderParts.slice(bookParts.bookBg, getGeometry());
     }
 
     private static List<String> breakLines(String text) {
@@ -59,19 +78,73 @@ public class BookView extends Widget {
             begin += line.length();
         }
 
-//        final StringBuilder sb = new StringBuilder(cleaned);
-//        while (sb.length() > 0) {
-//            final int textPartLength = Math.min(bookWidth, sb.length());
-//            final String textPart = sb.substring(0, textPartLength);
-//            final int lineWidth = font.sizeStringToWidth(textPart, bookWidth) + 1;
-//
-//            final int lineEnd = Math.min(lineWidth, sb.length());
-//            final String line = sb.substring(0, lineEnd).trim();
-//
-//            lines.add(line);
-//            sb.delete(0, lineEnd);
-//        }
-
         return lines;
+    }
+
+    private static class Controls extends Widget {
+        private ButtonIcon leftButton;
+        private ButtonIcon rightButton;
+        private CenteredLabel pageNum = new CenteredLabel();
+
+        Controls(BookView view) {
+            setZLevel(1);
+            setSizeHint(view.bookParts.bookBg.size.x, view.bookParts.leftBtn.size.y);
+            setSizePolicy(SizePolicy.FIXED);
+            setLayout(ListLayout.HORIZONTAL);
+
+            leftButton = new ButtonIcon(view.bookParts.leftBtn, view.bookParts.leftBtnHover);
+            rightButton = new ButtonIcon(view.bookParts.rightBtn, view.bookParts.rightBtnHover);
+            leftButton.setClickCallback(() -> view.flipPage(-1));
+            rightButton.setClickCallback(() -> view.flipPage(1));
+
+            pageNum.label.setText("1");
+            pageNum.getSizeHint().x = BOOK_TEXT_WIDTH - view.bookParts.leftBtn.size.x * 2;
+            pageNum.label.setColor(pageNum.label.darkColor);
+
+            addChild(leftButton);
+            addChild(pageNum);
+            addChild(rightButton);
+        }
+
+        void updateControls(int page, int totalPages) {
+            leftButton.setDisabled(page == 1);
+            rightButton.setDisabled(page == totalPages);
+            pageNum.label.setText(String.valueOf(page));
+        }
+    }
+
+    private static class ButtonIcon extends Button {
+        private Part normal;
+        private Part hover;
+
+        ButtonIcon(Part normal, Part hover) {
+            this.normal = normal;
+            this.hover = hover;
+
+            setZLevel(1);
+            setSizeHint(normal.size);
+            setSizePolicy(SizePolicy.FIXED);
+        }
+
+        @Override
+        protected void renderSelf() {
+            if (isDisabled())
+                return;
+
+            if (isHovered())
+                RenderParts.slice(hover, getGeometry());
+            else
+                RenderParts.slice(normal, getGeometry());
+        }
+    }
+
+    private static class CenteredLabel extends Widget {
+        Label label = new Label();
+
+        CenteredLabel() {
+            setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.MINIMUM);
+            setLayout(new AnchorLayout());
+            addChild(label);
+        }
     }
 }

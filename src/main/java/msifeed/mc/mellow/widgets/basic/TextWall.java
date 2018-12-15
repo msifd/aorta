@@ -59,10 +59,12 @@ public class TextWall extends Widget {
     protected void renderSelf() {
         final FontRenderer fr = RenderManager.instance.getFontRenderer();
         Geom geom = new Geom(getGeometry());
-        for (int i = startLine; i < lines.size() && i - startLine < maxLines; ++i) {
-            final String line = lines.get(i);
-            RenderWidgets.string(geom, line, darkColor);
-            geom.y += fr.FONT_HEIGHT;
-        }
+        lines.stream()
+                .skip(startLine)
+                .limit(maxLines)
+                .forEach(line -> {
+                    RenderWidgets.string(geom, line, darkColor);
+                    geom.y += fr.FONT_HEIGHT;
+                });
     }
 }
