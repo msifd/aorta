@@ -19,7 +19,7 @@ enum BookParts {
         bookBg.size = new Point(192, 192);
 
         leftBtn.sprite = style.sprite;
-        leftBtn.pos = new Point(23, 192);
+        leftBtn.pos = new Point(0, 205);
         leftBtn.size = new Point(23, 13);
         leftBtnHover.sprite = style.sprite;
         leftBtnHover.pos = new Point(23, 205);
@@ -29,7 +29,7 @@ enum BookParts {
         rightBtn.pos = new Point(0, 192);
         rightBtn.size = new Point(23, 13);
         rightBtnHover.sprite = style.sprite;
-        rightBtnHover.pos = new Point(0, 205);
+        rightBtnHover.pos = new Point(23, 192);
         rightBtnHover.size = new Point(23, 13);
     }
 }

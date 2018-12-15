@@ -29,14 +29,14 @@ public class BookView extends Widget {
     BookView() {
         setSizeHint(192, 192);
         setSizePolicy(SizePolicy.FIXED);
-        getMargin().set(36, 10);
+        getMargin().set(36, 14);
         setLayout(FreeLayout.INSTANCE);
 
         textWall.setLines(Collections.singletonList("Looking for book..."));
         textWall.setMaxLines(BOOK_MAX_LINES);
         flipPage(0);
 
-        controls.setPos(0, 140);
+        controls.setPos(0, 138);
 
         addChild(textWall);
         addChild(controls);
