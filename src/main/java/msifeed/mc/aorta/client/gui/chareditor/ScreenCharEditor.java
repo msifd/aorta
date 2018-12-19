@@ -55,11 +55,6 @@ public class ScreenCharEditor extends MellowGuiScreen {
     }
 
     @Override
-    public boolean doesGuiPauseGame() {
-        return false;
-    }
-
-    @Override
     public void drawScreen(int xMouse, int yMouse, float tick) {
         submitBtn.setDisabled(!entity.isEntityAlive());
         super.drawScreen(xMouse, yMouse, tick);

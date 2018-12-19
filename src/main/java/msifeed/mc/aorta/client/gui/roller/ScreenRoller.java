@@ -46,11 +46,6 @@ public class ScreenRoller extends MellowGuiScreen {
         modifiers.addChild(modInput);
     }
 
-    @Override
-    public boolean doesGuiPauseGame() {
-        return false;
-    }
-
     private void parseNumber(String s) {
         lastModifier = (s.isEmpty() || s.equals("-")) ? 0 : Integer.parseInt(s);
     }

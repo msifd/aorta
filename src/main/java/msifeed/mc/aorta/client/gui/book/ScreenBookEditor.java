@@ -87,11 +87,6 @@ public class ScreenBookEditor extends MellowGuiScreen {
         statusLabel.setText("> " + text);
     }
 
-    @Override
-    public boolean doesGuiPauseGame() {
-        return false;
-    }
-
     private static void closeGui() {
         Minecraft.getMinecraft().displayGuiScreen(null);
     }

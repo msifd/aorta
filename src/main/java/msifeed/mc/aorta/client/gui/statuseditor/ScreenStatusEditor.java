@@ -52,9 +52,4 @@ public class ScreenStatusEditor extends MellowGuiScreen {
         windowContent.addChild(new Separator());
         windowContent.addChild(submitBtn);
     }
-
-    @Override
-    public boolean doesGuiPauseGame() {
-        return false;
-    }
 }

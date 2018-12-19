@@ -1,12 +1,15 @@
 package msifeed.mc.aorta.client;
 
 import cpw.mods.fml.client.FMLClientHandler;
+import msifeed.mc.aorta.client.gui.ScreenDigitalLock;
 import msifeed.mc.aorta.client.gui.ScreenLangSelector;
 import msifeed.mc.aorta.client.gui.book.ScreenBookEditor;
 import msifeed.mc.aorta.client.gui.book.ScreenBookViewer;
 import msifeed.mc.aorta.client.gui.chareditor.ScreenCharEditor;
 import msifeed.mc.aorta.client.gui.roller.ScreenRoller;
 import msifeed.mc.aorta.client.gui.statuseditor.ScreenStatusEditor;
+import msifeed.mc.aorta.locks.DigitalLockAction;
+import msifeed.mc.aorta.locks.LockTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityLivingBase;
@@ -49,6 +52,12 @@ public class GuiHandlerClient extends GuiHandler {
     public void toggleBookEditor(EntityPlayer player) {
         if (player.worldObj.isRemote)
             toggleGui(ScreenBookEditor.class, () -> new ScreenBookEditor(player));
+    }
+
+    @Override
+    public void toggleDigitalLock(LockTileEntity lock, DigitalLockAction action) {
+        if (lock.getWorldObj().isRemote)
+            toggleGui(ScreenDigitalLock.class, () -> new ScreenDigitalLock(lock, action));
     }
 
     private void toggleGui(Class<?> c, Supplier<GuiScreen> screenSupplier) {

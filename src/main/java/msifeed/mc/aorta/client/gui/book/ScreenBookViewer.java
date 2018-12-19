@@ -45,11 +45,6 @@ public class ScreenBookViewer extends MellowGuiScreen {
     }
 
     @Override
-    public boolean doesGuiPauseGame() {
-        return false;
-    }
-
-    @Override
     public void handleKeyboardInput() {
         final int k = Keyboard.getEventKey();
         if (k == Keyboard.KEY_ESCAPE)

@@ -17,6 +17,11 @@ public class MellowGuiScreen extends GuiScreen {
     protected Scene scene = new ProfilingScene();
 
     @Override
+    public boolean doesGuiPauseGame() {
+        return false;
+    }
+
+    @Override
     public void initGui() {
         final Minecraft mc = Minecraft.getMinecraft();
         final int scaleFactor = RenderUtils.getScreenScaleFactor();

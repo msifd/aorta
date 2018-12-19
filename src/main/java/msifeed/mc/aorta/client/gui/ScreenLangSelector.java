@@ -51,9 +51,4 @@ public class ScreenLangSelector extends MellowGuiScreen {
         dropDown.setSelectCallback(lang -> LangAttribute.INSTANCE.set(entity, lang));
         windowContent.addChild(dropDown);
     }
-
-    @Override
-    public boolean doesGuiPauseGame() {
-        return false;
-    }
 }
