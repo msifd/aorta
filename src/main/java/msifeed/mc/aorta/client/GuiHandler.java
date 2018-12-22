@@ -6,6 +6,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class GuiHandler {
+    public void init() {}
     public void toggleRoller(EntityLivingBase entity) { }
     public void openCharEditor(EntityLivingBase entity) { }
     public void toggleStatusEditor(EntityLivingBase entity) { }

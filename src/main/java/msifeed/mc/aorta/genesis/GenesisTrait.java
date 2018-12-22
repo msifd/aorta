@@ -39,6 +39,9 @@ public enum GenesisTrait {
     // Books
     book,
 
+    // Guns
+    gun,
+
     // Rarity
     poor, common, uncommon, rare, epic, legendary,
 

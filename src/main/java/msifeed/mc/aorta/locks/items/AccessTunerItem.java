@@ -15,4 +15,9 @@ public class AccessTunerItem extends LockpickItem {
     protected boolean canPick(LockTileEntity lock) {
         return lock.getLockType() == LockType.DIGITAL;
     }
+
+    @Override
+    protected void unlock(LockTileEntity lock) {
+        lock.setSecret(LockItem.DEFAULT_DIGITAL_SECRET);
+    }
 }

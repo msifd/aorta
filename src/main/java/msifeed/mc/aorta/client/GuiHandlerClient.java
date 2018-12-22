@@ -1,23 +1,33 @@
 package msifeed.mc.aorta.client;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import msifeed.mc.aorta.client.gui.ScreenDigitalLock;
 import msifeed.mc.aorta.client.gui.ScreenLangSelector;
 import msifeed.mc.aorta.client.gui.book.ScreenBookEditor;
 import msifeed.mc.aorta.client.gui.book.ScreenBookViewer;
 import msifeed.mc.aorta.client.gui.chareditor.ScreenCharEditor;
 import msifeed.mc.aorta.client.gui.roller.ScreenRoller;
 import msifeed.mc.aorta.client.gui.statuseditor.ScreenStatusEditor;
+import msifeed.mc.aorta.client.hud.DebugHud;
+import msifeed.mc.aorta.client.hud.DisableVanillaHud;
+import msifeed.mc.aorta.client.lock.HudDoorLock;
+import msifeed.mc.aorta.client.lock.ScreenDigitalLock;
 import msifeed.mc.aorta.locks.DigitalLockAction;
 import msifeed.mc.aorta.locks.LockTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.util.function.Supplier;
 
 public class GuiHandlerClient extends GuiHandler {
+    public void init() {
+        MinecraftForge.EVENT_BUS.register(DisableVanillaHud.INSTANCE);
+        MinecraftForge.EVENT_BUS.register(DebugHud.INSTANCE);
+        MinecraftForge.EVENT_BUS.register(HudDoorLock.INSTANCE);
+    }
+
     @Override
     public void toggleRoller(EntityLivingBase entity) {
         if (entity.worldObj.isRemote)

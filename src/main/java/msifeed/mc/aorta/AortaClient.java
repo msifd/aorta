@@ -25,6 +25,7 @@ public class AortaClient extends Aorta {
     public void init() {
         super.init();
         DRM.apply();
+        GUI_HANDLER.init();
         Keybinds.INSTANCE.init();
     }
 

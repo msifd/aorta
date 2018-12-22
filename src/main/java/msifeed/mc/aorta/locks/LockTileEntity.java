@@ -1,7 +1,12 @@
 package msifeed.mc.aorta.locks;
 
+import cpw.mods.fml.common.registry.GameRegistry;
+import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.genesis.blocks.templates.DoorTemplate;
+import msifeed.mc.aorta.locks.items.LockItem;
 import net.minecraft.block.Block;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -26,6 +31,8 @@ public class LockTileEntity extends TileEntity {
 
     public void setLockType(LockType type) {
         this.type = type;
+        if (type == LockType.NONE)
+            this.locked = false;
         markDirty();
     }
 
@@ -42,7 +49,6 @@ public class LockTileEntity extends TileEntity {
     }
 
     public void setLocked(boolean locked) {
-        System.out.println("set lock to " + locked);
         this.locked = locked;
         markDirty();
         soundToggleLock();
@@ -52,16 +58,41 @@ public class LockTileEntity extends TileEntity {
         return this.key == Locks.makeKeyHash(secret);
     }
 
+    public EntityItem makeEntityItem() {
+        final float f = 0.7F;
+        final double d0 = worldObj.rand.nextFloat() * f + (1.0F - f) * 0.5D;
+        final double d1 = worldObj.rand.nextFloat() * f + (1.0F - f) * 0.5D;
+        final double d2 = worldObj.rand.nextFloat() * f + (1.0F - f) * 0.5D;
+        final EntityItem entityitem = new EntityItem(worldObj, xCoord + d0, yCoord + d1, zCoord + d2, toItemStack());
+        entityitem.delayBeforeCanPickup = 10;
+        return entityitem;
+    }
+
+    public ItemStack toItemStack() {
+        final ItemStack stack = GameRegistry.findItemStack(Aorta.MODID, LockItem.getItemId(type), 1);
+        if (stack == null)
+            return null;
+
+        final NBTTagCompound compound = new NBTTagCompound();
+        compound.setInteger("key", key);
+        stack.setTagCompound(compound);
+        return stack;
+    }
+
+    public void fromItemStack(ItemStack itemStack) {
+        if (!(itemStack.getItem() instanceof LockItem) || !itemStack.hasTagCompound())
+            return;
+
+        final LockItem item = (LockItem) itemStack.getItem();
+        final NBTTagCompound compound = itemStack.getTagCompound();
+        this.type = item.getLockType();
+        this.key = compound.getInteger("key");
+    }
+
     @Override
     public void markDirty() {
         super.markDirty();
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-    }
-
-    @Override
-    public void invalidate() {
-        super.invalidate();
-        System.out.println("LockTileEntity is invalidated!");
     }
 
     @Override
@@ -70,7 +101,6 @@ public class LockTileEntity extends TileEntity {
         this.type = LockType.values()[compound.getByte("type")];
         this.key = compound.getInteger("key");
         this.locked = compound.getBoolean("locked");
-        System.out.println("loaded");
     }
 
     @Override
@@ -91,7 +121,6 @@ public class LockTileEntity extends TileEntity {
     @Override
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
         readFromNBT(packet.func_148857_g());
-        System.out.println("received update. now locked: " + locked);
     }
 
     private void soundToggleLock() {

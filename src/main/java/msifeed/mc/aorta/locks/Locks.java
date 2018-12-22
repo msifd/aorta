@@ -2,17 +2,16 @@ package msifeed.mc.aorta.locks;
 
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import msifeed.mc.aorta.Aorta;
-import msifeed.mc.aorta.locks.items.AccessTunerItem;
-import msifeed.mc.aorta.locks.items.KeyItem;
-import msifeed.mc.aorta.locks.items.LockItem;
-import msifeed.mc.aorta.locks.items.LockpickItem;
-
-import java.util.stream.Stream;
+import msifeed.mc.aorta.genesis.blocks.templates.DoorTemplate;
+import msifeed.mc.aorta.locks.items.*;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.BlockEvent;
 
 public enum Locks {
     INSTANCE;
@@ -21,16 +20,26 @@ public enum Locks {
     private static final HashFunction hasher = Hashing.murmur3_128(3364);
 
     public static void init() {
-        Stream.of(LockType.values())
-                .skip(1)
-                .forEach(t -> GameRegistry.registerItem(new LockItem(t), LockItem.ID_BASE + t.toString().toLowerCase()));
+        LockType.locks().forEach(t -> GameRegistry.registerItem(new LockItem(t), LockItem.getItemId(t)));
         GameRegistry.registerItem(new KeyItem(), KeyItem.ID);
         GameRegistry.registerItem(new LockpickItem(), LockpickItem.ID);
         GameRegistry.registerItem(new AccessTunerItem(), AccessTunerItem.ID);
-
+        GameRegistry.registerItem(new SkeletalKeyItem(), SkeletalKeyItem.ID);
         GameRegistry.registerTileEntity(LockTileEntity.class, LockTileEntity.ID);
 
         INSTANCE.CHANNEL.registerMessage(DigitalLockMessage.class, DigitalLockMessage.class, 0x00, Side.SERVER);
+
+        MinecraftForge.EVENT_BUS.register(INSTANCE);
+    }
+
+    @SubscribeEvent
+    public void onBlockBreak(BlockEvent.BreakEvent event) {
+        if (!(event.block instanceof DoorTemplate))
+            return;
+
+        final LockTileEntity lock = LockTileEntity.find(event.world, event.x, event.y, event.z);
+        if (lock != null)
+            event.world.spawnEntityInWorld(lock.makeEntityItem());
     }
 
     public static int makeKeyHash(String input) {

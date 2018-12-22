@@ -37,6 +37,11 @@ public class DoorTemplate extends BlockDoor implements ITileEntityProvider, Bloc
     }
 
     @Override
+    protected boolean canSilkHarvest() {
+        return false;
+    }
+
+    @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
         final LockTileEntity lock = LockTileEntity.find(world, x, y, z);
         if (lock == null)
@@ -51,20 +56,28 @@ public class DoorTemplate extends BlockDoor implements ITileEntityProvider, Bloc
                 return true;
             }
         } else if (lock.isLocked()) {
-            System.out.println("my locked lock: " + lock.getLockType());
             return true;
         }
 
         return super.onBlockActivated(world, x, y, z, player, side, hitX, hitY, hitZ);
     }
+
+    @Override
+    public void func_150014_a(World world, int x, int y, int z, boolean flag) {
+        // Also check if locked when powered
+        final LockTileEntity lock = LockTileEntity.find(world, x, y, z);
+        if (lock == null || !lock.isLocked())
+            super.func_150014_a(world, x, y, z, flag);
+    }
+
     @Override
     public net.minecraft.item.Item getItem(World p_149694_1_, int p_149694_2_, int p_149694_3_, int p_149694_4_) {
         return item;
     }
 
     @Override
-    public net.minecraft.item.Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_) {
-        return item;
+    public net.minecraft.item.Item getItemDropped(int meta, Random rand, int p_149650_3_) {
+        return (meta & 8) != 0 ? null : item;
     }
 
     @Override

@@ -22,6 +22,10 @@ public class LockpickItem extends Item {
         return lock.getLockType() == LockType.BUILD_IN || lock.getLockType() == LockType.PADLOCK;
     }
 
+    protected void unlock(LockTileEntity lock) {
+        lock.setLocked(false);
+    }
+
     @Override
     public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
         final LockTileEntity lock = LockTileEntity.find(world, x, y, z);
@@ -40,7 +44,7 @@ public class LockpickItem extends Item {
 
         if (canPick(lock)) {
             player.addChatMessage(new ChatComponentText("lock is unLOCKed"));
-            lock.setLocked(false);
+            unlock(lock);
         } else {
             player.addChatMessage(new ChatComponentText("can't open this lock"));
         }
