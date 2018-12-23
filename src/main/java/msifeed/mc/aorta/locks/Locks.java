@@ -21,14 +21,15 @@ public enum Locks {
 
     public static void init() {
         LockType.locks().forEach(t -> GameRegistry.registerItem(new LockItem(t), LockItem.getItemId(t)));
+        GameRegistry.registerItem(new BlankKeyItem(), BlankKeyItem.ID);
         GameRegistry.registerItem(new KeyItem(), KeyItem.ID);
         GameRegistry.registerItem(new LockpickItem(), LockpickItem.ID);
         GameRegistry.registerItem(new AccessTunerItem(), AccessTunerItem.ID);
         GameRegistry.registerItem(new SkeletalKeyItem(), SkeletalKeyItem.ID);
         GameRegistry.registerTileEntity(LockTileEntity.class, LockTileEntity.ID);
+        GameRegistry.addRecipe(new CopyKeyRecipe());
 
         INSTANCE.CHANNEL.registerMessage(DigitalLockMessage.class, DigitalLockMessage.class, 0x00, Side.SERVER);
-
         MinecraftForge.EVENT_BUS.register(INSTANCE);
     }
 

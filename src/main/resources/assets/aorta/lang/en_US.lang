@@ -9,6 +9,14 @@ item.tool_char.name=Char tool
 item.tool_status.name=Status tool
 item.tool_roller.name=Roller tool
 item.remote_book.name=Infosphere text downloader
+item.lock_blank_key.name=Blank key
+item.lock_key.name=Key
+item.lock_build_in.name=Build-in lock
+item.lock_padlock.name=Padlock
+item.lock_digital.name=Digital lock
+item.lock_lockpick.name=Lockpick
+item.lock_access_tuner.name=Access Tuner
+item.lock_skeletal_key.name=Skeletal key
 
 aorta.gui.roller=Roller
 aorta.gui.status_editor=Status editor

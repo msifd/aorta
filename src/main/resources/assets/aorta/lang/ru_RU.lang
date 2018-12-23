@@ -9,6 +9,14 @@ item.tool_char.name=Чар-тул
 item.tool_status.name=Статус-тул
 item.tool_roller.name=Роллер-тул
 item.remote_book.name=Загрузчик текстов инфосферы
+item.lock_blank_key.name=Заготовка ключа
+item.lock_key.name=Ключ
+item.lock_build_in.name=Встроенный замок
+item.lock_padlock.name=Навесной замок
+item.lock_digital.name=Цифровой замок
+item.lock_lockpick.name=Отмычка
+item.lock_access_tuner.name=Настройщик доступа
+item.lock_skeletal_key.name=Скелетный ключ
 
 aorta.gui.roller=Роллер
 aorta.gui.status_editor=Статус

@@ -17,10 +17,12 @@ public class AortaCreativeTab extends CreativeTabs {
     private static final Item iconBlocks = makeIcon("tab_blocks");
     private static final Item iconItems = makeIcon("tab_items");
     private static final Item iconTools = makeIcon("tab_tools");
+    private static final Item iconLock = makeIcon("tab_locks");
 
     public static final AortaCreativeTab BLOCKS = new AortaCreativeTab("aorta.blocks", iconBlocks);
     public static final AortaCreativeTab ITEMS = new AortaCreativeTab("aorta.items", iconItems);
     public static final AortaCreativeTab TOOLS = new AortaCreativeTab("aorta.tools", iconTools);
+    public static final AortaCreativeTab LOCKS = new AortaCreativeTab("aorta.locks", iconLock);
 
     private final Item icon;
     private ArrayList<ItemStack> cache = new ArrayList<>();

@@ -13,7 +13,7 @@ public class LockpickItem extends Item {
     public static final String ID = "lock_lockpick";
 
     public LockpickItem() {
-        setCreativeTab(AortaCreativeTab.ITEMS);
+        setCreativeTab(AortaCreativeTab.LOCKS);
         setUnlocalizedName(ID);
         setTextureName("aorta:" + ID);
     }

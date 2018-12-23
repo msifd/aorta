@@ -14,14 +14,14 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 
 public class LockItem extends Item {
-    public static final String ID_BASE = "lock_";
     static final String DEFAULT_DIGITAL_SECRET = "0000";
+    private static final String ID_BASE = "lock_";
     private LockType type;
 
     public LockItem(LockType type) {
         this.type = type;
 
-        setCreativeTab(AortaCreativeTab.ITEMS);
+        setCreativeTab(AortaCreativeTab.LOCKS);
         setUnlocalizedName(getItemId(type));
         setTextureName("aorta:" + getItemId(type));
     }
