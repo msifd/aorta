@@ -5,14 +5,16 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 
 public class DigitalLockMessage implements IMessage, IMessageHandler<DigitalLockMessage, IMessage> {
-    DigitalLockAction action;
-    String secret;
-    int x;
-    int y;
-    int z;
+    private DigitalLockAction action;
+    private String secret;
+    private int x;
+    private int y;
+    private int z;
 
     public DigitalLockMessage() {}
 
@@ -44,7 +46,8 @@ public class DigitalLockMessage implements IMessage, IMessageHandler<DigitalLock
 
     @Override
     public IMessage onMessage(DigitalLockMessage message, MessageContext ctx) {
-        final World world = ctx.getServerHandler().playerEntity.getEntityWorld();
+        final EntityPlayer player = ctx.getServerHandler().playerEntity;
+        final World world = player.getEntityWorld();
         LockTileEntity lock = LockTileEntity.find(world, message.x, message.y, message.z);
         if (lock == null || lock.getLockType() != LockType.DIGITAL)
             return null;
@@ -52,10 +55,20 @@ public class DigitalLockMessage implements IMessage, IMessageHandler<DigitalLock
         switch (message.action) {
             case LOCK:
             case UNLOCK:
-                if (lock.canUnlockWith(message.secret))
+                if (lock.canUnlockWith(message.secret)) {
                     lock.setLocked(message.action == DigitalLockAction.LOCK);
+                    if (!world.isRemote) {
+                        final String msg = lock.isLocked() ? "aorta.lock.locked" : "aorta.lock.unlocked";
+                        player.addChatMessage(new ChatComponentTranslation(msg));
+                    }
+                }
                 break;
-            case INSTALL:
+            case RESET:
+                if (!lock.isLocked()) {
+                    lock.setSecret(message.secret);
+                    lock.makeToggleSound();
+                    player.addChatMessage(new ChatComponentTranslation("aorta.lock.reset"));
+                }
                 break;
         }
 

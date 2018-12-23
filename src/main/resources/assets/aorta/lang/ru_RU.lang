@@ -37,3 +37,10 @@ aorta.action.enemy_use=Использование
 aorta.action.block=Блокирование
 aorta.action.dodge=Уклонение
 aorta.action.psionics=Псионика
+
+aorta.lock.locked=§7Закрыто
+aorta.lock.unlocked=§7Открыто
+aorta.lock.installed=§7Замок установлен
+aorta.lock.replaced=§7Замок заменён
+aorta.lock.reset=§7Новый пароль установлен
+aorta.lock.blank_lock=§7Новенький

@@ -6,7 +6,6 @@ import msifeed.mc.aorta.genesis.AortaCreativeTab;
 import msifeed.mc.aorta.genesis.blocks.BlockGenesisUnit;
 import msifeed.mc.aorta.genesis.blocks.BlockTraitCommons;
 import msifeed.mc.aorta.genesis.blocks.SpecialBlockRegisterer;
-import msifeed.mc.aorta.locks.DigitalLockAction;
 import msifeed.mc.aorta.locks.LockTileEntity;
 import msifeed.mc.aorta.locks.LockType;
 import net.minecraft.block.BlockDoor;
@@ -48,13 +47,8 @@ public class DoorTemplate extends BlockDoor implements ITileEntityProvider, Bloc
             return false; // unreachable
 
         if (player.isSneaking() && lock.getLockType() == LockType.DIGITAL) {
-            if (lock.isLocked()) {
-                Aorta.GUI_HANDLER.toggleDigitalLock(lock, DigitalLockAction.UNLOCK);
-                return true;
-            } else {
-                Aorta.GUI_HANDLER.toggleDigitalLock(lock, DigitalLockAction.LOCK);
-                return true;
-            }
+            Aorta.GUI_HANDLER.toggleDigitalLock(lock);
+            return true;
         } else if (lock.isLocked()) {
             return true;
         }

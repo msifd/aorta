@@ -17,17 +17,17 @@ import java.util.HashMap;
 
 public class ScreenDigitalLock extends MellowGuiScreen {
     private final LockTileEntity lock;
-    private final DigitalLockAction action;
 
+    private DigitalLockAction action;
     private String input = "";
 
     private HashMap<Character, SquareButton> keyButtons = new HashMap<>();
     private SquareButton keyPressedButton = null;
     private long keyPressedTime = 0;
 
-    public ScreenDigitalLock(LockTileEntity lock, DigitalLockAction action) {
+    public ScreenDigitalLock(LockTileEntity lock) {
         this.lock = lock;
-        this.action = action;
+        this.action = lock.isLocked() ? DigitalLockAction.UNLOCK : DigitalLockAction.LOCK;
 
         final Window window = new Window();
         window.setTitle("ZX DigiLock");
@@ -47,9 +47,9 @@ public class ScreenDigitalLock extends MellowGuiScreen {
 
         final Widget bottomLine = new Widget();
         bottomLine.setLayout(ListLayout.HORIZONTAL);
-        bottomLine.addChild(makeKeyResponsiveButton('C', this::clearInput));
+        bottomLine.addChild(makeKeyResponsiveButton('C', this::pressClear));
         bottomLine.addChild(makeKeyResponsiveButton('0', () -> selectDigit('0')));
-        bottomLine.addChild(new SquareButton('R', () -> { }));
+        bottomLine.addChild(new SquareButton('R', this::pressReset));
 
         content.addChild(bottomLine);
     }
@@ -98,20 +98,39 @@ public class ScreenDigitalLock extends MellowGuiScreen {
 
     private void selectDigit(char digit) {
         input += digit;
-        unlock();
+        if (action != DigitalLockAction.RESET)
+            unlock();
     }
 
-    private void clearInput() {
+    private void pressClear() {
         input = "";
-        unlock();
+    }
+
+    private void pressReset() {
+        if (lock.isLocked())
+            return;
+        if (action == DigitalLockAction.RESET) {
+            if (!input.isEmpty()) {
+                lock.setSecret(input); // Update client side early
+                sendActionRequest();
+                action = DigitalLockAction.LOCK;
+            }
+        } else {
+            action = DigitalLockAction.RESET;
+        }
+        input = "";
     }
 
     private void unlock() {
         if (lock.canUnlockWith(input)) {
-            final DigitalLockMessage m = new DigitalLockMessage(lock, action, input);
-            Locks.INSTANCE.CHANNEL.sendToServer(m);
+            sendActionRequest();
             closeScreen();
         }
+    }
+
+    private void sendActionRequest() {
+        final DigitalLockMessage m = new DigitalLockMessage(lock, action, input);
+        Locks.INSTANCE.CHANNEL.sendToServer(m);
     }
 
     private void closeScreen() {

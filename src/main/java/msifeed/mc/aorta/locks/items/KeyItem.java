@@ -1,21 +1,32 @@
 package msifeed.mc.aorta.locks.items;
 
+import cpw.mods.fml.common.registry.GameRegistry;
+import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.locks.LockTileEntity;
 import msifeed.mc.aorta.locks.LockType;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
 public class KeyItem extends Item {
     public static final String ID = "lock_key";
     public static final String TEX_BASE = "lock_key_";
+    private static final int ICONS_COUNT = 3;
+
+    private IIcon[] icons = new IIcon[ICONS_COUNT];
 
     public KeyItem() {
         setUnlocalizedName(ID);
-        setTextureName("aorta:" + TEX_BASE + "1");
+    }
+
+    @Override
+    public boolean showDurabilityBar(ItemStack stack) {
+        return false;
     }
 
     @Override
@@ -32,12 +43,37 @@ public class KeyItem extends Item {
             lock.toggleLocked();
 
             if (!world.isRemote) {
-                final ChatComponentText ct = new ChatComponentText(lock.isLocked() ? "*locked*" : "*unlocked*");
-                ct.getChatStyle().setColor(EnumChatFormatting.GRAY);
-                player.addChatMessage(ct);
+                final String msg = lock.isLocked() ? "aorta.lock.locked" : "aorta.lock.unlocked";
+                player.addChatMessage(new ChatComponentTranslation(msg));
             }
         }
 
         return true;
+    }
+
+    @Override
+    public IIcon getIconIndex(ItemStack stack) {
+        if (!stack.hasTagCompound() || stack.getTagCompound().getString("secret").isEmpty())
+            return icons[0];
+
+        final String secret = stack.getTagCompound().getString("secret");
+        final int iconId = secret.charAt(1) % ICONS_COUNT; // use second char, because first one can be minus
+        return icons[iconId];
+    }
+
+    @Override
+    public void registerIcons(IIconRegister p_94581_1_) {
+        for (int i = 0; i < ICONS_COUNT; ++i)
+            icons[i] = p_94581_1_.registerIcon("aorta:" + TEX_BASE + (i + 1));
+    }
+
+    public static ItemStack makeKeyItem(String secret) {
+        final ItemStack stack = GameRegistry.findItemStack(Aorta.MODID, KeyItem.ID, 1);
+
+        final NBTTagCompound compound = new NBTTagCompound();
+        compound.setString("secret", secret);
+        stack.setTagCompound(compound);
+
+        return stack;
     }
 }

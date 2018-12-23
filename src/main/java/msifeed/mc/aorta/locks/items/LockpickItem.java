@@ -6,7 +6,7 @@ import msifeed.mc.aorta.locks.LockType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 
 public class LockpickItem extends Item {
@@ -32,21 +32,14 @@ public class LockpickItem extends Item {
         if (lock == null)
             return false;
 
-        if (!lock.hasLock()) {
-            player.addChatMessage(new ChatComponentText("there is no lock, u idiot"));
-            return true;
-        }
-
-        if (!lock.isLocked()) {
-            player.addChatMessage(new ChatComponentText("the door is open, u idiot"));
-            return true;
+        if (!lock.hasLock() || !lock.isLocked()) {
+            return false;
         }
 
         if (canPick(lock)) {
-            player.addChatMessage(new ChatComponentText("lock is unLOCKed"));
+            if (!world.isRemote)
+                player.addChatMessage(new ChatComponentTranslation("aorta.lock.unlocked"));
             unlock(lock);
-        } else {
-            player.addChatMessage(new ChatComponentText("can't open this lock"));
         }
 
         return true;

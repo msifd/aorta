@@ -1,6 +1,5 @@
 package msifeed.mc.aorta.client;
 
-import msifeed.mc.aorta.locks.DigitalLockAction;
 import msifeed.mc.aorta.locks.LockTileEntity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,5 +12,5 @@ public class GuiHandler {
     public void toggleLangSelector(EntityLivingBase entity) { }
     public void toggleBookViewer(EntityPlayer player) { }
     public void toggleBookEditor(EntityPlayer player) { }
-    public void toggleDigitalLock(LockTileEntity lock, DigitalLockAction action) { }
+    public void toggleDigitalLock(LockTileEntity lock) { }
 }

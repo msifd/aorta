@@ -20,6 +20,7 @@ public class LockTileEntity extends TileEntity {
     private LockType type = LockType.NONE;
     private int key;
     private boolean locked;
+    private int difficulty;
 
     public boolean hasLock() {
         return type != LockType.NONE;
@@ -38,6 +39,7 @@ public class LockTileEntity extends TileEntity {
 
     public void setSecret(String secret) {
         this.key = Locks.makeKeyHash(secret);
+        markDirty();
     }
 
     public boolean isLocked() {
@@ -51,7 +53,7 @@ public class LockTileEntity extends TileEntity {
     public void setLocked(boolean locked) {
         this.locked = locked;
         markDirty();
-        soundToggleLock();
+        makeToggleSound();
     }
 
     public boolean canUnlockWith(String secret) {
@@ -123,9 +125,8 @@ public class LockTileEntity extends TileEntity {
         readFromNBT(packet.func_148857_g());
     }
 
-    private void soundToggleLock() {
-        final float pitch = worldObj.rand.nextFloat() * 0.1f + 0.5f;
-        worldObj.playSoundEffect(xCoord, yCoord, zCoord, "random.click", 0.3f, pitch);
+    public void makeToggleSound() {
+        worldObj.playSoundEffect(xCoord, yCoord, zCoord, "random.click", 0.3f, 3);
     }
 
     public static LockTileEntity find(World world, int x, int y, int z) {

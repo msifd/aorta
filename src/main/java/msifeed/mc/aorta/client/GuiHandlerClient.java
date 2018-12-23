@@ -11,7 +11,6 @@ import msifeed.mc.aorta.client.hud.DebugHud;
 import msifeed.mc.aorta.client.hud.DisableVanillaHud;
 import msifeed.mc.aorta.client.lock.HudDoorLock;
 import msifeed.mc.aorta.client.lock.ScreenDigitalLock;
-import msifeed.mc.aorta.locks.DigitalLockAction;
 import msifeed.mc.aorta.locks.LockTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -65,9 +64,9 @@ public class GuiHandlerClient extends GuiHandler {
     }
 
     @Override
-    public void toggleDigitalLock(LockTileEntity lock, DigitalLockAction action) {
+    public void toggleDigitalLock(LockTileEntity lock) {
         if (lock.getWorldObj().isRemote)
-            toggleGui(ScreenDigitalLock.class, () -> new ScreenDigitalLock(lock, action));
+            toggleGui(ScreenDigitalLock.class, () -> new ScreenDigitalLock(lock));
     }
 
     private void toggleGui(Class<?> c, Supplier<GuiScreen> screenSupplier) {

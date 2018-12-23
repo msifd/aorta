@@ -37,3 +37,10 @@ aorta.action.enemy_use=Enemy use
 aorta.action.block=Block
 aorta.action.dodge=Dodge
 aorta.action.psionics=Psionics
+
+aorta.lock.locked=§7Locked
+aorta.lock.unlocked=§7Unlocked
+aorta.lock.installed=§7New lock installed
+aorta.lock.replaced=§7Old lock replaced
+aorta.lock.reset=§7New password is set
+aorta.lock.blank_lock=§7Blank

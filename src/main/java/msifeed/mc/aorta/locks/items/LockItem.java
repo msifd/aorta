@@ -1,17 +1,18 @@
 package msifeed.mc.aorta.locks.items;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.genesis.AortaCreativeTab;
 import msifeed.mc.aorta.locks.LockTileEntity;
 import msifeed.mc.aorta.locks.LockType;
 import msifeed.mc.aorta.locks.Locks;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class LockItem extends Item {
     static final String DEFAULT_DIGITAL_SECRET = "0000";
@@ -31,6 +32,12 @@ public class LockItem extends Item {
     }
 
     @Override
+    public void addInformation(ItemStack itemStack, EntityPlayer player, List lines, boolean advanced) {
+        if (isBlank(itemStack))
+            lines.add(I18n.format("aorta.lock.blank_lock"));
+    }
+
+    @Override
     public void onCreated(ItemStack itemStack, World world, EntityPlayer player) {
         final String secret = type == LockType.DIGITAL ? DEFAULT_DIGITAL_SECRET : String.valueOf(world.rand.nextInt());
         final int key = Locks.makeKeyHash(secret);
@@ -44,36 +51,41 @@ public class LockItem extends Item {
         final LockTileEntity lock = LockTileEntity.find(world, x, y, z);
         if (lock == null)
             return false;
-
-        if (lock.hasLock() && lock.isLocked()) {
-            player.addChatMessage(new ChatComponentText("you need to unlock existing lock first"));
-            return true;
-        }
-
-        player.addChatMessage(new ChatComponentText("install " + type.toString() + " lock"));
-        lock.setLockType(type);
-
-        itemStack.stackSize -= 1;
-
-        if (itemStack.hasTagCompound() && !itemStack.getTagCompound().getString("key").isEmpty()) {
-            // Used lock has no bonus key
-            lock.fromItemStack(itemStack);
-        } else {
-            final String secret = type == LockType.DIGITAL ? DEFAULT_DIGITAL_SECRET : String.valueOf(world.rand.nextInt());
-            lock.setSecret(secret);
-            if (type != LockType.DIGITAL)
-                player.inventory.addItemStackToInventory(makeKeyItem(secret));
-        }
-
+        install(itemStack, lock, player, world);
         return true;
     }
 
-    private ItemStack makeKeyItem(String secret) {
-        final ItemStack stack = GameRegistry.findItemStack(Aorta.MODID, KeyItem.ID, 1);
-        final NBTTagCompound compound = new NBTTagCompound();
-        compound.setString("secret", secret);
-        stack.setTagCompound(compound);
-        return stack;
+    private void install(ItemStack itemStack, LockTileEntity lock, EntityPlayer player, World world) {
+        if (lock.hasLock() && lock.isLocked())
+            return;
+
+        final String messageId = lock.hasLock() ? "aorta.lock.replaced" : "aorta.lock.installed";
+        itemStack.stackSize -= 1;
+
+        if (lock.hasLock()) {
+            player.inventory.addItemStackToInventory(lock.toItemStack());
+            player.inventory.markDirty();
+        }
+
+        if (isBlank(itemStack)) {
+            final String secret = type == LockType.DIGITAL ? DEFAULT_DIGITAL_SECRET : String.valueOf(world.rand.nextInt());
+            lock.setSecret(secret);
+            lock.setLockType(type);
+            if (type != LockType.DIGITAL) {
+                player.inventory.addItemStackToInventory(KeyItem.makeKeyItem(secret));
+                player.inventory.markDirty();
+            }
+        } else {
+            // Used lock has no bonus key
+            lock.fromItemStack(itemStack);
+        }
+
+        if (!world.isRemote)
+            player.addChatMessage(new ChatComponentTranslation(messageId));
+    }
+
+    private boolean isBlank(ItemStack itemStack) {
+        return !itemStack.hasTagCompound() || itemStack.getTagCompound().getString("key").isEmpty();
     }
 
     public static String getItemId(LockType type) {
