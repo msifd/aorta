@@ -44,9 +44,8 @@ public class ItemCustomRender implements IItemRenderer {
 
         final ItemRenderData renderData = ((IItemTemplate) item).getUnit().renderData;
         final float scale = renderData.scale + 1.5f;
-//        final float recess = -renderData.recess - 0.5f;
-        final float recess = renderData.recess;
         final float thickness = renderData.thickness * 0.0625f; // 0.0625f is default
+        final float recess = renderData.recess;
 
         /// align with tip of hand
         GL11.glTranslatef(1.5F, 1.5F, 1.5F);

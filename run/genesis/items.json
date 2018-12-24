@@ -54,9 +54,9 @@
     "texture": "aorta:test_gun",
     "render": {
       "scale": 2,
+      "thickness": 1.5,
       "offset": 0.7,
-      "recess": 0.4,
-      "thickness": 1.5
+      "recess": 0.4
     },
     "traits": [
       "item"

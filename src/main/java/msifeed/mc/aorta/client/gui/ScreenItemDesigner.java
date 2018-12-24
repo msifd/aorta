@@ -45,6 +45,13 @@ public class ScreenItemDesigner extends MellowGuiScreen {
         scaleInput.getSizeHint().x = 40;
         paramsGrid.addChild(scaleInput);
 
+        paramsGrid.addChild(new Label("thickness"));
+        final TextInput thicknessInput = new TextInput();
+        thicknessInput.setText(String.valueOf(renderData.thickness));
+        thicknessInput.setFilter(TextInput::isUnsignedFloat);
+        thicknessInput.getSizeHint().x = 40;
+        paramsGrid.addChild(thicknessInput);
+
         paramsGrid.addChild(new Label("offset"));
         final TextInput offsetInput = new TextInput();
         offsetInput.setText(String.valueOf(renderData.offset));
@@ -66,20 +73,13 @@ public class ScreenItemDesigner extends MellowGuiScreen {
         rotationInput.getSizeHint().x = 40;
         paramsGrid.addChild(rotationInput);
 
-        paramsGrid.addChild(new Label("thickness"));
-        final TextInput thicknessInput = new TextInput();
-        thicknessInput.setText(String.valueOf(renderData.thickness));
-        thicknessInput.setFilter(TextInput::isUnsignedFloat);
-        thicknessInput.getSizeHint().x = 40;
-        paramsGrid.addChild(thicknessInput);
-
         final ButtonLabel applyBtn = new ButtonLabel("Apply");
         applyBtn.setClickCallback(() -> {
             renderData.scale = scaleInput.getFloat();
+            renderData.thickness = thicknessInput.getFloat();
             renderData.offset = offsetInput.getFloat();
             renderData.recess = recessInput.getFloat();
             renderData.rotation = rotationInput.getFloat();
-            renderData.thickness = thicknessInput.getFloat();
         });
         content.addChild(applyBtn);
     }
