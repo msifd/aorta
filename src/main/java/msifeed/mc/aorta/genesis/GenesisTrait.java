@@ -28,7 +28,7 @@ public enum GenesisTrait {
     special_log, special_bush,
 
     // Items // // // // // // // //
-    not_stackable, hold_like_tool, double_sized,
+    not_stackable, hold_like_tool,
 
     // Armor
     armor, helmet, plate, legs, boots,
@@ -38,9 +38,6 @@ public enum GenesisTrait {
 
     // Books
     book,
-
-    // Guns
-    gun,
 
     // Rarity
     poor, common, uncommon, rare, epic, legendary,

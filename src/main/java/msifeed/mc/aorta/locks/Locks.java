@@ -39,7 +39,7 @@ public enum Locks {
             return;
 
         final LockTileEntity lock = LockTileEntity.find(event.world, event.x, event.y, event.z);
-        if (lock != null && !lock.isLocked())
+        if (lock != null && lock.hasLock() && !lock.isLocked())
             event.world.spawnEntityInWorld(lock.makeEntityItem());
     }
 

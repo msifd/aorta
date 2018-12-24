@@ -52,21 +52,12 @@
     "id": "test_gun",
     "title": "Картофелемёт",
     "texture": "aorta:test_gun",
+    "render": {
+      "scale": 2,
+      "offset": 0.5
+    },
     "traits": [
-      "item",
-      "gun",
-      "hold_like_tool"
-    ]
-  },
-  {
-    "id": "test_gun_large",
-    "title": "Картофелемёт",
-    "texture": "aorta:test_gun",
-    "traits": [
-      "item",
-      "gun",
-      "hold_like_tool",
-      "double_sized"
+      "item"
     ]
   }
 ]

@@ -48,8 +48,6 @@ public class ItemGenerator implements Generator {
 
         if (FMLCommonHandler.instance().getSide().isClient()) {
             ClientGenerator.fillTexture(unit, item);
-            if (unit.hasTrait(double_sized))
-                ClientGenerator.setDoubleSized(item);
         }
     }
 }

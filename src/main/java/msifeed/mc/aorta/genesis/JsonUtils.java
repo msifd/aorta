@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class JsonUtils {
     public static Optional<String> getOptString(JsonObject obj, String key) {
@@ -14,5 +15,11 @@ public class JsonUtils {
             }
         }
         return Optional.empty();
+    }
+
+    public static void consumeFloat(JsonObject json, String name, Consumer<Float> consumer) {
+        if (!json.has(name) || !json.get(name).isJsonPrimitive() || !json.get(name).getAsJsonPrimitive().isNumber())
+            return;
+        consumer.accept(json.get(name).getAsJsonPrimitive().getAsFloat());
     }
 }

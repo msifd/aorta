@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import msifeed.mc.aorta.genesis.GenesisTrait;
 import msifeed.mc.aorta.genesis.GenesisUnit;
 import msifeed.mc.aorta.genesis.JsonUtils;
+import msifeed.mc.aorta.genesis.items.data.ItemRenderData;
 
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -18,6 +19,7 @@ public class ItemGenesisUnit extends GenesisUnit {
     public LinkedHashMap<String, String> values = new LinkedHashMap<>();
     public String texture;
     public ItemRarity rarity;
+    public ItemRenderData renderData = null;
 
     public ItemGenesisUnit(JsonObject json, HashSet<GenesisTrait> traits) {
         super(json, traits);
@@ -29,6 +31,9 @@ public class ItemGenesisUnit extends GenesisUnit {
         rarity = getRarity();
         if (rarity == ItemRarity.COMMON)
             traits.add(common);
+
+        if (json.has(Props.render))
+            renderData = new ItemRenderData(json);
     }
 
     private void loadDescriptionValues(JsonObject json) {
@@ -67,5 +72,6 @@ public class ItemGenesisUnit extends GenesisUnit {
         static final String desc = "description";
         static final String values = "values";
         static final String texture = "texture";
+        static final String render = "render";
     }
 }
