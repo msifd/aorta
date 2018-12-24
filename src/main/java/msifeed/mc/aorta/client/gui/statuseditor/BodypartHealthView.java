@@ -84,10 +84,10 @@ class BodypartHealthView extends Widget {
     }
 
     private static boolean shieldPowerFilter(String s) {
-        return s.length() < 5 && TextInput.isUnsignedDigit(s);
+        return s.length() < 5 && TextInput.isUnsignedInt(s);
     }
 
     private static boolean sanityFilter(String s) {
-        return s.length() <= 3 && TextInput.isUnsignedDigit(s) && (s.length() <= 0 || Short.parseShort(s) <= 125);
+        return s.length() <= 3 && TextInput.isUnsignedInt(s) && (s.length() <= 0 || Short.parseShort(s) <= 125);
     }
 }

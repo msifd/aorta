@@ -24,14 +24,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class EntityControl {
+public enum EntityControl {
+    INSTANCE;
+
     private static Logger logger = LogManager.getLogger("Aorta.EntityControl");
     private final TypeToken<ArrayList<ConfigContent>> configContentType = new TypeToken<ArrayList<ConfigContent>>() {};
     private JsonConfig<ArrayList<ConfigContent>> config = ConfigManager.getConfig(ConfigMode.CLIENT, configContentType, "entity_control.json");
 
-    public EntityControl() {
-        ConfigManager.INSTANCE.eventbus.register(this);
-        MinecraftForge.EVENT_BUS.register(this);
+    public static void init() {
+        ConfigManager.INSTANCE.eventbus.register(INSTANCE);
+        MinecraftForge.EVENT_BUS.register(INSTANCE);
     }
 
     @Subscribe

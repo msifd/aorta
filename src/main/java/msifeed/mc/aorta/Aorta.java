@@ -16,6 +16,7 @@ import msifeed.mc.aorta.defines.Defines;
 import msifeed.mc.aorta.genesis.Genesis;
 import msifeed.mc.aorta.genesis.rename.RenameCommand;
 import msifeed.mc.aorta.locks.Locks;
+import msifeed.mc.aorta.tools.ToolItems;
 import msifeed.mc.aorta.tweaks.EnableDesertRain;
 import msifeed.mc.aorta.tweaks.EntityControl;
 import msifeed.mc.aorta.tweaks.MakeEveryoneHealthy;
@@ -48,9 +49,6 @@ public class Aorta {
     )
     public static GuiHandler GUI_HANDLER;
 
-    private Speechat speechat = new Speechat();
-    private EntityControl entityControl = new EntityControl();
-
     public void preInit(FMLPreInitializationEvent event) {
         ConfigManager.init(event);
         AttributeHandler.init();
@@ -59,10 +57,11 @@ public class Aorta {
     public void init() {
         CORE.init();
         GENESIS.init();
+        ToolItems.init();
         RemoteBookManager.init();
         Locks.init();
-
-        speechat.init();
+        Speechat.init();
+        EntityControl.init();
 
         MakeEveryoneHealthy.apply();
     }
@@ -81,6 +80,6 @@ public class Aorta {
         commandHandler.registerCommand(new RenameCommand());
 
         CORE.registerCommands(commandHandler);
-        speechat.registerCommands(commandHandler);
+        Speechat.registerCommands(commandHandler);
     }
 }

@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.core.things;
+package msifeed.mc.aorta.tools;
 
 import msifeed.mc.aorta.genesis.AortaCreativeTab;
 import net.minecraft.item.Item;

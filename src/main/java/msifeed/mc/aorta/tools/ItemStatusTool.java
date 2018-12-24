@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.core.things;
+package msifeed.mc.aorta.tools;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.aorta.Aorta;

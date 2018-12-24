@@ -1,6 +1,7 @@
 package msifeed.mc.aorta.client;
 
 import cpw.mods.fml.client.FMLClientHandler;
+import msifeed.mc.aorta.client.gui.ScreenItemDesigner;
 import msifeed.mc.aorta.client.gui.ScreenLangSelector;
 import msifeed.mc.aorta.client.gui.book.ScreenBookEditor;
 import msifeed.mc.aorta.client.gui.book.ScreenBookViewer;
@@ -67,6 +68,11 @@ public class GuiHandlerClient extends GuiHandler {
     public void toggleDigitalLock(LockTileEntity lock) {
         if (lock.getWorldObj().isRemote)
             toggleGui(ScreenDigitalLock.class, () -> new ScreenDigitalLock(lock));
+    }
+
+    public void toggleDesignerScreen() {
+        if (Minecraft.getMinecraft().theWorld.isRemote)
+            toggleGui(ScreenItemDesigner.class, ScreenItemDesigner::new);
     }
 
     private void toggleGui(Class<?> c, Supplier<GuiScreen> screenSupplier) {

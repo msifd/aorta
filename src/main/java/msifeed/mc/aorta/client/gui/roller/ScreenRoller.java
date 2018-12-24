@@ -41,7 +41,7 @@ public class ScreenRoller extends MellowGuiScreen {
         modInput.getSizeHint().x = 29;
         if (lastModifier != 0)
             modInput.setText(Integer.toString(lastModifier));
-        modInput.setFilter(s -> s.length() < 5 && TextInput.isSignedDigit(s));
+        modInput.setFilter(s -> s.length() < 5 && TextInput.isSignedInt(s));
         modInput.setCallback(this::parseNumber);
         modifiers.addChild(modInput);
     }

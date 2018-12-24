@@ -92,6 +92,6 @@ class BodypartHealthDialog extends Window {
     }
 
     private static boolean healthFilter(String s) {
-        return s.length() < 5 && TextInput.isUnsignedDigit(s);
+        return s.length() < 5 && TextInput.isUnsignedInt(s);
     }
 }

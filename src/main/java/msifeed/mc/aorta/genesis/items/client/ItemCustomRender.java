@@ -44,7 +44,8 @@ public class ItemCustomRender implements IItemRenderer {
 
         final ItemRenderData renderData = ((IItemTemplate) item).getUnit().renderData;
         final float scale = renderData.scale + 1.5f;
-        final float recess = -renderData.recess - 0.5f;
+//        final float recess = -renderData.recess - 0.5f;
+        final float recess = renderData.recess;
         final float thickness = renderData.thickness * 0.0625f; // 0.0625f is default
 
         /// align with tip of hand
@@ -58,8 +59,8 @@ public class ItemCustomRender implements IItemRenderer {
         GL11.glTranslatef(0, 0, (thickness / 2) * scale);
 
         GL11.glTranslatef(-2 * renderData.offset, 0, 0); // custom offset from tip of hand
+        GL11.glTranslatef(0, recess, 0); // move item out of hand
         GL11.glRotatef(-45 + renderData.rotation, 0, 0, 1); // rotate 45 deg + custom
-        GL11.glTranslatef(recess, 0, 0); // move item out of hand
         GL11.glScalef(scale, scale, scale); // scale item
 
         if (item.requiresMultipleRenderPasses()) {

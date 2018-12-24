@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.core.things;
+package msifeed.mc.aorta.tools;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.aorta.Aorta;
@@ -11,12 +11,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 
-public class ItemCharTool extends Item {
-    public static String ITEM_NAME = "tool_char";
+public class ItemRollerTool extends Item {
+    public static String ITEM_NAME = "tool_roller";
 
-    public ItemCharTool() {
+    public ItemRollerTool() {
         setUnlocalizedName(ITEM_NAME);
-        setTextureName("aorta:tool_char");
+        setTextureName("aorta:tool_roller");
         setCreativeTab(AortaCreativeTab.TOOLS);
         setMaxStackSize(1);
 
@@ -40,13 +40,13 @@ public class ItemCharTool extends Item {
     @SubscribeEvent
     public void onEntityInteract(EntityInteractEvent event) {
         final ItemStack heldItem = event.entityPlayer.getHeldItem();
-        if (heldItem == null || !(heldItem.getItem() instanceof ItemCharTool))
+        if (heldItem == null || !(heldItem.getItem() instanceof ItemRollerTool))
             return;
         if (event.target instanceof EntityLivingBase)
             handleEntity((EntityLivingBase) event.target);
     }
 
     private void handleEntity(EntityLivingBase entity) {
-        Aorta.GUI_HANDLER.openCharEditor(entity);
+        Aorta.GUI_HANDLER.toggleRoller(entity);
     }
 }

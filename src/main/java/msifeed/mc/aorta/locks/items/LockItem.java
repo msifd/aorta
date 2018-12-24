@@ -4,7 +4,7 @@ import msifeed.mc.aorta.genesis.AortaCreativeTab;
 import msifeed.mc.aorta.locks.LockTileEntity;
 import msifeed.mc.aorta.locks.LockType;
 import msifeed.mc.aorta.locks.Locks;
-import net.minecraft.client.resources.I18n;
+import msifeed.mc.aorta.utils.L10n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -34,7 +34,7 @@ public class LockItem extends Item {
     @Override
     public void addInformation(ItemStack itemStack, EntityPlayer player, List lines, boolean advanced) {
         if (isBlank(itemStack))
-            lines.add(I18n.format("aorta.lock.blank_lock"));
+            lines.add(L10n.tr("aorta.lock.blank_lock"));
     }
 
     @Override

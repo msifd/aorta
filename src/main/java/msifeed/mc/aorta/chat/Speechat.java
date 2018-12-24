@@ -14,16 +14,18 @@ import msifeed.mc.aorta.chat.usage.OfftopCommand;
 import net.minecraft.command.CommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 
-public class Speechat {
+public enum Speechat {
+    INSTANCE;
+
     static final SimpleNetworkWrapper CHANNEL = NetworkRegistry.INSTANCE.newSimpleChannel(Aorta.MODID + ".chat");
 
-    public void init() {
+    public static void init() {
         CHANNEL.registerMessage(SpeechMessageHandler.class, ChatMessage.class, 0x01, Side.CLIENT);
         MinecraftForge.EVENT_BUS.register(new ChatHandler());
         AttributeHandler.INSTANCE.registerAttribute(LangAttribute.INSTANCE);
     }
 
-    public void registerCommands(CommandHandler handler) {
+    public static void registerCommands(CommandHandler handler) {
         handler.registerCommand(new LangCommand());
         handler.registerCommand(new OfftopCommand());
         handler.registerCommand(new GmsayCommand());

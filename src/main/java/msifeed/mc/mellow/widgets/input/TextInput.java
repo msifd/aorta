@@ -63,6 +63,16 @@ public class TextInput extends Widget implements KeyHandler {
         }
     }
 
+    public float getFloat() {
+        if (text.isEmpty())
+            return 0;
+        try {
+            return Float.parseFloat(text);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
     public void setFilter(Function<String, Boolean> filter) {
         this.filter = filter;
     }
@@ -174,7 +184,7 @@ public class TextInput extends Widget implements KeyHandler {
             onChange.accept(text);
     }
 
-    public static boolean isUnsignedDigit(String s) {
+    public static boolean isUnsignedInt(String s) {
         if (s.isEmpty())
             return true;
         try {
@@ -185,11 +195,33 @@ public class TextInput extends Widget implements KeyHandler {
         }
     }
 
-    public static boolean isSignedDigit(String s) {
+    public static boolean isSignedInt(String s) {
         if (s.isEmpty() || s.equals("-"))
             return true;
         try {
             Integer.parseInt(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public static boolean isUnsignedFloat(String s) {
+        if (s.isEmpty())
+            return true;
+        try {
+            Float.parseFloat(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public static boolean isSignedFloat(String s) {
+        if (s.isEmpty() || s.equals("-"))
+            return true;
+        try {
+            Float.parseFloat(s);
             return true;
         } catch (NumberFormatException e) {
             return false;
