@@ -2,17 +2,14 @@ package msifeed.mc.aorta.genesis.items.data;
 
 import com.google.gson.JsonObject;
 import msifeed.mc.aorta.genesis.JsonUtils;
+import msifeed.mc.aorta.genesis.items.ItemGenesisUnit;
 
 public class ArmorData {
     private static final String EMPTY_ARMOR_TEXTURE = "aorta:textures/models/armor/empty_armor";
 
-    public String texture;
+    public String texture = EMPTY_ARMOR_TEXTURE;
 
     public ArmorData(JsonObject json) {
-        texture = JsonUtils.getOptString(json, Props.texture).orElse(EMPTY_ARMOR_TEXTURE);
-    }
-
-    private static class Props {
-        static final String texture = "armor_texture";
+        JsonUtils.consumeString(json, "armor_texture", s -> texture = s);
     }
 }

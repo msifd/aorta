@@ -18,11 +18,6 @@ public class ItemDesignerTool extends Item {
     }
 
     @Override
-    public int getEntityLifespan(ItemStack itemStack, World world) {
-        return 0;
-    }
-
-    @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
         if (world.isRemote)
             Aorta.GUI_HANDLER.toggleDesignerScreen();

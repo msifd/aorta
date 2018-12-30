@@ -23,10 +23,10 @@ public class ItemGenesisUnit extends GenesisUnit {
 
     public ItemGenesisUnit(JsonObject json, HashSet<GenesisTrait> traits) {
         super(json, traits);
-        title = JsonUtils.getOptString(json, Props.title).orElse(null);
-        desc = JsonUtils.getOptString(json, Props.desc).map(ItemGenesisUnit::parseDescription).orElse(null);
+        JsonUtils.consumeString(json, Props.title, s -> title = s);
+        JsonUtils.consumeString(json, Props.desc, s -> desc = parseDescription(s));
         loadDescriptionValues(json);
-        texture = JsonUtils.getOptString(json, Props.texture).orElse(null);
+        JsonUtils.consumeString(json, Props.texture, s -> texture = s);
 
         rarity = getRarity();
         if (rarity == ItemRarity.COMMON)

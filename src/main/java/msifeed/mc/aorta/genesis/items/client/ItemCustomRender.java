@@ -62,12 +62,16 @@ public class ItemCustomRender implements IItemRenderer {
         GL11.glRotatef(-45 + renderData.rotation, 0, 0, 1); // rotate 45 deg + custom
         GL11.glScalef(scale, scale, scale); // scale item
 
+        GL11.glEnable(GL11.GL_BLEND);
+
         if (item.requiresMultipleRenderPasses()) {
             for (int i = 0; i < stack.getItem().getRenderPasses(stack.getItemDamage()); ++i)
                 renderItem(stack, entity, thickness, i);
         } else {
             renderItem(stack, entity, thickness, 0);
         }
+
+        GL11.glDisable(GL11.GL_BLEND);
 
         renderFlag = false;
     }

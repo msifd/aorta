@@ -61,5 +61,18 @@
     "traits": [
       "item"
     ]
+  },
+  {
+    "id": "test_transparent_dagger",
+    "title": "Прозрачнотык",
+    "texture": "aorta:transparent_dagger",
+    "render": {
+      "scale": 0.5,
+      "offset": 0.8,
+      "recess": 1
+    },
+    "traits": [
+      "item"
+    ]
   }
 ]

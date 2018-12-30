@@ -7,10 +7,8 @@ public class BookData {
     public String index;
 
     public BookData(JsonObject json) {
-        index = JsonUtils.getOptString(json, Props.index).orElseThrow(() -> new RuntimeException("Book should have `index` field!"));
-    }
-
-    private static class Props {
-        static final String index = "index";
+        JsonUtils.consumeString(json, "index", s -> index = s);
+        if (index == null)
+            throw new RuntimeException("Book should have `index` field!");
     }
 }
