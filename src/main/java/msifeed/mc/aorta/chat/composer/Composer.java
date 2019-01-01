@@ -30,7 +30,8 @@ public class Composer {
     }
 
     private static String getTextFromTranslation(ChatComponentTranslation chatComponent) {
-        final Object formatObj = chatComponent.getFormatArgs()[1];
+        final Object[] args = chatComponent.getFormatArgs();
+        final Object formatObj = args[args.length - 1]; // pick last "text" arg
         if (formatObj instanceof IChatComponent)
             return ((IChatComponent) formatObj).getUnformattedText();
         else if (formatObj instanceof String)
