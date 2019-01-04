@@ -2,7 +2,6 @@ package msifeed.mc.aorta.genesis.items.data;
 
 import com.google.gson.JsonObject;
 import msifeed.mc.aorta.genesis.JsonUtils;
-import msifeed.mc.aorta.genesis.items.ItemGenesisUnit;
 
 public class ArmorData {
     private static final String EMPTY_ARMOR_TEXTURE = "aorta:textures/models/armor/empty_armor";

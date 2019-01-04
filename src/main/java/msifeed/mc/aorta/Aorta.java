@@ -21,6 +21,7 @@ import msifeed.mc.aorta.tweaks.EnableDesertRain;
 import msifeed.mc.aorta.tweaks.EntityControl;
 import msifeed.mc.aorta.tweaks.MakeEveryoneHealthy;
 import msifeed.mc.aorta.tweaks.MakeFoodEdible;
+import msifeed.mc.aorta.weather.WeatherManager;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.server.MinecraftServer;
 
@@ -62,6 +63,7 @@ public class Aorta {
         Locks.init();
         Speechat.init();
         EntityControl.init();
+        WeatherManager.init();
 
         MakeEveryoneHealthy.apply();
     }
@@ -81,5 +83,6 @@ public class Aorta {
 
         CORE.registerCommands(commandHandler);
         Speechat.registerCommands(commandHandler);
+        WeatherManager.registerCommands(commandHandler);
     }
 }
