@@ -1,0 +1,43 @@
+package msifeed.mc.aorta.environment;
+
+import msifeed.mc.aorta.commands.ExtCommand;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ChatComponentText;
+
+public class EnvironmentCommand extends ExtCommand {
+    @Override
+    public String getCommandName() {
+        return "aenv";
+    }
+
+    @Override
+    public String getCommandUsage(ICommandSender sender) {
+        return null;
+    }
+
+    @Override
+    public void processCommand(ICommandSender sender, String[] args) {
+        EntityPlayer player = (EntityPlayer) sender;
+
+        if (args.length < 1)
+            return;
+
+        final int dim = player.worldObj.provider.dimensionId;
+        final WorldEnv worldEnv = EnvironmentManager.getStatus(dim);
+        switch (args[0].toLowerCase()) {
+            case "snow":
+                worldEnv.snow = !worldEnv.snow;
+                sender.addChatMessage(new ChatComponentText("snow: " + worldEnv.snow));
+                break;
+            case "melt":
+                worldEnv.meltSnow = !worldEnv.meltSnow;
+                sender.addChatMessage(new ChatComponentText("meltSnow: " + worldEnv.meltSnow));
+                break;
+            case "stacksnow":
+                worldEnv.stackSnow = !worldEnv.stackSnow;
+                sender.addChatMessage(new ChatComponentText("stackSnow: " + worldEnv.stackSnow));
+                break;
+        }
+    }
+}

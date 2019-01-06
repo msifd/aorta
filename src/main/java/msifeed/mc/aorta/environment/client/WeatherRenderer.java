@@ -1,7 +1,8 @@
-package msifeed.mc.aorta.weather.client;
+package msifeed.mc.aorta.environment.client;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import msifeed.mc.aorta.weather.WeatherManager;
+import msifeed.mc.aorta.environment.EnvironmentManager;
+import msifeed.mc.aorta.environment.WorldEnv;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.EntityRenderer;
@@ -20,6 +21,7 @@ public class WeatherRenderer {
     private final float[] rainXCoords = new float[1024];
     private final float[] rainYCoords = new float[1024];
     private int rendererUpdateCount;
+    private float snowStrength = 0;
     private Random random = new Random();
 
     public WeatherRenderer() {
@@ -37,24 +39,29 @@ public class WeatherRenderer {
     @SubscribeEvent
     public void onWorldRender(RenderWorldLastEvent event) {
         final Minecraft mc = Minecraft.getMinecraft();
-        final int dim = mc.theWorld.provider.dimensionId;
-        if (WeatherManager.INSTANCE.isSnowing(dim))
-            renderSnow(event.partialTicks);
+        final WorldEnv worldEnv = EnvironmentManager.getStatus(mc.theWorld.provider.dimensionId);
+
+        if (worldEnv.snow) {
+            if (snowStrength < 1.5)
+                snowStrength += 0.01f;
+        } else if (snowStrength > 0) {
+            snowStrength -= 0.01f;
+        }
+        renderSnow(event.partialTicks);
+
         rendererUpdateCount++;
     }
 
     private void renderSnow(float partialTicks)
     {
+        if (snowStrength <= 0)
+            return;
+
         final Minecraft mc = Minecraft.getMinecraft();
         final EntityRenderer er = mc.entityRenderer;
         final WorldClient world = mc.theWorld;
         final EntityLivingBase entity = mc.renderViewEntity;
         final Tessellator tessellator = Tessellator.instance;
-
-//        float rainStrength = mc.theWorld.getRainStrength(partialTicks);
-//        if (rainStrength <= 0)
-//            return;
-        float rainStrength = 1f;
 
         er.enableLightmap((double)partialTicks);
 
@@ -122,7 +129,7 @@ public class WeatherRenderer {
                     double d5 = (double)((float)l + 0.5F) - entity.posZ;
                     float f14 = MathHelper.sqrt_double(d4 * d4 + d5 * d5) / (float)b0;
                     tessellator.setBrightness((world.getLightBrightnessForSkyBlocks(i1, j2, l, 0) * 3 + 15728880) / 4);
-                    tessellator.setColorRGBA_F(1, 1, 1, ((1.0F - f14 * f14) * 0.3F + 0.5F) * rainStrength);
+                    tessellator.setColorRGBA_F(1, 1, 1, ((1.0F - f14 * f14) * 0.3F + 0.5F) * snowStrength);
                     tessellator.setTranslation(-d0 * 1.0D, -d1 * 1.0D, -d2 * 1.0D);
                     tessellator.addVertexWithUV((double)((float)i1 - f6) + 0.5D, (double)l1, (double)((float)l - f7) + 0.5D, (double)(0.0F * f8 + f16), (double)((float)l1 * f8 / 4.0F + f10 * f8 + f11));
                     tessellator.addVertexWithUV((double)((float)i1 + f6) + 0.5D, (double)l1, (double)((float)l + f7) + 0.5D, (double)(1.0F * f8 + f16), (double)((float)l1 * f8 / 4.0F + f10 * f8 + f11));

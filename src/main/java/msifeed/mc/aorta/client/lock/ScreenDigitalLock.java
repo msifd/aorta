@@ -1,9 +1,7 @@
 package msifeed.mc.aorta.client.lock;
 
-import msifeed.mc.aorta.locks.DigitalLockAction;
-import msifeed.mc.aorta.locks.DigitalLockMessage;
 import msifeed.mc.aorta.locks.LockTileEntity;
-import msifeed.mc.aorta.locks.Locks;
+import msifeed.mc.aorta.rpc.Rpc;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.mellow.utils.SizePolicy;
@@ -18,8 +16,8 @@ import java.util.HashMap;
 public class ScreenDigitalLock extends MellowGuiScreen {
     private final LockTileEntity lock;
 
-    private DigitalLockAction action;
     private String input = "";
+    private boolean resetMode = false;
 
     private HashMap<Character, SquareButton> keyButtons = new HashMap<>();
     private SquareButton keyPressedButton = null;
@@ -27,7 +25,6 @@ public class ScreenDigitalLock extends MellowGuiScreen {
 
     public ScreenDigitalLock(LockTileEntity lock) {
         this.lock = lock;
-        this.action = lock.isLocked() ? DigitalLockAction.UNLOCK : DigitalLockAction.LOCK;
 
         final Window window = new Window();
         window.setTitle("ZX DigiLock");
@@ -98,7 +95,7 @@ public class ScreenDigitalLock extends MellowGuiScreen {
 
     private void selectDigit(char digit) {
         input += digit;
-        if (action != DigitalLockAction.RESET)
+        if (!resetMode)
             unlock();
     }
 
@@ -109,14 +106,14 @@ public class ScreenDigitalLock extends MellowGuiScreen {
     private void pressReset() {
         if (lock.isLocked())
             return;
-        if (action == DigitalLockAction.RESET) {
+        if (resetMode) {
             if (!input.isEmpty()) {
                 lock.setSecret(input); // Update client side early
                 sendActionRequest();
-                action = DigitalLockAction.LOCK;
+                resetMode = false;
             }
         } else {
-            action = DigitalLockAction.RESET;
+            resetMode = true;
         }
         input = "";
     }
@@ -129,8 +126,10 @@ public class ScreenDigitalLock extends MellowGuiScreen {
     }
 
     private void sendActionRequest() {
-        final DigitalLockMessage m = new DigitalLockMessage(lock, action, input);
-        Locks.INSTANCE.CHANNEL.sendToServer(m);
+        if (resetMode)
+            Rpc.sendToServer("aorta:locks.reset", lock.xCoord, lock.yCoord, lock.zCoord, input);
+        else
+            Rpc.sendToServer("aorta:locks.toggle", lock.xCoord, lock.yCoord, lock.zCoord, input);
     }
 
     private void closeScreen() {

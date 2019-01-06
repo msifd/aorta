@@ -6,18 +6,18 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
 import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.genesis.blocks.templates.DoorTemplate;
 import msifeed.mc.aorta.locks.items.*;
+import msifeed.mc.aorta.rpc.Rpc;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
 
 public enum Locks {
     INSTANCE;
 
-    public final SimpleNetworkWrapper CHANNEL = NetworkRegistry.INSTANCE.newSimpleChannel(Aorta.MODID + ".locks");
     private static final HashFunction hasher = Hashing.murmur3_128(3364);
+    private static final LocksRpcHandler rpcHandler = new LocksRpcHandler();
 
     public static void init() {
         LockType.locks().forEach(t -> GameRegistry.registerItem(new LockItem(t), LockItem.getItemId(t)));
@@ -29,7 +29,7 @@ public enum Locks {
         GameRegistry.registerTileEntity(LockTileEntity.class, LockTileEntity.ID);
         GameRegistry.addRecipe(new CopyKeyRecipe());
 
-        INSTANCE.CHANNEL.registerMessage(DigitalLockMessage.class, DigitalLockMessage.class, 0x00, Side.SERVER);
+        Rpc.register(rpcHandler);
         MinecraftForge.EVENT_BUS.register(INSTANCE);
     }
 

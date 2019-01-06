@@ -16,12 +16,13 @@ import msifeed.mc.aorta.defines.Defines;
 import msifeed.mc.aorta.genesis.Genesis;
 import msifeed.mc.aorta.genesis.rename.RenameCommand;
 import msifeed.mc.aorta.locks.Locks;
+import msifeed.mc.aorta.rpc.Rpc;
 import msifeed.mc.aorta.tools.ToolItems;
 import msifeed.mc.aorta.tweaks.EnableDesertRain;
 import msifeed.mc.aorta.tweaks.EntityControl;
 import msifeed.mc.aorta.tweaks.MakeEveryoneHealthy;
 import msifeed.mc.aorta.tweaks.MakeFoodEdible;
-import msifeed.mc.aorta.weather.WeatherManager;
+import msifeed.mc.aorta.environment.EnvironmentManager;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.server.MinecraftServer;
 
@@ -53,6 +54,7 @@ public class Aorta {
     public void preInit(FMLPreInitializationEvent event) {
         ConfigManager.init(event);
         AttributeHandler.init();
+        Rpc.init();
     }
 
     public void init() {
@@ -63,7 +65,7 @@ public class Aorta {
         Locks.init();
         Speechat.init();
         EntityControl.init();
-        WeatherManager.init();
+        EnvironmentManager.init();
 
         MakeEveryoneHealthy.apply();
     }
@@ -83,6 +85,6 @@ public class Aorta {
 
         CORE.registerCommands(commandHandler);
         Speechat.registerCommands(commandHandler);
-        WeatherManager.registerCommands(commandHandler);
+        EnvironmentManager.registerCommands(commandHandler);
     }
 }
