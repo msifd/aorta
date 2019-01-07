@@ -6,6 +6,8 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
 
+import java.io.*;
+
 public class RpcMessage implements IMessage, IMessageHandler<RpcMessage, IMessage> {
     String method;
     Object[] args;
@@ -14,7 +16,7 @@ public class RpcMessage implements IMessage, IMessageHandler<RpcMessage, IMessag
 
     }
 
-    public RpcMessage(String method, Object... args) {
+    public RpcMessage(String method, Serializable... args) {
         this.method = method;
         this.args = args;
     }
@@ -23,62 +25,40 @@ public class RpcMessage implements IMessage, IMessageHandler<RpcMessage, IMessag
     public void toBytes(ByteBuf buf) {
         ByteBufUtils.writeUTF8String(buf, method);
         buf.writeByte(args.length);
-        for (Object o : args)
-            writeSome(buf, o);
+
+        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try {
+            final ObjectOutputStream oos = new ObjectOutputStream(bos);
+            for (Object o : args)
+                oos.writeObject(o);
+            final byte[] bytes = bos.toByteArray();
+            buf.writeInt(bytes.length);
+            buf.writeBytes(bytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         method = ByteBufUtils.readUTF8String(buf);
         args = new Object[buf.readByte()];
-        for (int i = 0; i < args.length; ++i)
-            args[i] = readSome(buf);
+
+        final byte[] bytes = new byte[buf.readInt()];
+        buf.readBytes(bytes, 0, bytes.length);
+        final ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+        try {
+            final ObjectInputStream ois = new ObjectInputStream(bis);
+            for (int i = 0; i < args.length; ++i)
+                args[i] = ois.readObject();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public IMessage onMessage(RpcMessage message, MessageContext ctx) {
         Rpc.onMessage(message, ctx);
         return null;
-    }
-
-    private static void writeSome(ByteBuf buf, Object o) {
-        buf.writeByte(getTypeByte(o));
-        if (o instanceof Byte)
-            buf.writeByte((byte) o);
-        else if (o instanceof Short)
-            buf.writeShort((short) o);
-        else if (o instanceof Integer)
-            buf.writeInt((int) o);
-        else if (o instanceof String)
-            ByteBufUtils.writeUTF8String(buf, (String) o);
-    }
-
-    private static Object readSome(ByteBuf buf) {
-        final byte type = buf.readByte();
-        switch (type) {
-            case 0x01:
-                return buf.readByte();
-            case 0x02:
-                return buf.readShort();
-            case 0x03:
-                return buf.readInt();
-            case 0x04:
-                return ByteBufUtils.readUTF8String(buf);
-            default:
-                return null;
-        }
-    }
-
-    private static byte getTypeByte(Object o) {
-        if (o instanceof Byte)
-            return 0x01;
-        else if (o instanceof Short)
-            return 0x02;
-        else if (o instanceof Integer)
-            return 0x03;
-        else if (o instanceof String)
-            return 0x04;
-        else
-            throw new RuntimeException("unsupported type " + o.getClass().getName());
     }
 }

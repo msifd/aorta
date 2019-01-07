@@ -13,6 +13,7 @@ import msifeed.mc.aorta.config.ConfigManager;
 import msifeed.mc.aorta.core.Core;
 import msifeed.mc.aorta.defines.DefineCommand;
 import msifeed.mc.aorta.defines.Defines;
+import msifeed.mc.aorta.environment.EnvironmentManager;
 import msifeed.mc.aorta.genesis.Genesis;
 import msifeed.mc.aorta.genesis.rename.RenameCommand;
 import msifeed.mc.aorta.locks.Locks;
@@ -22,7 +23,6 @@ import msifeed.mc.aorta.tweaks.EnableDesertRain;
 import msifeed.mc.aorta.tweaks.EntityControl;
 import msifeed.mc.aorta.tweaks.MakeEveryoneHealthy;
 import msifeed.mc.aorta.tweaks.MakeFoodEdible;
-import msifeed.mc.aorta.environment.EnvironmentManager;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.server.MinecraftServer;
 

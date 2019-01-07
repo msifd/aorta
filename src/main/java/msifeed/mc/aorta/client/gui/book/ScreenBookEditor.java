@@ -22,7 +22,7 @@ public class ScreenBookEditor extends MellowGuiScreen {
 
     public ScreenBookEditor(EntityPlayer player) {
         final Window window = new Window();
-        window.setTitle(L10n.tr("item.remote_book.name"));
+        window.setTitle(L10n.tr("item.remote_book.value"));
         scene.addChild(window);
 
         final Widget content = window.getContent();
@@ -43,7 +43,7 @@ public class ScreenBookEditor extends MellowGuiScreen {
                     check(input.getText());
                     break;
                 case EXISTS:
-                    RemoteBookManager.INSTANCE.sendSign(input.getText());
+                    RemoteBookManager.INSTANCE.requestSign(input.getText());
                     closeGui();
                     break;
                 case MISSING:
@@ -64,7 +64,7 @@ public class ScreenBookEditor extends MellowGuiScreen {
     private void check(String index) {
         status = CheckStatus.CHECKING;
         updateStatus(index);
-        RemoteBookManager.INSTANCE.sendCheck(index, exists -> {
+        RemoteBookManager.INSTANCE.requestCheck(index, exists -> {
             status = exists ? CheckStatus.EXISTS : CheckStatus.MISSING;
             updateStatus(index);
         });

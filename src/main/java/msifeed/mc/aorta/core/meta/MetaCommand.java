@@ -15,7 +15,7 @@ public class MetaCommand extends ExtCommand {
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "/meta < owner <name> | add <text> | remove | clear >";
+        return "/meta < owner <value> | add <text> | remove | clear >";
     }
 
     @Override
@@ -51,7 +51,7 @@ public class MetaCommand extends ExtCommand {
                 if (args.length > 1)
                     MetaProvider.setOwner(itemStack, args[1]);
                 else
-                    error(sender, "You should pass a name");
+                    error(sender, "You should pass a value");
                 break;
             case "add":
                 MetaProvider.addLine(itemStack, joinText(args, 1));
@@ -71,7 +71,7 @@ public class MetaCommand extends ExtCommand {
     private void printHelp(ICommandSender sender) {
         title(sender, "Meta help:");
         info(sender, " Take item in hand.");
-        info(sender, " /meta owner <name> - Set owner");
+        info(sender, " /meta owner <value> - Set owner");
         info(sender, " /meta add <text> - Add new line");
         info(sender, " /meta remove - Remove last line");
         info(sender, " /meta clear - Clear meta data");

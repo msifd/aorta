@@ -3,10 +3,7 @@ package msifeed.mc.aorta.locks;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
-import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.genesis.blocks.templates.DoorTemplate;
 import msifeed.mc.aorta.locks.items.*;
 import msifeed.mc.aorta.rpc.Rpc;
@@ -17,7 +14,7 @@ public enum Locks {
     INSTANCE;
 
     private static final HashFunction hasher = Hashing.murmur3_128(3364);
-    private static final LocksRpcHandler rpcHandler = new LocksRpcHandler();
+    private static final LocksRpc rpcHandler = new LocksRpc();
 
     public static void init() {
         LockType.locks().forEach(t -> GameRegistry.registerItem(new LockItem(t), LockItem.getItemId(t)));

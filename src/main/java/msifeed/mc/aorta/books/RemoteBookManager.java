@@ -1,11 +1,8 @@
 package msifeed.mc.aorta.books;
 
 import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import msifeed.mc.aorta.Aorta;
+import msifeed.mc.aorta.rpc.Rpc;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -24,44 +21,42 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public enum RemoteBookManager {
     INSTANCE;
 
-    private static final SimpleNetworkWrapper CHANNEL = NetworkRegistry.INSTANCE.newSimpleChannel(Aorta.MODID + ".books");
     private static Logger logger = LogManager.getLogger("Aorta.Books");
-    private Consumer<RemoteBook> fetchConsumer = null;
-    private Consumer<Boolean> checkConsumer = null;
+    private static RemoteBookRpc rpcHandler = new RemoteBookRpc();
+
     private File booksDir;
 
+    // Client-side consumers
+    private Consumer<Boolean> checkConsumer = null;
+    private Consumer<RemoteBook> fetchConsumer = null;
+
     public static void init() {
+        Rpc.register(rpcHandler);
+
         final File mcRootDir = Loader.instance().getConfigDir().getParentFile();
         INSTANCE.booksDir = new File(mcRootDir, "books");
         INSTANCE.booksDir.mkdirs();
-
-        CHANNEL.registerMessage(MessageRemoteBook.class, MessageRemoteBook.class, 0x00, Side.SERVER);
-        CHANNEL.registerMessage(MessageRemoteBook.class, MessageRemoteBook.class, 0x01, Side.CLIENT);
 
         final ItemRemoteBook wikiBook = new ItemRemoteBook();
         GameRegistry.registerItem(wikiBook, "remote_book");
     }
 
-    /**
-     * @return Прошел ли запрос. Нельзя запрашивать следующую книжку до прихода предыдущей.
-     */
-    public boolean fetchBook(String name, Consumer<RemoteBook> consumer) {
-        if (fetchConsumer != null) return false;
+    public void fetchBook(String index, Consumer<RemoteBook> consumer) {
+        if (fetchConsumer != null) return;
 
         fetchConsumer = consumer;
-        CHANNEL.sendToServer(new MessageRemoteBook(MessageRemoteBook.Type.REQUEST_RESPONSE, name));
-        return true;
+        Rpc.sendToServer(RemoteBookRpc.fetchRequest, index);
     }
 
-    public void sendCheck(String name, Consumer<Boolean> consumer) {
+    public void requestCheck(String index, Consumer<Boolean> consumer) {
         if (checkConsumer != null) return;
 
         checkConsumer = consumer;
-        CHANNEL.sendToServer(new MessageRemoteBook(MessageRemoteBook.Type.CHECK, name));
+        Rpc.sendToServer(RemoteBookRpc.checkRequest, index);
     }
 
-    public void sendSign(String name) {
-        CHANNEL.sendToServer(new MessageRemoteBook(MessageRemoteBook.Type.SIGN, name));
+    public void requestSign(String index) {
+        Rpc.sendToServer(RemoteBookRpc.signRequest, index);
     }
 
     public void receiveResponse(String rawBook) {
@@ -80,12 +75,12 @@ public enum RemoteBookManager {
         }
     }
 
-    public void receiveCheck(boolean check) {
+    public void receiveCheck(boolean exists) {
         if (checkConsumer == null) return;
 
         final Consumer<Boolean> consumer = checkConsumer;
         checkConsumer = null;
-        consumer.accept(check);
+        consumer.accept(exists);
     }
 
     public boolean checkBook(String name) {
@@ -123,7 +118,7 @@ public enum RemoteBookManager {
         }
 
         final NBTTagCompound tc = new NBTTagCompound();
-        tc.setString("name", name);
+        tc.setString("value", name);
         tc.setString("title", book.title);
         tc.setString("style", book.style.toString());
         heldItem.setTagCompound(tc);

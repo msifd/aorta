@@ -1,6 +1,7 @@
 package msifeed.mc.aorta.client.lock;
 
 import msifeed.mc.aorta.locks.LockTileEntity;
+import msifeed.mc.aorta.locks.LocksRpc;
 import msifeed.mc.aorta.rpc.Rpc;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
@@ -127,9 +128,9 @@ public class ScreenDigitalLock extends MellowGuiScreen {
 
     private void sendActionRequest() {
         if (resetMode)
-            Rpc.sendToServer("aorta:locks.reset", lock.xCoord, lock.yCoord, lock.zCoord, input);
+            Rpc.sendToServer(LocksRpc.resetDigital, lock.xCoord, lock.yCoord, lock.zCoord, input);
         else
-            Rpc.sendToServer("aorta:locks.toggle", lock.xCoord, lock.yCoord, lock.zCoord, input);
+            Rpc.sendToServer(LocksRpc.toggleDigital, lock.xCoord, lock.yCoord, lock.zCoord, input);
     }
 
     private void closeScreen() {

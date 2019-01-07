@@ -6,9 +6,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 
-public class LocksRpcHandler {
-    @RpcMethod(name = "aorta:locks.toggle")
-    public void toggle(MessageContext ctx, int x, int y, int z, String secret) {
+public class LocksRpc {
+    public static final String toggleDigital = "aorta:locks.toggle_digital";
+    public static final String resetDigital = "aorta:locks.reset_digital";
+
+    @RpcMethod(toggleDigital)
+    public void toggleDigital(MessageContext ctx, int x, int y, int z, String secret) {
         final EntityPlayer player = ctx.getServerHandler().playerEntity;
         final World world = player.getEntityWorld();
         final LockTileEntity lock = LockTileEntity.find(world, x, y, z);
@@ -24,8 +27,8 @@ public class LocksRpcHandler {
         }
     }
 
-    @RpcMethod(name = "aorta:locks.reset")
-    public void reset(MessageContext ctx, int x, int y, int z, String secret) {
+    @RpcMethod(resetDigital)
+    public void resetDigital(MessageContext ctx, int x, int y, int z, String secret) {
         final EntityPlayer player = ctx.getServerHandler().playerEntity;
         final World world = player.getEntityWorld();
         final LockTileEntity lock = LockTileEntity.find(world, x, y, z);

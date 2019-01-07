@@ -26,6 +26,10 @@ public class JsonConfig<T> {
         return value;
     }
 
+    public void set(T v) {
+        value = v;
+    }
+
     @Subscribe
     public void onReloadEvent(ConfigEvent.Reload event) {
         if (mode.useConfigFile()) {

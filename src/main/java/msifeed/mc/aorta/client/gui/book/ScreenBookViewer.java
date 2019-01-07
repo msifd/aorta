@@ -25,7 +25,7 @@ public class ScreenBookViewer extends MellowGuiScreen {
                 return;
             final NBTTagCompound tc = itemStack.getTagCompound();
 
-            name = tc.getString("name");
+            name = tc.getString("value");
             if (name.isEmpty()) {
                 closeGui();
                 return;

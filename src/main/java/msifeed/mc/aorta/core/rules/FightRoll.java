@@ -5,7 +5,7 @@ import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.status.CharStatus;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class FightRoll {
@@ -16,7 +16,7 @@ public class FightRoll {
     public int result;
 
     public FightRoll(Character character, CharStatus status, FightAction action, int mod) {
-        final ArrayList<Double> featMods = Aorta.DEFINES.rules().modifiers.get(action);
+        final List<Double> featMods = Aorta.DEFINES.rules().modifiers.get(action);
         final double featSum = Stream.of(Feature.values())
                 .mapToDouble(f -> character.features.get(f).roll() * featMods.get(f.ordinal()))
                 .sum();

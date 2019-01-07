@@ -229,7 +229,7 @@ public class ContainerTemplate extends BlockContainer implements BlockTraitCommo
         }
 
         public String getInventoryName() {
-            return name + ".name";
+            return name + ".value";
         }
 
         public boolean hasCustomInventoryName() {

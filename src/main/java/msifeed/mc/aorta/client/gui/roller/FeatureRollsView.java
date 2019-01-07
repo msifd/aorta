@@ -1,7 +1,8 @@
 package msifeed.mc.aorta.client.gui.roller;
 
 import msifeed.mc.aorta.core.character.Feature;
-import msifeed.mc.aorta.core.net.RollRequests;
+import msifeed.mc.aorta.core.rules.RollRpc;
+import msifeed.mc.aorta.rpc.Rpc;
 import msifeed.mc.aorta.utils.L10n;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.widgets.Widget;
@@ -27,7 +28,7 @@ class FeatureRollsView extends Widget {
         if (System.currentTimeMillis() - ScreenRoller.lastRolled < 1000)
             return;
 
-        RollRequests.rollFeature(entity, feature, mod);
+        Rpc.sendToServer(RollRpc.rollFeature, entity.getEntityId(), feature, mod);
         ScreenRoller.lastRolled = System.currentTimeMillis();
     }
 }

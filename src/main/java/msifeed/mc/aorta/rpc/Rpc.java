@@ -1,17 +1,15 @@
 package msifeed.mc.aorta.rpc;
 
 import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import msifeed.mc.aorta.Aorta;
 import net.minecraft.entity.player.EntityPlayerMP;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.stream.Stream;
 
 public class Rpc {
     private static final Rpc INSTANCE = new Rpc();
@@ -30,18 +28,26 @@ public class Rpc {
         for (Method m : obj.getClass().getDeclaredMethods()) {
             if (!m.isAnnotationPresent(RpcMethod.class))
                 continue;
+
+            final Class<?>[] types = m.getParameterTypes();
+            if (types.length == 0)
+                throw new RuntimeException("RPC method missing MessageContext param");
+            for (int i = 1; i < types.length; ++i)
+                if (!types[i].isPrimitive() && !Serializable.class.isAssignableFrom(types[i]))
+                    throw new RuntimeException("RPC method's param " + (i + 1) + "is not Serializable");
+
             final RpcMethod a = m.getAnnotation(RpcMethod.class);
-            if (INSTANCE.handlers.containsKey(a.name()))
-                throw new RuntimeException("RPC method duplication: `" + a.name() + "`");
-            INSTANCE.handlers.put(a.name(), new Handler(obj, m));
+            if (INSTANCE.handlers.containsKey(a.value()))
+                throw new RuntimeException("RPC method duplication: `" + a.value() + "`");
+            INSTANCE.handlers.put(a.value(), new Handler(obj, m));
         }
     }
 
-    public static void sendToServer(String method, Object... args) {
+    public static void sendToServer(String method, Serializable... args) {
         INSTANCE.CHANNEL.sendToServer(new RpcMessage(method, args));
     }
 
-    public static void sendTo(EntityPlayerMP player, String method, Object... args) {
+    public static void sendTo(EntityPlayerMP player, String method, Serializable... args) {
         INSTANCE.CHANNEL.sendTo(new RpcMessage(method, args), player);
     }
 

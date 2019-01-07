@@ -34,7 +34,7 @@ public class BodyPart implements Comparable {
 
     public NBTTagCompound toNBT() {
         final NBTTagCompound compound = new NBTTagCompound();
-        compound.setString("name", name);
+        compound.setString("value", name);
         compound.setByte("type", (byte) type.ordinal());
         compound.setShort("max", max);
         compound.setBoolean("fatal", fatal);
@@ -42,7 +42,7 @@ public class BodyPart implements Comparable {
     }
 
     public void fromNBT(NBTTagCompound compound) {
-        name = compound.getString("name");
+        name = compound.getString("value");
         type = Type.values()[compound.getByte("type")];
         max = compound.getShort("max");
         fatal = compound.getBoolean("fatal");

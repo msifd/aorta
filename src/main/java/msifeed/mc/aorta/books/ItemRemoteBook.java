@@ -46,7 +46,7 @@ public class ItemRemoteBook extends Item {
     public void addInformation(ItemStack itemStack, EntityPlayer player, List lines, boolean advanced) {
         if (!advanced || !itemStack.hasTagCompound())
             return;
-        lines.add("Index: " + itemStack.getTagCompound().getString("name"));
+        lines.add("Index: " + itemStack.getTagCompound().getString("value"));
     }
 
     @Override
