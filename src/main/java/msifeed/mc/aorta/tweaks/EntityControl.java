@@ -1,6 +1,5 @@
 package msifeed.mc.aorta.tweaks;
 
-import com.google.common.eventbus.Subscribe;
 import com.google.gson.reflect.TypeToken;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.EventPriority;
@@ -32,12 +31,11 @@ public enum EntityControl {
     private JsonConfig<ArrayList<ConfigContent>> config = ConfigManager.getConfig(ConfigMode.CLIENT, configContentType, "entity_control.json");
 
     public static void init() {
-        ConfigManager.INSTANCE.eventbus.register(INSTANCE);
         MinecraftForge.EVENT_BUS.register(INSTANCE);
     }
 
-    @Subscribe
-    public void onReloadDone(ConfigEvent.UpdateDone event) {
+    @SubscribeEvent
+    public void onConfigUpdated(ConfigEvent.Updated event) {
         compileConfig();
 
         final MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();

@@ -69,7 +69,7 @@ public class DefineCommand extends ExtCommand {
                 final Object value = (new Gson()).fromJson(valueStr, type);
                 pair.getLeft().set(pair.getRight(), value);
                 printValue(sender, path);
-                ConfigManager.INSTANCE.broadcastConfig();
+                ConfigManager.INSTANCE.broadcast();
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (IllegalArgumentException e) {

@@ -2,10 +2,7 @@ package msifeed.mc.aorta;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartedEvent;
+import cpw.mods.fml.common.event.*;
 
 @Mod(modid = Aorta.MODID, name = Aorta.NAME, version = Aorta.VERSION)
 public class Bootstrap {
@@ -34,7 +31,12 @@ public class Bootstrap {
     }
 
     @Mod.EventHandler
-    public void serverStarting(FMLServerStartedEvent event) {
+    public void serverStarting(FMLServerStartingEvent event) {
         AORTA.serverStarting(event);
+    }
+
+    @Mod.EventHandler
+    public void serverStopping(FMLServerStoppingEvent event) {
+        AORTA.serverStopping(event);
     }
 }

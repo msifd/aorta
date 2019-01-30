@@ -1,6 +1,7 @@
 package msifeed.mc.aorta.environment;
 
 import msifeed.mc.aorta.commands.ExtCommand;
+import msifeed.mc.aorta.config.ConfigManager;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
@@ -24,7 +25,7 @@ public class EnvironmentCommand extends ExtCommand {
             return;
 
         final int dim = player.worldObj.provider.dimensionId;
-        final WorldEnv worldEnv = EnvironmentManager.getStatus(dim);
+        final WorldEnv worldEnv = EnvironmentManager.getEnv(dim);
         switch (args[0].toLowerCase()) {
             case "snow":
                 worldEnv.snow = !worldEnv.snow;
@@ -39,5 +40,7 @@ public class EnvironmentCommand extends ExtCommand {
                 sender.addChatMessage(new ChatComponentText("stackSnow: " + worldEnv.stackSnow));
                 break;
         }
+
+        ConfigManager.INSTANCE.broadcast();
     }
 }

@@ -51,6 +51,10 @@ public class Rpc {
         INSTANCE.CHANNEL.sendTo(new RpcMessage(method, args), player);
     }
 
+    public static void sendToAll(String method, Serializable... args) {
+        INSTANCE.CHANNEL.sendToAll(new RpcMessage(method, args));
+    }
+
     static void onMessage(RpcMessage message, MessageContext ctx) {
         final Handler h = INSTANCE.handlers.get(message.method);
         if (h == null)

@@ -1,32 +1,30 @@
 package msifeed.mc.aorta.config;
 
-import com.google.common.eventbus.EventBus;
 import com.google.gson.reflect.TypeToken;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.relauncher.Side;
+import msifeed.mc.aorta.rpc.Rpc;
+import msifeed.mc.aorta.rpc.RpcMethod;
 import net.minecraft.entity.player.EntityPlayerMP;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-public enum ConfigManager implements IMessageHandler<ConfigSyncMessage, ConfigSyncMessage> {
+public enum ConfigManager {
     INSTANCE;
 
-    public static File config_dir;
-    public final EventBus eventbus = new EventBus();
-    static final Logger logger = LogManager.getLogger("Aorta.Config");
-    private final SimpleNetworkWrapper network = new SimpleNetworkWrapper("aorta.config");
+    private static final String broadcastRpc = "aorta:config.broadcast";
+    static File config_dir;
+    private ArrayList<JsonConfig> handlers = new ArrayList<>();
 
     public static <T> JsonConfig<T> getConfig(ConfigMode mode, TypeToken<T> t, String filename) {
         JsonConfig<T> handler = new JsonConfig<>(mode, t, filename);
-        INSTANCE.eventbus.register(handler);
+        INSTANCE.handlers.add(handler);
         return handler;
     }
 
@@ -34,41 +32,49 @@ public enum ConfigManager implements IMessageHandler<ConfigSyncMessage, ConfigSy
         config_dir = new File(event.getModConfigurationDirectory(), "aorta");
         config_dir.mkdirs();
 
-        INSTANCE.network.registerMessage(INSTANCE, ConfigSyncMessage.class, 0, Side.CLIENT);
         FMLCommonHandler.instance().bus().register(INSTANCE);
-
-        reloadConfig();
+        reload();
     }
 
-    public static void reloadConfig() {
-        INSTANCE.eventbus.post(new ConfigEvent.Reload());
-        INSTANCE.eventbus.post(new ConfigEvent.UpdateDone());
+    public static void reload() {
+        final HashMap<String, String> backup = INSTANCE.collectConfigs();
+        try {
+            for (JsonConfig c : INSTANCE.handlers)
+                c.reload();
+            MinecraftForge.EVENT_BUS.post(new ConfigEvent.Updated());
+            save();
+        } catch (Exception e) {
+            for (JsonConfig c : INSTANCE.handlers)
+                c.fromJson(backup.get(c.getFilename()));
+        }
     }
 
-    public void broadcastConfig() {
-        network.sendToAll(collectOverrideMessage());
+    public static void broadcast() {
+        Rpc.sendToAll(broadcastRpc, INSTANCE.collectConfigs());
+    }
+
+    public static void save() {
+        for (JsonConfig c : INSTANCE.handlers)
+            c.save();
+    }
+
+    @RpcMethod(broadcastRpc)
+    public void onBroadcast(MessageContext ctx, HashMap<String, String> configs) {
+        if (ctx.side.isServer())
+            return;
+        for (JsonConfig c : INSTANCE.handlers)
+            c.fromJson(configs.get(c.getFilename()));
     }
 
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        network.sendTo(collectOverrideMessage(), (EntityPlayerMP) event.player);
+        Rpc.sendTo((EntityPlayerMP) event.player, broadcastRpc, collectConfigs());
     }
 
-    @Override
-    public ConfigSyncMessage onMessage(ConfigSyncMessage message, MessageContext ctx) {
-        ConfigEvent.Override event = new ConfigEvent.Override();
-        event.configs = message.configs;
-        eventbus.post(event);
-        eventbus.post(new ConfigEvent.UpdateDone());
-        return null;
-    }
-
-    private ConfigSyncMessage collectOverrideMessage() {
-        ConfigEvent.Collect event = new ConfigEvent.Collect();
-        eventbus.post(event);
-
-        ConfigSyncMessage msg = new ConfigSyncMessage();
-        msg.configs = event.configs;
-        return msg;
+    private HashMap<String, String> collectConfigs() {
+        final HashMap<String, String> r = new HashMap<>();
+        for (JsonConfig c : INSTANCE.handlers)
+           r.put(c.getFilename(), c.toJson());
+        return r;
     }
 }

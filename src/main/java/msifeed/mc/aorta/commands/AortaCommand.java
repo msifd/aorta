@@ -36,8 +36,8 @@ public class AortaCommand extends ExtCommand {
 
         switch (args[0]) {
             case "reload":
-                ConfigManager.reloadConfig();
-                ConfigManager.INSTANCE.broadcastConfig();
+                ConfigManager.reload();
+                ConfigManager.broadcast();
                 sender.addChatMessage(new ChatComponentText("Aorta reloaded"));
                 break;
         }

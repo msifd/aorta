@@ -3,7 +3,8 @@ package msifeed.mc.aorta;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartedEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import msifeed.mc.aorta.attributes.AttributeHandler;
 import msifeed.mc.aorta.books.RemoteBookManager;
 import msifeed.mc.aorta.chat.Speechat;
@@ -75,7 +76,7 @@ public class Aorta {
         MakeFoodEdible.apply();
     }
 
-    public void serverStarting(FMLServerStartedEvent event) {
+    public void serverStarting(FMLServerStartingEvent event) {
         final MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
         final CommandHandler commandHandler = (CommandHandler) server.getCommandManager();
 
@@ -86,5 +87,9 @@ public class Aorta {
         CORE.registerCommands(commandHandler);
         Speechat.registerCommands(commandHandler);
         EnvironmentManager.registerCommands(commandHandler);
+    }
+
+    public void serverStopping(FMLServerStoppingEvent event) {
+        ConfigManager.save();
     }
 }

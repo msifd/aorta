@@ -39,7 +39,7 @@ public class WeatherRenderer {
     @SubscribeEvent
     public void onWorldRender(RenderWorldLastEvent event) {
         final Minecraft mc = Minecraft.getMinecraft();
-        final WorldEnv worldEnv = EnvironmentManager.getStatus(mc.theWorld.provider.dimensionId);
+        final WorldEnv worldEnv = EnvironmentManager.getEnv(mc.theWorld.provider.dimensionId);
 
         if (worldEnv.snow) {
             if (snowStrength < 1.5)

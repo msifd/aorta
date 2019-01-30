@@ -52,7 +52,7 @@ public class TraitSetCommand extends ExtCommand {
                 send(sender, "You should be at least entity!");
                 return;
             }
-            toggleTrait(sender, (EntityLivingBase) sender, args[0]);
+            toggleTrait(sender, (EntityLivingBase) sender, args[0].toLowerCase());
         }
     }
 
