@@ -52,7 +52,7 @@ public class ContainerTemplate extends BlockContainer implements BlockTraitCommo
 
     @Override
     public TileEntity createNewTileEntity(World world, int meta) {
-        return new TileEntityContainer(rows * 9, getUnlocalizedName());
+        return new TileEntityContainer(rows * 9, traits.unit.id);
     }
 
     @Override
@@ -170,20 +170,20 @@ public class ContainerTemplate extends BlockContainer implements BlockTraitCommo
     }
 
     public static class TileEntityContainer extends TileEntity implements IInventory {
-        private ItemStack[] items = new ItemStack[54];
-        private int size = 54;
+        private ItemStack[] items;
         private String name;
 
         public TileEntityContainer() {
+
         }
 
         public TileEntityContainer(int size, String name) {
-            this.size = size;
+            this.items = new ItemStack[size];
             this.name = name;
         }
 
         public int getSizeInventory() {
-            return this.size;
+            return this.items.length;
         }
 
         public ItemStack getStackInSlot(int slot) {
@@ -240,11 +240,11 @@ public class ContainerTemplate extends BlockContainer implements BlockTraitCommo
         public void readFromNBT(NBTTagCompound nbt) {
             super.readFromNBT(nbt);
 
-            size = nbt.getByte("Size");
-            name = nbt.getString("Name");
+            final int size = nbt.getByte("Size");
+//            name = nbt.getString("Name");
 
-            NBTTagList list = nbt.getTagList("Items", Constants.NBT.TAG_COMPOUND);
-            items = new ItemStack[getSizeInventory()];
+            final NBTTagList list = nbt.getTagList("Items", Constants.NBT.TAG_COMPOUND);
+            items = new ItemStack[size];
             for (int i = 0; i < list.tagCount(); ++i) {
                 NBTTagCompound comp = list.getCompoundTagAt(i);
                 int j = comp.getByte("Slot");
@@ -258,10 +258,10 @@ public class ContainerTemplate extends BlockContainer implements BlockTraitCommo
         public void writeToNBT(NBTTagCompound nbt) {
             super.writeToNBT(nbt);
 
-            nbt.setByte("Size", (byte) size);
-            nbt.setString("Name", name);
+            nbt.setByte("Size", (byte) items.length);
+//            nbt.setString("Name", name);
 
-            NBTTagList list = new NBTTagList();
+            final NBTTagList list = new NBTTagList();
             for (int i = 0; i < getSizeInventory(); ++i) {
                 if (items[i] != null) {
                     NBTTagCompound comp = new NBTTagCompound();

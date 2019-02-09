@@ -7,10 +7,7 @@ import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.attributes.AttributeHandler;
 import msifeed.mc.aorta.chat.net.ChatMessage;
 import msifeed.mc.aorta.chat.net.SpeechMessageHandler;
-import msifeed.mc.aorta.chat.usage.GmsayCommand;
-import msifeed.mc.aorta.chat.usage.LangAttribute;
-import msifeed.mc.aorta.chat.usage.LangCommand;
-import msifeed.mc.aorta.chat.usage.OfftopCommand;
+import msifeed.mc.aorta.chat.usage.*;
 import net.minecraft.command.CommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -28,6 +25,7 @@ public enum Speechat {
     public static void registerCommands(CommandHandler handler) {
         handler.registerCommand(new LangCommand());
         handler.registerCommand(new OfftopCommand());
+        handler.registerCommand(new GlobalCommand());
         handler.registerCommand(new GmsayCommand());
     }
 

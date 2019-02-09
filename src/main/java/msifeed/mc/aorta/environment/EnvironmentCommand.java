@@ -2,6 +2,8 @@ package msifeed.mc.aorta.environment;
 
 import msifeed.mc.aorta.commands.ExtCommand;
 import msifeed.mc.aorta.config.ConfigManager;
+import msifeed.mc.aorta.core.attributes.CharacterAttribute;
+import msifeed.mc.aorta.core.traits.Trait;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
@@ -19,7 +21,11 @@ public class EnvironmentCommand extends ExtCommand {
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
-        EntityPlayer player = (EntityPlayer) sender;
+        final EntityPlayer player = (EntityPlayer) sender;
+        if (!CharacterAttribute.has(player, Trait.gm)) {
+            error(sender, "You are not GM!");
+            return;
+        }
 
         if (args.length < 1)
             return;

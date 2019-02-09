@@ -3,6 +3,7 @@ package msifeed.mc.aorta.genesis;
 public enum GenesisTrait {
     // Types
     block, item,
+    rain,
 
     // Size
     tiny, small, large,

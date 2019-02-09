@@ -64,6 +64,10 @@ public class AortaCreativeTab extends CreativeTabs {
         }
     }
 
+    public static void init() {
+        // static init
+    }
+
     private static Item makeIcon(String name) {
         final Item item = new Item();
         item.setTextureName("aorta:" + name);

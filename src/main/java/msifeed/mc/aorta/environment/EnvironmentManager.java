@@ -1,24 +1,20 @@
 package msifeed.mc.aorta.environment;
 
 import com.google.gson.reflect.TypeToken;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.eventhandler.EventPriority;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.aorta.config.ConfigManager;
 import msifeed.mc.aorta.config.ConfigMode;
 import msifeed.mc.aorta.config.JsonConfig;
-import msifeed.mc.aorta.environment.client.WeatherRenderer;
 import net.minecraft.command.CommandHandler;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.BiomeGenEnd;
-import net.minecraft.world.biome.BiomeGenHell;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.WorldEvent;
 
 import java.util.HashMap;
 
 public enum EnvironmentManager {
     INSTANCE;
-
-    private WeatherRenderer weatherRenderer = new WeatherRenderer();
 
     private final TypeToken<HashMap<Integer, WorldEnv>> configContentType = new TypeToken<HashMap<Integer, WorldEnv>>() {};
     private final JsonConfig<HashMap<Integer, WorldEnv>> config = ConfigManager.getConfig(ConfigMode.CLIENT, configContentType, "world_env.json");
@@ -30,10 +26,8 @@ public enum EnvironmentManager {
     private static EnvHandler envHandler;
 
     public static void init() {
-        FMLCommonHandler.instance().bus().register(INSTANCE);
-        FMLCommonHandler.instance().bus().register(envHandler);
-        MinecraftForge.EVENT_BUS.register(envHandler);
-        MinecraftForge.EVENT_BUS.register(INSTANCE.weatherRenderer);
+        MinecraftForge.EVENT_BUS.register(INSTANCE);
+        envHandler.init();
     }
 
     public static void registerCommands(CommandHandler commandHandler) {
@@ -49,11 +43,10 @@ public enum EnvironmentManager {
         return s;
     }
 
-    public static void syncEnv() {
-        ConfigManager.INSTANCE.broadcast();
-    }
-
-    private static boolean isRegularBiome(BiomeGenBase biome) {
-        return !(biome instanceof BiomeGenHell || biome instanceof BiomeGenEnd);
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    private void onWorldLoad(WorldEvent.Load event) {
+        final WorldEnvMapData data = (WorldEnvMapData) event.world.mapStorage.loadData(WorldEnvMapData.class, WorldEnvMapData.DATA_NAME);
+        final WorldEnv env = getEnv(event.world.provider.dimensionId);
+        env.load(data);
     }
 }

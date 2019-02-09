@@ -3,15 +3,11 @@ package msifeed.mc.aorta.core.commands;
 import cpw.mods.fml.common.FMLCommonHandler;
 import msifeed.mc.aorta.commands.ExtCommand;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
-import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.traits.Trait;
+import msifeed.mc.aorta.core.traits.TraitType;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.WorldServer;
-
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class TraitSetCommand extends ExtCommand {
     @Override
@@ -21,7 +17,7 @@ public class TraitSetCommand extends ExtCommand {
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "/trait [@<player>] [trait]";
+        return "/trait <trait> [player]";
     }
 
     @Override
@@ -36,45 +32,25 @@ public class TraitSetCommand extends ExtCommand {
             return;
         }
 
-        if (args[0].startsWith("@")) {
-            final String name = args[0].substring(1);
-            final EntityLivingBase player = findPlayer(name);
-            if (player != null) {
-                if (args.length > 1)
-                    toggleTrait(sender, player, args[1]);
-                else
-                    printTraits(sender, player);
-            } else {
+        final String traitName = args[0].toLowerCase();
+        final EntityLivingBase target;
+
+        if (args.length > 1) {
+            final EntityLivingBase player = findPlayer(args[1]);
+            if (player == null) {
                 error(sender, "Unknown player");
-            }
-        } else {
-            if (!(sender instanceof EntityLivingBase)) {
-                send(sender, "You should be at least entity!");
                 return;
             }
-            toggleTrait(sender, (EntityLivingBase) sender, args[0].toLowerCase());
+            target = player;
+        } else {
+            if (!(sender instanceof EntityLivingBase)) {
+                error(sender, "You should be at least entity!");
+                return;
+            }
+            target = (EntityLivingBase) sender;
         }
-    }
 
-    private void printTraits(ICommandSender sender, EntityLivingBase entity) {
-        CharacterAttribute.get(entity).map(Character::traits).ifPresent(traits -> {
-            final Set<String> names = traits.stream().map(Enum::toString).collect(Collectors.toSet());
-            final String theNiceString = joinNiceStringFromCollection(names);
-            title(sender, "Here %s's traits:", entity.getCommandSenderName());
-            send(sender, "  " + theNiceString);
-        });
-    }
-
-    private EntityLivingBase findPlayer(String name) {
-        final MinecraftServer mcServer = FMLCommonHandler.instance().getMinecraftServerInstance();
-        if (mcServer == null)
-            return null;
-        for (WorldServer server : mcServer.worldServers) {
-            final EntityLivingBase tmp = server.getPlayerEntityByName(name);
-            if (tmp != null)
-                return tmp;
-        }
-        return null;
+        toggleTrait(sender, target, traitName);
     }
 
     private void toggleTrait(ICommandSender sender, EntityLivingBase entity, String traitName) {
@@ -95,13 +71,12 @@ public class TraitSetCommand extends ExtCommand {
     private boolean isAllowedToSet(ICommandSender sender, Trait trait) {
         if (FMLCommonHandler.instance().getSide().isClient())
             return true;
-        switch (trait.type) {
-            case SYSTEM:
-                return sender instanceof MinecraftServer
-                        || (sender instanceof EntityLivingBase
-                        && CharacterAttribute.has((EntityLivingBase) sender, Trait.__admin));
-            default:
-                return true;
+        if (trait.type == TraitType.SYSTEM) {
+            return sender instanceof MinecraftServer
+                    || (sender instanceof EntityLivingBase
+                    && CharacterAttribute.has((EntityLivingBase) sender, Trait.__admin));
+        } else {
+            return true;
         }
     }
 }

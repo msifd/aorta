@@ -24,4 +24,8 @@ public class ChatHandler {
         final NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(sender.dimension, sender.posX, sender.posY, sender.posZ, message.radius);
         Speechat.CHANNEL.sendToAllAround(message, point);
     }
+
+    public static void sendGlobalChatMessage(EntityPlayerMP sender, ChatMessage message) {
+        Speechat.CHANNEL.sendToAll(message);
+    }
 }

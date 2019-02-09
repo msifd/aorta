@@ -7,12 +7,15 @@ import msifeed.mc.aorta.environment.EnvironmentManager;
 import msifeed.mc.aorta.environment.WorldEnv;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 
 public class EnvHandlerClient extends EnvHandler {
+    private WeatherRenderer weatherRenderer = new WeatherRenderer();
+
     @Override
-    @SubscribeEvent
-    public void onWorldTick(TickEvent.WorldTickEvent event) {
-        super.onWorldTick(event);
+    public void init() {
+        super.init();
+        MinecraftForge.EVENT_BUS.register(weatherRenderer);
     }
 
     @SubscribeEvent

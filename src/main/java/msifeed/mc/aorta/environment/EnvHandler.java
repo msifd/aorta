@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.storage.WorldInfo;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -17,6 +18,11 @@ import java.time.ZoneOffset;
 import java.util.List;
 
 public class EnvHandler {
+    public void init() {
+        FMLCommonHandler.instance().bus().register(this);
+        MinecraftForge.EVENT_BUS.register(this);
+    }
+
     @SubscribeEvent
     public void onWorldTick(TickEvent.WorldTickEvent event) {
         if (event.phase != TickEvent.Phase.START)
@@ -26,8 +32,10 @@ public class EnvHandler {
 
         handleSnowdrop((WorldServer) event.world, worldEnv);
 
-        if (FMLCommonHandler.instance().getMinecraftServerInstance().getTickCounter() % 20 == 0)
+        if (FMLCommonHandler.instance().getMinecraftServerInstance().getTickCounter() % 20 == 0) {
             handleTime(event.world, worldEnv);
+            handleRain(event.world, worldEnv);
+        }
     }
 
     protected void handleSnowdrop(WorldServer world, WorldEnv worldEnv) {
@@ -117,5 +125,25 @@ public class EnvHandler {
 
     private void setFixedTime(World world, long time) {
         world.getWorldInfo().setWorldTime(time);
+    }
+
+    private void handleRain(World world, WorldEnv env) {
+        final WorldInfo wi = world.getWorldInfo();
+        final WorldEnv.Rain r = env.rain;
+
+        if (wi.isRaining()) {
+            r.accumulated -= r.outcome;
+            if (r.accumulated <= 0) {
+                wi.setRaining(false);
+                wi.setThundering(false);
+            }
+        } else {
+            r.accumulated += r.income;
+            final boolean roll = r.accumulated >= r.minThreshold && world.rand.nextInt(r.rainfallDice) == 0;
+            if (roll || r.accumulated > r.maxThreshold) {
+                wi.setRaining(true);
+                wi.setThundering(r.accumulated > r.thunderThreshold);
+            }
+        }
     }
 }

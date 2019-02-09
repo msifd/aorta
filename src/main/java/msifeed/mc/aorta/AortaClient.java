@@ -4,6 +4,7 @@ import com.google.common.io.CharStreams;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import msifeed.mc.aorta.client.Keybinds;
+import msifeed.mc.aorta.genesis.AortaCreativeTab;
 import msifeed.mc.aorta.utils.DRM;
 import msifeed.mc.mellow.Mellow;
 import net.minecraft.client.resources.IResourcePack;
@@ -24,6 +25,7 @@ public class AortaClient extends Aorta {
     @Override
     public void init() {
         super.init();
+        AortaCreativeTab.init();
         DRM.apply();
         GUI_HANDLER.init();
         Keybinds.INSTANCE.init();

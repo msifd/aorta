@@ -56,6 +56,7 @@ public class Aorta {
         ConfigManager.init(event);
         AttributeHandler.init();
         Rpc.init();
+        EnableDesertRain.apply();
     }
 
     public void init() {
@@ -72,7 +73,6 @@ public class Aorta {
     }
 
     public void postInit() {
-        EnableDesertRain.apply();
         MakeFoodEdible.apply();
     }
 

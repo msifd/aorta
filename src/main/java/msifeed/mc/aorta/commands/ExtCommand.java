@@ -1,9 +1,13 @@
 package msifeed.mc.aorta.commands;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.world.WorldServer;
 
 public abstract class ExtCommand extends CommandBase {
     @Override
@@ -52,5 +56,17 @@ public abstract class ExtCommand extends CommandBase {
                 sb.append(' ');
         }
         return sb.toString();
+    }
+
+    protected EntityLivingBase findPlayer(String name) {
+        final MinecraftServer mcServer = FMLCommonHandler.instance().getMinecraftServerInstance();
+        if (mcServer == null)
+            return null;
+        for (WorldServer server : mcServer.worldServers) {
+            final EntityLivingBase tmp = server.getPlayerEntityByName(name);
+            if (tmp != null)
+                return tmp;
+        }
+        return null;
     }
 }

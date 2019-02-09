@@ -17,23 +17,36 @@ public class TraitListCommand extends ExtCommand {
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "/traits";
+        return "/traits [player]";
     }
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
-        if (!(sender instanceof EntityLivingBase)) {
-            send(sender, "You should be at least entity!");
-            return;
+        final EntityLivingBase target;
+
+        if (args.length > 0) {
+            final EntityLivingBase player = findPlayer(args[0]);
+            if (player == null) {
+                error(sender, "Unknown player");
+                return;
+            }
+            target = player;
+        } else {
+            if (!(sender instanceof EntityLivingBase)) {
+                error(sender, "You should be at least entity!");
+                return;
+            }
+            target = (EntityLivingBase) sender;
         }
-        printTraits(sender, (EntityLivingBase) sender);
+
+        printTraits(sender, target);
     }
 
     private void printTraits(ICommandSender sender, EntityLivingBase entity) {
         CharacterAttribute.get(entity).map(Character::traits).ifPresent(traits -> {
             final Set<String> names = traits.stream().map(Enum::toString).collect(Collectors.toSet());
             final String theNiceString = joinNiceStringFromCollection(names);
-            title(sender, "Your traits:", entity.getCommandSenderName());
+            title(sender, "%s's traits:", entity.getCommandSenderName(), entity.getCommandSenderName());
             send(sender, "  " + theNiceString);
         });
     }

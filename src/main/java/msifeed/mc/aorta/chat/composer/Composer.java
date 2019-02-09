@@ -13,6 +13,7 @@ public class Composer {
     static {
         COMPOSERS.put(SpeechType.SPEECH, new SpeechComposer());
         COMPOSERS.put(SpeechType.OFFTOP, new OfftopComposer());
+        COMPOSERS.put(SpeechType.GLOBAL, new GlobalComposer());
         COMPOSERS.put(SpeechType.GM, new GmsayComposer());
         COMPOSERS.put(SpeechType.ROLL, new RollComposer());
     }

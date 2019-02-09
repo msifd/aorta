@@ -24,7 +24,7 @@ public class GmsayCommand extends ExtCommand {
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "/gms help";
+        return "/gms ?";
     }
 
     @Override

@@ -11,14 +11,16 @@ public class EnableDesertRain {
         final String rainField = (Boolean) Launch.blackboard.getOrDefault("fml.deobfuscatedEnvironment", false)
                 ? "enableRain" : "field_76765_S";
         for (BiomeGenBase biome : BiomeGenBase.getBiomeGenArray()) {
-            if (biome != null && !isNoRainBiome(biome)) {
+            if (biome != null && !isSpecialBiome(biome) && biome.rainfall == 0) {
                 ReflectionHelper.setPrivateValue(BiomeGenBase.class, biome, true, rainField);
-                biome.rainfall = 0.4f; // Plains value
+//                biome.rainfall = 0.4f; // Plains value
+                biome.setTemperatureRainfall(0.8f, 0.4f); // Plains value
             }
         }
+
     }
 
-    private static boolean isNoRainBiome(BiomeGenBase biome) {
+    private static boolean isSpecialBiome(BiomeGenBase biome) {
         return biome instanceof BiomeGenHell || biome instanceof BiomeGenEnd;
     }
 }
