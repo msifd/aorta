@@ -24,13 +24,17 @@ public class RenameProvider {
     }
 
     public static boolean hasDescription(ItemStack itemStack) {
-        return itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey(Tags.description);
+        return itemStack.hasTagCompound()
+                && itemStack.stackTagCompound.hasKey("display", 10)
+                && itemStack.stackTagCompound.getCompoundTag("display").hasKey(Tags.description);
     }
 
     public static void addDescriptionToList(ItemStack itemStack, List<String> list) {
         if (!hasDescription(itemStack))
             return;
-        final NBTTagList lines = itemStack.stackTagCompound.getTagList(Tags.description, 8);
+        final NBTTagList lines = itemStack.stackTagCompound
+                .getCompoundTag("display")
+                .getTagList(Tags.description, 8);
         for (int i = 0; i < lines.tagCount(); i++) {
             list.add(lines.getStringTagAt(i));
         }
@@ -38,14 +42,18 @@ public class RenameProvider {
 
     public static void addDescription(ItemStack itemStack, String line) {
         createDescriptionIfNeeded(itemStack);
-        final NBTTagList lines = itemStack.stackTagCompound.getTagList(Tags.description, 8);
-        lines.appendTag(new NBTTagString(replaceFormattingCode(line)));
+        final NBTTagList lines = itemStack.stackTagCompound
+                .getCompoundTag("display")
+                .getTagList(Tags.description, 8);
+        lines.appendTag(new NBTTagString(replaceFormattingCode("\u00A7r" + line)));
     }
 
     public static void removeDescriptionLine(ItemStack itemStack) {
         if (!hasDescription(itemStack))
             return;
-        final NBTTagList lines = itemStack.stackTagCompound.getTagList(Tags.description, 8);
+        final NBTTagList lines = itemStack.stackTagCompound
+                .getCompoundTag("display")
+                .getTagList(Tags.description, 8);
         if (lines.tagCount() > 1)
             lines.removeTag(lines.tagCount() - 1);
         else
@@ -55,13 +63,15 @@ public class RenameProvider {
     public static void clearDescription(ItemStack itemStack) {
         if (!hasDescription(itemStack))
             return;
-        itemStack.stackTagCompound.removeTag(Tags.description);
+        itemStack.stackTagCompound.getCompoundTag("display").removeTag(Tags.description);
     }
 
     private static void createDescriptionIfNeeded(ItemStack itemStack) {
         createCompoundIfNeeded(itemStack);
-        if (!itemStack.stackTagCompound.hasKey(Tags.description))
-            itemStack.stackTagCompound.setTag(Tags.description, new NBTTagList());
+        if (!itemStack.stackTagCompound.hasKey("display"))
+            itemStack.stackTagCompound.setTag("display", new NBTTagCompound());
+        if (!itemStack.stackTagCompound.getCompoundTag("display").hasKey(Tags.description))
+            itemStack.stackTagCompound.getCompoundTag("display").setTag(Tags.description, new NBTTagList());
     }
 
     public static boolean hasOverriddenValues(ItemStack itemStack) {
@@ -107,7 +117,8 @@ public class RenameProvider {
     }
 
     static class Tags {
-        static final String description = "aorta.descr";
+        static final String title = "Name";
+        static final String description = "Lore";
         static final String values = "aorta.values";
     }
 }

@@ -4,6 +4,7 @@ import msifeed.mc.aorta.genesis.items.IItemTemplate;
 import msifeed.mc.aorta.genesis.items.data.ItemRenderData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureUtil;
@@ -63,6 +64,7 @@ public class ItemCustomRender implements IItemRenderer {
         GL11.glScalef(scale, scale, scale); // scale item
 
         GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
         if (item.requiresMultipleRenderPasses()) {
             for (int i = 0; i < stack.getItem().getRenderPasses(stack.getItemDamage()); ++i)

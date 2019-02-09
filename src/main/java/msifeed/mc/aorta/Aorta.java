@@ -24,6 +24,7 @@ import msifeed.mc.aorta.tweaks.EnableDesertRain;
 import msifeed.mc.aorta.tweaks.EntityControl;
 import msifeed.mc.aorta.tweaks.MakeEveryoneHealthy;
 import msifeed.mc.aorta.tweaks.MakeFoodEdible;
+import msifeed.mc.aorta.tweaks.nametag.Nametag;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.server.MinecraftServer;
 
@@ -68,6 +69,7 @@ public class Aorta {
         Speechat.init();
         EntityControl.init();
         EnvironmentManager.init();
+        Nametag.INSTANCE.init();
 
         MakeEveryoneHealthy.apply();
     }

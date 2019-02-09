@@ -17,7 +17,7 @@ public enum EnvironmentManager {
     INSTANCE;
 
     private final TypeToken<HashMap<Integer, WorldEnv>> configContentType = new TypeToken<HashMap<Integer, WorldEnv>>() {};
-    private final JsonConfig<HashMap<Integer, WorldEnv>> config = ConfigManager.getConfig(ConfigMode.CLIENT, configContentType, "world_env.json");
+    private final JsonConfig<HashMap<Integer, WorldEnv>> config = ConfigManager.getConfig(ConfigMode.SERVER, configContentType, "world_env.json");
 
     @SidedProxy(
             serverSide = "msifeed.mc.aorta.environment.EnvHandler",

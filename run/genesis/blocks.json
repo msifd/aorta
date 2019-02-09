@@ -125,21 +125,5 @@
       "block",
       "bed"
     ]
-  },
-  {
-    "id": "yellow_metal_loker_half",
-    "texture": [
-      "aorta:yellow_metal_loker_top",
-      "aorta:yellow_metal_loker"
-    ],
-    "texture_layout": "001100",
-    "traits": [
-      "block",
-      "rotatable",
-      "container",
-      "metal",
-      "half",
-      "small"
-    ]
   }
 ]
