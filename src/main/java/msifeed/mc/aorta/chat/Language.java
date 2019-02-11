@@ -2,6 +2,7 @@ package msifeed.mc.aorta.chat;
 
 import msifeed.mc.aorta.chat.obfuscation.*;
 import msifeed.mc.aorta.core.traits.Trait;
+import msifeed.mc.aorta.utils.L10n;
 
 public enum Language {
     VANILLA(Trait.__lang_vanilla, new VanillaObfuscator()),
@@ -19,11 +20,24 @@ public enum Language {
     KSHEMIN(Trait.lang_kshemin, new KsheminObfuscator()),
     ;
 
-    public Trait trait;
-    public LangObfuscator obfuscator;
+    public final Trait trait;
+    public final LangObfuscator obfuscator;
 
     Language(Trait trait, LangObfuscator obfuscator) {
         this.trait = trait;
         this.obfuscator = obfuscator;
+    }
+
+    @Override
+    public String toString() {
+        return tr();
+    }
+
+    public String tr() {
+        return L10n.tr("aorta.lang." + name().toLowerCase());
+    }
+
+    public String shortTr() {
+        return L10n.tr("aorta.lang." + name().toLowerCase() + ".short");
     }
 }

@@ -9,6 +9,7 @@ import msifeed.mc.aorta.chat.net.ChatMessage;
 import msifeed.mc.aorta.chat.obfuscation.LangObfuscator;
 import msifeed.mc.aorta.chat.usage.LangAttribute;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
+import msifeed.mc.aorta.utils.L10n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
@@ -31,11 +32,13 @@ public class SpeechComposer implements ChatComposer {
     @Override
     public IChatComponent format(EntityPlayer self, ChatMessage message) {
         final String text;
-
-        if (!isMyNameIs(self, message.speaker) && !doIKnowLanguage(self, message.language))
+        if (!isMyNameIs(self, message.speaker) && !doIKnowLanguage(self, message.language)) {
             text = obfuscateWith(message.language.obfuscator, message.text);
-        else
-            text = message.text;
+        } else {
+            final String langPrefix = message.language.shortTr();
+            final String finalPrefix = langPrefix.isEmpty() ? "" : "[" + langPrefix + "] ";
+            text = finalPrefix + message.text;
+        }
 
         final ChatComponentText root = new ChatComponentText("");
         root.appendText(text);
