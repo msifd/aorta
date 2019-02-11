@@ -8,4 +8,8 @@ interface ChatComposer {
     ChatMessage compose(EntityPlayer player, String text);
 
     IChatComponent format(EntityPlayer self, ChatMessage message);
+
+    default boolean canReceiveMessage(EntityPlayer self, ChatMessage message) {
+        return true;
+    }
 }

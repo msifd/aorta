@@ -14,8 +14,10 @@ public class SpeechMessageHandler implements IMessageHandler<ChatMessage, IMessa
     @Override
     public IMessage onMessage(ChatMessage message, MessageContext ctx) {
         final EntityPlayer player = net.minecraft.client.Minecraft.getMinecraft().thePlayer;
-        final IChatComponent chatComponent = Composer.formatMessage(player, message);
-        player.addChatMessage(chatComponent);
+        if (Composer.canReceiveMessage(player, message)) {
+            final IChatComponent chatComponent = Composer.formatMessage(player, message);
+            player.addChatMessage(chatComponent);
+        }
         return null;
     }
 }

@@ -15,6 +15,7 @@ public class Composer {
         COMPOSERS.put(SpeechType.OFFTOP, new OfftopComposer());
         COMPOSERS.put(SpeechType.GLOBAL, new GlobalComposer());
         COMPOSERS.put(SpeechType.GM, new GmsayComposer());
+        COMPOSERS.put(SpeechType.GM_GLOBAL, new GmGlobalComposer());
         COMPOSERS.put(SpeechType.ROLL, new RollComposer());
     }
 
@@ -28,6 +29,10 @@ public class Composer {
 
     public static IChatComponent formatMessage(EntityPlayer self, ChatMessage message) {
         return COMPOSERS.getOrDefault(message.type, COMPOSERS.get(SpeechType.SPEECH)).format(self, message);
+    }
+
+    public static boolean canReceiveMessage(EntityPlayer self, ChatMessage message) {
+        return COMPOSERS.getOrDefault(message.type, COMPOSERS.get(SpeechType.SPEECH)).canReceiveMessage(self, message);
     }
 
     private static String getTextFromTranslation(ChatComponentTranslation chatComponent) {

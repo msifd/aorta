@@ -74,7 +74,7 @@ public class GmsayCommand extends ExtCommand {
             }
         }
 
-        final String text = Arrays.stream(args).collect(Collectors.joining(" "));
+        final String text = String.join(" ", args);
         final ChatMessage message = Composer.makeMessage(SpeechType.GM, player, text);
 
         if (player instanceof EntityPlayerMP)
