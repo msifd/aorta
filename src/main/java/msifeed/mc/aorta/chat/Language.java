@@ -5,7 +5,7 @@ import msifeed.mc.aorta.core.traits.Trait;
 import msifeed.mc.aorta.utils.L10n;
 
 public enum Language {
-    VANILLA(Trait.__lang_vanilla, new VanillaObfuscator()),
+    VANILLA(Trait.lang_vanilla, new VanillaObfuscator()),
     COMMON(Trait.lang_common, new CommonObfuscator()),
     MENALA(Trait.lang_menala, new MenalaObfuscator()),
     GURHK(Trait.lang_gurhk, new GurhkObfuscator()),

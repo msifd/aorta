@@ -5,14 +5,11 @@ import msifeed.mc.aorta.attributes.PlayerAttribute;
 import msifeed.mc.aorta.chat.Language;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.character.Character;
-import msifeed.mc.aorta.core.traits.Trait;
-import msifeed.mc.aorta.core.traits.TraitType;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Stream;
 
 public class LangAttribute extends PlayerAttribute<Language> {
@@ -33,8 +30,9 @@ public class LangAttribute extends PlayerAttribute<Language> {
 
     @Override
     public Language init(Entity entity, World world, Language currentValue) {
-        if (currentValue == null || currentValue == Language.VANILLA)
-            return findLang(entity);
+        if (currentValue == null || currentValue == Language.VANILLA) {
+            return findAnyKnownLang(entity).orElse(Language.VANILLA);
+        }
         return currentValue;
     }
 
@@ -56,16 +54,15 @@ public class LangAttribute extends PlayerAttribute<Language> {
 
     @Override
     public Optional<Language> getValue(Entity entity) {
-        Optional<Language> result = super.getValue(entity);
+        final Optional<Language> result = super.getValue(entity);
 
         if (!result.isPresent())
             return Optional.empty();
 
         if (!isLangKnown(entity, result.get())) {
-            final Language newLang = findLang(entity);
-            if (newLang != result.get())
-                set(entity, newLang);
-            return Optional.of(newLang);
+            final Optional<Language> replacement = findAnyKnownLang(entity);
+            replacement.ifPresent(language -> set(entity, language));
+            return replacement;
         }
 
         return result;
@@ -76,14 +73,10 @@ public class LangAttribute extends PlayerAttribute<Language> {
         return character != null && character.traits.contains(language.trait);
     }
 
-    private Language findLang(Entity entity) {
-        final Character character = CharacterAttribute.get(entity).orElse(null);
-        if (character == null)
-            return Language.VANILLA;
-
-        final Set<Trait> langTraits = TraitType.LANG.filter(character.traits);
-        return Stream.of(Language.values())
-                .filter(l -> langTraits.contains(l.trait))
-                .findAny().orElse(Language.VANILLA);
+    private Optional<Language> findAnyKnownLang(Entity entity) {
+        return CharacterAttribute.get(entity)
+                .flatMap(c -> Stream.of(Language.values())
+                    .filter(l -> c.traits.contains(l.trait))
+                    .findAny());
     }
 }

@@ -7,12 +7,14 @@ import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.traits.Trait;
 import msifeed.mc.aorta.core.traits.TraitType;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class LangCommand extends ExtCommand {
     @Override
@@ -73,10 +75,10 @@ public class LangCommand extends ExtCommand {
     }
 
     private Set<Language> getKnownLanguages(EntityLivingBase entity) {
-        final Set<Trait> traits = CharacterAttribute.get(entity).map(Character::traits).orElse(Collections.emptySet());
-        final Set<Trait> langTraits = TraitType.LANG.filter(traits);
-        return Arrays.stream(Language.values())
-                .filter(language -> langTraits.contains(language.trait))
-                .collect(Collectors.toSet());
+        return CharacterAttribute.get(entity)
+                .map(c -> Stream.of(Language.values())
+                        .filter(l -> c.traits.contains(l.trait))
+                        .collect(Collectors.toSet()))
+                .orElse(Collections.emptySet());
     }
 }

@@ -2,6 +2,7 @@ package msifeed.mc.aorta.core.traits;
 
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public enum TraitType {
     SYSTEM("__"), LANG("lang_");
@@ -10,10 +11,6 @@ public enum TraitType {
 
     TraitType(String prefix) {
         this.prefix = prefix;
-    }
-
-    public Set<Trait> filter(Set<Trait> traits) {
-        return traits.stream().filter(t -> t.type == this).collect(Collectors.toSet());
     }
 
     public static TraitType resolveType(String raw) {

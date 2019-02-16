@@ -42,7 +42,7 @@ public class DropList<T> extends Widget {
     }
 
     public void selectItem(int i) {
-        if (i < items.size()) {
+        if (i >= 0 && i < items.size()) {
             selectedItem = i;
             header.setLabel(getSelectedItem().toString());
             if (selectCallback != null)

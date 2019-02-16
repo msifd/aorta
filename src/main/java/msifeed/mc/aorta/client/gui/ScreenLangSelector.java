@@ -37,14 +37,12 @@ public class ScreenLangSelector extends MellowGuiScreen {
             return;
         }
 
-        final Set<Trait> langTraits = TraitType.LANG.filter(character.traits);
         final List<Language> knownLanguages = Stream.of(Language.values())
-                .filter(l -> langTraits.contains(l.trait))
+                .filter(l -> character.traits.contains(l.trait))
                 .collect(Collectors.toList());
-        final Language backupLang = knownLanguages.isEmpty() ? Language.VANILLA : knownLanguages.get(0);
-        if (!knownLanguages.contains(backupLang))
-            knownLanguages.add(backupLang);
-        final Language selected = LangAttribute.get(entity).orElse(backupLang);
+        if (knownLanguages.isEmpty())
+            knownLanguages.add(Language.VANILLA);
+        final Language selected = LangAttribute.get(entity).orElse(knownLanguages.get(0));
 
         final DropList<Language> dropDown = new DropList<>(knownLanguages);
         dropDown.selectItem(knownLanguages.indexOf(selected));
