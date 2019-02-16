@@ -121,6 +121,10 @@ public class BlockGenerator implements Generator {
     }
 
     private void fillCommons(BlockGenesisUnit unit, Block block) {
+        // Hardness as planks
+        block.setHardness(2.0F);
+        block.setResistance(5.0F);
+
         if (unit.hasTrait(unbreakable)) {
             block.setBlockUnbreakable();
             block.setResistance(6000000);
