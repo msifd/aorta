@@ -4,8 +4,6 @@ import msifeed.mc.aorta.chat.Language;
 import msifeed.mc.aorta.chat.usage.LangAttribute;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.character.Character;
-import msifeed.mc.aorta.core.traits.Trait;
-import msifeed.mc.aorta.core.traits.TraitType;
 import msifeed.mc.aorta.utils.L10n;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
@@ -16,7 +14,6 @@ import msifeed.mc.mellow.widgets.window.Window;
 import net.minecraft.entity.EntityLivingBase;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 

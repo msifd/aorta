@@ -17,7 +17,9 @@ item.lock_build_in.name=Build-in lock
 item.lock_padlock.name=Padlock
 item.lock_digital.name=Digital lock
 item.lock_lockpick.name=Lockpick
+item.lock_advanced_lockpick.name=Auto-lockpick
 item.lock_access_tuner.name=Access Tuner
+item.lock_advanced_tuner.name=Scheme recombinator
 item.lock_skeletal_key.name=Skeletal key
 
 aorta.gui.roller=Roller
@@ -46,6 +48,8 @@ aorta.lock.installed=§7New lock installed
 aorta.lock.replaced=§7Old lock replaced
 aorta.lock.reset=§7New password is set
 aorta.lock.blank_lock=§7Blank
+aorta.lock.pick_break=§7Lockpick broke
+aorta.lock.hacked=§7Lock hacked
 
 aorta.lang.vanilla=Ванильный
 aorta.lang.common=Единоречие

@@ -24,7 +24,7 @@ public class ButtonLabel extends Button {
 
     public ButtonLabel(String text) {
         this();
-        label.setText(text);
+        setLabel(text);
     }
 
     public void setLabel(String text) {

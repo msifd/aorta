@@ -11,9 +11,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 public class GmGlobalCommand extends ExtCommand {
     @Override
     public String getCommandName() {

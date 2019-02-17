@@ -13,5 +13,6 @@ public class GuiHandler {
     public void toggleBookViewer(EntityPlayer player) { }
     public void toggleBookEditor(EntityPlayer player) { }
     public void toggleDigitalLock(LockTileEntity lock) { }
+    public void toggleSkeletalKey(LockTileEntity lock) { }
     public void toggleDesignerScreen() { }
 }

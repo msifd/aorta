@@ -39,6 +39,7 @@ public class KeyItem extends Item {
             return false;
 
         final String secret = itemStack.getTagCompound().getString("secret");
+        System.out.println("key " + secret);
         if (lock.canUnlockWith(secret)) {
             lock.toggleLocked();
 

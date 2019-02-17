@@ -21,7 +21,9 @@ public enum Locks {
         GameRegistry.registerItem(new BlankKeyItem(), BlankKeyItem.ID);
         GameRegistry.registerItem(new KeyItem(), KeyItem.ID);
         GameRegistry.registerItem(new LockpickItem(), LockpickItem.ID);
+        GameRegistry.registerItem(new AdvancedLockpickItem(), AdvancedLockpickItem.ID);
         GameRegistry.registerItem(new AccessTunerItem(), AccessTunerItem.ID);
+        GameRegistry.registerItem(new AdvancedAccessTunerItem(), AdvancedAccessTunerItem.ID);
         GameRegistry.registerItem(new SkeletalKeyItem(), SkeletalKeyItem.ID);
         GameRegistry.registerTileEntity(LockTileEntity.class, LockTileEntity.ID);
         GameRegistry.addRecipe(new CopyKeyRecipe());

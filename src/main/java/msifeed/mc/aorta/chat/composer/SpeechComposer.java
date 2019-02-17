@@ -9,7 +9,6 @@ import msifeed.mc.aorta.chat.net.ChatMessage;
 import msifeed.mc.aorta.chat.obfuscation.LangObfuscator;
 import msifeed.mc.aorta.chat.usage.LangAttribute;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
-import msifeed.mc.aorta.utils.L10n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;

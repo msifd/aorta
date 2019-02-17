@@ -20,7 +20,7 @@ public class LockTileEntity extends TileEntity {
     private LockType type = LockType.NONE;
     private int key;
     private boolean locked;
-    private int difficulty;
+    private int difficulty = Aorta.DEFINES.get().locks.defaultDifficulty;
 
     public boolean hasLock() {
         return type != LockType.NONE;
@@ -32,8 +32,8 @@ public class LockTileEntity extends TileEntity {
 
     public void setLockType(LockType type) {
         this.type = type;
-        if (type == LockType.NONE)
-            this.locked = false;
+        this.difficulty = type == LockType.NONE ? 0 : Aorta.DEFINES.get().locks.defaultDifficulty;
+        this.locked = false;
         markDirty();
     }
 
@@ -56,11 +56,19 @@ public class LockTileEntity extends TileEntity {
         makeToggleSound();
     }
 
+    public int getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(int difficulty) {
+        this.difficulty = difficulty;
+    }
+
     public boolean canUnlockWith(String secret) {
         return this.key == Locks.makeKeyHash(secret);
     }
 
-    public EntityItem makeEntityItem() {
+    EntityItem makeEntityItem() {
         final float f = 0.7F;
         final double d0 = worldObj.rand.nextFloat() * f + (1.0F - f) * 0.5D;
         final double d1 = worldObj.rand.nextFloat() * f + (1.0F - f) * 0.5D;
@@ -77,6 +85,7 @@ public class LockTileEntity extends TileEntity {
 
         final NBTTagCompound compound = new NBTTagCompound();
         compound.setInteger("key", key);
+        compound.setByte("diff", (byte) difficulty);
         stack.setTagCompound(compound);
         return stack;
     }
@@ -89,6 +98,8 @@ public class LockTileEntity extends TileEntity {
         final NBTTagCompound compound = itemStack.getTagCompound();
         this.type = item.getLockType();
         this.key = compound.getInteger("key");
+        this.difficulty = compound.getByte("diff");
+        markDirty();
     }
 
     @Override
@@ -102,6 +113,7 @@ public class LockTileEntity extends TileEntity {
         super.readFromNBT(compound);
         this.type = LockType.values()[compound.getByte("type")];
         this.key = compound.getInteger("key");
+        this.difficulty = compound.getByte("diff");
         this.locked = compound.getBoolean("locked");
     }
 
@@ -110,6 +122,7 @@ public class LockTileEntity extends TileEntity {
         super.writeToNBT(compound);
         compound.setByte("type", (byte) type.ordinal());
         compound.setInteger("key", this.key);
+        compound.setByte("diff", (byte) this.difficulty);
         compound.setBoolean("locked", this.locked);
     }
 
@@ -125,7 +138,7 @@ public class LockTileEntity extends TileEntity {
         readFromNBT(packet.func_148857_g());
     }
 
-    public void makeToggleSound() {
+    void makeToggleSound() {
         worldObj.playSoundEffect(xCoord, yCoord, zCoord, "random.click", 0.3f, 3);
     }
 

@@ -24,7 +24,7 @@ public class RollRpc {
     public static final String rollAction = "aorta:core.roll.action";
 
     @RpcMethod(rollFeature)
-    public void rollFeature(MessageContext ctx, int entityId, Feature feature, int mod) {
+    public void rollFeature(MessageContext ctx, int entityId, int mod, Feature[] features) {
         final EntityPlayerMP player = ctx.getServerHandler().playerEntity;
         final World world = ctx.getServerHandler().playerEntity.worldObj;
         final Entity entity = world.getEntityByID(entityId);
@@ -34,7 +34,7 @@ public class RollRpc {
         final Optional<Character> charOpt = CharacterAttribute.get(entity);
         final Optional<CharStatus> statusOpt = StatusAttribute.get(entity);
         if (charOpt.isPresent() && statusOpt.isPresent()) {
-            final FeatureRoll result = new FeatureRoll(charOpt.get(), statusOpt.get(), feature, mod);
+            final FeatureRoll result = new FeatureRoll(charOpt.get(), statusOpt.get(), mod, features);
             final String text = RollComposer.makeText((EntityLivingBase) entity, result);
             final ChatMessage m = Composer.makeMessage(SpeechType.ROLL, player, text);
             ChatHandler.sendChatMessage(player, m);

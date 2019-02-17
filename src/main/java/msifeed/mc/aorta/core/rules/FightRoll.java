@@ -8,12 +8,8 @@ import msifeed.mc.aorta.core.status.CharStatus;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class FightRoll {
+public class FightRoll extends Roll {
     public FightAction action;
-    public int roll;
-    public int mod;
-    public int sanity;
-    public int result;
 
     public FightRoll(Character character, CharStatus status, FightAction action, int mod) {
         final List<Double> featMods = Aorta.DEFINES.rules().modifiers.get(action);
@@ -27,5 +23,6 @@ public class FightRoll {
         this.mod = mod;
         this.sanity = sanity;
         this.result = roll + mod + sanity;
+        this.critical = Critical.roll();
     }
 }

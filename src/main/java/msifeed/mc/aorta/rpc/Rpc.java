@@ -81,12 +81,20 @@ public class Rpc {
     private static boolean isInstance(Class c, Object o) {
         if (c.isPrimitive()) {
             switch (c.getName()) {
+                case "boolean":
+                    return o instanceof Boolean;
                 case "byte":
                     return o instanceof Byte;
                 case "short":
                     return o instanceof Short;
                 case "int":
                     return o instanceof Integer;
+                case "long":
+                    return o instanceof Long;
+                case "float":
+                    return o instanceof Float;
+                case "double":
+                    return o instanceof Double;
                 default:
                     return false;
             }

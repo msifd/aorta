@@ -1,9 +1,5 @@
 package msifeed.mc.aorta.core.traits;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 public enum TraitType {
     SYSTEM("__"), LANG("lang_");
 

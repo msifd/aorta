@@ -2,25 +2,25 @@ package msifeed.mc.aorta.core.rules;
 
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
-import msifeed.mc.aorta.core.character.Grade;
 import msifeed.mc.aorta.core.status.CharStatus;
 
-public class FeatureRoll {
-    public final Feature feature;
-    public final int roll;
-    public final int mod;
-    public final int sanity;
-    public final int result;
+import java.util.stream.Stream;
 
-    public FeatureRoll(Character c, CharStatus status, Feature f, int mod) {
-        final Grade grade = c.features.get(f);
-        final int middleDice = Dices.dice(grade.value() * 2) - grade.value() * 2 + 3;
-        final int normalDice = Dices.dice(4) - Dices.dice(3);
+public class FeatureRoll extends Roll {
+    public Feature[] features;
 
-        this.feature = f;
-        this.roll = grade.roll() + middleDice + normalDice;
+    public FeatureRoll(Character c, CharStatus status, int mod, Feature... feats) {
+        final double rollAvg = Stream.of(feats).mapToDouble(f -> c.features.get(f).roll()).sum() / feats.length;
+
+        this.features = feats;
+        this.roll = Dices.randRound(rollAvg);
         this.mod = mod;
         this.sanity = SanityMod.calc(status);
         this.result = roll + mod + sanity;
+        this.critical = Critical.roll();
+    }
+
+    public boolean check(int difficulty) {
+        return critical == Critical.LUCK || critical != Critical.FAIL && result >= difficulty;
     }
 }

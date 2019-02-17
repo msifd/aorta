@@ -3,14 +3,9 @@ package msifeed.mc.aorta.chat.usage;
 import msifeed.mc.aorta.chat.Language;
 import msifeed.mc.aorta.commands.ExtCommand;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
-import msifeed.mc.aorta.core.character.Character;
-import msifeed.mc.aorta.core.traits.Trait;
-import msifeed.mc.aorta.core.traits.TraitType;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;

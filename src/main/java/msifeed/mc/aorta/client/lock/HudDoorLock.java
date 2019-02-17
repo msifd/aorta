@@ -5,8 +5,10 @@ import msifeed.mc.aorta.genesis.blocks.templates.DoorTemplate;
 import msifeed.mc.aorta.locks.LockTileEntity;
 import msifeed.mc.aorta.locks.LockType;
 import msifeed.mc.aorta.locks.items.LockItem;
+import msifeed.mc.aorta.utils.L10n;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.MovingObjectPosition;
@@ -52,6 +54,16 @@ public class HudDoorLock extends Gui {
 
         mc.getTextureManager().bindTexture(lockIcons.get(lock.getLockType()));
         drawSprite(x, y, size, txSize);
+
+        final FontRenderer fr = mc.fontRenderer;
+        final String diffStr = String.valueOf(lock.getDifficulty());
+        final int diffStrWidth = fr.getStringWidth(diffStr);
+        drawString(fr, diffStr, x + (size - diffStrWidth) / 2 + 1, y + size, 0xaaaaaaaa);
+
+        if (lock.getLockType() == LockType.PADLOCK) {
+            String statusText = L10n.tr(lock.isLocked() ? "aorta.lock.locked" : "aorta.lock.unlocked");
+            drawString(fr, statusText, x + size + 2, y + (size - fr.FONT_HEIGHT) / 2, 0xaaaaaaaa);
+        }
     }
 
     private void drawSprite(double x, double y, double s, double ts) {

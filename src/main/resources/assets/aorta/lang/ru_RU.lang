@@ -8,6 +8,8 @@ item.tool_debug.name=Дэбаг-тул
 item.tool_char.name=Чар-тул
 item.tool_status.name=Статус-тул
 item.tool_roller.name=Роллер-тул
+item.tool_designer.name=Дэсигнер-тул
+
 item.remote_book.name=Загрузчик текстов инфосферы
 item.lock_blank_key.name=Заготовка ключа
 item.lock_key.name=Ключ
@@ -15,7 +17,9 @@ item.lock_build_in.name=Встроенный замок
 item.lock_padlock.name=Навесной замок
 item.lock_digital.name=Цифровой замок
 item.lock_lockpick.name=Отмычка
+item.lock_advanced_lockpick.name=Авто-отмычка
 item.lock_access_tuner.name=Настройщик доступа
+item.lock_advanced_tuner.name=Рекомбинатор схем
 item.lock_skeletal_key.name=Скелетный ключ
 
 aorta.gui.roller=Роллер
@@ -44,6 +48,8 @@ aorta.lock.installed=§7Замок установлен
 aorta.lock.replaced=§7Замок заменён
 aorta.lock.reset=§7Новый пароль установлен
 aorta.lock.blank_lock=§7Новенький
+aorta.lock.pick_break=§7Отмычка сломалась
+aorta.lock.hacked=§7Замок взломан
 
 aorta.lang.vanilla=Ванильный
 aorta.lang.common=Единоречие

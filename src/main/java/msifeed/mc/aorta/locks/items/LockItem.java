@@ -3,12 +3,11 @@ package msifeed.mc.aorta.locks.items;
 import msifeed.mc.aorta.genesis.AortaCreativeTab;
 import msifeed.mc.aorta.locks.LockTileEntity;
 import msifeed.mc.aorta.locks.LockType;
-import msifeed.mc.aorta.locks.Locks;
 import msifeed.mc.aorta.utils.L10n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 
@@ -38,15 +37,6 @@ public class LockItem extends Item {
     }
 
     @Override
-    public void onCreated(ItemStack itemStack, World world, EntityPlayer player) {
-        final String secret = type == LockType.DIGITAL ? DEFAULT_DIGITAL_SECRET : String.valueOf(world.rand.nextInt());
-        final int key = Locks.makeKeyHash(secret);
-        final NBTTagCompound compound = new NBTTagCompound();
-        compound.setInteger("key", key);
-        itemStack.setTagCompound(compound);
-    }
-
-    @Override
     public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
         final LockTileEntity lock = LockTileEntity.find(world, x, y, z);
         if (lock == null)
@@ -56,6 +46,8 @@ public class LockItem extends Item {
     }
 
     private void install(ItemStack itemStack, LockTileEntity lock, EntityPlayer player, World world) {
+        if (world.isRemote)
+            return;
         if (lock.hasLock() && lock.isLocked())
             return;
 
@@ -64,21 +56,22 @@ public class LockItem extends Item {
 
         if (lock.hasLock()) {
             player.inventory.addItemStackToInventory(lock.toItemStack());
-            player.inventory.markDirty();
         }
 
         if (isBlank(itemStack)) {
             final String secret = type == LockType.DIGITAL ? DEFAULT_DIGITAL_SECRET : String.valueOf(world.rand.nextInt());
+            System.out.println("install client: " + world.isRemote + " sec: " + secret);
             lock.setSecret(secret);
             lock.setLockType(type);
             if (type != LockType.DIGITAL) {
                 player.inventory.addItemStackToInventory(KeyItem.makeKeyItem(secret));
-                player.inventory.markDirty();
             }
         } else {
             // Used lock has no bonus key
             lock.fromItemStack(itemStack);
         }
+
+        ((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
 
         if (!world.isRemote)
             player.addChatMessage(new ChatComponentTranslation(messageId));
