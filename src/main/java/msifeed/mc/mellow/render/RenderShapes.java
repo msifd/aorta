@@ -5,6 +5,18 @@ import net.minecraft.client.renderer.Tessellator;
 import org.lwjgl.opengl.GL11;
 
 public final class RenderShapes {
+    public static void line(Geom geom, float width, int color) {
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glLineWidth(width);
+        final Tessellator tessellator = Tessellator.instance;
+        tessellator.startDrawing(GL11.GL_LINES);
+        tessellator.setColorRGBA_I(color, 255);
+        tessellator.addVertex(geom.x, geom.y + 0.3, geom.z);
+        tessellator.addVertex(geom.w, geom.h + 0.3, geom.z);
+        tessellator.draw();
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+    }
+
     public static void frame(Geom geom, float width, int color) {
         final float w = geom.w;
         final float h = geom.h;

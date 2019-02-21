@@ -8,6 +8,7 @@ import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.basic.Label;
 import msifeed.mc.mellow.widgets.basic.Separator;
 import msifeed.mc.mellow.widgets.input.TextInput;
+import msifeed.mc.mellow.widgets.tabs.TabArea;
 import msifeed.mc.mellow.widgets.window.Window;
 import net.minecraft.entity.EntityLivingBase;
 
@@ -22,14 +23,12 @@ public class ScreenRoller extends MellowGuiScreen {
 
         final Widget windowContent = window.getContent();
 
-        final Widget buttons = new Widget();
-        buttons.setLayout(ListLayout.VERTICAL);
-        buttons.addChild(new FeatureRollsView(entity));
-        buttons.addChild(new Separator());
-        buttons.addChild(new FightRollView(entity));
+        final TabArea tabArea = new TabArea();
+        windowContent.addChild(tabArea);
 
-        windowContent.addChild(buttons);
-        windowContent.addChild(new Separator());
+        tabArea.addTab("Feats", new FeatureRollsView(entity));
+        tabArea.addTab("Fight", new FightRollView(entity));
+        tabArea.addTab("Other", new OtherRollView(entity));
 
         final Widget modifiers = new Widget();
         modifiers.setLayout(new GridLayout());

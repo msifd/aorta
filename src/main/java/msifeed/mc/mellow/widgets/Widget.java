@@ -216,6 +216,7 @@ public class Widget {
         if (isVisible()) {
             renderSelf();
             renderChildren();
+            postRenderSelf();
 //            if (isHovered())
 //                renderDebug();
         }
@@ -226,6 +227,9 @@ public class Widget {
     }
 
     protected void renderSelf() {
+    }
+
+    protected void postRenderSelf() {
     }
 
     protected void renderChildren() {

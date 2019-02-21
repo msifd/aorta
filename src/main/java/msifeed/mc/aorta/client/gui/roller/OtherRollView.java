@@ -7,14 +7,13 @@ import msifeed.mc.aorta.utils.L10n;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.widgets.Widget;
-import msifeed.mc.mellow.widgets.basic.Separator;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
 import net.minecraft.entity.EntityLivingBase;
 
-class FightRollView extends Widget {
+class OtherRollView extends Widget {
     private final EntityLivingBase entity;
 
-    FightRollView(EntityLivingBase entity) {
+    OtherRollView(EntityLivingBase entity) {
         this.entity = entity;
         setLayout(ListLayout.VERTICAL);
 

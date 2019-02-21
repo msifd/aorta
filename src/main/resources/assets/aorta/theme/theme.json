@@ -71,9 +71,18 @@
     "flat_button_hover": {
       "pos": [72,16],
       "9slice": [[2,2], [4,6], [2,2]]
+    },
+    "tab_inactive": {
+      "pos": [64,32],
+      "9slice": [[4,3], [6,6], [4,3]]
+    },
+    "tab_active": {
+      "pos": [80,32],
+      "9slice": [[4,3], [6,6], [4,3]]
     }
   },
   "colors": {
+    "dark_border": "08141e",
     "text_bright": "f6d6bd",
     "text_dark": "0f2a3f"
   }

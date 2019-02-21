@@ -6,7 +6,7 @@ public enum Feature {
     STRENGTH, DEXTERITY, ENDURANCE, INTELLIGENCE;
 
     public String tr() {
-        return L10n.tr("aorta.features." + name().toLowerCase());
+        return L10n.tr("aorta.feature." + name().toLowerCase());
     }
 
     public String shortName() {
