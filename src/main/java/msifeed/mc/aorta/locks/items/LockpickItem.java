@@ -10,7 +10,7 @@ import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.attributes.StatusAttribute;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
-import msifeed.mc.aorta.core.rules.FeatureRoll;
+import msifeed.mc.aorta.core.rolls.FeatureRoll;
 import msifeed.mc.aorta.core.status.CharStatus;
 import msifeed.mc.aorta.genesis.AortaCreativeTab;
 import msifeed.mc.aorta.locks.LockTileEntity;
@@ -46,7 +46,7 @@ public class LockpickItem extends Item {
         if (!charOpt.isPresent() || !statusOpt.isPresent())
             return false;
 
-        final FeatureRoll roll = new FeatureRoll(charOpt.get(), statusOpt.get(), 0, Feature.DEXTERITY, Feature.INTELLIGENCE);
+        final FeatureRoll roll = new FeatureRoll(charOpt.get(), statusOpt.get(), Feature.DEX, Feature.INT);
         consumePick(lock, pick, player, roll);
 
         if (player instanceof EntityPlayerMP) {

@@ -3,7 +3,6 @@ package msifeed.mc.mellow.widgets.tabs;
 import msifeed.mc.mellow.Mellow;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.render.RenderShapes;
-import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.utils.Geom;
 import msifeed.mc.mellow.widgets.Widget;
 
@@ -15,11 +14,10 @@ class TabBar extends Widget {
     private final TabArea parent;
     private final ArrayList<TabButton> tabs = new ArrayList<>();
     private TabButton activeTab = null;
-    private int activeTabIndex = -1;
 
     TabBar(TabArea parent) {
         this.parent = parent;
-        setLayout(ListLayout.HORIZONTAL);
+        setLayout(new ListLayout(ListLayout.Direction.HORIZONTAL, 0));
     }
 
     void addTab(String name) {
@@ -36,7 +34,6 @@ class TabBar extends Widget {
 
     void selectTab(int i) {
         activeTab = tabs.get(i);
-        activeTabIndex = i;
         parent.selectContent(i);
     }
 

@@ -24,7 +24,7 @@ class GlobalComposer implements ChatComposer {
     public IChatComponent format(EntityPlayer self, ChatMessage message) {
         final String prefix = String.format("[GLOBAL] %s: %s", message.speaker, message.text);
         final ChatComponentText compPrefix = new ChatComponentText(prefix);
-        compPrefix.getChatStyle().setColor(EnumChatFormatting.BLUE);
+        compPrefix.getChatStyle().setColor(EnumChatFormatting.GREEN);
         return compPrefix;
     }
 }

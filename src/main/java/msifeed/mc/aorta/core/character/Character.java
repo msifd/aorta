@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Character {
-    public EnumMap<Feature, Grade> features = new EnumMap<>(Feature.class);
+    public EnumMap<Feature, Integer> features = new EnumMap<>(Feature.class);
     public HashMap<String, BodyPart> bodyParts = new HashMap<>();
     public Set<Trait> traits = new HashSet<>();
     public double disfunctionRate = 0.2;
@@ -20,7 +20,7 @@ public class Character {
     public Character() {
         final Feature[] featureEnum = Feature.values();
         for (Feature f : featureEnum) {
-            features.put(f, Grade.NORMAL);
+            features.put(f, 5);
         }
     }
 
@@ -28,6 +28,7 @@ public class Character {
         features.putAll(c.features);
         bodyParts.putAll(c.bodyParts);
         traits.addAll(c.traits);
+        disfunctionRate = c.disfunctionRate;
     }
 
     public Set<Trait> traits() {
@@ -42,8 +43,8 @@ public class Character {
         final NBTTagCompound compound = new NBTTagCompound();
 
         final NBTTagCompound features = new NBTTagCompound();
-        for (EnumMap.Entry<Feature, Grade> e : this.features.entrySet())
-            features.setByte(e.getKey().toString().toLowerCase(), (byte) e.getValue().ordinal());
+        for (EnumMap.Entry<Feature, Integer> e : this.features.entrySet())
+            features.setByte(e.getKey().toString().toLowerCase(), e.getValue().byteValue());
         compound.setTag(Tags.features, features);
 
         final NBTTagList bodyParts = new NBTTagList();
@@ -60,10 +61,9 @@ public class Character {
     public void fromNBT(NBTTagCompound compound) {
         final NBTTagCompound features = compound.getCompoundTag(Tags.features);
         final Feature[] featEnum = Feature.values();
-        final Grade[] gradeEnum = Grade.values();
         for (Feature feature : featEnum) {
-            final byte ord = features.getByte(feature.toString().toLowerCase());
-            this.features.put(feature, gradeEnum[ord]);
+            final int feat = features.getByte(feature.toString().toLowerCase());
+            this.features.put(feature, feat);
         }
 
         final NBTTagList bodyParts = compound.getTagList(Tags.bodyParts, 10); // 10 - NBTTagCompound

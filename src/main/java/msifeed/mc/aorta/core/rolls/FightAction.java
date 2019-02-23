@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.core.rules;
+package msifeed.mc.aorta.core.rolls;
 
 import msifeed.mc.aorta.utils.L10n;
 

@@ -195,6 +195,17 @@ public class TextInput extends Widget implements KeyHandler {
         }
     }
 
+    public static boolean isUnsignedIntBetween(String s, int min, int max) {
+        if (s.isEmpty())
+            return true;
+        try {
+            final int i = Integer.parseInt(s);
+            return i >= min && i <= max;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
     public static boolean isSignedInt(String s) {
         if (s.isEmpty() || s.equals("-"))
             return true;

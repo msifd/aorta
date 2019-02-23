@@ -4,10 +4,10 @@ import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.chat.Language;
 import msifeed.mc.aorta.chat.net.ChatMessage;
 import msifeed.mc.aorta.core.character.Feature;
-import msifeed.mc.aorta.core.rules.Critical;
-import msifeed.mc.aorta.core.rules.FeatureRoll;
-import msifeed.mc.aorta.core.rules.FightRoll;
-import msifeed.mc.aorta.core.rules.Roll;
+import msifeed.mc.aorta.core.rolls.Critical;
+import msifeed.mc.aorta.core.rolls.FeatureRoll;
+import msifeed.mc.aorta.core.rolls.FightRoll;
+import msifeed.mc.aorta.core.rolls.Roll;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
@@ -38,7 +38,7 @@ public class RollComposer implements ChatComposer {
     }
 
     public static String makeText(EntityLivingBase entity, FeatureRoll roll) {
-        final List<String> featNames = Stream.of(roll.features).map(Feature::shortName).collect(Collectors.toList());
+        final List<String> featNames = Stream.of(roll.features).map(Feature::toString).collect(Collectors.toList());
         final String feat = String.join("+", featNames);
         return makeRollText("ROLL", getName(entity), feat, roll);
     }
@@ -48,7 +48,7 @@ public class RollComposer implements ChatComposer {
     }
 
     private static String makeRollText(String type, String player, String action, Roll roll) {
-        final String modsStr = formatMod(roll.mod) + formatSanity(roll.sanity);
+        final String modsStr = formatMod(roll.mods.rollMod) + formatSanity(roll.sanity);
         if (modsStr.isEmpty()) {
             // [TYPE] player ACTION: res CRIT
             return String.format("[%s] \u00a7r%s\u00a76 %s: %d%s", type, player, action, roll.result, formatCrit(roll.critical));

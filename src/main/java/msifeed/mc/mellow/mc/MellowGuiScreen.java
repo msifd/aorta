@@ -11,9 +11,12 @@ import msifeed.mc.mellow.widgets.scene.Scene;
 import msifeed.mc.mellow.widgets.window.Window;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
 
 public class MellowGuiScreen extends GuiScreen {
+    private static final Logger LOGGER = LogManager.getLogger("Mellow.GuiScreen");
     protected Scene scene = new ProfilingScene();
 
     @Override
@@ -30,9 +33,15 @@ public class MellowGuiScreen extends GuiScreen {
 
     @Override
     public void drawScreen(int xMouse, int yMouse, float tick) {
-        scene.update();
-        scene.render();
-        Widget.hoveredWidget = scene.lookupWidget(new Point(xMouse, yMouse)).orElse(null);
+        try {
+            scene.update();
+            scene.render();
+            Widget.hoveredWidget = scene.lookupWidget(new Point(xMouse, yMouse)).orElse(null);
+        } catch (Exception e) {
+            LOGGER.error(e);
+            Minecraft.getMinecraft().displayGuiScreen(null);
+            return;
+        }
 
         if (scene.getChildren().isEmpty()) {
             Minecraft.getMinecraft().displayGuiScreen(null);
@@ -41,11 +50,15 @@ public class MellowGuiScreen extends GuiScreen {
 
     @Override
     protected void mouseClicked(int xMouse, int yMouse, int button) {
-        final Widget lookup = scene.lookupWidget(new Point(xMouse, yMouse)).orElse(null);
-        if (lookup instanceof MouseHandler.Press)
-            ((MouseHandler.Press) lookup).onPress(xMouse, yMouse, button);
-        Widget.setFocused(lookup);
-        Widget.pressedWidget = lookup;
+        try {
+            final Widget lookup = scene.lookupWidget(new Point(xMouse, yMouse)).orElse(null);
+            if (lookup instanceof MouseHandler.Press)
+                ((MouseHandler.Press) lookup).onPress(xMouse, yMouse, button);
+            Widget.setFocused(lookup);
+            Widget.pressedWidget = lookup;
+        } catch (Exception e) {
+            LOGGER.error(e);
+        }
     }
 
     @Override
@@ -56,7 +69,10 @@ public class MellowGuiScreen extends GuiScreen {
 
     @Override
     protected void mouseMovedOrUp(int xMouse, int yMouse, int button) {
-        if (Widget.pressedWidget != null) {
+        if (Widget.pressedWidget == null)
+            return;
+
+        try {
             final Widget widget = Widget.pressedWidget;
             if (button == -1) {
                 if (widget instanceof MouseHandler.Move)
@@ -74,6 +90,8 @@ public class MellowGuiScreen extends GuiScreen {
 
                 Widget.pressedWidget = null;
             }
+        } catch (Exception e) {
+            LOGGER.error(e);
         }
     }
 

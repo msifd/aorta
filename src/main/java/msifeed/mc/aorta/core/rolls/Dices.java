@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.core.rules;
+package msifeed.mc.aorta.core.rolls;
 
 import java.util.Random;
 import java.util.stream.IntStream;

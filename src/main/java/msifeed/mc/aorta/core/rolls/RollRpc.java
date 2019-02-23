@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.core.rules;
+package msifeed.mc.aorta.core.rolls;
 
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.aorta.chat.ChatHandler;
@@ -20,11 +20,25 @@ import net.minecraft.world.World;
 import java.util.Optional;
 
 public class RollRpc {
+    public static final String updateMods = "aorta:core.roll.modifiers";
     public static final String rollFeature = "aorta:core.roll.feature";
     public static final String rollAction = "aorta:core.roll.action";
 
+    @RpcMethod(updateMods)
+    public void onUpdateMods(MessageContext ctx, int entityId, Modifiers modifiers) {
+        final World world = ctx.getServerHandler().playerEntity.worldObj;
+        final Entity entity = world.getEntityByID(entityId);
+        if (!(entity instanceof EntityLivingBase))
+            return;
+
+        StatusAttribute.get(entity).ifPresent(status -> {
+            status.modifiers = modifiers;
+            StatusAttribute.INSTANCE.sync(world, entity);
+        });
+    }
+
     @RpcMethod(rollFeature)
-    public void rollFeature(MessageContext ctx, int entityId, int mod, Feature[] features) {
+    public void onRollFeature(MessageContext ctx, int entityId, Feature[] features) {
         final EntityPlayerMP player = ctx.getServerHandler().playerEntity;
         final World world = ctx.getServerHandler().playerEntity.worldObj;
         final Entity entity = world.getEntityByID(entityId);
@@ -34,15 +48,15 @@ public class RollRpc {
         final Optional<Character> charOpt = CharacterAttribute.get(entity);
         final Optional<CharStatus> statusOpt = StatusAttribute.get(entity);
         if (charOpt.isPresent() && statusOpt.isPresent()) {
-            final FeatureRoll result = new FeatureRoll(charOpt.get(), statusOpt.get(), mod, features);
-            final String text = RollComposer.makeText((EntityLivingBase) entity, result);
+            final FeatureRoll roll = new FeatureRoll(charOpt.get(), statusOpt.get(), features);
+            final String text = RollComposer.makeText((EntityLivingBase) entity, roll);
             final ChatMessage m = Composer.makeMessage(SpeechType.ROLL, player, text);
             ChatHandler.sendChatMessage(player, m);
         }
     }
 
     @RpcMethod(rollAction)
-    public void rollAction(MessageContext ctx, int entityId, FightAction action, int mod) {
+    public void onRollAction(MessageContext ctx, int entityId, FightAction action) {
         final EntityPlayerMP player = ctx.getServerHandler().playerEntity;
         final World world = ctx.getServerHandler().playerEntity.worldObj;
         final Entity entity = world.getEntityByID(entityId);
@@ -52,8 +66,8 @@ public class RollRpc {
         final Optional<Character> charOpt = CharacterAttribute.get(entity);
         final Optional<CharStatus> statusOpt = StatusAttribute.get(entity);
         if (charOpt.isPresent() && statusOpt.isPresent()) {
-            final FightRoll result = new FightRoll(charOpt.get(), statusOpt.get(), action, mod);
-            final String text = RollComposer.makeText((EntityLivingBase) entity, result);
+            final FightRoll roll = new FightRoll(charOpt.get(), statusOpt.get(), action);
+            final String text = RollComposer.makeText((EntityLivingBase) entity, roll);
             final ChatMessage m = Composer.makeMessage(SpeechType.ROLL, player, text);
             ChatHandler.sendChatMessage(player, m);
         }

@@ -6,7 +6,7 @@ import msifeed.mc.aorta.core.attributes.StatusAttribute;
 import msifeed.mc.aorta.core.commands.TraitListCommand;
 import msifeed.mc.aorta.core.commands.TraitSetCommand;
 import msifeed.mc.aorta.core.meta.MetaCommand;
-import msifeed.mc.aorta.core.rules.RollRpc;
+import msifeed.mc.aorta.core.rolls.RollRpc;
 import msifeed.mc.aorta.core.traits.TraitDecoder;
 import msifeed.mc.aorta.rpc.Rpc;
 import net.minecraft.command.CommandHandler;

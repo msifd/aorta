@@ -4,7 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import msifeed.mc.aorta.config.ConfigManager;
 import msifeed.mc.aorta.config.ConfigMode;
 import msifeed.mc.aorta.config.JsonConfig;
-import msifeed.mc.aorta.core.rules.FightAction;
+import msifeed.mc.aorta.core.rolls.FightAction;
 import msifeed.mc.aorta.defines.data.AortaDefines;
 import msifeed.mc.aorta.defines.data.FightRules;
 

@@ -1,7 +1,7 @@
 package msifeed.mc.aorta.client.gui.roller;
 
 import msifeed.mc.aorta.core.character.Feature;
-import msifeed.mc.aorta.core.rules.RollRpc;
+import msifeed.mc.aorta.core.rolls.RollRpc;
 import msifeed.mc.aorta.rpc.Rpc;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.widgets.Widget;
@@ -17,16 +17,16 @@ class FeatureRollsView extends Widget {
 
         for (Feature f : Feature.values()) {
             final ButtonLabel b = new ButtonLabel(f.tr());
-            b.setClickCallback(() -> roll(f, ScreenRoller.lastModifier));
+            b.setClickCallback(() -> roll(f));
             addChild(b);
         }
     }
 
-    private void roll(Feature feature, int mod) {
-        if (System.currentTimeMillis() - ScreenRoller.lastRolled < 1000)
+    private void roll(Feature feature) {
+        if (System.currentTimeMillis() - ScreenRoller.prevRollTime < 1000)
             return;
 
-        Rpc.sendToServer(RollRpc.rollFeature, entity.getEntityId(), mod, new Feature[]{feature});
-        ScreenRoller.lastRolled = System.currentTimeMillis();
+        Rpc.sendToServer(RollRpc.rollFeature, entity.getEntityId(), new Feature[]{feature});
+        ScreenRoller.prevRollTime = System.currentTimeMillis();
     }
 }

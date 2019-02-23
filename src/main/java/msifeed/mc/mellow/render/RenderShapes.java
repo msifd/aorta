@@ -5,9 +5,9 @@ import net.minecraft.client.renderer.Tessellator;
 import org.lwjgl.opengl.GL11;
 
 public final class RenderShapes {
-    public static void line(Geom geom, float width, int color) {
+    public static void line(Geom geom, float thickness, int color) {
         GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glLineWidth(width);
+        GL11.glLineWidth(thickness);
         final Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawing(GL11.GL_LINES);
         tessellator.setColorRGBA_I(color, 255);
@@ -17,12 +17,12 @@ public final class RenderShapes {
         GL11.glEnable(GL11.GL_TEXTURE_2D);
     }
 
-    public static void frame(Geom geom, float width, int color) {
+    public static void frame(Geom geom, float thickness, int color) {
         final float w = geom.w;
         final float h = geom.h;
 
         GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glLineWidth(width);
+        GL11.glLineWidth(thickness);
         final Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawing(GL11.GL_LINE_LOOP);
         tessellator.setColorRGBA_I(color, 255);

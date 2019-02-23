@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.core.rules;
+package msifeed.mc.aorta.core.rolls;
 
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
@@ -9,14 +9,17 @@ import java.util.stream.Stream;
 public class FeatureRoll extends Roll {
     public Feature[] features;
 
-    public FeatureRoll(Character c, CharStatus status, int mod, Feature... feats) {
-        final double rollAvg = Stream.of(feats).mapToDouble(f -> c.features.get(f).roll()).sum() / feats.length;
+    public FeatureRoll(Character character, CharStatus status, Feature... feats) {
+        final double rollAvg = Stream.of(feats)
+                .map(f -> character.features.get(f) + status.modifiers.feat(f))
+                .mapToDouble(Dices::feature)
+                .sum() / feats.length;
 
         this.features = feats;
+        this.mods = status.modifiers;
+        this.sanity = sanityMod(status.sanity);
         this.roll = Dices.randRound(rollAvg);
-        this.mod = mod;
-        this.sanity = SanityMod.calc(status);
-        this.result = roll + mod + sanity;
+        this.result = roll + mods.rollMod + sanity;
         this.critical = Critical.roll();
     }
 

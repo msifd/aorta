@@ -27,10 +27,10 @@ aorta.gui.status_editor=Статус
 aorta.gui.char_editor=Персодулятор
 aorta.gui.lang_selector=Языковыбиратель
 
-aorta.feature.strength=Тренированность
-aorta.feature.dexterity=Выучка
-aorta.feature.endurance=Упорство
-aorta.feature.intelligence=Интеллект
+aorta.feature.str=Тренированность
+aorta.feature.dex=Выучка
+aorta.feature.end=Упорство
+aorta.feature.int=Интеллект
 
 aorta.action.hit=Удар
 aorta.action.special_hit=Особый удар

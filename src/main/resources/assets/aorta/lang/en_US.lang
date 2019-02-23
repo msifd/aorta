@@ -1,4 +1,4 @@
-\aorta=Aorta
+aorta=Aorta
 
 itemGroup.aorta.blocks=Aorta Blocks
 itemGroup.aorta.items=Aorta Items
@@ -27,10 +27,10 @@ aorta.gui.status_editor=Status editor
 aorta.gui.char_editor=Character editor
 aorta.gui.lang_selector=Lang selector
 
-aorta.feature.strength=Strength
-aorta.feature.dexterity=Dexterity
-aorta.feature.endurance=Endurance
-aorta.feature.intelligence=Intelligence
+aorta.feature.str=Strength
+aorta.feature.dex=Dexterity
+aorta.feature.end=Endurance
+aorta.feature.int=Intelligence
 
 aorta.action.hit=Hit
 aorta.action.special_hit=Special hit

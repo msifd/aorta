@@ -62,6 +62,7 @@ public class AnchorLayout implements Layout {
 
         for (Widget child : children) {
             final Geom childGeom = child.getGeometry();
+
             switch (horAnchor) {
                 case CENTER:
                     childGeom.x += (geometry.w - childGeom.w) / 2;

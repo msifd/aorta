@@ -1,10 +1,9 @@
 package msifeed.mc.aorta.locks.items;
 
-import msifeed.mc.aorta.core.rules.FeatureRoll;
+import msifeed.mc.aorta.core.rolls.FeatureRoll;
 import msifeed.mc.aorta.locks.LockTileEntity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentTranslation;
 
 public class AdvancedLockpickItem extends LockpickItem {
     public static final String ID = "lock_advanced_lockpick";

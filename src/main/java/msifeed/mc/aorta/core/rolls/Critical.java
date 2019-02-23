@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.core.rules;
+package msifeed.mc.aorta.core.rolls;
 
 public enum Critical {
     NONE, LUCK, FAIL;

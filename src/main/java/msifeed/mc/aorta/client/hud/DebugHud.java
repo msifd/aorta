@@ -6,7 +6,6 @@ import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.attributes.StatusAttribute;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
-import msifeed.mc.aorta.core.character.Grade;
 import msifeed.mc.aorta.core.status.BodyPartHealth;
 import msifeed.mc.aorta.core.status.StatusCalc;
 import msifeed.mc.aorta.core.traits.Trait;
@@ -72,8 +71,8 @@ public enum DebugHud {
             lines.add("Character {");
 
             lines.add("  features: {");
-            for (EnumMap.Entry<Feature, Grade> e : character.features.entrySet()) {
-                lines.add("    " + e.getKey().toString().toLowerCase() + ": " + (e.getValue().ordinal() + 1));
+            for (EnumMap.Entry<Feature, Integer> e : character.features.entrySet()) {
+                lines.add("    " + e.getKey().toString().toLowerCase() + ": " + (e.getValue() + 1));
             }
             lines.add("  }");
 

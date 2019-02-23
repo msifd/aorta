@@ -4,7 +4,6 @@ import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.attributes.StatusAttribute;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
-import msifeed.mc.aorta.core.character.Grade;
 import msifeed.mc.aorta.core.status.CharStatus;
 import msifeed.mc.aorta.utils.L10n;
 import msifeed.mc.mellow.layout.GridLayout;
@@ -15,13 +14,11 @@ import msifeed.mc.mellow.widgets.basic.Label;
 import msifeed.mc.mellow.widgets.basic.Separator;
 import msifeed.mc.mellow.widgets.button.Button;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
-import msifeed.mc.mellow.widgets.droplist.DropList;
+import msifeed.mc.mellow.widgets.input.TextInput;
 import msifeed.mc.mellow.widgets.window.Window;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 public class ScreenCharEditor extends MellowGuiScreen {
@@ -106,13 +103,14 @@ public class ScreenCharEditor extends MellowGuiScreen {
         final Widget features = new Widget();
         features.setLayout(new GridLayout());
 
-        final List<Grade> gradeList = Arrays.asList(Grade.values());
-        for (Map.Entry<Feature, Grade> entry : character.features.entrySet()) {
+        for (Map.Entry<Feature, Integer> entry : character.features.entrySet()) {
             features.addChild(new Label(entry.getKey().toString() + ':'));
-            final DropList<Grade> dropDown = new DropList<>(gradeList);
-            dropDown.selectItem(entry.getValue().ordinal());
-            dropDown.setSelectCallback(grade -> character.features.put(entry.getKey(), grade));
-            features.addChild(dropDown);
+            final TextInput input = new TextInput();
+            input.getSizeHint().x = 29;
+            input.setText(Integer.toString(entry.getValue()));
+            input.setFilter(s -> TextInput.isUnsignedIntBetween(s, 1, 10));
+            input.setCallback(s -> character.features.put(entry.getKey(), Integer.parseInt(s)));
+            features.addChild(input);
         }
 
         leftSection.addChild(new Separator());

@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.core.rules;
+package msifeed.mc.aorta.core.rolls;
 
 import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.core.character.Character;
@@ -11,18 +11,17 @@ import java.util.stream.Stream;
 public class FightRoll extends Roll {
     public FightAction action;
 
-    public FightRoll(Character character, CharStatus status, FightAction action, int mod) {
-        final List<Double> featMods = Aorta.DEFINES.rules().modifiers.get(action);
+    public FightRoll(Character character, CharStatus status, FightAction action) {
+        final List<Double> factors = Aorta.DEFINES.rules().modifiers.get(action);
         final double featSum = Stream.of(Feature.values())
-                .mapToDouble(f -> character.features.get(f).roll() * featMods.get(f.ordinal()))
+                .mapToDouble(f -> Dices.feature(character.features.get(f) + status.modifiers.feat(f)) * factors.get(f.ordinal()))
                 .sum();
-        final int sanity = SanityMod.calc(status);
 
         this.action = action;
+        this.mods = status.modifiers;
+        this.sanity = Roll.sanityMod(status.sanity);
         this.roll = (int) Math.floor(featSum);
-        this.mod = mod;
-        this.sanity = sanity;
-        this.result = roll + mod + sanity;
+        this.result = roll + mods.rollMod + sanity;
         this.critical = Critical.roll();
     }
 }
