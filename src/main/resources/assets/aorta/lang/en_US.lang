@@ -29,8 +29,12 @@ aorta.gui.lang_selector=Lang selector
 
 aorta.feature.str=Strength
 aorta.feature.dex=Dexterity
-aorta.feature.end=Endurance
+aorta.feature.ten=Tenacity
 aorta.feature.int=Intelligence
+aorta.feature.ath=Athletics
+aorta.feature.end=Endurance
+aorta.feature.hnd=Handicraft
+aorta.feature.psi=Psionics
 
 aorta.action.hit=Hit
 aorta.action.special_hit=Special hit

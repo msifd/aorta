@@ -20,13 +20,19 @@ class FeatureRollsView extends Widget {
             b.setClickCallback(() -> roll(f));
             addChild(b);
         }
+
+        for (Feature.ComplexFeature cf : Feature.ComplexFeature.values()) {
+            final ButtonLabel b = new ButtonLabel(cf.tr());
+            b.setClickCallback(() -> roll(cf.feats));
+            addChild(b);
+        }
     }
 
-    private void roll(Feature feature) {
+    private void roll(Feature... features) {
         if (System.currentTimeMillis() - ScreenRoller.prevRollTime < 1000)
             return;
 
-        Rpc.sendToServer(RollRpc.rollFeature, entity.getEntityId(), new Feature[]{feature});
+        Rpc.sendToServer(RollRpc.rollFeature, entity.getEntityId(), features);
         ScreenRoller.prevRollTime = System.currentTimeMillis();
     }
 }

@@ -29,8 +29,12 @@ aorta.gui.lang_selector=Языковыбиратель
 
 aorta.feature.str=Тренированность
 aorta.feature.dex=Выучка
-aorta.feature.end=Упорство
+aorta.feature.ten=Упорство
 aorta.feature.int=Интеллект
+aorta.feature.ath=Атлетика
+aorta.feature.end=Выносливость
+aorta.feature.hnd=Ремесло
+aorta.feature.psi=Псионика
 
 aorta.action.hit=Удар
 aorta.action.special_hit=Особый удар
