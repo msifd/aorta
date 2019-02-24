@@ -72,7 +72,7 @@ public enum DebugHud {
 
             lines.add("  features: {");
             for (EnumMap.Entry<Feature, Integer> e : character.features.entrySet()) {
-                lines.add("    " + e.getKey().toString().toLowerCase() + ": " + (e.getValue() + 1));
+                lines.add("    " + e.getKey().toString().toLowerCase() + ": " + e.getValue());
             }
             lines.add("  }");
 

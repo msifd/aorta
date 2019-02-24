@@ -109,7 +109,7 @@ public class ScreenCharEditor extends MellowGuiScreen {
             input.getSizeHint().x = 29;
             input.setText(Integer.toString(entry.getValue()));
             input.setFilter(s -> TextInput.isUnsignedIntBetween(s, 1, 10));
-            input.setCallback(s -> character.features.put(entry.getKey(), Integer.parseInt(s)));
+            input.setCallback(s -> character.features.put(entry.getKey(), s.isEmpty() ? 0 : Integer.parseInt(s)));
             features.addChild(input);
         }
 

@@ -38,7 +38,7 @@ public class MellowGuiScreen extends GuiScreen {
             scene.render();
             Widget.hoveredWidget = scene.lookupWidget(new Point(xMouse, yMouse)).orElse(null);
         } catch (Exception e) {
-            LOGGER.error(e);
+            LOGGER.throwing(e);
             Minecraft.getMinecraft().displayGuiScreen(null);
             return;
         }
@@ -57,14 +57,18 @@ public class MellowGuiScreen extends GuiScreen {
             Widget.setFocused(lookup);
             Widget.pressedWidget = lookup;
         } catch (Exception e) {
-            LOGGER.error(e);
+            LOGGER.throwing(e);
         }
     }
 
     @Override
     protected void mouseClickMove(int xMouse, int yMouse, int button, long timeSinceMouseClick) {
-        if (Widget.pressedWidget instanceof MouseHandler.Move)
-            ((MouseHandler.Move) Widget.pressedWidget).onMove(xMouse, yMouse, button);
+        try {
+            if (Widget.pressedWidget instanceof MouseHandler.Move)
+                ((MouseHandler.Move) Widget.pressedWidget).onMove(xMouse, yMouse, button);
+        } catch (Exception e) {
+            LOGGER.throwing(e);
+        }
     }
 
     @Override
@@ -91,7 +95,7 @@ public class MellowGuiScreen extends GuiScreen {
                 Widget.pressedWidget = null;
             }
         } catch (Exception e) {
-            LOGGER.error(e);
+            LOGGER.throwing(e);
         }
     }
 
@@ -126,9 +130,13 @@ public class MellowGuiScreen extends GuiScreen {
             return;
         }
 
-        if (Widget.focusedWidget instanceof KeyHandler)
-            ((KeyHandler) Widget.focusedWidget).onKeyboard(c, k);
-        else {
+        if (Widget.focusedWidget instanceof KeyHandler) {
+            try {
+                ((KeyHandler) Widget.focusedWidget).onKeyboard(c, k);
+            } catch (Exception e) {
+                LOGGER.throwing(e);
+            }
+        } else {
             FMLCommonHandler.instance().fireKeyInput();
         }
     }
