@@ -7,7 +7,6 @@ import msifeed.mc.aorta.core.attributes.StatusAttribute;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.status.BodyPartHealth;
-import msifeed.mc.aorta.core.status.StatusCalc;
 import msifeed.mc.aorta.core.traits.Trait;
 import msifeed.mc.aorta.environment.EnvironmentManager;
 import msifeed.mc.aorta.environment.WorldEnv;
@@ -108,9 +107,12 @@ public enum DebugHud {
         StatusAttribute.get(entity).ifPresent(status -> {
             lines.add("Status {");
 
-            lines.add("  health to death: " + StatusCalc.damageToDeath(character, status));
+            final int vitalityThreshold = character.countVitalityThreshold();
+            final int vitality = status.countVitality(vitalityThreshold);
+            final double vitalityPercents = vitality / (double) vitalityThreshold;
+            lines.add(String.format("  vitality: %d/%d (%f)", vitality, vitalityThreshold, vitalityPercents));
 
-            lines.add("  health: {");
+            lines.add("  body health: {");
             for (Map.Entry<String, BodyPartHealth> e : status.health.entrySet()) {
                 lines.add("    " + e.getKey().toLowerCase() + ": " + e.getValue().toString());
             }
@@ -124,7 +126,7 @@ public enum DebugHud {
     }
 
     private void addLang(ArrayList<String> lines, EntityLivingBase entity) {
-        LangAttribute.get(entity).ifPresent(lang -> lines.add("Language: " + lang));
+        LangAttribute.get(entity).ifPresent(lang -> lines.add("Language: " + lang.name()));
     }
 
     private void addWeather(ArrayList<String> lines, WorldEnv env) {

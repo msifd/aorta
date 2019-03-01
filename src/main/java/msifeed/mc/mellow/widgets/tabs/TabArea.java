@@ -19,6 +19,12 @@ public class TabArea extends Widget {
         addChild(contentWrap);
     }
 
+    @Override
+    public void clearChildren() {
+        tabBar.clearChildren();
+        contentWrap.clearChildren();
+    }
+
     public void addTab(String name, Widget tabContent) {
         tabBar.addTab(name);
         contents.add(tabContent);

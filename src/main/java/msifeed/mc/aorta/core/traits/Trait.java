@@ -14,6 +14,7 @@ public enum Trait {
     lang_aistemia, lang_forgotten, lang_enlimian, lang_transcriptor, lang_underwater, lang_kshemin,
 
     weak, tough,
+    psionic,
 
     ;
 

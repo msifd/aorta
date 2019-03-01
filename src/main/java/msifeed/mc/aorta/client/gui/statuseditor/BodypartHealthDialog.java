@@ -31,7 +31,7 @@ class BodypartHealthDialog extends Window {
 
         final Widget partInfo = new Widget();
         partInfo.setLayout(new GridLayout());
-        partInfo.addChild(new Label("\"" + bodyPart.name + "\""));
+        partInfo.addChild(new Label(bodyPart.name));
         partInfo.addChild(new Label(bodyPart.type.toString()));
         partInfo.addChild(new Label("Max health"));
         partInfo.addChild(new Label(String.valueOf(bodyPart.max)));
@@ -47,7 +47,7 @@ class BodypartHealthDialog extends Window {
         final TextInput healthInput = new TextInput();
         healthInput.getSizeHint().x = 30;
         healthInput.setText(String.valueOf(health.health));
-        healthInput.setFilter(BodypartHealthDialog::healthFilter);
+        healthInput.setFilter(s -> TextInput.isUnsignedIntBetween(s, 0, bodyPart.max));
         healthInput.setCallback(s -> health.health = (short) healthInput.getInt());
         params.addChild(healthInput);
 

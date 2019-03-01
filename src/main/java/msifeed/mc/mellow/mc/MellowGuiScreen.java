@@ -39,13 +39,12 @@ public class MellowGuiScreen extends GuiScreen {
             Widget.hoveredWidget = scene.lookupWidget(new Point(xMouse, yMouse)).orElse(null);
         } catch (Exception e) {
             LOGGER.throwing(e);
-            Minecraft.getMinecraft().displayGuiScreen(null);
+            closeGui();
             return;
         }
 
-        if (scene.getChildren().isEmpty()) {
-            Minecraft.getMinecraft().displayGuiScreen(null);
-        }
+        if (scene.getChildren().isEmpty())
+            closeGui();
     }
 
     @Override
@@ -139,5 +138,9 @@ public class MellowGuiScreen extends GuiScreen {
         } else {
             FMLCommonHandler.instance().fireKeyInput();
         }
+    }
+
+    public void closeGui() {
+        Minecraft.getMinecraft().displayGuiScreen(null);
     }
 }

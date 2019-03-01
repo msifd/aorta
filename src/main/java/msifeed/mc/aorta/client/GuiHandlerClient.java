@@ -19,10 +19,14 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.function.Supplier;
 
 public class GuiHandlerClient extends GuiHandler {
+    final Logger LOG = LogManager.getLogger("Aorta.GuiHandler");
+
     public void init() {
         MinecraftForge.EVENT_BUS.register(DisableVanillaHud.INSTANCE);
         MinecraftForge.EVENT_BUS.register(DebugHud.INSTANCE);
@@ -86,7 +90,11 @@ public class GuiHandlerClient extends GuiHandler {
         if (c.isInstance(mc.currentScreen)) {
             mc.displayGuiScreen(null);
         } else {
-            FMLClientHandler.instance().displayGuiScreen(mc.thePlayer, screenSupplier.get());
+            try {
+                FMLClientHandler.instance().displayGuiScreen(mc.thePlayer, screenSupplier.get());
+            } catch (Exception e) {
+                LOG.throwing(e);
+            }
         }
     }
 }

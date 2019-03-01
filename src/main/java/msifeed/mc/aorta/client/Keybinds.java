@@ -15,14 +15,14 @@ import java.util.HashMap;
 public enum Keybinds {
     INSTANCE;
 
-    private final KeyBinding rollerScreen = new KeyBinding("aorta.gui.roller", Keyboard.KEY_C, "aorta");
-    private final KeyBinding statusScreen = new KeyBinding("aorta.gui.status", Keyboard.KEY_V, "aorta");
+    private final KeyBinding statusScreen = new KeyBinding("aorta.gui.status", Keyboard.KEY_C, "aorta");
+    private final KeyBinding rollerScreen = new KeyBinding("aorta.gui.roller", Keyboard.KEY_V, "aorta");
     private final KeyBinding langScreen = new KeyBinding("aorta.gui.lang_selector", Keyboard.KEY_Y, "aorta");
     private final HashMap<KeyBinding, Runnable> callbacks = new HashMap<>();
 
     public void init() {
-        callbacks.put(rollerScreen, () -> Aorta.GUI_HANDLER.toggleRoller(Minecraft.getMinecraft().thePlayer));
         callbacks.put(statusScreen, () -> Aorta.GUI_HANDLER.toggleStatusEditor(Minecraft.getMinecraft().thePlayer));
+        callbacks.put(rollerScreen, () -> Aorta.GUI_HANDLER.toggleRoller(Minecraft.getMinecraft().thePlayer));
         callbacks.put(langScreen, () -> Aorta.GUI_HANDLER.toggleLangSelector(Minecraft.getMinecraft().thePlayer));
 
         KeyBinding[] keyBindings = new KeyBinding[callbacks.size()];

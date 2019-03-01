@@ -22,10 +22,29 @@ item.lock_access_tuner.name=Настройщик доступа
 item.lock_advanced_tuner.name=Рекомбинатор схем
 item.lock_skeletal_key.name=Скелетный ключ
 
+aorta.gui.apply=Применить
+aorta.gui.cancel=Отменить
+
 aorta.gui.roller=Роллер
-aorta.gui.status_editor=Статус
 aorta.gui.char_editor=Персодулятор
 aorta.gui.lang_selector=Языковыбиратель
+
+aorta.gui.status=Статус: %s
+aorta.gui.status.status=Статус
+aorta.gui.status.overall=В целом
+aorta.gui.status.vitality=Живучесть
+aorta.gui.status.psionics=Псионические Очки
+aorta.gui.status.sanity=Псих. состояние
+aorta.gui.status.shield=Щиты
+aorta.gui.status.shield_type=Тип щита
+aorta.gui.status.shield_power=Мощность
+aorta.gui.status.body=Тело
+
+aorta.status.dead=Умер
+aorta.status.dying=При смерти
+aorta.status.injured=Травмирован
+aorta.status.wounded=Ранен
+aorta.status.fine=В порядке
 
 aorta.feature.str=Тренированность
 aorta.feature.dex=Выучка

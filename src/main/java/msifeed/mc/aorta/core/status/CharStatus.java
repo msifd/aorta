@@ -12,10 +12,10 @@ public class CharStatus {
     public Map<String, BodyPartHealth> health = new LinkedHashMap<>();
     public BodyShield shield = new BodyShield();
     public byte sanity = 100;
+    public byte psionics = 0;
     public Modifiers modifiers = new Modifiers();
 
     public CharStatus() {
-
     }
 
     public CharStatus(CharStatus s) {
@@ -23,7 +23,13 @@ public class CharStatus {
             health.put(e.getKey(), new BodyPartHealth(e.getValue()));
         shield = new BodyShield(s.shield);
         sanity = s.sanity;
+        psionics = s.psionics;
         modifiers = new Modifiers(s.modifiers);
+    }
+
+    public int countVitality(int vitalityThreshold) {
+        final int currentHealth = health.values().stream().mapToInt(BodyPartHealth::getHealth).sum();
+        return Math.max(0, Math.min(vitalityThreshold, currentHealth - vitalityThreshold));
     }
 
     public NBTTagCompound toNBT() {
@@ -41,6 +47,7 @@ public class CharStatus {
         c.setTag(Tags.health, hc);
         c.setTag(Tags.shield, shield.toNBT());
         c.setByte(Tags.sanity, sanity);
+        c.setByte(Tags.psionics, psionics);
         c.setInteger(Tags.modifiersRoll, modifiers.rollMod);
         c.setTag(Tags.modifiers, mc);
 
@@ -65,12 +72,14 @@ public class CharStatus {
 
         shield.fromNBT(compound.getCompoundTag(Tags.shield));
         sanity = compound.getByte(Tags.sanity);
+        psionics = compound.getByte(Tags.psionics);
     }
 
     private static class Tags {
         static final String health = "health";
         static final String shield = "shield";
         static final String sanity = "sanity";
+        static final String psionics = "psionics";
         static final String modifiers = "mods";
         static final String modifiersRoll = "roll";
     }

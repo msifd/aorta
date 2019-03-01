@@ -38,6 +38,13 @@ class TabBar extends Widget {
     }
 
     @Override
+    public void clearChildren() {
+        tabs.clear();
+        activeTab = null;
+        super.clearChildren();
+    }
+
+    @Override
     protected void postRenderSelf() {
         if (activeTab == null)
             return;

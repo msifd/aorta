@@ -10,6 +10,7 @@ import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.basic.Label;
 import msifeed.mc.mellow.widgets.basic.Separator;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
+import msifeed.mc.mellow.widgets.tabs.TabArea;
 import msifeed.mc.mellow.widgets.window.Window;
 import net.minecraft.entity.EntityLivingBase;
 
@@ -19,37 +20,39 @@ public class ScreenStatusEditor extends MellowGuiScreen {
 
     public ScreenStatusEditor(EntityLivingBase entity) {
         final Window window = new Window();
-        window.setTitle(L10n.tr("aorta.gui.status_editor"));
+        window.setTitle(L10n.fmt("aorta.gui.status", entity.getCommandSenderName()));
         scene.addChild(window);
 
-        final Widget windowContent = window.getContent();
+        final Widget content = window.getContent();
 
         CharacterAttribute.get(entity).ifPresent(c -> character = new Character(c));
         StatusAttribute.get(entity).ifPresent(c -> charStatus = new CharStatus(c));
 
         if (character == null) {
-            windowContent.addChild(new Label("Missing character data!"));
+            content.addChild(new Label("Missing character data!"));
             return;
         }
         if (charStatus == null) {
-            windowContent.addChild(new Label("Missing status data!"));
+            content.addChild(new Label("Missing status data!"));
             return;
         }
 
-        windowContent.addChild(new Label("Entity: " + entity.getCommandSenderName()));
-        windowContent.addChild(new Separator());
-        windowContent.addChild(new BodypartHealthView(character, charStatus));
+        final TabArea tabs = new TabArea();
+        tabs.addTab(L10n.tr("aorta.gui.status.status"), new ParamsView(character, charStatus));
+        tabs.addTab(L10n.tr("aorta.gui.status.body"), new BodypartHealthView(character, charStatus));
+        tabs.addTab(L10n.tr("aorta.gui.status.shield"), new ShieldView(charStatus));
+        content.addChild(tabs);
 
-        final ButtonLabel submitBtn = new ButtonLabel("Apply");
+        final ButtonLabel submitBtn = new ButtonLabel(L10n.tr("aorta.gui.apply"));
         submitBtn.setClickCallback(() -> {
-            if (!entity.isEntityAlive())
+            if (!entity.isEntityAlive()) {
                 System.out.println("entity is actually dead");
-            else if (character != null) {
-//                CharacterAttribute.INSTANCE.set(entity, character);
+                closeGui();
+            } else if (charStatus != null) {
                 StatusAttribute.INSTANCE.set(entity, charStatus);
             }
         });
-        windowContent.addChild(new Separator());
-        windowContent.addChild(submitBtn);
+        content.addChild(new Separator());
+        content.addChild(submitBtn);
     }
 }

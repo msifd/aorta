@@ -10,7 +10,6 @@ import msifeed.mc.mellow.widgets.basic.Label;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
 import msifeed.mc.mellow.widgets.input.TextInput;
 import msifeed.mc.mellow.widgets.window.Window;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.Random;
@@ -85,10 +84,6 @@ public class ScreenBookEditor extends MellowGuiScreen {
 
         getBtn.setLabel(status.buttonLabel);
         statusLabel.setText("> " + text);
-    }
-
-    private static void closeGui() {
-        Minecraft.getMinecraft().displayGuiScreen(null);
     }
 
     private static Random stringSeededRandom(String s) {

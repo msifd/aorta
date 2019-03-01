@@ -16,6 +16,10 @@ public class BodyPartHealth {
         this.armor = a;
     }
 
+    public short getHealth() {
+        return health;
+    }
+
     public int toInt() {
         return (health << Short.SIZE) | armor;
     }

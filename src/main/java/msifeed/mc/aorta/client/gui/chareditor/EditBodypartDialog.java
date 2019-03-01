@@ -22,12 +22,11 @@ class EditBodypartDialog extends Window {
         this(new BodyPart(), consumer);
         setTitle("New bodypart");
         doneBtn.setLabel("Add part");
-
-        bodypart.type = BodyPart.Type.HEAD; // Fix droplist
     }
 
-    EditBodypartDialog(BodyPart bodyPart, Consumer<BodyPart> consumer) {
-        this.bodypart = new BodyPart(bodyPart);
+    EditBodypartDialog(BodyPart prevBodyPart, Consumer<BodyPart> consumer) {
+        this.bodypart = new BodyPart(prevBodyPart);
+
         setTitle("Edit bodypart");
         setZLevel(5);
         setFocused(this);
@@ -41,28 +40,27 @@ class EditBodypartDialog extends Window {
 
         params.addChild(new Label("Name"));
         final TextInput nameInput = new TextInput();
-        if (bodyPart.name != null)
-            nameInput.setText(bodyPart.name);
+        if (bodypart.name != null)
+            nameInput.setText(bodypart.name);
         nameInput.setCallback(s -> bodypart.name = s);
         params.addChild(nameInput);
 
         params.addChild(new Label("Type"));
         final DropList<BodyPart.Type> typeList = new DropList<>(Arrays.asList(BodyPart.Type.values()));
-        if (bodyPart.type != null)
-            typeList.selectItem(bodypart.type.ordinal());
+        typeList.selectItem(bodypart.type != null ? bodypart.type.ordinal() : 0);
         typeList.setSelectCallback(type -> bodypart.type = type);
         params.addChild(typeList);
 
         params.addChild(new Label("Max health"));
         final TextInput healthInput = new TextInput();
-        healthInput.setText(String.valueOf(bodyPart.max));
+        healthInput.setText(String.valueOf(bodypart.max));
         healthInput.setFilter(EditBodypartDialog::healthFilter);
         healthInput.setCallback(s -> bodypart.max = (short) healthInput.getInt());
         params.addChild(healthInput);
 
         params.addChild(new Label("Fatal"));
         final DropList<Boolean> fatalList = new DropList<>(Arrays.asList(Boolean.TRUE, Boolean.FALSE));
-        fatalList.selectItem(bodyPart.fatal ? 0 : 1);
+        fatalList.selectItem(bodypart.fatal ? 0 : 1);
         fatalList.setSelectCallback(flag -> bodypart.fatal = flag);
         params.addChild(fatalList);
 

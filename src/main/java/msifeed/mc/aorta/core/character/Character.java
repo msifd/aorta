@@ -6,16 +6,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
 
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Character {
     public EnumMap<Feature, Integer> features = new EnumMap<>(Feature.class);
-    public HashMap<String, BodyPart> bodyParts = new HashMap<>();
+    public Map<String, BodyPart> bodyParts = new LinkedHashMap<>();
     public Set<Trait> traits = new HashSet<>();
-    public double disfunctionRate = 0.2;
+    public byte vitalityRate = 50;
 
     public Character() {
         final Feature[] featureEnum = Feature.values();
@@ -28,7 +25,7 @@ public class Character {
         features.putAll(c.features);
         bodyParts.putAll(c.bodyParts);
         traits.addAll(c.traits);
-        disfunctionRate = c.disfunctionRate;
+        vitalityRate = c.vitalityRate;
     }
 
     public Set<Trait> traits() {
@@ -37,6 +34,14 @@ public class Character {
 
     public boolean has(Trait trait) {
         return traits.contains(trait);
+    }
+
+    public int countMaxHealth() {
+        return bodyParts.values().stream().mapToInt(BodyPart::getMaxHealth).sum();
+    }
+
+    public int countVitalityThreshold() {
+        return Math.floorDiv(vitalityRate * countMaxHealth(), 100);
     }
 
     public NBTTagCompound toNBT() {
@@ -54,6 +59,8 @@ public class Character {
 
         int[] array = traits.stream().mapToInt(t -> t.code).toArray();
         compound.setTag(Tags.traits, new NBTTagIntArray(array));
+
+        compound.setByte(Tags.vitality, vitalityRate);
 
         return compound;
     }
@@ -76,11 +83,14 @@ public class Character {
 
         final int[] codes = compound.getIntArray(Tags.traits);
         this.traits = TraitDecoder.decode(codes);
+
+        this.vitalityRate = compound.getByte(Tags.vitality);
     }
 
     private static class Tags {
         static final String features = "features";
         static final String bodyParts = "bodyParts";
         static final String traits = "traits";
+        static final String vitality = "vitality";
     }
 }

@@ -25,6 +25,10 @@ public class BodyPart implements Comparable {
         this.fatal = fatal;
     }
 
+    public short getMaxHealth() {
+        return max;
+    }
+
     @Override
     public int compareTo(Object o) {
         if (!(o instanceof BodyPart))

@@ -3,7 +3,6 @@ package msifeed.mc.aorta.client.gui.book;
 import msifeed.mc.aorta.books.RemoteBookManager;
 import msifeed.mc.aorta.genesis.items.templates.BookTemplate;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -50,9 +49,4 @@ public class ScreenBookViewer extends MellowGuiScreen {
         if (k == Keyboard.KEY_ESCAPE)
             closeGui();
     }
-
-    private static void closeGui() {
-        Minecraft.getMinecraft().displayGuiScreen(null);
-    }
-
 }

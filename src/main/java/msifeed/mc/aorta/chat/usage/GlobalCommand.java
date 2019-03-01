@@ -10,12 +10,19 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class GlobalCommand extends ExtCommand {
     @Override
     public String getCommandName() {
         return "global";
+    }
+
+    @Override
+    public List getCommandAliases() {
+        return Collections.singletonList("g");
     }
 
     @Override
