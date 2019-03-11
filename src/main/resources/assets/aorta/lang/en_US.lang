@@ -22,10 +22,42 @@ item.lock_access_tuner.name=Access Tuner
 item.lock_advanced_tuner.name=Scheme recombinator
 item.lock_skeletal_key.name=Skeletal key
 
+aorta.gui.apply=Apply
+aorta.gui.cancel=Cancel
+
 aorta.gui.roller=Roller
-aorta.gui.status_editor=Status editor
 aorta.gui.char_editor=Character editor
 aorta.gui.lang_selector=Lang selector
+
+aorta.gui.status=Status editor
+aorta.gui.status.title=Status: %s
+aorta.gui.status.status=Status
+aorta.gui.status.overall=Overall
+aorta.gui.status.vitality=Vitality
+aorta.gui.status.psionics=Psionics
+aorta.gui.status.sanity=Sanity
+aorta.gui.status.body=Body
+aorta.gui.status.shield=Shield
+aorta.gui.status.shield_type=Type
+aorta.gui.status.shield_power=Points
+
+aorta.status.sanity.0=Extreme stress
+aorta.status.sanity.1=Severe stress
+aorta.status.sanity.2=Stress
+aorta.status.sanity.3=Normal
+aorta.status.sanity.4=Good
+
+aorta.status.vitality.0=Fine
+aorta.status.vitality.1=Wounded
+aorta.status.vitality.2=Injured
+aorta.status.vitality.3=Dying
+aorta.status.vitality.4=Dead
+
+aorta.status.psionics.0=Fine
+aorta.status.psionics.1=Headache
+aorta.status.psionics.2=Bruises
+aorta.status.psionics.3=Hematomas
+aorta.status.psionics.4=Critical
 
 aorta.feature.str=Strength
 aorta.feature.dex=Dexterity

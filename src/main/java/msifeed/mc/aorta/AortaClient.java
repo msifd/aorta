@@ -4,6 +4,7 @@ import com.google.common.io.CharStreams;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import msifeed.mc.aorta.client.Keybinds;
+import msifeed.mc.aorta.client.ResponsiveEntityStatus;
 import msifeed.mc.aorta.genesis.AortaCreativeTab;
 import msifeed.mc.aorta.utils.DRM;
 import msifeed.mc.mellow.Mellow;
@@ -29,6 +30,7 @@ public class AortaClient extends Aorta {
         DRM.apply();
         GUI_HANDLER.init();
         Keybinds.INSTANCE.init();
+        ResponsiveEntityStatus.init();
     }
 
     private void initMellow() {

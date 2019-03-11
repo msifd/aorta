@@ -4,7 +4,6 @@ import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.attributes.StatusAttribute;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.status.CharStatus;
-import msifeed.mc.aorta.utils.L10n;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.mellow.widgets.Widget;
@@ -30,7 +29,7 @@ public class ScreenCharEditor extends MellowGuiScreen {
         this.entity = entity;
 
         final Window window = new Window();
-        window.setTitle(L10n.tr("aorta.gui.char_editor") + ": " + entity.getCommandSenderName());
+        window.setTitle("Char edit: " + entity.getCommandSenderName());
         scene.addChild(window);
 
         content = window.getContent();

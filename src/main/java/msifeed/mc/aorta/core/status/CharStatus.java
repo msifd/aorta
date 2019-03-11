@@ -1,8 +1,10 @@
 package msifeed.mc.aorta.core.status;
 
+import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.rolls.Modifiers;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MathHelper;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -30,6 +32,30 @@ public class CharStatus {
     public int countVitality(int vitalityThreshold) {
         final int currentHealth = health.values().stream().mapToInt(BodyPartHealth::getHealth).sum();
         return Math.max(0, Math.min(vitalityThreshold, currentHealth - vitalityThreshold));
+    }
+
+    public int vitalityLevel(Character c) {
+        final int vitalityThreshold = c.countVitalityThreshold();
+        final int vitality = countVitality(vitalityThreshold);
+        return vitalityLevel(vitality, vitalityThreshold);
+    }
+
+    public int vitalityLevel(int vitality, int vitalityThreshold) {
+        final int percent = 100 - (vitality * 100) / vitalityThreshold;
+        return MathHelper.clamp_int(percent / 25, 0, 4);
+    }
+
+    public int sanityLevel() {
+        final int s = MathHelper.clamp_int(sanity, 1, 125);
+        return Math.floorDiv(s - 1, 25);
+    }
+
+    public int psionicsLevel(Character c) {
+        if (psionics <= 0 || c.psionics <= 0)
+            return 0;
+        final int p = MathHelper.clamp_int(psionics, 0, c.psionics);
+        final int percent = (p * 100) / c.psionics;
+        return MathHelper.clamp_int(percent / 25, 0, 4);
     }
 
     public NBTTagCompound toNBT() {

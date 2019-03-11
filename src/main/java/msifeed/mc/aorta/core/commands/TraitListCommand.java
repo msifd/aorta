@@ -50,4 +50,9 @@ public class TraitListCommand extends ExtCommand {
             send(sender, "  " + theNiceString);
         });
     }
+
+    @Override
+    public boolean isUsernameIndex(String[] args, int index) {
+        return index == 0;
+    }
 }

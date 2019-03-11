@@ -13,6 +13,7 @@ public class Character {
     public Map<String, BodyPart> bodyParts = new LinkedHashMap<>();
     public Set<Trait> traits = new HashSet<>();
     public byte vitalityRate = 50;
+    public byte psionics = 0;
 
     public Character() {
         final Feature[] featureEnum = Feature.values();
@@ -26,6 +27,7 @@ public class Character {
         bodyParts.putAll(c.bodyParts);
         traits.addAll(c.traits);
         vitalityRate = c.vitalityRate;
+        psionics = c.psionics;
     }
 
     public Set<Trait> traits() {
@@ -61,6 +63,7 @@ public class Character {
         compound.setTag(Tags.traits, new NBTTagIntArray(array));
 
         compound.setByte(Tags.vitality, vitalityRate);
+        compound.setByte(Tags.psionics, psionics);
 
         return compound;
     }
@@ -85,6 +88,7 @@ public class Character {
         this.traits = TraitDecoder.decode(codes);
 
         this.vitalityRate = compound.getByte(Tags.vitality);
+        this.psionics = compound.getByte(Tags.psionics);
     }
 
     private static class Tags {
@@ -92,5 +96,6 @@ public class Character {
         static final String bodyParts = "bodyParts";
         static final String traits = "traits";
         static final String vitality = "vitality";
+        static final String psionics = "psionics";
     }
 }

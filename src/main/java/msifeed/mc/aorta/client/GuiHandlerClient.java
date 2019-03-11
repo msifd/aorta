@@ -7,9 +7,9 @@ import msifeed.mc.aorta.client.gui.book.ScreenBookEditor;
 import msifeed.mc.aorta.client.gui.book.ScreenBookViewer;
 import msifeed.mc.aorta.client.gui.chareditor.ScreenCharEditor;
 import msifeed.mc.aorta.client.gui.roller.ScreenRoller;
-import msifeed.mc.aorta.client.gui.statuseditor.ScreenStatusEditor;
+import msifeed.mc.aorta.client.gui.status.ScreenStatus;
 import msifeed.mc.aorta.client.hud.DebugHud;
-import msifeed.mc.aorta.client.hud.DisableVanillaHud;
+import msifeed.mc.aorta.client.hud.StatusHudReplacer;
 import msifeed.mc.aorta.client.lock.HudDoorLock;
 import msifeed.mc.aorta.client.lock.ScreenDigitalLock;
 import msifeed.mc.aorta.client.lock.ScreenSkeletalKey;
@@ -25,10 +25,10 @@ import org.apache.logging.log4j.Logger;
 import java.util.function.Supplier;
 
 public class GuiHandlerClient extends GuiHandler {
-    final Logger LOG = LogManager.getLogger("Aorta.GuiHandler");
+    private final Logger LOG = LogManager.getLogger("Aorta.GuiHandler");
 
     public void init() {
-        MinecraftForge.EVENT_BUS.register(DisableVanillaHud.INSTANCE);
+        StatusHudReplacer.init();
         MinecraftForge.EVENT_BUS.register(DebugHud.INSTANCE);
         MinecraftForge.EVENT_BUS.register(HudDoorLock.INSTANCE);
     }
@@ -48,7 +48,13 @@ public class GuiHandlerClient extends GuiHandler {
     @Override
     public void toggleStatusEditor(EntityLivingBase entity) {
         if (entity.worldObj.isRemote)
-            toggleGui(ScreenStatusEditor.class, () -> new ScreenStatusEditor(entity));
+            toggleGui(ScreenStatus.class, () -> new ScreenStatus(entity, true));
+    }
+
+    @Override
+    public void toggleStatus(EntityLivingBase entity) {
+        if (entity.worldObj.isRemote)
+            toggleGui(ScreenStatus.class, () -> new ScreenStatus(entity, false));
     }
 
     @Override
@@ -75,11 +81,13 @@ public class GuiHandlerClient extends GuiHandler {
             toggleGui(ScreenDigitalLock.class, () -> new ScreenDigitalLock(lock));
     }
 
+    @Override
     public void toggleSkeletalKey(LockTileEntity lock) {
         if (lock.getWorldObj().isRemote)
             toggleGui(ScreenSkeletalKey.class, () -> new ScreenSkeletalKey(lock));
     }
 
+    @Override
     public void toggleDesignerScreen() {
         if (Minecraft.getMinecraft().theWorld.isRemote)
             toggleGui(ScreenItemDesigner.class, ScreenItemDesigner::new);

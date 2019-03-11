@@ -9,6 +9,7 @@ public class GuiHandler {
     public void toggleRoller(EntityLivingBase entity) { }
     public void openCharEditor(EntityLivingBase entity) { }
     public void toggleStatusEditor(EntityLivingBase entity) { }
+    public void toggleStatus(EntityLivingBase entity) { }
     public void toggleLangSelector(EntityLivingBase entity) { }
     public void toggleBookViewer(EntityPlayer player) { }
     public void toggleBookEditor(EntityPlayer player) { }

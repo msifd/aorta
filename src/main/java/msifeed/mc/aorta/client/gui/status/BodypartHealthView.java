@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.client.gui.statuseditor;
+package msifeed.mc.aorta.client.gui.status;
 
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.status.BodyPartHealth;
@@ -12,12 +12,15 @@ import msifeed.mc.mellow.widgets.button.FlatButtonLabel;
 class BodypartHealthView extends Widget {
     private final Character character;
     private final CharStatus charStatus;
+    private final boolean editable;
 
     private Widget bodypartList = new Widget();
 
-    BodypartHealthView(Character character, CharStatus charStatus) {
+    BodypartHealthView(Character character, CharStatus charStatus, boolean editable) {
         this.character = character;
         this.charStatus = charStatus;
+        this.editable = editable;
+
         setLayout(ListLayout.VERTICAL);
 
         bodypartList.setLayout(new ListLayout(ListLayout.Direction.VERTICAL, 0));
@@ -25,7 +28,7 @@ class BodypartHealthView extends Widget {
         refill();
     }
 
-    private void refill() {
+    public void refill() {
         bodypartList.clearChildren();
 
         if (character.bodyParts.isEmpty()) {
@@ -37,12 +40,15 @@ class BodypartHealthView extends Widget {
             final BodyPartHealth bph = charStatus.health.getOrDefault(bp.name, new BodyPartHealth(bp.max, (short) 0));
 
             final FlatButtonLabel b = new FlatButtonLabel();
+            b.setDisabled(!editable);
             b.setLabel(String.format("%s - %d/%d + %d", bp.name, bph.health, bp.max, bph.armor));
             b.setLayout(new AnchorLayout(AnchorLayout.Anchor.RIGHT, AnchorLayout.Anchor.CENTER));
-            b.setClickCallback(() -> getTopParent().addChild(new BodypartHealthDialog(bp, bph, h -> {
-                charStatus.health.put(bp.name, h);
-                refill();
-            })));
+            if (editable) {
+                b.setClickCallback(() -> getTopParent().addChild(new BodypartHealthDialog(bp, bph, h -> {
+                    charStatus.health.put(bp.name, h);
+                    refill();
+                })));
+            }
             bodypartList.addChild(b);
         });
     }

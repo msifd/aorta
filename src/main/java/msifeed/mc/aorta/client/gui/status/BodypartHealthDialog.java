@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.client.gui.statuseditor;
+package msifeed.mc.aorta.client.gui.status;
 
 import msifeed.mc.aorta.core.character.BodyPart;
 import msifeed.mc.aorta.core.status.BodyPartHealth;
@@ -19,9 +19,9 @@ class BodypartHealthDialog extends Window {
 
     private final ButtonLabel doneBtn = new ButtonLabel();
 
-    BodypartHealthDialog(BodyPart bodyPart, BodyPartHealth health, Consumer<BodyPartHealth> consumer) {
-        this.bodypart = new BodyPart(bodyPart);
-        this.health = new BodyPartHealth(health);
+    BodypartHealthDialog(BodyPart _bodypart, BodyPartHealth _health, Consumer<BodyPartHealth> consumer) {
+        this.bodypart = new BodyPart(_bodypart);
+        this.health = new BodyPartHealth(_health);
         setTitle("Edit health");
         setZLevel(5);
         setFocused(this);
@@ -31,10 +31,10 @@ class BodypartHealthDialog extends Window {
 
         final Widget partInfo = new Widget();
         partInfo.setLayout(new GridLayout());
-        partInfo.addChild(new Label(bodyPart.name));
-        partInfo.addChild(new Label(bodyPart.type.toString()));
+        partInfo.addChild(new Label(bodypart.name));
+        partInfo.addChild(new Label(bodypart.type.toString()));
         partInfo.addChild(new Label("Max health"));
-        partInfo.addChild(new Label(String.valueOf(bodyPart.max)));
+        partInfo.addChild(new Label(String.valueOf(bodypart.max)));
         content.addChild(partInfo);
 
         content.addChild(new Separator());
@@ -47,7 +47,7 @@ class BodypartHealthDialog extends Window {
         final TextInput healthInput = new TextInput();
         healthInput.getSizeHint().x = 30;
         healthInput.setText(String.valueOf(health.health));
-        healthInput.setFilter(s -> TextInput.isUnsignedIntBetween(s, 0, bodyPart.max));
+        healthInput.setFilter(s -> TextInput.isUnsignedIntBetween(s, 0, bodypart.max));
         healthInput.setCallback(s -> health.health = (short) healthInput.getInt());
         params.addChild(healthInput);
 

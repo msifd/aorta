@@ -20,8 +20,13 @@ public class DropList<T> extends Widget {
     public DropList(List<T> items) {
         this.items = items;
         this.popupList = new DropListPopup(this);
+        refill();
+    }
 
-//        setSizeHint(header.getSizeHint());
+    @Override
+    public void refill() {
+        clearChildren();
+
         setSizePolicy(header.getSizePolicy());
         setLayout(FreeLayout.INSTANCE);
 

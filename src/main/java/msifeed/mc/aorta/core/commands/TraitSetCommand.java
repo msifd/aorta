@@ -79,4 +79,9 @@ public class TraitSetCommand extends ExtCommand {
             return true;
         }
     }
+
+    @Override
+    public boolean isUsernameIndex(String[] args, int index) {
+        return index == 1;
+    }
 }

@@ -11,7 +11,6 @@ import msifeed.mc.mellow.utils.SizePolicy;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.stream.Collectors;
 
 public class Widget {
     public static Widget hoveredWidget = null;
@@ -237,6 +236,9 @@ public class Widget {
             w.render();
     }
 
+    public void refill() {
+    }
+
     public Collection<Widget> getChildren() {
         return children;
     }
@@ -265,12 +267,6 @@ public class Widget {
 
     public boolean containsPoint(Point p) {
         return isVisible() && getGeometry().contains(p);
-    }
-
-    public Collection<Widget> childrenAt(Point p) {
-        return children.stream()
-                .filter(w -> w.containsPoint(p))
-                .collect(Collectors.toList());
     }
 
     public boolean isHovered() {
