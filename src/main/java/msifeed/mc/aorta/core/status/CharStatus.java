@@ -41,6 +41,8 @@ public class CharStatus {
     }
 
     public int vitalityLevel(int vitality, int vitalityThreshold) {
+        if (vitality <= 0 || vitalityThreshold <= 0)
+            return 0;
         final int percent = 100 - (vitality * 100) / vitalityThreshold;
         return MathHelper.clamp_int(percent / 25, 0, 4);
     }
