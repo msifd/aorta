@@ -11,9 +11,9 @@ public class BodyPartHealth {
         this(h.health, h.armor);
     }
 
-    public BodyPartHealth(short d, short a) {
-        this.health = d;
-        this.armor = a;
+    public BodyPartHealth(int d, int a) {
+        this.health = (short) d;
+        this.armor = (short) a;
     }
 
     public short getHealth() {

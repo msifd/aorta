@@ -1,5 +1,6 @@
 package msifeed.mc.aorta.core.status;
 
+import msifeed.mc.aorta.core.character.BodyPart;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.rolls.Modifiers;
@@ -101,6 +102,13 @@ public class CharStatus {
         shield.fromNBT(compound.getCompoundTag(Tags.shield));
         sanity = compound.getByte(Tags.sanity);
         psionics = compound.getByte(Tags.psionics);
+    }
+
+    public void cleanup(Character c) {
+        this.health.entrySet().removeIf(e -> !c.bodyParts.containsKey(e.getKey()));
+        for (Map.Entry<String, BodyPart> e : c.bodyParts.entrySet())
+            this.health.computeIfAbsent(e.getKey(), s -> new BodyPartHealth(e.getValue().max, 0));
+        this.psionics = (byte) Math.min(this.psionics, c.psionics);
     }
 
     private static class Tags {

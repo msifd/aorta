@@ -39,6 +39,7 @@ public class ScreenCharEditor extends MellowGuiScreen {
             if (!entity.isEntityAlive())
                 System.out.println("entity is actually dead");
             else if (character != null && charStatus != null) {
+                charStatus.cleanup(character);
                 CharacterAttribute.INSTANCE.set(entity, character);
                 StatusAttribute.INSTANCE.set(entity, charStatus);
             }

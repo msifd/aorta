@@ -43,7 +43,7 @@ class ShieldView extends Widget {
         final TextInput shieldPower = new TextInput();
         shieldPower.getSizeHint().x = 30;
         shieldPower.setText(String.valueOf(status.shield.power));
-        shieldPower.setFilter(s -> TextInput.isUnsignedIntBetween(s, 0, 5));
+        shieldPower.setFilter(s -> TextInput.isUnsignedIntBetween(s, 0, 100));
         shieldPower.setCallback(s -> status.shield.power = (short) shieldPower.getInt());
         addChild(shieldPower);
     }
