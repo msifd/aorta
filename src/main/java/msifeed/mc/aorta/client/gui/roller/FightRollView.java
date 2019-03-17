@@ -2,7 +2,6 @@ package msifeed.mc.aorta.client.gui.roller;
 
 import msifeed.mc.aorta.core.rolls.FightAction;
 import msifeed.mc.aorta.core.rolls.RollRpc;
-import msifeed.mc.aorta.rpc.Rpc;
 import msifeed.mc.aorta.utils.L10n;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.layout.ListLayout;
@@ -41,7 +40,7 @@ class FightRollView extends Widget {
         if (System.currentTimeMillis() - ScreenRoller.prevRollTime < 1000)
             return;
 
-        Rpc.sendToServer(RollRpc.rollAction, entity.getEntityId(), action);
+        RollRpc.rollAction(entity.getEntityId(), action);
         ScreenRoller.prevRollTime = System.currentTimeMillis();
     }
 }

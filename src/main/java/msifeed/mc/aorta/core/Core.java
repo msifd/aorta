@@ -3,6 +3,7 @@ package msifeed.mc.aorta.core;
 import msifeed.mc.aorta.attributes.AttributeHandler;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.attributes.StatusAttribute;
+import msifeed.mc.aorta.core.character.CharRpc;
 import msifeed.mc.aorta.core.commands.TraitListCommand;
 import msifeed.mc.aorta.core.commands.TraitSetCommand;
 import msifeed.mc.aorta.core.meta.MetaCommand;
@@ -12,13 +13,12 @@ import msifeed.mc.aorta.rpc.Rpc;
 import net.minecraft.command.CommandHandler;
 
 public class Core {
-    private RollRpc rollRpcHandler = new RollRpc();
-
     public void init() {
         AttributeHandler.INSTANCE.registerAttribute(CharacterAttribute.INSTANCE);
         AttributeHandler.INSTANCE.registerAttribute(StatusAttribute.INSTANCE);
 
-        Rpc.register(rollRpcHandler);
+        Rpc.register(CharRpc.INSTANCE);
+        Rpc.register(RollRpc.INSTANCE);
         TraitDecoder.init();
     }
 

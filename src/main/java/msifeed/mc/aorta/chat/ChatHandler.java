@@ -7,6 +7,7 @@ import msifeed.mc.aorta.chat.composer.Composer;
 import msifeed.mc.aorta.chat.composer.SpeechType;
 import msifeed.mc.aorta.chat.gm.GmSpeech;
 import msifeed.mc.aorta.chat.net.ChatMessage;
+import msifeed.mc.aorta.logs.Logs;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.ServerChatEvent;
 
@@ -20,12 +21,21 @@ public class ChatHandler {
         event.setCanceled(true);
     }
 
-    public static void sendChatMessage(EntityPlayerMP sender, ChatMessage message) {
+    public static void sendSystemChatMessage(EntityPlayerMP sender, ChatMessage message) {
         final NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(sender.dimension, sender.posX, sender.posY, sender.posZ, message.radius);
         Speechat.CHANNEL.sendToAllAround(message, point);
     }
 
+    public static void sendChatMessage(EntityPlayerMP sender, ChatMessage message) {
+        final NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(sender.dimension, sender.posX, sender.posY, sender.posZ, message.radius);
+        Speechat.CHANNEL.sendToAllAround(message, point);
+        final String langPrefix = message.language == Language.VANILLA || message.language == Language.COMMON
+                ? "" : String.format("[%s] ", message.language.shortTr());
+        Logs.log(sender, "chat", langPrefix + message.text);
+    }
+
     public static void sendGlobalChatMessage(EntityPlayerMP sender, ChatMessage message) {
         Speechat.CHANNEL.sendToAll(message);
+        Logs.log(sender, "chat.global", message.text);
     }
 }

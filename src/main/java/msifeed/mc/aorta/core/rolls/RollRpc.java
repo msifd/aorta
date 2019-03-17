@@ -8,9 +8,10 @@ import msifeed.mc.aorta.chat.composer.SpeechType;
 import msifeed.mc.aorta.chat.net.ChatMessage;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.attributes.StatusAttribute;
+import msifeed.mc.aorta.core.character.CharStatus;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
-import msifeed.mc.aorta.core.status.CharStatus;
+import msifeed.mc.aorta.rpc.Rpc;
 import msifeed.mc.aorta.rpc.RpcMethod;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -19,10 +20,24 @@ import net.minecraft.world.World;
 
 import java.util.Optional;
 
-public class RollRpc {
-    public static final String updateMods = "aorta:core.roll.modifiers";
-    public static final String rollFeature = "aorta:core.roll.feature";
-    public static final String rollAction = "aorta:core.roll.action";
+public enum RollRpc {
+    INSTANCE;
+
+    private static final String updateMods = "aorta:core.roll.modifiers";
+    private static final String rollFeature = "aorta:core.roll.feature";
+    private static final String rollAction = "aorta:core.roll.action";
+
+    public static void updateMods(int entityId, Modifiers modifiers) {
+        Rpc.sendToServer(updateMods, entityId, modifiers);
+    }
+
+    public static void rollFeature(int entityId, Feature[] features) {
+        Rpc.sendToServer(rollFeature, entityId, features);
+    }
+
+    public static void rollAction(int entityId, FightAction action) {
+        Rpc.sendToServer(rollAction, entityId, action);
+    }
 
     @RpcMethod(updateMods)
     public void onUpdateMods(MessageContext ctx, int entityId, Modifiers modifiers) {
@@ -33,7 +48,7 @@ public class RollRpc {
 
         StatusAttribute.get(entity).ifPresent(status -> {
             status.modifiers = modifiers;
-            StatusAttribute.INSTANCE.sync(world, entity);
+            StatusAttribute.INSTANCE.broadcast(world, entity);
         });
     }
 

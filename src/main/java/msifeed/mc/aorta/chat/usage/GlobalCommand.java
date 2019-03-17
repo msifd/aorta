@@ -9,12 +9,12 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class GlobalCommand extends ExtCommand {
+    public static boolean receiveMessages = true;
+
     @Override
     public String getCommandName() {
         return "global";
@@ -32,11 +32,16 @@ public class GlobalCommand extends ExtCommand {
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
-        if (args.length == 0)
+        if (args.length == 0) {
+            receiveMessages = !receiveMessages;
+            return;
+        }
+
+        if (!receiveMessages)
             return;
 
         final EntityPlayer player = (EntityPlayer) sender;
-        final String text = Arrays.stream(args).collect(Collectors.joining(" "));
+        final String text = String.join(" ", args);
         final ChatMessage message = Composer.makeMessage(SpeechType.GLOBAL, player, text);
 
         if (player instanceof EntityPlayerMP)

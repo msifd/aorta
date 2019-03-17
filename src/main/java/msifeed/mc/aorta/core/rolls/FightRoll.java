@@ -1,9 +1,9 @@
 package msifeed.mc.aorta.core.rolls;
 
 import msifeed.mc.aorta.Aorta;
+import msifeed.mc.aorta.core.character.CharStatus;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
-import msifeed.mc.aorta.core.status.CharStatus;
 
 import java.util.List;
 import java.util.stream.Stream;

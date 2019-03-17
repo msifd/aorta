@@ -1,8 +1,5 @@
-package msifeed.mc.aorta.core.status;
+package msifeed.mc.aorta.core.character;
 
-import msifeed.mc.aorta.core.character.BodyPart;
-import msifeed.mc.aorta.core.character.Character;
-import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.rolls.Modifiers;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
@@ -42,7 +39,7 @@ public class CharStatus {
     }
 
     public int vitalityLevel(int vitality, int vitalityThreshold) {
-        if (vitality <= 0 || vitalityThreshold <= 0)
+        if (vitalityThreshold <= 0)
             return 0;
         final int percent = 100 - (vitality * 100) / vitalityThreshold;
         return MathHelper.clamp_int(percent / 25, 0, 4);

@@ -1,7 +1,7 @@
 package msifeed.mc.aorta.client.gui.status;
 
+import msifeed.mc.aorta.core.character.CharStatus;
 import msifeed.mc.aorta.core.character.Character;
-import msifeed.mc.aorta.core.status.CharStatus;
 import msifeed.mc.aorta.core.traits.Trait;
 import msifeed.mc.aorta.utils.L10n;
 import msifeed.mc.mellow.layout.GridLayout;

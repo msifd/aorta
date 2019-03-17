@@ -16,7 +16,7 @@ apply plugin: 'idea'
 apply plugin: 'net.nemerosa.versioning'
 
 
-version = "0.24.2-$versioning.info.build"
+version = "0.25.0-$versioning.info.build"
 group = "msifeed.mc.aorta"
 archivesBaseName = "aorta"
 
@@ -29,6 +29,7 @@ minecraft {
 }
 
 dependencies {
+    runtime 'mysql:mysql-connector-java:8.0.15'
     testCompile 'junit:junit:4.12'
 }
 

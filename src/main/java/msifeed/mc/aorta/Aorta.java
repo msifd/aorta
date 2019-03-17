@@ -18,6 +18,7 @@ import msifeed.mc.aorta.environment.EnvironmentManager;
 import msifeed.mc.aorta.genesis.Genesis;
 import msifeed.mc.aorta.genesis.rename.RenameCommand;
 import msifeed.mc.aorta.locks.Locks;
+import msifeed.mc.aorta.logs.Logs;
 import msifeed.mc.aorta.rpc.Rpc;
 import msifeed.mc.aorta.tools.ToolItems;
 import msifeed.mc.aorta.tweaks.EnableDesertRain;
@@ -54,10 +55,14 @@ public class Aorta {
     public static GuiHandler GUI_HANDLER;
 
     public void preInit(FMLPreInitializationEvent event) {
-        ConfigManager.init(event);
         AttributeHandler.init();
         Rpc.init();
         EnableDesertRain.apply();
+
+        Logs.init();
+        EntityControl.init();
+        EnvironmentManager.init();
+        ConfigManager.init(event);
     }
 
     public void init() {
@@ -67,10 +72,7 @@ public class Aorta {
         RemoteBookManager.init();
         Locks.init();
         Speechat.init();
-        EntityControl.init();
-        EnvironmentManager.init();
         Nametag.INSTANCE.init();
-
         MakeEveryoneHealthy.apply();
     }
 

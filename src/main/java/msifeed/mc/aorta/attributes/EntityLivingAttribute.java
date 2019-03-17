@@ -15,11 +15,11 @@ public abstract class EntityLivingAttribute<T> extends EntityAttribute<T> {
 
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
         if (!event.world.isRemote && event.entity instanceof EntityLivingBase)
-            sync(event.world, event.entity);
+            broadcast(event.world, event.entity);
     }
 
     public void onPlayerStartedTracking(PlayerEvent.StartTracking event) {
         if (!event.target.worldObj.isRemote && event.target instanceof EntityLivingBase)
-            sync((EntityPlayerMP) event.entityPlayer, event.target);
+            broadcast((EntityPlayerMP) event.entityPlayer, event.target);
     }
 }

@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.core.status;
+package msifeed.mc.aorta.core.character;
 
 public class BodyPartHealth {
     public short health;

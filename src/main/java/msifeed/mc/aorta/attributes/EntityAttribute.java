@@ -34,7 +34,7 @@ public abstract class EntityAttribute<T> {
         final AttrProp<T> attr = getProp(entity);
         if (attr != null) {
             attr.value = value;
-            sync(entity);
+            broadcast(entity.worldObj, entity);
         }
     }
 
@@ -42,6 +42,7 @@ public abstract class EntityAttribute<T> {
         final AttrProp<T> attr = getProp(entity);
         if (attr != null) {
             fn.accept(attr.value);
+            broadcast(entity.worldObj, entity);
         }
     }
 
@@ -62,19 +63,12 @@ public abstract class EntityAttribute<T> {
         }
     }
 
-    public void sync(EntityPlayerMP playerMP, Entity entity) {
+    public void broadcast(EntityPlayerMP playerMP, Entity entity) {
         final SyncAttrMessage msg = new SyncAttrMessage(entity, this);
         AttributeHandler.INSTANCE.CHANNEL.sendTo(msg, playerMP);
     }
 
-    public void sync(Entity entity) {
-        if (entity.worldObj.isRemote)
-            syncServer(entity);
-        else
-            sync(entity.worldObj, entity);
-    }
-
-    public void sync(World world, Entity entity) {
+    public void broadcast(World world, Entity entity) {
         if (!(world instanceof WorldServer))
             return;
 
@@ -88,11 +82,6 @@ public abstract class EntityAttribute<T> {
         if (entity instanceof EntityPlayerMP) {
             AttributeHandler.INSTANCE.CHANNEL.sendTo(msg, (EntityPlayerMP) entity);
         }
-    }
-
-    public void syncServer(Entity e) {
-        final SyncAttrMessage msg = new SyncAttrMessage(e, this);
-        AttributeHandler.INSTANCE.CHANNEL.sendToServer(msg);
     }
 
     void toNBT(Entity entity, NBTTagCompound root) {

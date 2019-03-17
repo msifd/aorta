@@ -65,7 +65,7 @@ public class CharacterAttribute extends EntityLivingAttribute<Character> {
             final boolean removed = traits.remove(trait);
             if (!removed)
                 traits.add(trait);
-            INSTANCE.sync(entity);
+            INSTANCE.broadcast(entity.worldObj, entity);
             return !removed;
         }
         return false;

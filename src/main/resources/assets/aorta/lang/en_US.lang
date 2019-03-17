@@ -78,15 +78,6 @@ aorta.action.block=Block
 aorta.action.dodge=Dodge
 aorta.action.psionics=Psionics
 
-aorta.lock.locked=§7Locked
-aorta.lock.unlocked=§7Unlocked
-aorta.lock.installed=§7New lock installed
-aorta.lock.replaced=§7Old lock replaced
-aorta.lock.reset=§7New password is set
-aorta.lock.blank_lock=§7Blank
-aorta.lock.pick_break=§7Lockpick broke
-aorta.lock.hacked=§7Lock hacked
-
 aorta.lang.vanilla=Ванильный
 aorta.lang.common=Единоречие
 aorta.lang.menala=Меналийский
@@ -111,3 +102,37 @@ aorta.lang.underwater=Подводный
 aorta.lang.underwater.short=подв.
 aorta.lang.kshemin=Кшеминский
 aorta.lang.kshemin.short=кшм.
+
+aorta.shield.none=none
+aorta.shield.energy=energy
+aorta.shield.kinnalian=kinnalian
+aorta.shield.psionic=psionic
+aorta.shield.industrial=industrial
+
+aorta.diff.s=point
+aorta.diff.g=points
+aorta.diff.m=points
+aorta.diff.status.add_sanity=got %d mental %s
+aorta.diff.status.rem_sanity=lost %d mental %s
+aorta.diff.status.add_psionics=used %d PP
+aorta.diff.status.rem_psionics=restored %d PP
+aorta.diff.status.enable_shield=enabled %s shield with a power of %d
+aorta.diff.status.cast_psionic_shield=casted psionic shield with a power of %d
+aorta.diff.status.disable_shield=disabled %s shield
+aorta.diff.status.dispell_psionic_shield=dispelled psionic shield
+aorta.diff.status.change_shield=changed %s shield with a power of %d to %s with a power of %d
+aorta.diff.status.add_shield=restored %d shield %s
+aorta.diff.status.rem_shield=lost %d shield %s
+aorta.diff.status.add_health=%s restored %d health %s
+aorta.diff.status.rem_health=%s lost %d health %s
+aorta.diff.status.add_armor=%s got %d armor %s
+aorta.diff.status.rem_armor=%s lost %d armor %s
+
+aorta.lock.locked=§7Locked
+aorta.lock.unlocked=§7Unlocked
+aorta.lock.installed=§7New lock installed
+aorta.lock.replaced=§7Old lock replaced
+aorta.lock.reset=§7New password is set
+aorta.lock.blank_lock=§7Blank
+aorta.lock.pick_break=§7Lockpick broke
+aorta.lock.hacked=§7Lock hacked

@@ -23,8 +23,10 @@ public class Character {
     }
 
     public Character(Character c) {
-        features.putAll(c.features);
-        bodyParts.putAll(c.bodyParts);
+        for (Map.Entry<Feature, Integer> e : c.features.entrySet())
+            this.features.put(e.getKey(), e.getValue());
+        for (Map.Entry<String, BodyPart> e : c.bodyParts.entrySet())
+            this.bodyParts.put(e.getKey(), new BodyPart(e.getValue()));
         traits.addAll(c.traits);
         vitalityRate = c.vitalityRate;
         psionics = c.psionics;

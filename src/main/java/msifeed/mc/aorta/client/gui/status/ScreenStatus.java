@@ -2,8 +2,9 @@ package msifeed.mc.aorta.client.gui.status;
 
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.attributes.StatusAttribute;
+import msifeed.mc.aorta.core.character.CharRpc;
+import msifeed.mc.aorta.core.character.CharStatus;
 import msifeed.mc.aorta.core.character.Character;
-import msifeed.mc.aorta.core.status.CharStatus;
 import msifeed.mc.aorta.utils.L10n;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.mellow.widgets.Widget;
@@ -54,6 +55,7 @@ public class ScreenStatus extends MellowGuiScreen {
                     closeGui();
                 } else if (status != null) {
                     StatusAttribute.INSTANCE.set(entity, status);
+                    CharRpc.updateStatus(entity.getEntityId(), status);
                     paramsView.refill();
                     bodypartView.refill();
                     shieldView.refill();

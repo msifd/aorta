@@ -2,8 +2,9 @@ package msifeed.mc.aorta.client.gui.chareditor;
 
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.attributes.StatusAttribute;
+import msifeed.mc.aorta.core.character.CharRpc;
+import msifeed.mc.aorta.core.character.CharStatus;
 import msifeed.mc.aorta.core.character.Character;
-import msifeed.mc.aorta.core.status.CharStatus;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.mellow.widgets.Widget;
@@ -23,7 +24,7 @@ public class ScreenCharEditor extends MellowGuiScreen {
     private final Button submitBtn = new ButtonLabel("Submit");
 
     private Character character = null;
-    private CharStatus charStatus = null;
+    private CharStatus status = null;
 
     public ScreenCharEditor(EntityLivingBase entity) {
         this.entity = entity;
@@ -38,10 +39,9 @@ public class ScreenCharEditor extends MellowGuiScreen {
         submitBtn.setClickCallback(() -> {
             if (!entity.isEntityAlive())
                 System.out.println("entity is actually dead");
-            else if (character != null && charStatus != null) {
-                charStatus.cleanup(character);
-                CharacterAttribute.INSTANCE.set(entity, character);
-                StatusAttribute.INSTANCE.set(entity, charStatus);
+            else if (character != null && status != null) {
+                status.cleanup(character);
+                CharRpc.updateChar(entity.getEntityId(), character, status);
             }
         });
 
@@ -59,14 +59,14 @@ public class ScreenCharEditor extends MellowGuiScreen {
 
     private void refill() {
         CharacterAttribute.get(entity).ifPresent(c -> this.character = new Character(c));
-        StatusAttribute.get(entity).ifPresent(s -> this.charStatus = new CharStatus(s));
+        StatusAttribute.get(entity).ifPresent(s -> this.status = new CharStatus(s));
 
         content.clearChildren();
-        if (character != null && charStatus != null) {
+        if (character != null && status != null) {
             tabArea.clearChildren();
             tabArea.addTab("Params", new EditParamsView(character));
             tabArea.addTab("Feats", new EditFeaturesView(character));
-            tabArea.addTab("Body", new EditBodypartsView(character, charStatus));
+            tabArea.addTab("Body", new EditBodypartsView(character, status));
             content.addChild(tabArea);
 
             content.addChild(new Separator());
@@ -77,7 +77,7 @@ public class ScreenCharEditor extends MellowGuiScreen {
             final Button addDataBtn = new ButtonLabel("Add data");
             addDataBtn.setClickCallback(() -> {
                 character = new Character();
-                charStatus = new CharStatus();
+                status = new CharStatus();
                 refill();
             });
             content.addChild(addDataBtn);
@@ -88,10 +88,9 @@ public class ScreenCharEditor extends MellowGuiScreen {
         ClearDataButton() {
             super("Clear all data");
             setClickCallback(() -> {
-                CharacterAttribute.INSTANCE.set(entity, null);
-                StatusAttribute.INSTANCE.set(entity, null);
+                CharRpc.updateChar(entity.getEntityId(), character, status);
                 character = null;
-                charStatus = null;
+                status = null;
                 refill();
             });
         }

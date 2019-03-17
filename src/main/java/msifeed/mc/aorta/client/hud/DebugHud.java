@@ -4,9 +4,9 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.aorta.chat.usage.LangAttribute;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.attributes.StatusAttribute;
+import msifeed.mc.aorta.core.character.BodyPartHealth;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
-import msifeed.mc.aorta.core.status.BodyPartHealth;
 import msifeed.mc.aorta.core.traits.Trait;
 import msifeed.mc.aorta.environment.EnvironmentManager;
 import msifeed.mc.aorta.environment.WorldEnv;
@@ -81,6 +81,9 @@ public enum DebugHud {
             });
             lines.add("  }");
 
+            lines.add("  vitaity rate: " + character.vitalityRate);
+            lines.add("  max psionics: " + character.psionics);
+
             lines.add("  traits [");
             final StringBuilder sb = new StringBuilder("    ");
             for (Trait t : character.traits) {
@@ -112,7 +115,7 @@ public enum DebugHud {
             final double vitalityPercents = vitality / (double) vitalityThreshold;
             lines.add(String.format("  vitality: %d/%d (%f)", vitality, vitalityThreshold, vitalityPercents));
 
-            lines.add("  body health: {");
+            lines.add("  bodyparts health: {");
             for (Map.Entry<String, BodyPartHealth> e : status.health.entrySet()) {
                 lines.add("    " + e.getKey().toLowerCase() + ": " + e.getValue().toString());
             }
@@ -120,6 +123,7 @@ public enum DebugHud {
 
             lines.add("  shield: " + status.shield);
             lines.add("  sanity: " + status.sanity);
+            lines.add("  psionics: " + status.psionics + " / " + character.psionics);
 
             lines.add("}");
         });

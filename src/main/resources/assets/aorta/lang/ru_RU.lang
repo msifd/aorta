@@ -77,15 +77,6 @@ aorta.action.block=Блокирование
 aorta.action.dodge=Уклонение
 aorta.action.psionics=Псионика
 
-aorta.lock.locked=§7Закрыто
-aorta.lock.unlocked=§7Открыто
-aorta.lock.installed=§7Замок установлен
-aorta.lock.replaced=§7Замок заменён
-aorta.lock.reset=§7Новый пароль установлен
-aorta.lock.blank_lock=§7Новенький
-aorta.lock.pick_break=§7Отмычка сломалась
-aorta.lock.hacked=§7Замок взломан
-
 aorta.lang.vanilla=Ванильный
 aorta.lang.common=Единоречие
 aorta.lang.menala=Меналийский
@@ -110,3 +101,37 @@ aorta.lang.underwater=Подводный
 aorta.lang.underwater.short=подв.
 aorta.lang.kshemin=Кшеминский
 aorta.lang.kshemin.short=кшм.
+
+aorta.shield.none=нет
+aorta.shield.energy=энергитический
+aorta.shield.kinnalian=киналлийский
+aorta.shield.psionic=псионический
+aorta.shield.industrial=индустриальный
+
+aorta.diff.s=очко
+aorta.diff.g=очка
+aorta.diff.m=очков
+aorta.diff.status.add_sanity=получил %d %s ментального состояния
+aorta.diff.status.rem_sanity=потерял %d %s ментального состояния
+aorta.diff.status.add_psionics=использовал %d ПО
+aorta.diff.status.rem_psionics=восстановил %d ПО
+aorta.diff.status.enable_shield=включает %s щит с мощностью %d
+aorta.diff.status.cast_psionic_shield=накладывает псионический щит с мощностью %d
+aorta.diff.status.disable_shield=отключает %s щит
+aorta.diff.status.dispell_psionic_shield=развеивает псионический щит
+aorta.diff.status.change_shield=сменил %s щит с мощностью %d на %s с мощностью %d
+aorta.diff.status.add_shield=восстановил %d %s щита
+aorta.diff.status.rem_shield=потерял %d %s щита
+aorta.diff.status.add_health=%s восполняет %d %s здоровья
+aorta.diff.status.rem_health=%s теряет %d %s здоровья
+aorta.diff.status.add_armor=%s получает %d %s брони
+aorta.diff.status.rem_armor=%s теряет %d %s брони
+
+aorta.lock.locked=§7Закрыто
+aorta.lock.unlocked=§7Открыто
+aorta.lock.installed=§7Замок установлен
+aorta.lock.replaced=§7Замок заменён
+aorta.lock.reset=§7Новый пароль установлен
+aorta.lock.blank_lock=§7Новенький
+aorta.lock.pick_break=§7Отмычка сломалась
+aorta.lock.hacked=§7Замок взломан

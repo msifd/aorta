@@ -1,11 +1,10 @@
 package msifeed.mc.aorta.client.gui.roller;
 
 import msifeed.mc.aorta.core.attributes.StatusAttribute;
+import msifeed.mc.aorta.core.character.CharStatus;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.rolls.Modifiers;
 import msifeed.mc.aorta.core.rolls.RollRpc;
-import msifeed.mc.aorta.core.status.CharStatus;
-import msifeed.mc.aorta.rpc.Rpc;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.widgets.Widget;
@@ -73,6 +72,6 @@ class ModifiersView extends Widget {
 
     private void syncModifiers() {
         System.out.println("send mods");
-        Rpc.sendToServer(RollRpc.updateMods, entity.getEntityId(), modifiers);
+        RollRpc.updateMods(entity.getEntityId(), modifiers);
     }
 }

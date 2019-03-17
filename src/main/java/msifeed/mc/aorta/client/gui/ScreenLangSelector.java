@@ -3,6 +3,7 @@ package msifeed.mc.aorta.client.gui;
 import msifeed.mc.aorta.chat.Language;
 import msifeed.mc.aorta.chat.usage.LangAttribute;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
+import msifeed.mc.aorta.core.character.CharRpc;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.utils.L10n;
 import msifeed.mc.mellow.layout.ListLayout;
@@ -43,7 +44,7 @@ public class ScreenLangSelector extends MellowGuiScreen {
 
         final DropList<Language> dropDown = new DropList<>(knownLanguages);
         dropDown.selectItem(knownLanguages.indexOf(selected));
-        dropDown.setSelectCallback(lang -> LangAttribute.INSTANCE.set(entity, lang));
+        dropDown.setSelectCallback(lang -> CharRpc.setLang(entity.getEntityId(), lang));
         windowContent.addChild(dropDown);
     }
 }

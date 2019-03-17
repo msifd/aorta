@@ -1,8 +1,8 @@
 package msifeed.mc.aorta.client.gui.status;
 
+import msifeed.mc.aorta.core.character.BodyPartHealth;
+import msifeed.mc.aorta.core.character.CharStatus;
 import msifeed.mc.aorta.core.character.Character;
-import msifeed.mc.aorta.core.status.BodyPartHealth;
-import msifeed.mc.aorta.core.status.CharStatus;
 import msifeed.mc.mellow.layout.AnchorLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.widgets.Widget;

@@ -1,5 +1,6 @@
-package msifeed.mc.aorta.core.status;
+package msifeed.mc.aorta.core.character;
 
+import msifeed.mc.aorta.utils.L10n;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class BodyShield {
@@ -33,6 +34,10 @@ public class BodyShield {
 
     public enum Type {
         NONE, ENERGY, KINNALIAN, PSIONIC, INDUSTRIAL;
+
+        public String tr() {
+            return L10n.tr("aorta.shield." + name().toLowerCase());
+        }
     }
 
     private static class Tags {
