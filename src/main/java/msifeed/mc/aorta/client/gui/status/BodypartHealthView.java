@@ -3,6 +3,7 @@ package msifeed.mc.aorta.client.gui.status;
 import msifeed.mc.aorta.core.character.BodyPartHealth;
 import msifeed.mc.aorta.core.character.CharStatus;
 import msifeed.mc.aorta.core.character.Character;
+import msifeed.mc.aorta.utils.L10n;
 import msifeed.mc.mellow.layout.AnchorLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.widgets.Widget;
@@ -31,17 +32,18 @@ class BodypartHealthView extends Widget {
     public void refill() {
         bodypartList.clearChildren();
 
-        if (character.bodyParts.isEmpty()) {
+        if (character.getBodyParts().isEmpty()) {
             bodypartList.addChild(new Label("No bodyparts! Ha-Ha!"));
             return;
         }
 
-        character.bodyParts.values().stream().sorted().forEach(bp -> {
+        character.getBodyParts().stream().sorted().forEach(bp -> {
             final BodyPartHealth bph = charStatus.health.getOrDefault(bp.name, new BodyPartHealth(bp.max, (short) 0));
+            final String injure = bph.isInjured(bp) ? L10n.tr("aorta.gui.status.injured") : "";
 
             final FlatButtonLabel b = new FlatButtonLabel();
             b.setDisabled(!editable);
-            b.setLabel(String.format("%s - %d/%d + %d", bp.name, bph.health, bp.max, bph.armor));
+            b.setLabel(String.format("%s - %d/%d + %d %s", bp.name, bph.health, bp.max, bph.armor, injure));
             b.setLayout(new AnchorLayout(AnchorLayout.Anchor.RIGHT, AnchorLayout.Anchor.CENTER));
             if (editable) {
                 b.setClickCallback(() -> getTopParent().addChild(new BodypartHealthDialog(bp, bph, h -> {

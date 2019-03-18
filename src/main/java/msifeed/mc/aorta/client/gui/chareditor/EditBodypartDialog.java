@@ -58,12 +58,6 @@ class EditBodypartDialog extends Window {
         healthInput.setCallback(s -> bodypart.max = (short) healthInput.getInt());
         params.addChild(healthInput);
 
-        params.addChild(new Label("Fatal"));
-        final DropList<Boolean> fatalList = new DropList<>(Arrays.asList(Boolean.TRUE, Boolean.FALSE));
-        fatalList.selectItem(bodypart.fatal ? 0 : 1);
-        fatalList.setSelectCallback(flag -> bodypart.fatal = flag);
-        params.addChild(fatalList);
-
         content.addChild(new Separator());
 
         final Widget footer = new Widget();

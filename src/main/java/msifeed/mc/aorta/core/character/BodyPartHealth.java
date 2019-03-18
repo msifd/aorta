@@ -16,6 +16,11 @@ public class BodyPartHealth {
         this.armor = (short) a;
     }
 
+    public boolean isInjured(BodyPart bodyPart) {
+        final int percent = (100 * health) / bodyPart.max;
+        return percent <= 20;
+    }
+
     public short getHealth() {
         return health;
     }

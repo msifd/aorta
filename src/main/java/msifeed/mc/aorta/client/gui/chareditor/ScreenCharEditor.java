@@ -88,7 +88,7 @@ public class ScreenCharEditor extends MellowGuiScreen {
         ClearDataButton() {
             super("Clear all data");
             setClickCallback(() -> {
-                CharRpc.updateChar(entity.getEntityId(), character, status);
+                CharRpc.clearEntity(entity.getEntityId());
                 character = null;
                 status = null;
                 refill();

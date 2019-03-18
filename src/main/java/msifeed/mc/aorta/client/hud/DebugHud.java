@@ -76,7 +76,7 @@ public enum DebugHud {
             lines.add("  }");
 
             lines.add("  bodyParts: {");
-            character.bodyParts.values().stream().sorted().forEach(bp -> {
+            character.getBodyParts().stream().sorted().forEach(bp -> {
                 lines.add("    " + bp.toLineString());
             });
             lines.add("  }");

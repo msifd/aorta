@@ -31,6 +31,7 @@ public enum CharRpc {
     private static final String setLang = "aorta:core.char.lang";
     private static final String updateChar = "aorta:core.char.char";
     private static final String updateStatus = "aorta:core.char.status";
+    private static final String clearEntity = "aorta:core.char.clear";
 
     public static void setLang(int entityId, Language lang) {
         Rpc.sendToServer(setLang, entityId, lang);
@@ -53,6 +54,10 @@ public enum CharRpc {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void clearEntity(int entityId) {
+        Rpc.sendToServer(clearEntity, entityId);
     }
 
     @RpcMethod(setLang)
@@ -86,7 +91,7 @@ public enum CharRpc {
                 StatusAttribute.INSTANCE.update(entity, s -> s.fromNBT(statusNbt));
 
                 if (sender == entity || !CharacterAttribute.has(sender, Trait.gm))
-                    sendLogs(sender, entity.getCommandSenderName(), "update_char", Differ.diff(before, optChar.get()));
+                    sendLogs(sender, (EntityLivingBase) entity, "update_char", Differ.diff(before, optChar.get()));
             } else {
                 CharacterAttribute.INSTANCE.update(entity, c -> c.fromNBT(charNbt));
                 StatusAttribute.INSTANCE.update(entity, s -> s.fromNBT(statusNbt));
@@ -115,7 +120,11 @@ public enum CharRpc {
                 optStatus.get().fromNBT(statusNbt);
 
                 if (sender == entity || !CharacterAttribute.has(sender, Trait.gm))
-                    sendLogs(sender, entity.getCommandSenderName(), "update_status", Differ.diff(before, optStatus.get()));
+                    sendLogs(sender, (EntityLivingBase) entity, "update_status", Differ.diff(before, optStatus.get()));
+
+                CharacterAttribute.get(entity).ifPresent(c -> {
+                    sendLogs(sender, (EntityLivingBase) entity, "status", Differ.status(c, before, optStatus.get()));
+                });
             } else {
                 StatusAttribute.INSTANCE.update(entity, s -> s.fromNBT(statusNbt));
             }
@@ -124,14 +133,26 @@ public enum CharRpc {
         }
     }
 
-    private void sendLogs(EntityPlayerMP sender, String who, String type, String message) {
+    private void sendLogs(EntityPlayerMP sender, EntityLivingBase who, String type, String message) {
         if (message.isEmpty())
             return;
 
-        Logs.log(sender, type, message);
+        final String namePrefix = sender == who ? "" : who.getCommandSenderName() + ": ";
+        Logs.log(sender, type, namePrefix + message);
 
         final ChatMessage m = Composer.makeMessage(SpeechType.LOG, sender, message);
-        m.speaker = who;
+        m.speaker = who.getCommandSenderName();
         ChatHandler.sendSystemChatMessage(sender, m);
+    }
+
+    @RpcMethod(clearEntity)
+    public void onClearEntity(MessageContext ctx, int entityId) {
+        final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
+        final Entity entity = sender.worldObj.getEntityByID(entityId);
+        if (!(entity instanceof EntityLivingBase) || entity instanceof EntityPlayer)
+            return;
+
+        CharacterAttribute.INSTANCE.set(entity, null);
+        StatusAttribute.INSTANCE.set(entity, null);
     }
 }

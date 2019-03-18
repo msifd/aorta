@@ -30,7 +30,7 @@ public class Label extends Widget {
 
     public void setText(String text) {
         final FontRenderer fr = RenderManager.instance.getFontRenderer();
-        this.text = text;
+        this.text = text.trim();
         setSizeHint(fr.getStringWidth(text), fr.FONT_HEIGHT);
     }
 

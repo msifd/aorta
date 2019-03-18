@@ -10,7 +10,7 @@ import java.util.*;
 
 public class Character {
     public EnumMap<Feature, Integer> features = new EnumMap<>(Feature.class);
-    public Map<String, BodyPart> bodyParts = new LinkedHashMap<>();
+    private LinkedHashMap<String, BodyPart> bodyParts = new LinkedHashMap<>();
     public Set<Trait> traits = new HashSet<>();
     public byte vitalityRate = 50;
     public byte psionics = 0;
@@ -25,11 +25,27 @@ public class Character {
     public Character(Character c) {
         for (Map.Entry<Feature, Integer> e : c.features.entrySet())
             this.features.put(e.getKey(), e.getValue());
-        for (Map.Entry<String, BodyPart> e : c.bodyParts.entrySet())
-            this.bodyParts.put(e.getKey(), new BodyPart(e.getValue()));
+        for (BodyPart bp : c.getBodyParts())
+            this.bodyParts.put(bp.name, new BodyPart(bp));
         traits.addAll(c.traits);
         vitalityRate = c.vitalityRate;
         psionics = c.psionics;
+    }
+
+    public Collection<BodyPart> getBodyParts() {
+        return bodyParts.values();
+    }
+
+    public Map<String, BodyPart> getBodyPartsMap() {
+        return bodyParts;
+    }
+
+    public void addBodyPart(BodyPart part) {
+        bodyParts.put(part.name, part);
+    }
+
+    public void removeBodyPart(BodyPart part) {
+        bodyParts.remove(part.name);
     }
 
     public Set<Trait> traits() {
@@ -41,7 +57,7 @@ public class Character {
     }
 
     public int countMaxHealth() {
-        return bodyParts.values().stream().mapToInt(BodyPart::getMaxHealth).sum();
+        return getBodyParts().stream().mapToInt(BodyPart::getMaxHealth).sum();
     }
 
     public int countVitalityThreshold() {
@@ -57,7 +73,7 @@ public class Character {
         compound.setTag(Tags.features, features);
 
         final NBTTagList bodyParts = new NBTTagList();
-        for (BodyPart p : this.bodyParts.values())
+        for (BodyPart p : getBodyParts())
             bodyParts.appendTag(p.toNBT());
         compound.setTag(Tags.bodyParts, bodyParts);
 

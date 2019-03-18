@@ -37,7 +37,7 @@ class EditBodypartsView extends Widget {
     private void addEditButtons() {
         final ButtonLabel addPartBtn = new ButtonLabel("Add part");
         addPartBtn.setClickCallback(() -> getTopParent().addChild(new EditBodypartDialog(bp -> {
-            character.bodyParts.put(bp.name, bp);
+            character.addBodyPart(bp);
             charStatus.health.put(bp.name, new BodyPartHealth(bp.max, (short) 0));
             refillList();
         })));
@@ -47,7 +47,7 @@ class EditBodypartsView extends Widget {
     private void refillList() {
         bodypartList.clearChildren();
 
-        if (character.bodyParts.isEmpty()) {
+        if (character.getBodyParts().isEmpty()) {
             bodypartList.addChild(new Label("No bodyparts! Ha-Ha!"));
             final ButtonLabel addDefault = new ButtonLabel("Add default parts");
             addDefault.setClickCallback(() -> {
@@ -58,18 +58,18 @@ class EditBodypartsView extends Widget {
             return;
         }
 
-        character.bodyParts.values().stream().sorted().forEach(bp -> {
+        character.getBodyParts().stream().sorted().forEach(bp -> {
             final FlatButtonLabel b = new FlatButtonLabel();
             b.setLabel(bp.toLineString());
             b.setClickCallback(() -> getTopParent().addChild(new EditBodypartDialog(bp, nbp -> {
                 if (nbp != null) {
                     final BodyPartHealth prevBph = charStatus.health.getOrDefault(bp.name, new BodyPartHealth());
                     final BodyPartHealth nbph = new BodyPartHealth((short) Math.min(prevBph.health, nbp.max), prevBph.armor);
-                    character.bodyParts.put(nbp.name, nbp);
+                    character.addBodyPart(nbp);
                     charStatus.health.put(nbp.name, nbph);
                 }
                 if (nbp == null || !bp.name.equals(nbp.name)) {
-                    character.bodyParts.remove(bp.name);
+                    character.removeBodyPart(bp);
                     charStatus.health.remove(bp.name);
                 }
                 refillList();
@@ -80,14 +80,14 @@ class EditBodypartsView extends Widget {
 
     private void addDefaultBodyparts() {
         Stream.of(
-                new BodyPart("head", BodyPart.Type.HEAD, 8, true),
-                new BodyPart("body", BodyPart.Type.BODY, 20, true),
-                new BodyPart("lhand", BodyPart.Type.HAND, 10, false),
-                new BodyPart("rhand", BodyPart.Type.HAND, 10, false),
-                new BodyPart("lleg", BodyPart.Type.LEG, 12, false),
-                new BodyPart("rleg", BodyPart.Type.LEG, 12, false)
+                new BodyPart("head", BodyPart.Type.HEAD, 8),
+                new BodyPart("body", BodyPart.Type.BODY, 20),
+                new BodyPart("lhand", BodyPart.Type.HAND, 10),
+                new BodyPart("rhand", BodyPart.Type.HAND, 10),
+                new BodyPart("lleg", BodyPart.Type.LEG, 12),
+                new BodyPart("rleg", BodyPart.Type.LEG, 12)
         ).forEach(bp -> {
-            character.bodyParts.put(bp.name, bp);
+            character.addBodyPart(bp);
             charStatus.health.put(bp.name, new BodyPartHealth(bp.max, (short) 0));
         });
     }

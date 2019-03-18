@@ -102,9 +102,18 @@ public class CharStatus {
     }
 
     public void cleanup(Character c) {
-        this.health.entrySet().removeIf(e -> !c.bodyParts.containsKey(e.getKey()));
-        for (Map.Entry<String, BodyPart> e : c.bodyParts.entrySet())
-            this.health.computeIfAbsent(e.getKey(), s -> new BodyPartHealth(e.getValue().max, 0));
+        if (this.health.size() != c.getBodyParts().size()) {
+            final Map<String, BodyPartHealth> h = new LinkedHashMap<>();
+            for (BodyPart bp : c.getBodyParts()) {
+                final BodyPartHealth bph = this.health.get(bp.name);
+                if (bph == null)
+                    h.put(bp.name, new BodyPartHealth(bp.max, 0));
+                else
+                    h.put(bp.name, bph);
+            }
+            this.health = h;
+        }
+
         this.psionics = (byte) Math.min(this.psionics, c.psionics);
     }
 
