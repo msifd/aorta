@@ -41,10 +41,10 @@ public class ScreenStatus extends MellowGuiScreen {
         final TabArea tabs = new TabArea();
         final ParamsView paramsView = new ParamsView(character, status, editable);
         final BodypartHealthView bodypartView = new BodypartHealthView(character, status, editable);
-        final ShieldView shieldView = new ShieldView(status, editable);
         tabs.addTab(L10n.tr("aorta.gui.status.status"), paramsView);
         tabs.addTab(L10n.tr("aorta.gui.status.body"), bodypartView);
-        tabs.addTab(L10n.tr("aorta.gui.status.shield"), shieldView);
+        if (editable)
+            tabs.addTab(L10n.tr("aorta.gui.status.name"), new NameView(status));
         content.addChild(tabs);
 
         if (editable) {
@@ -58,7 +58,6 @@ public class ScreenStatus extends MellowGuiScreen {
                     CharRpc.updateStatus(entity.getEntityId(), status);
                     paramsView.refill();
                     bodypartView.refill();
-                    shieldView.refill();
                 }
             });
             content.addChild(new Separator());

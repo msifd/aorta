@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class CharStatus {
+    public String name = "";
     public Map<String, BodyPartHealth> health = new LinkedHashMap<>();
     public BodyShield shield = new BodyShield();
     public byte sanity = 100;
@@ -19,6 +20,7 @@ public class CharStatus {
     }
 
     public CharStatus(CharStatus s) {
+        name = s.name;
         for (Map.Entry<String, BodyPartHealth> e : s.health.entrySet())
             health.put(e.getKey(), new BodyPartHealth(e.getValue()));
         shield = new BodyShield(s.shield);
@@ -61,6 +63,8 @@ public class CharStatus {
     public NBTTagCompound toNBT() {
         final NBTTagCompound c = new NBTTagCompound();
 
+        c.setString(Tags.name, name);
+
         final NBTTagCompound hc = new NBTTagCompound();
         for (Map.Entry<String, BodyPartHealth> e : health.entrySet()) {
             hc.setInteger(e.getKey(), e.getValue().toInt());
@@ -81,6 +85,8 @@ public class CharStatus {
     }
 
     public void fromNBT(NBTTagCompound compound) {
+        name = compound.getString(Tags.name);
+
         health.clear();
         final NBTTagCompound hc = compound.getCompoundTag(Tags.health);
         for (String k : (Set<String>) hc.func_150296_c()) {
@@ -118,6 +124,7 @@ public class CharStatus {
     }
 
     private static class Tags {
+        static final String name = "name";
         static final String health = "health";
         static final String shield = "shield";
         static final String sanity = "sanity";

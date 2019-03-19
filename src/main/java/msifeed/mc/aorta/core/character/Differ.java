@@ -131,6 +131,12 @@ class Differ {
     static String status(Character character, CharStatus before, CharStatus after) {
         final ArrayList<String> diffs = new ArrayList<>();
 
+        if (!before.name.equalsIgnoreCase(after.name))
+            diffs.add(L10n.fmt("aorta.diff.status.name", after.name));
+
+        if (before.sanityLevel() != after.sanityLevel())
+            diffs.add(L10n.fmt("aorta.diff.status.sanity_level", L10n.tr("aorta.diff.status.sanity." + after.sanityLevel())));
+
         if (before.sanityLevel() != after.sanityLevel())
             diffs.add(L10n.fmt("aorta.diff.status.sanity_level", L10n.tr("aorta.diff.status.sanity." + after.sanityLevel())));
 

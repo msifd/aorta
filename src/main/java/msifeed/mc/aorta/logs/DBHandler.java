@@ -26,8 +26,10 @@ public class DBHandler {
     private final Object sync = new Object();
 
     void logCommand(ICommandSender sender, String cmd, String text) {
-        checkDbConnection();
-        threadPool.submit(() -> asyncLog(sender, cmd, text));
+        threadPool.submit(() -> {
+            checkDbConnection();
+            asyncLog(sender, cmd, text);
+        });
     }
 
     private void asyncLog(ICommandSender sender, String cmd, String text) {

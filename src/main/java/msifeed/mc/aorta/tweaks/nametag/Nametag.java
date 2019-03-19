@@ -1,12 +1,15 @@
 package msifeed.mc.aorta.tweaks.nametag;
 
 import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import msifeed.mc.aorta.core.attributes.StatusAttribute;
+import msifeed.mc.aorta.core.character.CharStatus;
 import msifeed.mc.aorta.rpc.Rpc;
 import msifeed.mc.aorta.rpc.RpcMethod;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 
 public class Nametag {
     @SidedProxy(
@@ -19,16 +22,24 @@ public class Nametag {
     static final String broadcastTyping = "aorta:nametags.broadcast";
 
     public void init() {
-        Rpc.register(INSTANCE);
-        MinecraftForge.EVENT_BUS.register(INSTANCE);
+        Rpc.register(this);
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
-    public void notifyTyping() {
-    }
-
-    @SideOnly(Side.SERVER)
-    @RpcMethod(notifyTyping)
+    @RpcMethod(Nametag.notifyTyping)
     public void onNotifyTyping(MessageContext ctx, int id) {
-        Rpc.sendToAll(broadcastTyping, id);
+        Rpc.sendToAll(Nametag.broadcastTyping, id);
+    }
+
+    @SubscribeEvent
+    public void onNameFormat(PlayerEvent.NameFormat event) {
+        event.displayname = getPreferredName(event.entityPlayer);
+    }
+
+    protected String getPreferredName(EntityPlayer player) {
+        final CharStatus s = StatusAttribute.get(player).orElse(null);
+        return s == null || s.name.isEmpty()
+                ? player.getCommandSenderName()
+                : s.name;
     }
 }

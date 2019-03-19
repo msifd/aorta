@@ -6,14 +6,12 @@ import com.google.common.hash.Hashing;
 public enum Trait {
     __admin,
 
-    test,
     gm,
 
     lang_vanilla,
     lang_common, lang_menala, lang_gurhk, lang_umallan, lang_tervilian, lang_machine,
     lang_aistemia, lang_forgotten, lang_enlimian, lang_transcriptor, lang_underwater, lang_kshemin,
 
-    weak, tough,
     psionic,
 
     ;

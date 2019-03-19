@@ -4,6 +4,7 @@ import msifeed.mc.aorta.attributes.AttributeHandler;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.attributes.StatusAttribute;
 import msifeed.mc.aorta.core.character.CharRpc;
+import msifeed.mc.aorta.core.commands.RollCommand;
 import msifeed.mc.aorta.core.commands.TraitListCommand;
 import msifeed.mc.aorta.core.commands.TraitSetCommand;
 import msifeed.mc.aorta.core.meta.MetaCommand;
@@ -26,5 +27,6 @@ public class Core {
         handler.registerCommand(new TraitListCommand());
         handler.registerCommand(new TraitSetCommand());
         handler.registerCommand(new MetaCommand());
+        handler.registerCommand(new RollCommand());
     }
 }

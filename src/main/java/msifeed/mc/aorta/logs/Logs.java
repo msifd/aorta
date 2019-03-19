@@ -18,7 +18,7 @@ public enum Logs {
     }
 
     public static void log(ICommandSender sender, String type, String message) {
-        dbHandler.logCommand(sender, type, message);
-        LOGGER.info("{}/{}: {}", sender.getCommandSenderName(), type, message);
+        if (FMLCommonHandler.instance().getSide().isServer())
+            dbHandler.logCommand(sender, type, message);
     }
 }

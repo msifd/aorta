@@ -117,7 +117,7 @@ public enum CharRpc {
                     return;
 
                 final CharStatus before = new CharStatus(optStatus.get());
-                optStatus.get().fromNBT(statusNbt);
+                StatusAttribute.INSTANCE.update(entity, s -> s.fromNBT(statusNbt));
 
                 if (sender == entity || !CharacterAttribute.has(sender, Trait.gm))
                     sendLogs(sender, (EntityLivingBase) entity, "update_status", Differ.diff(before, optStatus.get()));
@@ -125,6 +125,9 @@ public enum CharRpc {
                 CharacterAttribute.get(entity).ifPresent(c -> {
                     sendLogs(sender, (EntityLivingBase) entity, "status", Differ.status(c, before, optStatus.get()));
                 });
+
+                if (!before.name.equals(optStatus.get().name))
+                    ((EntityPlayer) entity).refreshDisplayName();
             } else {
                 StatusAttribute.INSTANCE.update(entity, s -> s.fromNBT(statusNbt));
             }
@@ -141,7 +144,7 @@ public enum CharRpc {
         Logs.log(sender, type, namePrefix + message);
 
         final ChatMessage m = Composer.makeMessage(SpeechType.LOG, sender, message);
-        m.speaker = who.getCommandSenderName();
+        m.speaker = (who instanceof EntityPlayer) ? ((EntityPlayer) who).getDisplayName() : who.getCommandSenderName();
         ChatHandler.sendSystemChatMessage(sender, m);
     }
 

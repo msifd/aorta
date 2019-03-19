@@ -110,6 +110,8 @@ public enum DebugHud {
         StatusAttribute.get(entity).ifPresent(status -> {
             lines.add("Status {");
 
+            lines.add("  name: '" + status.name + "'");
+
             final int vitalityThreshold = character.countVitalityThreshold();
             final int vitality = status.countVitality(vitalityThreshold);
             final double vitalityPercents = vitality / (double) vitalityThreshold;

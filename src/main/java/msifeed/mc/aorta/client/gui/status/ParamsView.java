@@ -1,5 +1,6 @@
 package msifeed.mc.aorta.client.gui.status;
 
+import msifeed.mc.aorta.core.character.BodyShield;
 import msifeed.mc.aorta.core.character.CharStatus;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.traits.Trait;
@@ -8,7 +9,10 @@ import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.basic.Label;
+import msifeed.mc.mellow.widgets.droplist.DropList;
 import msifeed.mc.mellow.widgets.input.TextInput;
+
+import java.util.Arrays;
 
 class ParamsView extends Widget {
     private final Character character;
@@ -51,6 +55,20 @@ class ParamsView extends Widget {
         sanityInput.setText(String.valueOf(status.sanity));
         addChild(sanityInput);
 
+        addChild(new Label(L10n.tr("aorta.gui.status.shield_type")));
+        final DropList<BodyShield.Type> shieldType = new DropList<>(Arrays.asList(BodyShield.Type.values()));
+        shieldType.selectItem(status.shield.type.ordinal());
+        shieldType.setSelectCallback(type -> status.shield.type = type);
+        addChild(shieldType);
+
+        addChild(new Label(L10n.tr("aorta.gui.status.shield_power")));
+        final TextInput shieldPower = new TextInput();
+        shieldPower.getSizeHint().x = 30;
+        shieldPower.setText(String.valueOf(status.shield.power));
+        shieldPower.setFilter(s -> TextInput.isUnsignedIntBetween(s, 0, 100));
+        shieldPower.setCallback(s -> status.shield.power = (short) shieldPower.getInt());
+        addChild(shieldPower);
+
         if (character.has(Trait.psionic)) {
             addChild(new Label(L10n.tr("aorta.gui.status.psionics")));
 
@@ -87,6 +105,12 @@ class ParamsView extends Widget {
                 vitality,
                 vitalityThreshold,
                 L10n.tr("aorta.status.vitality." + vitalityLevel))));
+
+        addChild(new Label(L10n.tr("aorta.gui.status.shield_type")));
+        addChild(new Label(status.shield.type.toString()));
+
+        addChild(new Label(L10n.tr("aorta.gui.status.shield_power")));
+        addChild(new Label(String.valueOf(status.shield.power)));
 
         if (character.has(Trait.psionic)) {
             final int psionicsLevel = status.psionicsLevel(character);

@@ -4,8 +4,6 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.ReflectionHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import msifeed.mc.aorta.rpc.Rpc;
 import msifeed.mc.aorta.rpc.RpcMethod;
 import net.minecraft.client.Minecraft;
@@ -13,6 +11,7 @@ import net.minecraft.client.gui.GuiChat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import org.lwjgl.input.Keyboard;
 
 import java.util.HashMap;
@@ -33,27 +32,7 @@ public class NametagClient extends Nametag {
         FMLCommonHandler.instance().bus().register(this);
     }
 
-    @SubscribeEvent
-    public void onDrawScreen(GuiScreenEvent.DrawScreenEvent.Post event) {
-        if (!(Minecraft.getMinecraft().currentScreen instanceof GuiChat))
-            return;
-        final char c = Keyboard.getEventCharacter();
-        if (lastCharPressed != c) {
-            lastCharPressed = c;
-            notifyTyping();
-        }
-    }
-
-    @Override
-    public void notifyTyping() {
-        if (System.currentTimeMillis() - lastNotify < TYPING_PING_MS / 2)
-            return;
-        lastNotify = System.currentTimeMillis();
-        Rpc.sendToServer(notifyTyping, Minecraft.getMinecraft().thePlayer.getEntityId());
-    }
-
-    @SideOnly(Side.CLIENT)
-    @RpcMethod(broadcastTyping)
+    @RpcMethod(Nametag.broadcastTyping)
     public void onBroadcastTyping(MessageContext ctx, int id) {
         typingPlayers.put(id, System.currentTimeMillis());
     }
@@ -72,13 +51,44 @@ public class NametagClient extends Nametag {
                 typingPlayers.remove(player.getEntityId());
                 player.refreshDisplayName();
             } else {
-                final String replacer = TYPING_REPLACER[(int) (now / TYPING_TAG_INTERVAL_MS % TYPING_REPLACER.length)];
-                ReflectionHelper.setPrivateValue(EntityPlayer.class, player, replacer, "displayname");
+                final String dots = TYPING_REPLACER[(int) (now / TYPING_TAG_INTERVAL_MS % TYPING_REPLACER.length)];
+                ReflectionHelper.setPrivateValue(EntityPlayer.class, player, dots, "displayname");
             }
+        } else {
+            final String name = displayOriginalUsername() ? player.getCommandSenderName() : getPreferredName(player);
+            if (!name.equals(player.getDisplayName()))
+                ReflectionHelper.setPrivateValue(EntityPlayer.class, player, name, "displayname");
         }
 
         final float distance = self.getDistanceToEntity(player);
         if (distance > MAX_NAMETAG_DISTANCE)
             event.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public void onDrawScreen(GuiScreenEvent.DrawScreenEvent.Post event) {
+        if (!(Minecraft.getMinecraft().currentScreen instanceof GuiChat))
+            return;
+        final char c = Keyboard.getEventCharacter();
+        if (lastCharPressed != c) {
+            lastCharPressed = c;
+            notifyTyping();
+        }
+    }
+
+    @SubscribeEvent
+    public void onNameFormat(PlayerEvent.NameFormat event) {
+        super.onNameFormat(event);
+    }
+
+    private void notifyTyping() {
+        if (System.currentTimeMillis() - lastNotify < TYPING_PING_MS / 2)
+            return;
+        lastNotify = System.currentTimeMillis();
+        Rpc.sendToServer(Nametag.notifyTyping, Minecraft.getMinecraft().thePlayer.getEntityId());
+    }
+
+    private static boolean displayOriginalUsername() {
+        return Keyboard.isKeyDown(Keyboard.KEY_LMENU);
     }
 }

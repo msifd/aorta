@@ -238,4 +238,8 @@ public class TextInput extends Widget implements KeyHandler {
             return false;
         }
     }
+
+    public static boolean isValidName(String s) {
+        return s.codePoints().allMatch(c -> Character.isLetter(c) || c == ' ');
+    }
 }
