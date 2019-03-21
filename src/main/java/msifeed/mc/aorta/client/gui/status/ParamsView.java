@@ -106,11 +106,13 @@ class ParamsView extends Widget {
                 vitalityThreshold,
                 L10n.tr("aorta.status.vitality." + vitalityLevel))));
 
-        addChild(new Label(L10n.tr("aorta.gui.status.shield_type")));
-        addChild(new Label(status.shield.type.toString()));
+        if (status.shield.type != BodyShield.Type.NONE && status.shield.power > 0) {
+            addChild(new Label(L10n.tr("aorta.gui.status.shield_type")));
+            addChild(new Label(status.shield.type.toString()));
 
-        addChild(new Label(L10n.tr("aorta.gui.status.shield_power")));
-        addChild(new Label(String.valueOf(status.shield.power)));
+            addChild(new Label(L10n.tr("aorta.gui.status.shield_power")));
+            addChild(new Label(String.valueOf(status.shield.power)));
+        }
 
         if (character.has(Trait.psionic)) {
             final int psionicsLevel = status.psionicsLevel(character);

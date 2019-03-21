@@ -49,7 +49,7 @@ public class SpeechComposer implements ChatComposer {
     }
 
     private static boolean isMyNameIs(EntityPlayer self, String name) {
-        return self.getCommandSenderName().equalsIgnoreCase(name);
+        return self.getDisplayName().equals(name);
     }
 
     private static boolean doIKnowLanguage(EntityPlayer self, Language language) {

@@ -26,6 +26,13 @@ aorta.gui.apply=Apply
 aorta.gui.cancel=Cancel
 
 aorta.gui.roller=Roller
+aorta.gui.roller.title=Roller: %s
+aorta.gui.roller.feat=Feats
+aorta.gui.roller.fight=Fight
+aorta.gui.roller.mods=Mods
+aorta.gui.roller.mods.roll=Roll mod:
+aorta.gui.roller.mods.feat=Feat mods
+
 aorta.gui.char_editor=Character editor
 aorta.gui.lang_selector=Lang selector
 
@@ -61,23 +68,31 @@ aorta.status.psionics.3=Hematomas
 aorta.status.psionics.4=Critical
 
 aorta.feature.str=Тренированность
+aorta.feature.short.str=трен
 aorta.feature.dex=Выучка
+aorta.feature.short.dex=выуч
 aorta.feature.ten=Упорство
+aorta.feature.short.ten=упор
 aorta.feature.int=Интеллект
+aorta.feature.short.int=инт
 aorta.feature.ath=Атлетика
+aorta.feature.short.ath=атл
 aorta.feature.end=Выносливость
+aorta.feature.short.end=вын
 aorta.feature.hnd=Ремесло
+aorta.feature.short.hnd=рем
 aorta.feature.psi=Псионика
+aorta.feature.short.psi=пси
 
-aorta.action.hit=Hit
-aorta.action.special_hit=Special hit
-aorta.action.shot=Shot
-aorta.action.special_shot=Special shot
-aorta.action.self_use=Self use
-aorta.action.enemy_use=Enemy use
-aorta.action.block=Block
-aorta.action.dodge=Dodge
-aorta.action.psionics=Psionics
+aorta.action.hit=Удар
+aorta.action.special_hit=Особый удар
+aorta.action.shot=Выстрел
+aorta.action.special_shot=Особый выстрел
+aorta.action.self_use=Применение
+aorta.action.enemy_use=Использование
+aorta.action.block=Блокирование
+aorta.action.dodge=Уклонение
+aorta.action.psionics=Псионика
 
 aorta.lang.vanilla=Ванильный
 aorta.lang.common=Единоречие

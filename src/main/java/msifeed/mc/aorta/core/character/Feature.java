@@ -9,6 +9,10 @@ public enum Feature {
         return L10n.tr("aorta.feature." + name().toLowerCase());
     }
 
+    public String trShort() {
+        return L10n.tr("aorta.feature.short." + name().toLowerCase());
+    }
+
     public enum ComplexFeature {
         ATH(STR, DEX), END(STR, TEN), HND(DEX, INT), PSI(TEN, INT);
 

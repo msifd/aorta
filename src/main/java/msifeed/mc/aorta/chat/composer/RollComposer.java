@@ -4,10 +4,7 @@ import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.chat.Language;
 import msifeed.mc.aorta.chat.net.ChatMessage;
 import msifeed.mc.aorta.core.character.Feature;
-import msifeed.mc.aorta.core.rolls.Critical;
-import msifeed.mc.aorta.core.rolls.FeatureRoll;
-import msifeed.mc.aorta.core.rolls.FightRoll;
-import msifeed.mc.aorta.core.rolls.Roll;
+import msifeed.mc.aorta.core.rolls.*;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
@@ -15,6 +12,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -48,13 +46,13 @@ public class RollComposer implements ChatComposer {
     }
 
     private static String makeRollText(String type, String player, String action, Roll roll) {
-        final String modsStr = formatMod(roll.mods.rollMod) + formatSanity(roll.sanity);
+        final String modsStr = formatNumber(roll.mods.rollMod) + formatSanity(roll.sanity);
         if (modsStr.isEmpty()) {
-            // [TYPE] player ACTION: res CRIT
-            return String.format("[%s] \u00a7r%s\u00a76 %s: %d%s", type, player, action, roll.result, formatCrit(roll.critical));
+            // [TYPE] player ACTION: (feat mods) res CRIT
+            return String.format("[%s] \u00a7r%s\u00a76 %s:%s %d%s", type, player, action, formatFeatMods(roll.mods), roll.result, formatCrit(roll.critical));
         } else {
-            // [TYPE] player ACTION: [roll] - mod - san = res CRIT
-            return String.format("[%s] \u00a7r%s\u00a76 %s: [%s]%s = %d%s", type, player, action, roll.roll, modsStr, roll.result, formatCrit(roll.critical));
+            // [TYPE] player ACTION: (feat mods) [roll] - mod - san = res CRIT
+            return String.format("[%s] \u00a7r%s\u00a76 %s:%s [%s]%s = %d%s", type, player, action, formatFeatMods(roll.mods), roll.roll, modsStr, roll.result, formatCrit(roll.critical));
         }
     }
 
@@ -62,16 +60,36 @@ public class RollComposer implements ChatComposer {
         return entity instanceof EntityPlayer ? ((EntityPlayer) entity).getDisplayName() : entity.getCommandSenderName();
     }
 
+    private static String formatFeatMods(Modifiers mod) {
+        final StringBuilder sb = new StringBuilder();
+
+        for (Map.Entry<Feature, Integer> e : mod.featureMods.entrySet()) {
+            if (e.getValue() == 0)
+                continue;
+            sb.append(e.getKey().trShort());
+            sb.append(e.getValue() > 0 ? '+' : '-');
+            sb.append(Math.abs(e.getValue()));
+            sb.append(' ');
+        }
+
+        if (sb.length() > 0) {
+            sb.deleteCharAt(sb.length() - 1); // remove whitespace
+            return " (" + sb.toString() + ')';
+        } else {
+            return "";
+        }
+    }
+
     private static String formatSanity(int san) {
-        final String f = formatMod(san);
+        final String f = formatNumber(san);
         return f.isEmpty() ? "" : "\u00a77" + f + "\u00a76";
     }
 
-    private static String formatMod(int mod) {
-        if (mod > 0)
-            return " + " + mod;
-        else if (mod < 0)
-            return " - " + Math.abs(mod);
+    private static String formatNumber(int num) {
+        if (num > 0)
+            return " + " + num;
+        else if (num < 0)
+            return " - " + Math.abs(num);
         else
             return "";
     }

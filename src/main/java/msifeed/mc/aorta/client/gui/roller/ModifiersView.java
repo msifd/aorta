@@ -5,13 +5,11 @@ import msifeed.mc.aorta.core.character.CharStatus;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.rolls.Modifiers;
 import msifeed.mc.aorta.core.rolls.RollRpc;
+import msifeed.mc.aorta.utils.L10n;
 import msifeed.mc.mellow.layout.GridLayout;
-import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.basic.Label;
-import msifeed.mc.mellow.widgets.basic.WrapWidget;
 import msifeed.mc.mellow.widgets.input.TextInput;
-import msifeed.mc.mellow.widgets.spoiler.Spoiler;
 import net.minecraft.entity.EntityLivingBase;
 
 import java.util.Optional;
@@ -29,31 +27,25 @@ class ModifiersView extends Widget {
             modifiers = null;
             return;
         }
-        setLayout(ListLayout.VERTICAL);
+        setLayout(new GridLayout());
 
-        final Widget rollMod = new Widget();
-        rollMod.setLayout(new GridLayout());
-        rollMod.addChild(new Label("Roll mod:"));
+        addChild(new Label(L10n.tr("aorta.gui.roller.mods.roll")));
         final TextInput modInput = new TextInput();
         modInput.getSizeHint().x = 29;
         modInput.setText(Integer.toString(modifiers.rollMod));
         modInput.setFilter(s -> s.length() < 5 && TextInput.isSignedInt(s));
         modInput.setCallback(this::updateRollMod);
-        rollMod.addChild(modInput);
-        addChild(new WrapWidget(rollMod));
+        addChild(modInput);
 
-        final Widget featMods = new Widget();
-        featMods.setLayout(new GridLayout());
         for (Feature f : Feature.values()) {
-            featMods.addChild(new Label(f.toString() + ":"));
+            addChild(new Label(f.tr() + ":"));
             final TextInput input = new TextInput();
-            input.getSizeHint().x = 29;
+            input.getSizeHint().x = 20;
             input.setText(Integer.toString(modifiers.featureMods.getOrDefault(f, 0)));
             input.setFilter(s -> s.length() < 5 && TextInput.isSignedInt(s));
             input.setCallback(s -> updateFeatMods(f, s));
-            featMods.addChild(input);
+            addChild(input);
         }
-        addChild(new Spoiler("Feat mods", featMods));
     }
 
     private void updateRollMod(String s) {

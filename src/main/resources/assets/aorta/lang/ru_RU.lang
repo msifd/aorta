@@ -26,6 +26,13 @@ aorta.gui.apply=Применить
 aorta.gui.cancel=Отменить
 
 aorta.gui.roller=Роллер
+aorta.gui.roller.title=Роллер: %s
+aorta.gui.roller.feat=Хар-ки
+aorta.gui.roller.fight=Бой
+aorta.gui.roller.mods=Моды
+aorta.gui.roller.mods.roll=Мод. броска:
+aorta.gui.roller.mods.feat=Мод. характеристик
+
 aorta.gui.lang_selector=Языковыбиратель
 
 aorta.gui.status=Статус
@@ -60,13 +67,21 @@ aorta.status.psionics.3=Кровотечение
 aorta.status.psionics.4=Детонация
 
 aorta.feature.str=Тренированность
+aorta.feature.short.str=трен
 aorta.feature.dex=Выучка
+aorta.feature.short.dex=выуч
 aorta.feature.ten=Упорство
+aorta.feature.short.ten=упор
 aorta.feature.int=Интеллект
+aorta.feature.short.int=инт
 aorta.feature.ath=Атлетика
+aorta.feature.short.ath=атл
 aorta.feature.end=Выносливость
+aorta.feature.short.end=вын
 aorta.feature.hnd=Ремесло
+aorta.feature.short.hnd=рем
 aorta.feature.psi=Псионика
+aorta.feature.short.psi=пси
 
 aorta.action.hit=Удар
 aorta.action.special_hit=Особый удар
