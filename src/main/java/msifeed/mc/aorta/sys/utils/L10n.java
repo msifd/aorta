@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.utils;
+package msifeed.mc.aorta.sys.utils;
 
 import cpw.mods.fml.common.registry.LanguageRegistry;
 

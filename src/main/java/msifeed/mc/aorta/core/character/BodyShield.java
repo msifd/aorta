@@ -1,6 +1,6 @@
 package msifeed.mc.aorta.core.character;
 
-import msifeed.mc.aorta.utils.L10n;
+import msifeed.mc.aorta.sys.utils.L10n;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class BodyShield {

@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.config;
+package msifeed.mc.aorta.sys.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

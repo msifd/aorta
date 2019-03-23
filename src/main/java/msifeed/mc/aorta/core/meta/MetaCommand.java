@@ -1,6 +1,6 @@
 package msifeed.mc.aorta.core.meta;
 
-import msifeed.mc.aorta.commands.ExtCommand;
+import msifeed.mc.aorta.sys.cmd.ExtCommand;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.traits.Trait;
 import net.minecraft.command.ICommandSender;

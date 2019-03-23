@@ -5,7 +5,7 @@ import msifeed.mc.aorta.genesis.blocks.templates.DoorTemplate;
 import msifeed.mc.aorta.locks.LockTileEntity;
 import msifeed.mc.aorta.locks.LockType;
 import msifeed.mc.aorta.locks.items.LockItem;
-import msifeed.mc.aorta.utils.L10n;
+import msifeed.mc.aorta.sys.utils.L10n;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;

@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.rpc;
+package msifeed.mc.aorta.sys.rpc;
 
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;

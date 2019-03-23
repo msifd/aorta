@@ -1,9 +1,9 @@
 package msifeed.mc.aorta.defines;
 
 import com.google.gson.reflect.TypeToken;
-import msifeed.mc.aorta.config.ConfigManager;
-import msifeed.mc.aorta.config.ConfigMode;
-import msifeed.mc.aorta.config.JsonConfig;
+import msifeed.mc.aorta.sys.config.ConfigManager;
+import msifeed.mc.aorta.sys.config.ConfigMode;
+import msifeed.mc.aorta.sys.config.JsonConfig;
 import msifeed.mc.aorta.core.rolls.FightAction;
 import msifeed.mc.aorta.defines.data.AortaDefines;
 import msifeed.mc.aorta.defines.data.FightRules;

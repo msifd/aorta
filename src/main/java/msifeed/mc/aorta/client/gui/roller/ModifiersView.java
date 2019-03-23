@@ -5,7 +5,7 @@ import msifeed.mc.aorta.core.character.CharStatus;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.rolls.Modifiers;
 import msifeed.mc.aorta.core.rolls.RollRpc;
-import msifeed.mc.aorta.utils.L10n;
+import msifeed.mc.aorta.sys.utils.L10n;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.basic.Label;

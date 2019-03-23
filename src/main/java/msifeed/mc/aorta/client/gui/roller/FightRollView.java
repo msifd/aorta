@@ -2,7 +2,7 @@ package msifeed.mc.aorta.client.gui.roller;
 
 import msifeed.mc.aorta.core.rolls.FightAction;
 import msifeed.mc.aorta.core.rolls.RollRpc;
-import msifeed.mc.aorta.utils.L10n;
+import msifeed.mc.aorta.sys.utils.L10n;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.widgets.Widget;

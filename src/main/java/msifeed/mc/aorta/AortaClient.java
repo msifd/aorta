@@ -6,7 +6,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import msifeed.mc.aorta.client.Keybinds;
 import msifeed.mc.aorta.client.ResponsiveEntityStatus;
 import msifeed.mc.aorta.genesis.AortaCreativeTab;
-import msifeed.mc.aorta.utils.DRM;
+import msifeed.mc.aorta.sys.utils.DRM;
 import msifeed.mc.mellow.Mellow;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.util.ResourceLocation;

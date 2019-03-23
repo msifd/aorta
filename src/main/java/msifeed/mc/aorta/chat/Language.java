@@ -2,7 +2,7 @@ package msifeed.mc.aorta.chat;
 
 import msifeed.mc.aorta.chat.obfuscation.*;
 import msifeed.mc.aorta.core.traits.Trait;
-import msifeed.mc.aorta.utils.L10n;
+import msifeed.mc.aorta.sys.utils.L10n;
 
 public enum Language {
     VANILLA(Trait.lang_vanilla, new VanillaObfuscator()),

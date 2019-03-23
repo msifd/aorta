@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.rpc;
+package msifeed.mc.aorta.sys.rpc;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;

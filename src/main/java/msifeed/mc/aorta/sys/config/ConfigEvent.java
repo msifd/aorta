@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.config;
+package msifeed.mc.aorta.sys.config;
 
 import cpw.mods.fml.common.eventhandler.Event;
 

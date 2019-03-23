@@ -4,7 +4,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import msifeed.mc.aorta.Aorta;
-import msifeed.mc.aorta.attributes.AttributeHandler;
+import msifeed.mc.aorta.sys.attributes.AttributeHandler;
 import msifeed.mc.aorta.chat.net.ChatMessage;
 import msifeed.mc.aorta.chat.net.SpeechMessageHandler;
 import msifeed.mc.aorta.chat.usage.*;

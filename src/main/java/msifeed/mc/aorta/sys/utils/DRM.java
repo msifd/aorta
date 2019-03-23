@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.utils;
+package msifeed.mc.aorta.sys.utils;
 
 import com.google.common.net.InetAddresses;
 import cpw.mods.fml.common.eventhandler.EventPriority;

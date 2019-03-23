@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.config;
+package msifeed.mc.aorta.sys.config;
 
 import com.google.gson.reflect.TypeToken;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -6,8 +6,8 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import msifeed.mc.aorta.rpc.Rpc;
-import msifeed.mc.aorta.rpc.RpcMethod;
+import msifeed.mc.aorta.sys.rpc.Rpc;
+import msifeed.mc.aorta.sys.rpc.RpcMethod;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
 

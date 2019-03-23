@@ -1,6 +1,6 @@
 package msifeed.mc.aorta.core.rolls;
 
-import msifeed.mc.aorta.utils.L10n;
+import msifeed.mc.aorta.sys.utils.L10n;
 
 public enum FightAction {
     HIT, SPECIAL_HIT, SHOT, SPECIAL_SHOT,

@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.attributes;
+package msifeed.mc.aorta.sys.attributes;
 
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;

@@ -1,6 +1,6 @@
 package msifeed.mc.aorta.core;
 
-import msifeed.mc.aorta.attributes.AttributeHandler;
+import msifeed.mc.aorta.sys.attributes.AttributeHandler;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.attributes.StatusAttribute;
 import msifeed.mc.aorta.core.character.CharRpc;
@@ -10,7 +10,7 @@ import msifeed.mc.aorta.core.commands.TraitSetCommand;
 import msifeed.mc.aorta.core.meta.MetaCommand;
 import msifeed.mc.aorta.core.rolls.RollRpc;
 import msifeed.mc.aorta.core.traits.TraitDecoder;
-import msifeed.mc.aorta.rpc.Rpc;
+import msifeed.mc.aorta.sys.rpc.Rpc;
 import net.minecraft.command.CommandHandler;
 
 public class Core {

@@ -2,7 +2,7 @@ package msifeed.mc.aorta.client.lock;
 
 import msifeed.mc.aorta.locks.LockTileEntity;
 import msifeed.mc.aorta.locks.LocksRpc;
-import msifeed.mc.aorta.rpc.Rpc;
+import msifeed.mc.aorta.sys.rpc.Rpc;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;

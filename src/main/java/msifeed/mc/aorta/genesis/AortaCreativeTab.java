@@ -3,7 +3,7 @@ package msifeed.mc.aorta.genesis;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import msifeed.mc.aorta.utils.AlphanumComparator;
+import msifeed.mc.aorta.sys.utils.AlphanumComparator;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

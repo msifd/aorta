@@ -2,7 +2,7 @@ package msifeed.mc.aorta.client.gui.book;
 
 import com.google.common.hash.Hashing;
 import msifeed.mc.aorta.books.RemoteBookManager;
-import msifeed.mc.aorta.utils.L10n;
+import msifeed.mc.aorta.sys.utils.L10n;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.mellow.widgets.Widget;

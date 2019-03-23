@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.attributes;
+package msifeed.mc.aorta.sys.attributes;
 
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -20,8 +20,8 @@ public enum AttributeHandler {
     final SimpleNetworkWrapper CHANNEL = NetworkRegistry.INSTANCE.newSimpleChannel(Aorta.MODID + ".attr");
 
     @SidedProxy(
-            serverSide = "msifeed.mc.aorta.attributes.SyncAttrHandler",
-            clientSide = "msifeed.mc.aorta.attributes.SyncAttrHandlerClient"
+            serverSide = "msifeed.mc.aorta.sys.attributes.SyncAttrHandler",
+            clientSide = "msifeed.mc.aorta.sys.attributes.SyncAttrHandlerClient"
     )
     private static SyncAttrHandler syncAttrHandler;
 

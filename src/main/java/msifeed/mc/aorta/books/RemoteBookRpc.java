@@ -3,8 +3,8 @@ package msifeed.mc.aorta.books;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import msifeed.mc.aorta.rpc.Rpc;
-import msifeed.mc.aorta.rpc.RpcMethod;
+import msifeed.mc.aorta.sys.rpc.Rpc;
+import msifeed.mc.aorta.sys.rpc.RpcMethod;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public class RemoteBookRpc {

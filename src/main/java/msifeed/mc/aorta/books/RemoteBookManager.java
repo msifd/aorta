@@ -2,7 +2,7 @@ package msifeed.mc.aorta.books;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
-import msifeed.mc.aorta.rpc.Rpc;
+import msifeed.mc.aorta.sys.rpc.Rpc;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;

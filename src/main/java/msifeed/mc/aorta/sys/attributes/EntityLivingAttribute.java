@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.attributes;
+package msifeed.mc.aorta.sys.attributes;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;

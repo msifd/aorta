@@ -3,7 +3,7 @@ package msifeed.mc.aorta.locks;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.traits.Trait;
-import msifeed.mc.aorta.rpc.RpcMethod;
+import msifeed.mc.aorta.sys.rpc.RpcMethod;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;

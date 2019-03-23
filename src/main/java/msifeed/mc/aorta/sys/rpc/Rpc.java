@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.rpc;
+package msifeed.mc.aorta.sys.rpc;
 
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;

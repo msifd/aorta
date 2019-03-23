@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.commands;
+package msifeed.mc.aorta.sys.cmd;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.command.CommandBase;

@@ -2,7 +2,7 @@ package msifeed.mc.aorta.core.character;
 
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
-import msifeed.mc.aorta.utils.L10n;
+import msifeed.mc.aorta.sys.utils.L10n;
 
 import java.util.ArrayList;
 import java.util.Map;

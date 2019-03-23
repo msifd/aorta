@@ -4,7 +4,7 @@ import msifeed.mc.aorta.chat.ChatHandler;
 import msifeed.mc.aorta.chat.composer.Composer;
 import msifeed.mc.aorta.chat.composer.SpeechType;
 import msifeed.mc.aorta.chat.net.ChatMessage;
-import msifeed.mc.aorta.commands.ExtCommand;
+import msifeed.mc.aorta.sys.cmd.ExtCommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;

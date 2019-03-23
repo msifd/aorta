@@ -1,7 +1,7 @@
 package msifeed.mc.aorta.chat.usage;
 
 import msifeed.mc.aorta.Aorta;
-import msifeed.mc.aorta.attributes.PlayerAttribute;
+import msifeed.mc.aorta.sys.attributes.PlayerAttribute;
 import msifeed.mc.aorta.chat.Language;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.character.Character;
