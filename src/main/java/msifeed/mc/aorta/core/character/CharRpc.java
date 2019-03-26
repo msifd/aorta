@@ -93,8 +93,12 @@ public enum CharRpc {
                 if (sender == entity || !CharacterAttribute.has(sender, Trait.gm))
                     sendLogs(sender, (EntityLivingBase) entity, "update_char", Differ.diff(before, optChar.get()));
             } else {
-                CharacterAttribute.INSTANCE.update(entity, c -> c.fromNBT(charNbt));
-                StatusAttribute.INSTANCE.update(entity, s -> s.fromNBT(statusNbt));
+                final Character c = new Character();
+                final CharStatus s = new CharStatus();
+                c.fromNBT(charNbt);
+                s.fromNBT(statusNbt);
+                CharacterAttribute.INSTANCE.set(entity, c);
+                StatusAttribute.INSTANCE.set(entity, s);
             }
 
         } catch (IOException e) {
