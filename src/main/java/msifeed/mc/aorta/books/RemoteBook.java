@@ -1,11 +1,13 @@
 package msifeed.mc.aorta.books;
 
+import msifeed.mc.aorta.chat.Language;
 import net.minecraft.util.ResourceLocation;
 
 public class RemoteBook {
     public Style style = Style.REGULAR;
     public String title = "";
     public String text = "";
+    public Language lang = Language.COMMON;
 
     public enum Style {
         REGULAR("book_regular"), RICH("book_rich"), PAD("book_pad"), NOTE("book_note");

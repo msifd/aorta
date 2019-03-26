@@ -68,7 +68,7 @@ public enum RemoteBookManager {
         try {
             consumer.accept(RemoteBookParser.parse(rawBook));
         } catch (Exception e) {
-            logger.error(e);
+            logger.throwing(e);
             Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("Failed to parse book file."));
 
             consumer.accept(null);
@@ -112,7 +112,7 @@ public enum RemoteBookManager {
         try {
             book = RemoteBookParser.parse(rawBook);
         } catch (Exception e) {
-            logger.error(e);
+            logger.throwing(e);
             player.addChatMessage(new ChatComponentText("Failed to parse book file."));
             return;
         }

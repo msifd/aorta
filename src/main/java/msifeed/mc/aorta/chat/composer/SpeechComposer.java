@@ -56,7 +56,7 @@ public class SpeechComposer implements ChatComposer {
         return CharacterAttribute.has(self, language.trait);
     }
 
-    private static String obfuscateWith(LangObfuscator obfuscator, String text) {
+    public static String obfuscateWith(LangObfuscator obfuscator, String text) {
         final List<SpeechToken> parts = SpeechTokenParser.parse(text);
         return obfuscator.obfuscate(parts);
     }

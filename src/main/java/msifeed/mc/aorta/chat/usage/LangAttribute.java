@@ -1,10 +1,10 @@
 package msifeed.mc.aorta.chat.usage;
 
 import msifeed.mc.aorta.Aorta;
-import msifeed.mc.aorta.sys.attributes.PlayerAttribute;
 import msifeed.mc.aorta.chat.Language;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.character.Character;
+import msifeed.mc.aorta.sys.attributes.PlayerAttribute;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;

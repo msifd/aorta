@@ -4,10 +4,11 @@
 
 ## Формат книжки
 ```
-#!<style>
+#!<style>, <lang>
 <title>
 <text>
 ```
 - `<style>` - может принимать значения `regular, rich, pad, note`.
+- `<lang>` - язык по-умолчанию всеобщий. может принимать значения `vanilla, common, menala, gurhk, umallan, tervilian, machine, aistemia, forgotten, enlimian, transcriptor, underwater, kshemin`.
 - `<title>` - заголовок книги. После загрузки предмет принимает такое имя.
 - `<text>` - содержимое книжки. Ограничений нет. Поддерживается стандартное форматирование через `§`.

@@ -1,8 +1,8 @@
 package msifeed.mc.aorta.core.attributes;
 
 import msifeed.mc.aorta.Aorta;
-import msifeed.mc.aorta.sys.attributes.EntityLivingAttribute;
 import msifeed.mc.aorta.core.character.CharStatus;
+import msifeed.mc.aorta.sys.attributes.EntityLivingAttribute;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;

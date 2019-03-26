@@ -1,9 +1,9 @@
 package msifeed.mc.aorta.core.attributes;
 
 import msifeed.mc.aorta.Aorta;
-import msifeed.mc.aorta.sys.attributes.EntityLivingAttribute;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.traits.Trait;
+import msifeed.mc.aorta.sys.attributes.EntityLivingAttribute;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;

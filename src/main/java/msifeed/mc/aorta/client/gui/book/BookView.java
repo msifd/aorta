@@ -1,6 +1,9 @@
 package msifeed.mc.aorta.client.gui.book;
 
 import msifeed.mc.aorta.books.RemoteBook;
+import msifeed.mc.aorta.chat.Language;
+import msifeed.mc.aorta.chat.composer.SpeechComposer;
+import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.mellow.layout.AnchorLayout;
 import msifeed.mc.mellow.layout.FreeLayout;
 import msifeed.mc.mellow.layout.ListLayout;
@@ -43,8 +46,11 @@ public class BookView extends Widget {
     }
 
     public void setBook(RemoteBook book) {
+        final String text = doIKnowLanguage(book.lang)
+                ? book.text
+                : SpeechComposer.obfuscateWith(book.lang.obfuscator, book.text);
         setStyle(book.style);
-        textWall.setLines(breakLines(book.text));
+        textWall.setLines(breakLines(text));
         flipPage(0);
     }
 
@@ -73,6 +79,10 @@ public class BookView extends Widget {
         controls.leftButton.hover = bookParts.leftBtnHover;
         controls.rightButton.normal = bookParts.rightBtn;
         controls.rightButton.hover = bookParts.rightBtnHover;
+    }
+
+    private static boolean doIKnowLanguage(Language language) {
+        return language == Language.VANILLA || CharacterAttribute.has(Minecraft.getMinecraft().thePlayer, language.trait);
     }
 
     private static List<String> breakLines(String text) {
