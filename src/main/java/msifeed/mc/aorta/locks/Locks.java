@@ -4,11 +4,13 @@ import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
+import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.genesis.blocks.templates.DoorTemplate;
 import msifeed.mc.aorta.locks.items.*;
 import msifeed.mc.aorta.sys.rpc.Rpc;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.oredict.RecipeSorter;
 
 public enum Locks {
     INSTANCE;
@@ -26,7 +28,9 @@ public enum Locks {
         GameRegistry.registerItem(new AdvancedAccessTunerItem(), AdvancedAccessTunerItem.ID);
         GameRegistry.registerItem(new SkeletalKeyItem(), SkeletalKeyItem.ID);
         GameRegistry.registerTileEntity(LockTileEntity.class, LockTileEntity.ID);
+
         GameRegistry.addRecipe(new CopyKeyRecipe());
+        RecipeSorter.register(Aorta.MODID + ":copylock", CopyKeyRecipe.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
 
         Rpc.register(rpcHandler);
         MinecraftForge.EVENT_BUS.register(INSTANCE);

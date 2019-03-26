@@ -5,6 +5,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
+import msifeed.mc.aorta.mount.Mount;
 import msifeed.mc.aorta.sys.attributes.AttributeHandler;
 import msifeed.mc.aorta.books.RemoteBookManager;
 import msifeed.mc.aorta.chat.Speechat;
@@ -73,6 +74,7 @@ public class Aorta {
         Speechat.init();
         Nametag.INSTANCE.init();
         MakeEveryoneHealthy.apply();
+        Mount.init();
     }
 
     public void postInit() {
