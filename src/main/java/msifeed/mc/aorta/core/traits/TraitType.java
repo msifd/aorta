@@ -1,7 +1,7 @@
 package msifeed.mc.aorta.core.traits;
 
 public enum TraitType {
-    SYSTEM("__"), LANG("lang_");
+    SYSTEM("__"), LANG("lang_"), SCIENCE("sci_");
 
     public String prefix;
 

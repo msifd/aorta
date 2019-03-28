@@ -12,6 +12,11 @@ public enum Trait {
     lang_common, lang_menala, lang_gurhk, lang_umallan, lang_tervilian, lang_machine,
     lang_aistemia, lang_forgotten, lang_enlimian, lang_transcriptor, lang_underwater, lang_kshemin,
 
+    sci_melee_weapons, sci_ranged_weapons, sci_armor,
+    sci_chemistry, sci_biology, sci_physics,
+    sci_computers, sci_implants, sci_engineer,
+    sci_materials, sci_psionics, sci_optimisation,
+
     psionic,
 
     ;
