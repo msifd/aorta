@@ -2,6 +2,7 @@ package msifeed.mc.aorta.client.gui.status;
 
 import msifeed.mc.aorta.core.character.BodyPart;
 import msifeed.mc.aorta.core.character.BodyPartHealth;
+import msifeed.mc.aorta.sys.utils.L10n;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.widgets.Widget;
@@ -34,7 +35,7 @@ class BodypartHealthDialog extends Window {
         partInfo.addChild(new Label(bodypart.name));
         partInfo.addChild(new Label(bodypart.type.toString()));
         partInfo.addChild(new Label("Max health"));
-        partInfo.addChild(new Label(String.valueOf(bodypart.max)));
+        partInfo.addChild(new Label(bodypart.max + (bodypart.fatal ? " " + L10n.tr("aorta.gui.status.fatal") : "")));
         content.addChild(partInfo);
 
         content.addChild(new Separator());

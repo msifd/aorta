@@ -74,5 +74,14 @@
     "traits": [
       "item"
     ]
+  },
+  {
+    "id": "test_clicker",
+    "title": "Кликер",
+    "texture": "minecraft:nether_star",
+    "usages": 3,
+    "traits": [
+      "item"
+    ]
   }
 ]

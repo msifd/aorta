@@ -137,9 +137,6 @@ class Differ {
         if (before.sanityLevel() != after.sanityLevel())
             diffs.add(L10n.fmt("aorta.diff.status.sanity_level", L10n.tr("aorta.diff.status.sanity." + after.sanityLevel())));
 
-        if (before.sanityLevel() != after.sanityLevel())
-            diffs.add(L10n.fmt("aorta.diff.status.sanity_level", L10n.tr("aorta.diff.status.sanity." + after.sanityLevel())));
-
         final int vitalityBefore = before.vitalityLevel(character);
         final int vitalityAfter = after.vitalityLevel(character);
         if (vitalityAfter != vitalityBefore)

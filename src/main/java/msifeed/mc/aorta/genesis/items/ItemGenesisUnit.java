@@ -20,6 +20,7 @@ public class ItemGenesisUnit extends GenesisUnit {
     public String texture;
     public ItemRarity rarity;
     public ItemRenderData renderData = null;
+    public int maxUsages = 0;
 
     public ItemGenesisUnit(JsonObject json, HashSet<GenesisTrait> traits) {
         super(json, traits);
@@ -34,6 +35,9 @@ public class ItemGenesisUnit extends GenesisUnit {
 
         if (json.has(Props.render))
             renderData = new ItemRenderData(json);
+
+        if (json.has(Props.usages))
+            JsonUtils.consumeInt(json, Props.usages, i -> maxUsages = i);
     }
 
     private void loadDescriptionValues(JsonObject json) {
@@ -73,5 +77,6 @@ public class ItemGenesisUnit extends GenesisUnit {
         static final String values = "values";
         static final String texture = "texture";
         static final String render = "render";
+        static final String usages = "usages";
     }
 }

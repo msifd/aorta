@@ -39,12 +39,13 @@ class BodypartHealthView extends Widget {
 
         character.getBodyParts().stream().sorted().forEach(bp -> {
             final BodyPartHealth bph = charStatus.health.getOrDefault(bp.name, new BodyPartHealth(bp.max, (short) 0));
-            final String injure = bph.isInjured(bp) ? L10n.tr("aorta.gui.status.injured") : "";
+            final String fatal = bp.fatal ? " " + L10n.tr("aorta.gui.status.fatal") : "";
+            final String injure = bph.isInjured(bp) ? " " + L10n.tr("aorta.gui.status.injured") : "";
 
             final FlatButtonLabel b = new FlatButtonLabel();
             b.setDisabled(!editable);
-            b.setLabel(String.format("%s - %d/%d + %d %s", bp.name, bph.health, bp.max, bph.armor, injure));
-            b.setLayout(new AnchorLayout(AnchorLayout.Anchor.RIGHT, AnchorLayout.Anchor.CENTER));
+            b.setLabel(String.format("%s - %d/%d + %d%s%s", bp.name, bph.health, bp.max, bph.armor, fatal, injure));
+            b.setLayout(new AnchorLayout(AnchorLayout.Anchor.LEFT, AnchorLayout.Anchor.CENTER));
             if (editable) {
                 b.setClickCallback(() -> getTopParent().addChild(new BodypartHealthDialog(bp, bph, h -> {
                     charStatus.health.put(bp.name, h);

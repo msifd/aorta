@@ -17,6 +17,12 @@ public class JsonUtils {
         consumer.accept(json.get(name).getAsJsonPrimitive().getAsFloat());
     }
 
+    public static void consumeInt(JsonObject json, String name, Consumer<Integer> consumer) {
+        if (!json.has(name) || !json.get(name).isJsonPrimitive() || !json.get(name).getAsJsonPrimitive().isNumber())
+            return;
+        consumer.accept(json.get(name).getAsJsonPrimitive().getAsInt());
+    }
+
     public static void consumeBool(JsonObject json, String name, Consumer<Boolean> consumer) {
         if (!json.has(name) || !json.get(name).isJsonPrimitive() || !json.get(name).getAsJsonPrimitive().isBoolean())
             return;

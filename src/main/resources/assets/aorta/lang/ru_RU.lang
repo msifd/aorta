@@ -47,6 +47,7 @@ aorta.gui.status.psionics=Псионические Очки
 aorta.gui.status.body=Тело
 aorta.gui.status.injured=травма
 aorta.gui.status.name=Имя
+aorta.gui.status.fatal=фатально
 
 aorta.status.sanity.0=Предельный стресс
 aorta.status.sanity.1=Сильный стресс
@@ -176,3 +177,6 @@ aorta.lock.reset=§7Новый пароль установлен
 aorta.lock.blank_lock=§7Новенький
 aorta.lock.pick_break=§7Отмычка сломалась
 aorta.lock.hacked=§7Замок взломан
+
+aorta.used=использовал %s
+aorta.uses_left=Осталось использований: %d

@@ -48,6 +48,7 @@ aorta.gui.status.sanity=Sanity
 aorta.gui.status.body=Body
 aorta.gui.status.injured=injured
 aorta.gui.status.name=Name
+aorta.gui.status.fatal=fatal
 
 aorta.status.sanity.0=Extreme stress
 aorta.status.sanity.1=Severe stress
@@ -177,3 +178,6 @@ aorta.lock.reset=§7New password is set
 aorta.lock.blank_lock=§7Blank
 aorta.lock.pick_break=§7Lockpick broke
 aorta.lock.hacked=§7Lock hacked
+
+aorta.used=used %s
+aorta.uses_left=Uses left: %d

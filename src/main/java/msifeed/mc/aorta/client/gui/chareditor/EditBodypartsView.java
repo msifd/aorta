@@ -80,12 +80,12 @@ class EditBodypartsView extends Widget {
 
     private void addDefaultBodyparts() {
         Stream.of(
-                new BodyPart("head", BodyPart.Type.HEAD, 8),
-                new BodyPart("body", BodyPart.Type.BODY, 20),
-                new BodyPart("lhand", BodyPart.Type.HAND, 10),
-                new BodyPart("rhand", BodyPart.Type.HAND, 10),
-                new BodyPart("lleg", BodyPart.Type.LEG, 12),
-                new BodyPart("rleg", BodyPart.Type.LEG, 12)
+                new BodyPart("head", BodyPart.Type.HEAD, 8, true),
+                new BodyPart("body", BodyPart.Type.BODY, 20, true),
+                new BodyPart("lhand", BodyPart.Type.HAND, 10, false),
+                new BodyPart("rhand", BodyPart.Type.HAND, 10, false),
+                new BodyPart("lleg", BodyPart.Type.LEG, 12, false),
+                new BodyPart("rleg", BodyPart.Type.LEG, 12, false)
         ).forEach(bp -> {
             character.addBodyPart(bp);
             charStatus.health.put(bp.name, new BodyPartHealth(bp.max, (short) 0));

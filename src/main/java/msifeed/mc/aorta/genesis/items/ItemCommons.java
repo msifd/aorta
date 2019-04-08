@@ -1,6 +1,7 @@
 package msifeed.mc.aorta.genesis.items;
 
 import msifeed.mc.aorta.genesis.rename.RenameProvider;
+import msifeed.mc.aorta.sys.utils.L10n;
 import net.minecraft.item.ItemStack;
 
 import java.util.Collections;
@@ -19,5 +20,8 @@ public class ItemCommons {
         values.putAll(RenameProvider.getOverriddenValues(itemStack));
         for (Map.Entry<String, String> entry : values.entrySet())
             lines.add("\u00A7r" + entry.getKey() + "\u00A7r: " + entry.getValue());
+
+        if (unit.maxUsages > 0)
+            lines.add("\u00A7r" + L10n.fmt("aorta.uses_left", itemStack.getItemDamage()));
     }
 }

@@ -35,6 +35,8 @@ public class CharStatus {
     }
 
     public int vitalityLevel(Character c) {
+        if (isDeadByFatalPart(c))
+            return 4;
         final int vitalityThreshold = c.countVitalityThreshold();
         final int vitality = countVitality(vitalityThreshold);
         return vitalityLevel(vitality, vitalityThreshold);
@@ -58,6 +60,11 @@ public class CharStatus {
         final int p = MathHelper.clamp_int(psionics, 0, c.psionics);
         final int percent = (p * 100) / c.psionics;
         return MathHelper.clamp_int(percent / 25, 0, 4);
+    }
+
+    public boolean isDeadByFatalPart(Character c) {
+        return health.entrySet().stream()
+                .anyMatch(e -> e.getValue().health == 0 && c.getBodyPartsMap().get(e.getKey()).fatal);
     }
 
     public NBTTagCompound toNBT() {
