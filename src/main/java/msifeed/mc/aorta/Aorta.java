@@ -20,10 +20,7 @@ import msifeed.mc.aorta.sys.attributes.AttributeHandler;
 import msifeed.mc.aorta.sys.config.ConfigManager;
 import msifeed.mc.aorta.sys.rpc.Rpc;
 import msifeed.mc.aorta.tools.ToolItems;
-import msifeed.mc.aorta.tweaks.EnableDesertRain;
-import msifeed.mc.aorta.tweaks.EntityControl;
-import msifeed.mc.aorta.tweaks.MakeEveryoneHealthy;
-import msifeed.mc.aorta.tweaks.MakeFoodEdible;
+import msifeed.mc.aorta.tweaks.*;
 import msifeed.mc.aorta.tweaks.nametag.Nametag;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.server.MinecraftServer;
@@ -86,6 +83,7 @@ public class Aorta {
         commandHandler.registerCommand(new AortaCommand());
         commandHandler.registerCommand(new DefineCommand());
         commandHandler.registerCommand(new RenameCommand());
+        commandHandler.registerCommand(new UnstuckCommand());
 
         CORE.registerCommands(commandHandler);
         Speechat.registerCommands(commandHandler);

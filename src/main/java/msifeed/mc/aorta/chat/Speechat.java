@@ -28,6 +28,7 @@ public enum Speechat {
         handler.registerCommand(new GlobalCommand());
         handler.registerCommand(new GmsayCommand());
         handler.registerCommand(new GmGlobalCommand());
+        handler.registerCommand(new SusayCommand());
     }
 
 

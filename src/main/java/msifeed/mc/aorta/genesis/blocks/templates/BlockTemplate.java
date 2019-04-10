@@ -57,6 +57,16 @@ public class BlockTemplate extends Block implements BlockTraitCommons.Getter {
     }
 
     @Override
+    public boolean isLadder(IBlockAccess world, int x, int y, int z, EntityLivingBase entity) {
+        return traits.isLadder();
+    }
+
+    @Override
+    public boolean isLeaves(IBlockAccess world, int x, int y, int z) {
+        return traits.isLeaves();
+    }
+
+    @Override
     public boolean renderAsNormalBlock() {
         return traits.renderAsNormalBlock();
     }

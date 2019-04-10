@@ -3,7 +3,6 @@ package msifeed.mc.aorta.genesis;
 public enum GenesisTrait {
     // Types
     block, item,
-    rain,
 
     // Size
     tiny, small, large,
@@ -18,9 +17,11 @@ public enum GenesisTrait {
     rotatable, pillar,
     half, crossed_squares,
     without_particles,
+    leaves,
 
     // Logic
     container, chest, door, torch, pane, bed,
+    ladder,
 
     // Extensions
     add_slabs, add_stairs,
@@ -29,7 +30,8 @@ public enum GenesisTrait {
     special_log, special_bush,
 
     // Items // // // // // // // //
-    not_stackable, hold_like_tool, usable,
+    not_stackable, hold_like_tool,
+    usable, action_bow,
 
     // Armor
     armor, helmet, plate, legs, boots,

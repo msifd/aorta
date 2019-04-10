@@ -41,7 +41,8 @@
       "wooden",
       "rotatable",
       "half",
-      "tiny"
+      "tiny",
+      "ladder"
     ]
   },
   {
@@ -55,7 +56,7 @@
       "block",
       "wooden",
       "pillar",
-      "dim_light"
+      "ladder"
     ]
   },
   {

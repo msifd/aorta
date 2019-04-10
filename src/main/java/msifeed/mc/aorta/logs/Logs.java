@@ -5,6 +5,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import net.minecraft.command.ICommandSender;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.CommandEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,6 +18,7 @@ public enum Logs {
     public static void init() {
         if (FMLCommonHandler.instance().getSide().isServer()) {
             MinecraftForge.EVENT_BUS.register(dbHandler);
+            MinecraftForge.EVENT_BUS.register(INSTANCE);
             FMLCommonHandler.instance().bus().register(INSTANCE);
         }
     }
@@ -36,5 +38,11 @@ public enum Logs {
     public void onPlayerLeft(PlayerEvent.PlayerLoggedOutEvent event) {
         if (!event.player.worldObj.isRemote)
             log(event.player, "logout", "[logout]");
+    }
+
+    @SubscribeEvent
+    public void onCommandSend(CommandEvent event) {
+        if (!event.sender.getEntityWorld().isRemote)
+            log(event.sender, "cmd", String.format("/%s %s", event.command.getCommandName(), String.join(" ", event.parameters)));
     }
 }

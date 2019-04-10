@@ -2,6 +2,7 @@ package msifeed.mc.aorta.genesis.blocks;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import msifeed.mc.aorta.genesis.GenesisTrait;
 import msifeed.mc.aorta.genesis.GenesisUnit;
 import msifeed.mc.aorta.genesis.blocks.client.GenesisBlockRenderer;
 import net.minecraft.block.Block;
@@ -52,6 +53,14 @@ public class BlockTraitCommons {
         if (half)
             return side == Facing.oppositeSide[getOrt(meta)];
         return true;
+    }
+
+    public boolean isLadder() {
+        return unit.hasTrait(GenesisTrait.ladder);
+    }
+
+    public boolean isLeaves() {
+        return unit.hasTrait(GenesisTrait.leaves);
     }
 
     public int getRenderType() {

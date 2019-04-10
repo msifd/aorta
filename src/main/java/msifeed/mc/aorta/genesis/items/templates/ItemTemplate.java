@@ -4,11 +4,13 @@ import msifeed.mc.aorta.chat.ChatHandler;
 import msifeed.mc.aorta.chat.composer.Composer;
 import msifeed.mc.aorta.chat.composer.SpeechType;
 import msifeed.mc.aorta.chat.net.ChatMessage;
+import msifeed.mc.aorta.genesis.GenesisTrait;
 import msifeed.mc.aorta.genesis.items.IItemTemplate;
 import msifeed.mc.aorta.genesis.items.ItemCommons;
 import msifeed.mc.aorta.genesis.items.ItemGenesisUnit;
 import msifeed.mc.aorta.sys.utils.L10n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -43,13 +45,16 @@ public class ItemTemplate extends Item implements IItemTemplate {
         return super.getDamage(stack);
     }
 
-    public int getMaxItemUseDuration(ItemStack itemStack) {
-        return 32;
+    @Override
+    public EnumAction getItemUseAction(ItemStack p_77661_1_) {
+        return unit.hasTrait(GenesisTrait.action_bow) ? EnumAction.bow : EnumAction.none;
     }
 
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
         if (unit.maxUsages > 0)
-            player.setItemInUse(itemStack, this.getMaxItemUseDuration(itemStack));
+            player.setItemInUse(itemStack, 32);
+        else if (unit.hasTrait(GenesisTrait.action_bow))
+            player.setItemInUse(itemStack, 72000);
         return itemStack;
     }
 

@@ -59,7 +59,7 @@
       "recess": 0.4
     },
     "traits": [
-      "item"
+      "item", "action_bow"
     ]
   },
   {
