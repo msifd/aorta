@@ -4,7 +4,6 @@ import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
-import msifeed.mc.aorta.genesis.blocks.templates.DoorTemplate;
 import msifeed.mc.aorta.locks.items.*;
 import msifeed.mc.aorta.sys.rpc.Rpc;
 import net.minecraftforge.common.MinecraftForge;
@@ -34,10 +33,13 @@ public enum Locks {
 
     @SubscribeEvent
     public void onBlockBreak(BlockEvent.BreakEvent event) {
-        if (!(event.block instanceof DoorTemplate))
+        if (!(event.block instanceof LockableBlock))
+            return;
+        final LockableBlock block = (LockableBlock) event.block;
+        if (!block.dropLockOnBreak(event.world, event.x, event.y, event.z))
             return;
 
-        final LockTileEntity lock = LockTileEntity.find(event.world, event.x, event.y, event.z);
+        final LockObject lock = block.getLock(event.world, event.x, event.y, event.z);
         if (lock != null && lock.hasLock() && !lock.isLocked())
             event.world.spawnEntityInWorld(lock.makeEntityItem());
     }

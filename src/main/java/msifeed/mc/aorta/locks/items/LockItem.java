@@ -1,7 +1,7 @@
 package msifeed.mc.aorta.locks.items;
 
 import msifeed.mc.aorta.genesis.AortaCreativeTab;
-import msifeed.mc.aorta.locks.LockTileEntity;
+import msifeed.mc.aorta.locks.LockObject;
 import msifeed.mc.aorta.locks.LockType;
 import msifeed.mc.aorta.sys.utils.L10n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -38,14 +38,15 @@ public class LockItem extends Item {
 
     @Override
     public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-        final LockTileEntity lock = LockTileEntity.find(world, x, y, z);
+        final LockObject lock = LockObject.find(world, x, y, z);
         if (lock == null)
             return false;
+
         install(itemStack, lock, player, world);
         return true;
     }
 
-    private void install(ItemStack itemStack, LockTileEntity lock, EntityPlayer player, World world) {
+    private void install(ItemStack itemStack, LockObject lock, EntityPlayer player, World world) {
         if (world.isRemote)
             return;
         if (lock.hasLock() && lock.isLocked())

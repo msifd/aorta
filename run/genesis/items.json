@@ -83,5 +83,12 @@
     "traits": [
       "item"
     ]
+  },
+  {
+    "id": "test_unnamed",
+    "texture": "minecraft:coal",
+    "traits": [
+      "item"
+    ]
   }
 ]

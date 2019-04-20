@@ -2,7 +2,7 @@ package msifeed.mc.aorta.locks.items;
 
 import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.genesis.AortaCreativeTab;
-import msifeed.mc.aorta.locks.LockTileEntity;
+import msifeed.mc.aorta.locks.LockObject;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -24,9 +24,10 @@ public class SkeletalKeyItem extends Item {
 
     @Override
     public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-        final LockTileEntity lock = LockTileEntity.find(world, x, y, z);
+        final LockObject lock = LockObject.find(world, x, y, z);
         if (lock == null || !lock.hasLock())
             return false;
+
         Aorta.GUI_HANDLER.toggleSkeletalKey(lock);
         return true;
     }

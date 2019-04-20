@@ -20,6 +20,12 @@ import static msifeed.mc.aorta.genesis.GenesisTrait.*;
 
 public class BlockGenerator implements Generator {
     @Override
+    public void init() {
+        GameRegistry.registerTileEntity(ChestTemplate.ChestEntity.class, ChestTemplate.ChestEntity.ID);
+        GameRegistry.registerTileEntity(ContainerTemplate.TileEntityContainer.class, "aorta.container");
+    }
+
+    @Override
     public void generate(JsonObject json, HashSet<GenesisTrait> traits) {
         final BlockGenesisUnit unit = new BlockGenesisUnit(json, traits);
 

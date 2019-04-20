@@ -10,10 +10,10 @@ import msifeed.mc.aorta.client.gui.roller.ScreenRoller;
 import msifeed.mc.aorta.client.gui.status.ScreenStatus;
 import msifeed.mc.aorta.client.hud.DebugHud;
 import msifeed.mc.aorta.client.hud.StatusHudReplacer;
-import msifeed.mc.aorta.client.lock.HudDoorLock;
+import msifeed.mc.aorta.client.lock.HudLock;
 import msifeed.mc.aorta.client.lock.ScreenDigitalLock;
 import msifeed.mc.aorta.client.lock.ScreenSkeletalKey;
-import msifeed.mc.aorta.locks.LockTileEntity;
+import msifeed.mc.aorta.locks.LockObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityLivingBase;
@@ -30,7 +30,7 @@ public class GuiHandlerClient extends GuiHandler {
     public void init() {
         StatusHudReplacer.init();
         MinecraftForge.EVENT_BUS.register(DebugHud.INSTANCE);
-        MinecraftForge.EVENT_BUS.register(HudDoorLock.INSTANCE);
+        MinecraftForge.EVENT_BUS.register(HudLock.INSTANCE);
     }
 
     @Override
@@ -76,14 +76,14 @@ public class GuiHandlerClient extends GuiHandler {
     }
 
     @Override
-    public void toggleDigitalLock(LockTileEntity lock) {
-        if (lock.getWorldObj().isRemote)
+    public void toggleDigitalLock(LockObject lock) {
+        if (lock.getTileEntity().getWorldObj().isRemote)
             toggleGui(ScreenDigitalLock.class, () -> new ScreenDigitalLock(lock));
     }
 
     @Override
-    public void toggleSkeletalKey(LockTileEntity lock) {
-        if (lock.getWorldObj().isRemote)
+    public void toggleSkeletalKey(LockObject lock) {
+        if (lock.getTileEntity().getWorldObj().isRemote)
             toggleGui(ScreenSkeletalKey.class, () -> new ScreenSkeletalKey(lock));
     }
 

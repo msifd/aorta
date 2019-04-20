@@ -2,7 +2,7 @@ package msifeed.mc.aorta.locks.items;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import msifeed.mc.aorta.Aorta;
-import msifeed.mc.aorta.locks.LockTileEntity;
+import msifeed.mc.aorta.locks.LockObject;
 import msifeed.mc.aorta.locks.LockType;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,12 +34,11 @@ public class KeyItem extends Item {
         if (!itemStack.hasTagCompound())
             return false;
 
-        final LockTileEntity lock = LockTileEntity.find(world, x, y, z);
+        final LockObject lock = LockObject.find(world, x, y, z);
         if (lock == null || lock.getLockType() == LockType.DIGITAL)
             return false;
 
         final String secret = itemStack.getTagCompound().getString("secret");
-        System.out.println("key " + secret);
         if (lock.canUnlockWith(secret)) {
             lock.toggleLocked();
 

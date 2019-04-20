@@ -1,6 +1,6 @@
 package msifeed.mc.aorta.client.lock;
 
-import msifeed.mc.aorta.locks.LockTileEntity;
+import msifeed.mc.aorta.locks.LockObject;
 import msifeed.mc.aorta.locks.LocksRpc;
 import msifeed.mc.aorta.sys.rpc.Rpc;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
@@ -8,11 +8,12 @@ import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
 import msifeed.mc.mellow.widgets.input.TextInput;
 import msifeed.mc.mellow.widgets.window.Window;
+import net.minecraft.tileentity.TileEntity;
 
 public class ScreenSkeletalKey extends MellowGuiScreen {
-    private final LockTileEntity lock;
+    private final LockObject lock;
 
-    public ScreenSkeletalKey(LockTileEntity lock) {
+    public ScreenSkeletalKey(LockObject lock) {
         this.lock = lock;
         final Window window = new Window();
         window.setTitle("Skeletal Key");
@@ -47,6 +48,7 @@ public class ScreenSkeletalKey extends MellowGuiScreen {
     }
 
     private void sendOverrideRequest() {
-        Rpc.sendToServer(LocksRpc.gmOverrideLock, lock.xCoord, lock.yCoord, lock.zCoord, lock.isLocked(), lock.getDifficulty());
+        final TileEntity te = lock.getTileEntity();
+        Rpc.sendToServer(LocksRpc.gmOverrideLock, te.xCoord, te.yCoord, te.zCoord, lock.isLocked(), lock.getDifficulty());
     }
 }

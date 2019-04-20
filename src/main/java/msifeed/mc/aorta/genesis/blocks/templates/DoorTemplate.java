@@ -6,8 +6,8 @@ import msifeed.mc.aorta.genesis.AortaCreativeTab;
 import msifeed.mc.aorta.genesis.blocks.BlockGenesisUnit;
 import msifeed.mc.aorta.genesis.blocks.BlockTraitCommons;
 import msifeed.mc.aorta.genesis.blocks.SpecialBlockRegisterer;
-import msifeed.mc.aorta.locks.LockTileEntity;
-import msifeed.mc.aorta.locks.LockType;
+import msifeed.mc.aorta.locks.*;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
-public class DoorTemplate extends BlockDoor implements ITileEntityProvider, BlockTraitCommons.Getter, SpecialBlockRegisterer {
+public class DoorTemplate extends BlockDoor implements ITileEntityProvider, SpecialBlockRegisterer, BlockTraitCommons.Getter, LockableBlock {
     private BlockTraitCommons traits;
     private final DoorItem item;
 
@@ -42,9 +42,9 @@ public class DoorTemplate extends BlockDoor implements ITileEntityProvider, Bloc
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-        final LockTileEntity lock = LockTileEntity.find(world, x, y, z);
+        final LockObject lock = getLock(world, x, y, z);
         if (lock == null)
-            return false; // unreachable
+            return false;
 
         if (player.isSneaking() && lock.getLockType() == LockType.DIGITAL) {
             Aorta.GUI_HANDLER.toggleDigitalLock(lock);
@@ -59,7 +59,7 @@ public class DoorTemplate extends BlockDoor implements ITileEntityProvider, Bloc
     @Override
     public void func_150014_a(World world, int x, int y, int z, boolean flag) {
         // Also check if locked when powered
-        final LockTileEntity lock = LockTileEntity.find(world, x, y, z);
+        final LockObject lock = getLock(world, x, y, z);
         if (lock == null || !lock.isLocked())
             super.func_150014_a(world, x, y, z, flag);
     }
@@ -89,6 +89,23 @@ public class DoorTemplate extends BlockDoor implements ITileEntityProvider, Bloc
         item.setCreativeTab(AortaCreativeTab.BLOCKS);
         GameRegistry.registerBlock(this, id);
         GameRegistry.registerItem(item, id + "_item");
+    }
+
+    @Override
+    public TileEntity getLockTileEntity(World world, int x, int y, int z) {
+        final Block middleBlock = world.getBlock(x, y, z);
+
+        if (!(middleBlock instanceof DoorTemplate))
+            return null;
+
+        final Block upperBlock = world.getBlock(x, y + 1, z);
+        final int groundBlockY = upperBlock instanceof DoorTemplate ? y : y - 1;
+
+        final TileEntity te = world.getTileEntity(x, groundBlockY, z);
+        if (te instanceof Lockable)
+            return te;
+        else
+            return null;
     }
 
     public static class DoorItem extends ItemDoor {

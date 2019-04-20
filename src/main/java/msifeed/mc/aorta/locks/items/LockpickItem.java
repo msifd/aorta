@@ -13,12 +13,13 @@ import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.rolls.FeatureRoll;
 import msifeed.mc.aorta.genesis.AortaCreativeTab;
-import msifeed.mc.aorta.locks.LockTileEntity;
+import msifeed.mc.aorta.locks.LockObject;
 import msifeed.mc.aorta.locks.LockType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 
@@ -33,11 +34,11 @@ public class LockpickItem extends Item {
         setTextureName("aorta:" + ID);
     }
 
-    protected boolean canPick(LockTileEntity lock) {
+    protected boolean canPick(LockObject lock) {
         return lock.getLockType() == LockType.BUILD_IN || lock.getLockType() == LockType.PADLOCK;
     }
 
-    protected boolean rollPick(LockTileEntity lock, ItemStack pick, EntityPlayer player) {
+    protected boolean rollPick(LockObject lock, ItemStack pick, EntityPlayer player) {
         if (lock.getDifficulty() >= 100)
             return false;
 
@@ -58,8 +59,8 @@ public class LockpickItem extends Item {
         return roll.check(lock.getDifficulty());
     }
 
-    protected void consumePick(LockTileEntity lock, ItemStack pick, EntityPlayer player, FeatureRoll roll) {
-        if (lock.getWorldObj().isRemote)
+    protected void consumePick(LockObject lock, ItemStack pick, EntityPlayer player, FeatureRoll roll) {
+        if (lock.getTileEntity().getWorldObj().isRemote)
             return;
         if (roll.result <= lock.getDifficulty() - Aorta.DEFINES.get().locks.pickBreakOffset) {
             pick.stackSize--;
@@ -68,22 +69,23 @@ public class LockpickItem extends Item {
         }
     }
 
-    protected void makeBreakSound(LockTileEntity lock) {
-        lock.getWorldObj().playSoundEffect(lock.xCoord, lock.yCoord, lock.zCoord, "random.break", 0.3f, 3);
+    protected void makeBreakSound(LockObject lock) {
+        final TileEntity te = lock.getTileEntity();
+        te.getWorldObj().playSoundEffect(te.xCoord, te.yCoord, te.zCoord, "random.break", 0.3f, 3);
     }
 
-    protected void doPick(LockTileEntity lock) {
+    protected void doPick(LockObject lock) {
         lock.setLocked(!lock.isLocked());
     }
 
-    protected void successMessage(LockTileEntity lock, EntityPlayer player) {
+    protected void successMessage(LockObject lock, EntityPlayer player) {
         if (lock.isLocked())
             player.addChatMessage(new ChatComponentTranslation("aorta.lock.locked"));
         else
             player.addChatMessage(new ChatComponentTranslation("aorta.lock.unlocked"));
     }
 
-    private boolean tryToPick(LockTileEntity lock, ItemStack pick, EntityPlayer player) {
+    private boolean tryToPick(LockObject lock, ItemStack pick, EntityPlayer player) {
         if (rollPick(lock, pick, player)) {
             doPick(lock);
             return true;
@@ -94,7 +96,7 @@ public class LockpickItem extends Item {
 
     @Override
     public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-        final LockTileEntity lock = LockTileEntity.find(world, x, y, z);
+        final LockObject lock = LockObject.find(world, x, y, z);
         if (lock == null || !lock.hasLock())
             return false;
 

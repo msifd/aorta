@@ -20,6 +20,11 @@ import static msifeed.mc.aorta.genesis.GenesisTrait.*;
 
 public class ItemGenerator implements Generator {
     @Override
+    public void init() {
+
+    }
+
+    @Override
     public void generate(JsonObject json, HashSet<GenesisTrait> traits) {
         final ItemGenesisUnit unit = new ItemGenesisUnit(json, traits);
         final Item item = getItemTemplate(json, unit);

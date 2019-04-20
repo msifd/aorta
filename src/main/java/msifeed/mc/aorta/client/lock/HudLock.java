@@ -1,12 +1,10 @@
 package msifeed.mc.aorta.client.lock;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import msifeed.mc.aorta.genesis.blocks.templates.DoorTemplate;
-import msifeed.mc.aorta.locks.LockTileEntity;
+import msifeed.mc.aorta.locks.LockObject;
 import msifeed.mc.aorta.locks.LockType;
 import msifeed.mc.aorta.locks.items.LockItem;
 import msifeed.mc.aorta.sys.utils.L10n;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -17,12 +15,12 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 import java.util.EnumMap;
 
-public class HudDoorLock extends Gui {
-    public static final HudDoorLock INSTANCE = new HudDoorLock();
+public class HudLock extends Gui {
+    public static final HudLock INSTANCE = new HudLock();
 
     private EnumMap<LockType, ResourceLocation> lockIcons = new EnumMap<>(LockType.class);
 
-    private HudDoorLock() {
+    private HudLock() {
         LockType.locks().forEach(t -> {
             final String s = "textures/items/" + LockItem.getItemId(t) + ".png";
             lockIcons.put(t, new ResourceLocation("aorta", s));
@@ -39,11 +37,7 @@ public class HudDoorLock extends Gui {
         if (mop == null || mop.typeOfHit != MovingObjectPosition.MovingObjectType.BLOCK)
             return;
 
-        final Block block = mc.theWorld.getBlock(mop.blockX, mop.blockY, mop.blockZ);
-        if (!(block instanceof DoorTemplate))
-            return;
-
-        final LockTileEntity lock = LockTileEntity.find(mc.theWorld, mop.blockX, mop.blockY, mop.blockZ);
+        final LockObject lock = LockObject.find(mc.theWorld, mop.blockX, mop.blockY, mop.blockZ);
         if (lock == null || !lock.hasLock())
             return;
 

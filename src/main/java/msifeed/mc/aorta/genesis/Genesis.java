@@ -24,6 +24,8 @@ public class Genesis {
             .build();
 
     public void init() {
+        for (Generator g : generators.values())
+            g.init();
         generate();
     }
 

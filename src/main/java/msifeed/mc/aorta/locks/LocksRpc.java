@@ -21,7 +21,7 @@ public class LocksRpc {
             return;
 
         final World world = player.getEntityWorld();
-        final LockTileEntity lock = LockTileEntity.find(world, x, y, z);
+        final LockObject lock = LockObject.find(world, x, y, z);
         if (lock == null)
             return;
 
@@ -38,7 +38,7 @@ public class LocksRpc {
     public void toggleDigital(MessageContext ctx, int x, int y, int z, String secret) {
         final EntityPlayer player = ctx.getServerHandler().playerEntity;
         final World world = player.getEntityWorld();
-        final LockTileEntity lock = LockTileEntity.find(world, x, y, z);
+        final LockObject lock = LockObject.find(world, x, y, z);
         if (lock == null || lock.getLockType() != LockType.DIGITAL)
             return;
 
@@ -55,7 +55,7 @@ public class LocksRpc {
     public void resetDigital(MessageContext ctx, int x, int y, int z, String secret) {
         final EntityPlayer player = ctx.getServerHandler().playerEntity;
         final World world = player.getEntityWorld();
-        final LockTileEntity lock = LockTileEntity.find(world, x, y, z);
+        final LockObject lock = LockObject.find(world, x, y, z);
         if (lock == null || lock.getLockType() != LockType.DIGITAL)
             return;
 

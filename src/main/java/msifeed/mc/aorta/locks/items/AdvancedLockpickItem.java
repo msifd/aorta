@@ -1,7 +1,7 @@
 package msifeed.mc.aorta.locks.items;
 
 import msifeed.mc.aorta.core.rolls.FeatureRoll;
-import msifeed.mc.aorta.locks.LockTileEntity;
+import msifeed.mc.aorta.locks.LockObject;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
@@ -14,14 +14,14 @@ public class AdvancedLockpickItem extends LockpickItem {
     }
 
     @Override
-    protected boolean rollPick(LockTileEntity lock, ItemStack pick, EntityPlayer player) {
+    protected boolean rollPick(LockObject lock, ItemStack pick, EntityPlayer player) {
         consumePick(lock, pick, player, null);
         return true;
     }
 
     @Override
-    protected void consumePick(LockTileEntity lock, ItemStack pick, EntityPlayer player, FeatureRoll roll) {
-        if (lock.getWorldObj().isRemote)
+    protected void consumePick(LockObject lock, ItemStack pick, EntityPlayer player, FeatureRoll roll) {
+        if (lock.getTileEntity().getWorldObj().isRemote)
             return;
         pick.stackSize--;
         makeBreakSound(lock);

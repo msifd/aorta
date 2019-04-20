@@ -1,11 +1,15 @@
 package msifeed.mc.aorta.genesis.blocks.templates;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.genesis.GenesisUnit;
 import msifeed.mc.aorta.genesis.blocks.BlockTraitCommons;
+import msifeed.mc.aorta.locks.LockObject;
+import msifeed.mc.aorta.locks.LockType;
+import msifeed.mc.aorta.locks.Lockable;
+import msifeed.mc.aorta.locks.LockableBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -18,6 +22,9 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
@@ -29,11 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class ContainerTemplate extends BlockContainer implements BlockTraitCommons.Getter {
-    static {
-        GameRegistry.registerTileEntity(TileEntityContainer.class, "AortaContainer");
-    }
-
+public class ContainerTemplate extends BlockContainer implements BlockTraitCommons.Getter, LockableBlock {
     private BlockTraitCommons traits;
 
     private final int rows;
@@ -118,9 +121,21 @@ public class ContainerTemplate extends BlockContainer implements BlockTraitCommo
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float lx, float ly, float lz) {
-        if (world.isRemote) return true;
+        final LockObject lock = getLock(world, x, y, z);
+        if (lock == null)
+            return false;
 
-        TileEntity te = world.getTileEntity(x, y, z);
+        if (player.isSneaking() && lock.getLockType() == LockType.DIGITAL) {
+            Aorta.GUI_HANDLER.toggleDigitalLock(lock);
+            return true;
+        } else if (lock.isLocked()) {
+            return true;
+        }
+
+        if (world.isRemote)
+            return true;
+
+        final TileEntity te = world.getTileEntity(x, y, z);
         if (te instanceof TileEntityContainer) {
             player.displayGUIChest((TileEntityContainer) te);
             return true;
@@ -166,6 +181,7 @@ public class ContainerTemplate extends BlockContainer implements BlockTraitCommo
         }
     }
 
+    @Override
     public void addCollisionBoxesToList(World world, int x, int y, int z, AxisAlignedBB mask, List list, Entity entity) {
         if (traits.half)
             this.setBlockBoundsBasedOnState(world, x, y, z);
@@ -179,12 +195,12 @@ public class ContainerTemplate extends BlockContainer implements BlockTraitCommo
         return super.getCollisionBoundingBoxFromPool(p_149668_1_, p_149668_2_, p_149668_3_, p_149668_4_);
     }
 
-    public static class TileEntityContainer extends TileEntity implements IInventory {
+    public static class TileEntityContainer extends TileEntity implements IInventory, Lockable {
         private ItemStack[] items;
         private String name;
+        private final LockObject lock = new LockObject(this);
 
         public TileEntityContainer() {
-
         }
 
         public TileEntityContainer(int size, String name) {
@@ -192,14 +208,17 @@ public class ContainerTemplate extends BlockContainer implements BlockTraitCommo
             this.name = name;
         }
 
+        @Override
         public int getSizeInventory() {
             return this.items.length;
         }
 
+        @Override
         public ItemStack getStackInSlot(int slot) {
             return items[slot];
         }
 
+        @Override
         public ItemStack decrStackSize(int slot, int amount) {
             if (items[slot] != null) {
                 ItemStack itemstack;
@@ -220,6 +239,7 @@ public class ContainerTemplate extends BlockContainer implements BlockTraitCommo
             }
         }
 
+        @Override
         public ItemStack getStackInSlotOnClosing(int slot) {
             if (items[slot] != null) {
                 ItemStack itemstack = items[slot];
@@ -230,6 +250,7 @@ public class ContainerTemplate extends BlockContainer implements BlockTraitCommo
             }
         }
 
+        @Override
         public void setInventorySlotContents(int slot, ItemStack stack) {
             items[slot] = stack;
             if (stack != null && stack.stackSize > getInventoryStackLimit()) {
@@ -238,10 +259,12 @@ public class ContainerTemplate extends BlockContainer implements BlockTraitCommo
             markDirty();
         }
 
+        @Override
         public String getInventoryName() {
             return name + ".value";
         }
 
+        @Override
         public boolean hasCustomInventoryName() {
             return false;
         }
@@ -262,6 +285,8 @@ public class ContainerTemplate extends BlockContainer implements BlockTraitCommo
                     items[j] = ItemStack.loadItemStackFromNBT(comp);
                 }
             }
+
+            lock.readFromNBT(nbt);
         }
 
         @Override
@@ -281,8 +306,11 @@ public class ContainerTemplate extends BlockContainer implements BlockTraitCommo
                 }
             }
             nbt.setTag("Items", list);
+
+            lock.writeToNBT(nbt);
         }
 
+        @Override
         public int getInventoryStackLimit() {
             return 64;
         }
@@ -293,14 +321,34 @@ public class ContainerTemplate extends BlockContainer implements BlockTraitCommo
                     && player.getDistanceSq(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 20.0D;
         }
 
+        @Override
         public void openInventory() {
         }
 
+        @Override
         public void closeInventory() {
         }
 
+        @Override
         public boolean isItemValidForSlot(int slot, ItemStack stack) {
             return true;
+        }
+
+        @Override
+        public Packet getDescriptionPacket() {
+            final NBTTagCompound compound = new NBTTagCompound();
+            writeToNBT(compound);
+            return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, compound);
+        }
+
+        @Override
+        public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
+            readFromNBT(packet.func_148857_g());
+        }
+
+        @Override
+        public LockObject getLock() {
+            return lock;
         }
     }
 }
