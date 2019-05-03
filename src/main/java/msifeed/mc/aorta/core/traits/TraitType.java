@@ -9,6 +9,10 @@ public enum TraitType {
         this.prefix = prefix;
     }
 
+    public boolean is(Trait trait) {
+        return trait.name().startsWith(prefix);
+    }
+
     public static TraitType resolveType(String raw) {
         for (TraitType tt : values()) {
             if (raw.startsWith(tt.prefix))

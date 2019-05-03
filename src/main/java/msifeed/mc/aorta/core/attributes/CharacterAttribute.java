@@ -3,6 +3,7 @@ package msifeed.mc.aorta.core.attributes;
 import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.traits.Trait;
+import msifeed.mc.aorta.core.traits.TraitType;
 import msifeed.mc.aorta.sys.attributes.EntityLivingAttribute;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -33,9 +34,10 @@ public class CharacterAttribute extends EntityLivingAttribute<Character> {
     public Character init(Entity entity, World world, Character character) {
         if (character != null)
             return character;
-        if (entity instanceof EntityPlayer)
+        else if (entity instanceof EntityPlayer)
             return new Character();
-        return null;
+        else
+            return null;
     }
 
     @Override
@@ -51,6 +53,11 @@ public class CharacterAttribute extends EntityLivingAttribute<Character> {
             return null;
         final Character character = new Character();
         character.fromNBT(root.getCompoundTag(PROP_NAME));
+
+        // Add default lang trait if has no one
+        if (character.traits.stream().noneMatch(TraitType.LANG::is))
+            character.traits.add(Trait.lang_common);
+
         return character;
     }
 
