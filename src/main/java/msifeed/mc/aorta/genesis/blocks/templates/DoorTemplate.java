@@ -87,7 +87,7 @@ public class DoorTemplate extends BlockDoor implements ITileEntityProvider, Spec
     @Override
     public void register(String id) {
         item.setCreativeTab(AortaCreativeTab.BLOCKS);
-        GameRegistry.registerBlock(this, id);
+        GameRegistry.registerBlock(this, ItemBlockTemplate.class, id);
         GameRegistry.registerItem(item, id + "_item");
     }
 

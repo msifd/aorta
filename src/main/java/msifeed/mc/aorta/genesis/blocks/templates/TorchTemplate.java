@@ -1,7 +1,7 @@
 package msifeed.mc.aorta.genesis.blocks.templates;
 
 import msifeed.mc.aorta.genesis.GenesisTrait;
-import msifeed.mc.aorta.genesis.GenesisUnit;
+import msifeed.mc.aorta.genesis.blocks.BlockGenesisUnit;
 import msifeed.mc.aorta.genesis.blocks.BlockTraitCommons;
 import net.minecraft.block.BlockTorch;
 import net.minecraft.world.World;
@@ -11,7 +11,7 @@ import java.util.Random;
 public class TorchTemplate extends BlockTorch implements BlockTraitCommons.Getter {
     private BlockTraitCommons traits;
 
-    public TorchTemplate(GenesisUnit unit) {
+    public TorchTemplate(BlockGenesisUnit unit) {
         traits = new BlockTraitCommons(unit);
         setBlockName(unit.id);
     }

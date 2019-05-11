@@ -3,7 +3,6 @@ package msifeed.mc.aorta.genesis.blocks;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import msifeed.mc.aorta.genesis.GenesisTrait;
-import msifeed.mc.aorta.genesis.GenesisUnit;
 import msifeed.mc.aorta.genesis.blocks.client.GenesisBlockRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPistonBase;
@@ -24,7 +23,7 @@ public class BlockTraitCommons {
             0, 1, 4, 5, 3, 2
     };
 
-    public GenesisUnit unit;
+    public BlockGenesisUnit unit;
     public BlockTextureLayout textureLayout = null;
     public boolean half = false;
     public boolean not_collidable = false;
@@ -33,7 +32,7 @@ public class BlockTraitCommons {
     public Type type = Type.SIMPLE;
     public Size size = Size.MEDIUM;
 
-    public BlockTraitCommons(GenesisUnit unit) {
+    public BlockTraitCommons(BlockGenesisUnit unit) {
         this.unit = unit;
     }
 

@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import msifeed.mc.aorta.genesis.GenesisTrait;
 import msifeed.mc.aorta.genesis.GenesisUnit;
+import msifeed.mc.aorta.genesis.JsonUtils;
 
 import java.util.HashSet;
 import java.util.List;
@@ -14,6 +15,7 @@ public class BlockGenesisUnit extends GenesisUnit {
     public String textureString = null;
     List<String> textureArray = null;
     int[] textureLayout = null;
+    public String[] description;
 
     BlockGenesisUnit(JsonObject json, HashSet<GenesisTrait> traits) {
         super(json, traits);
@@ -44,10 +46,13 @@ public class BlockGenesisUnit extends GenesisUnit {
                         .toArray();
             }
         }
+
+        JsonUtils.consumeString(json, Props.desc, s -> description = s.split("\n"));
     }
 
     private static class Props {
         static final String texture = "texture";
         static final String textureLayout = "texture_layout";
+        static final String desc = "description";
     }
 }

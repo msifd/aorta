@@ -38,7 +38,7 @@ public class BlockGenerator implements Generator {
             ((SpecialBlockRegisterer) block).register(unit.id);
         else {
             block.setCreativeTab(AortaCreativeTab.BLOCKS);
-            GameRegistry.registerBlock(block, unit.id);
+            GameRegistry.registerBlock(block, ItemBlockTemplate.class, unit.id);
         }
 
         if (unit.hasTrait(add_stairs))
@@ -96,7 +96,7 @@ public class BlockGenerator implements Generator {
         final Block stairs = new StairsTemplate(parent, id, ((BlockTraitCommons.Getter) parent).getCommons());
         fillCommons(unit, stairs);
         stairs.setCreativeTab(AortaCreativeTab.BLOCKS);
-        GameRegistry.registerBlock(stairs, id);
+        GameRegistry.registerBlock(stairs, ItemBlockTemplate.class, id);
     }
 
     private void generateSlabs(BlockGenesisUnit unit, Block parent) {
@@ -112,7 +112,7 @@ public class BlockGenerator implements Generator {
         slabDouble.setCreativeTab(null);
 
         GameRegistry.registerBlock(slabSingle, SlabTemplate.SlabItem.class, singleId, slabSingle, slabDouble);
-        GameRegistry.registerBlock(slabDouble, doubleId);
+        GameRegistry.registerBlock(slabDouble, ItemBlockTemplate.class, doubleId);
     }
 
     private Material getMaterial(BlockGenesisUnit unit) {

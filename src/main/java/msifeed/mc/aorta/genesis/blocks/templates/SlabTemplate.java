@@ -3,9 +3,14 @@ package msifeed.mc.aorta.genesis.blocks.templates;
 import msifeed.mc.aorta.genesis.blocks.BlockTraitCommons;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSlab;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemSlab;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+
+import java.util.Collections;
+import java.util.List;
 
 public class SlabTemplate extends BlockSlab implements BlockTraitCommons.Getter {
     private final BlockTraitCommons traits;
@@ -45,6 +50,16 @@ public class SlabTemplate extends BlockSlab implements BlockTraitCommons.Getter 
                 ((SlabTemplate) block).item = this;
 
             setUnlocalizedName(halfSlab.selfId + "_item");
+        }
+
+        @Override
+        public void addInformation(ItemStack itemStack, EntityPlayer player, List lines, boolean debug) {
+            if (!(field_150939_a instanceof BlockTraitCommons.Getter))
+                return;
+
+            final BlockTraitCommons commons = ((BlockTraitCommons.Getter) field_150939_a).getCommons();
+            if (commons != null && commons.unit.description != null)
+                Collections.addAll(lines, commons.unit.description);
         }
     }
 }

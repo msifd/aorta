@@ -2,7 +2,7 @@ package msifeed.mc.aorta.genesis.blocks.templates;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import msifeed.mc.aorta.genesis.GenesisUnit;
+import msifeed.mc.aorta.genesis.blocks.BlockGenesisUnit;
 import msifeed.mc.aorta.genesis.blocks.BlockTraitCommons;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -20,7 +20,7 @@ import java.util.List;
 public class BlockTemplate extends Block implements BlockTraitCommons.Getter {
     private BlockTraitCommons traits;
 
-    public BlockTemplate(GenesisUnit unit, Material material) {
+    public BlockTemplate(BlockGenesisUnit unit, Material material) {
         super(material);
         traits = new BlockTraitCommons(unit);
         setBlockName(unit.id);

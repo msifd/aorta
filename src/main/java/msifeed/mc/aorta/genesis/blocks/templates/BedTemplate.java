@@ -74,7 +74,7 @@ public class BedTemplate extends BlockBed implements SpecialBlockRegisterer {
     @Override
     public void register(String id) {
         item.setCreativeTab(AortaCreativeTab.BLOCKS);
-        GameRegistry.registerBlock(this, id);
+        GameRegistry.registerBlock(this, ItemBlockTemplate.class, id);
         GameRegistry.registerItem(item, id + "_item");
     }
 

@@ -3,7 +3,7 @@ package msifeed.mc.aorta.genesis.blocks.templates;
 import cpw.mods.fml.common.registry.GameRegistry;
 import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.genesis.AortaCreativeTab;
-import msifeed.mc.aorta.genesis.GenesisUnit;
+import msifeed.mc.aorta.genesis.blocks.BlockGenesisUnit;
 import msifeed.mc.aorta.genesis.blocks.BlockTraitCommons;
 import msifeed.mc.aorta.genesis.blocks.SpecialBlockRegisterer;
 import msifeed.mc.aorta.genesis.blocks.client.GenesisChestRenderer;
@@ -24,7 +24,7 @@ import net.minecraft.world.World;
 public class ChestTemplate extends BlockChest implements SpecialBlockRegisterer, BlockTraitCommons.Getter, LockableBlock {
     private BlockTraitCommons traits;
 
-    public ChestTemplate(GenesisUnit unit) {
+    public ChestTemplate(BlockGenesisUnit unit) {
         super(0);
         traits = new BlockTraitCommons(unit);
         setBlockName(unit.id);
@@ -70,7 +70,7 @@ public class ChestTemplate extends BlockChest implements SpecialBlockRegisterer,
     @Override
     public void register(String id) {
         setCreativeTab(AortaCreativeTab.BLOCKS);
-        GameRegistry.registerBlock(this, id);
+        GameRegistry.registerBlock(this, ItemBlockTemplate.class, id);
     }
 
     @Override

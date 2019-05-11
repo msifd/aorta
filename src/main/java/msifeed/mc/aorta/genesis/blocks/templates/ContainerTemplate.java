@@ -4,7 +4,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import msifeed.mc.aorta.Aorta;
-import msifeed.mc.aorta.genesis.GenesisUnit;
+import msifeed.mc.aorta.genesis.blocks.BlockGenesisUnit;
 import msifeed.mc.aorta.genesis.blocks.BlockTraitCommons;
 import msifeed.mc.aorta.locks.LockObject;
 import msifeed.mc.aorta.locks.LockType;
@@ -41,7 +41,7 @@ public class ContainerTemplate extends BlockContainer implements BlockTraitCommo
 
     private final int rows;
 
-    public ContainerTemplate(GenesisUnit unit, Material material, int rows) {
+    public ContainerTemplate(BlockGenesisUnit unit, Material material, int rows) {
         super(material);
         this.traits = new BlockTraitCommons(unit);
         this.rows = rows;
