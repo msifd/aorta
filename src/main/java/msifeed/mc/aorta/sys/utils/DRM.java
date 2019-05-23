@@ -18,8 +18,11 @@ import java.util.stream.Stream;
 public enum  DRM {
     INSTANCE;
 
-    private static final Set<InetAddress> SERVERS = Stream.of("137.74.214.123", "79.137.9.233")
-            .map(s -> InetAddresses.forString(s))
+    private static final Set<InetAddress> SERVERS = Stream.of(
+            "145.239.149.64",
+            "51.77.71.251",
+            "51.89.44.179")
+            .map(InetAddresses::forString)
             .collect(Collectors.toSet());
 
     public static void apply() {
