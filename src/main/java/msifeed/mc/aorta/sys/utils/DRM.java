@@ -1,10 +1,13 @@
 package msifeed.mc.aorta.sys.utils;
 
 import com.google.common.net.InetAddresses;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import net.minecraftforge.common.MinecraftForge;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.awt.*;
 import java.net.InetAddress;
@@ -18,6 +21,7 @@ import java.util.stream.Stream;
 public enum  DRM {
     INSTANCE;
 
+    private static final Logger LOG = LogManager.getLogger("DRM");
     private static final Set<InetAddress> SERVERS = Stream.of(
             "145.239.149.64",
             "51.77.71.251",
@@ -26,17 +30,21 @@ public enum  DRM {
             .collect(Collectors.toSet());
 
     public static void apply() {
-        MinecraftForge.EVENT_BUS.register(INSTANCE);
+        FMLCommonHandler.instance().bus().register(INSTANCE);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onClientConnectedToServerEvent(ClientConnectedToServerEvent event) {
         final SocketAddress socket = event.manager.getSocketAddress();
-        if (!(socket instanceof InetSocketAddress)) return;
+        if (!(socket instanceof InetSocketAddress))
+            return;
 
         final InetAddress address = ((InetSocketAddress) socket).getAddress();
-        if (address.isLoopbackAddress() || SERVERS.contains(address)) return;
+        LOG.info("Connecting to {}", address.getHostName());
+        if (address.isLoopbackAddress() || SERVERS.contains(address))
+            return;
 
+        LOG.info("Connection attempt rejected");
         if (Desktop.isDesktopSupported()) {
             try {
                 Desktop.getDesktop().browse(new URI("https://www.youtube.com/watch?v=cQ_b4_lw0Gg"));
