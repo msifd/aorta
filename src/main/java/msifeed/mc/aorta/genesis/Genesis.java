@@ -63,7 +63,7 @@ public class Genesis {
             if (!parsed.isJsonArray())
                 return;
             for (JsonElement je : parsed.getAsJsonArray())
-                if (!parsed.isJsonObject())
+                if (je.isJsonObject())
                     loadObject(je.getAsJsonObject());
         } catch (IOException e) {
             log.error("IO error '{}' at file {}", e.getMessage(), path);
