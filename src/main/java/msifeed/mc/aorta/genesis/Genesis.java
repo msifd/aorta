@@ -1,13 +1,13 @@
 package msifeed.mc.aorta.genesis;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import msifeed.mc.aorta.genesis.blocks.BlockGenerator;
 import msifeed.mc.aorta.genesis.items.ItemGenerator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +22,9 @@ public class Genesis {
             .put(GenesisTrait.block, new BlockGenerator())
             .put(GenesisTrait.item, new ItemGenerator())
             .build();
+
+    private static Logger log = LogManager.getLogger("Aorta.Gen");
+    private static boolean abortLoading = false;
 
     public void init() {
         for (Generator g : generators.values())
@@ -40,38 +43,48 @@ public class Genesis {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        if (abortLoading) {
+            log.warn("Abort due to genesis errors!");
+            FMLCommonHandler.instance().handleExit(1);
+        }
     }
 
     private void loadFolder(File genesisDir) throws IOException {
         Files.walk(genesisDir.toPath())
                 .filter(Files::isRegularFile)
                 .filter(path -> path.toString().endsWith(".json"))
-                .map(this::parseJson)
-                .filter(JsonElement::isJsonArray)
-                .forEach(el -> el.getAsJsonArray().forEach(this::generateFromFile));
+                .forEach(this::loadFile);
     }
 
-    private JsonElement parseJson(Path path) {
+    private void loadFile(Path path) {
         try {
-            return jsonParser.parse(Files.newBufferedReader(path));
+            final JsonElement parsed = jsonParser.parse(Files.newBufferedReader(path));
+            if (!parsed.isJsonArray())
+                return;
+            for (JsonElement je : parsed.getAsJsonArray())
+                if (!parsed.isJsonObject())
+                    loadObject(je.getAsJsonObject());
         } catch (IOException e) {
-            e.printStackTrace();
-            return JsonNull.INSTANCE;
+            log.error("IO error '{}' at file {}", e.getMessage(), path);
+            abortLoading = true;
+        } catch (JsonParseException e) {
+            log.error("Parse error '{}' at file {}", e.getMessage(), path);
+            abortLoading = true;
+        } catch (Exception e) {
+            log.error("Exception '{}' at file {}", e, path);
+            abortLoading = true;
         }
     }
 
-    private void generateFromFile(JsonElement jsonElement) {
-        if (jsonElement.isJsonObject()) {
-            final JsonObject json = jsonElement.getAsJsonObject();
-            final HashSet<GenesisTrait> traits = parseTraits(json);
-
-            final Optional<GenesisTrait> generatorTrait = traits.stream()
-                    .filter(generators::containsKey)
-                    .findFirst();
-            generatorTrait.ifPresent(genesisTrait -> {
-                generators.get(genesisTrait).generate(json, traits);
-            });
-        }
+    private void loadObject(JsonObject json) {
+        final HashSet<GenesisTrait> traits = parseTraits(json);
+        final Optional<GenesisTrait> generatorTrait = traits.stream()
+                .filter(generators::containsKey)
+                .findFirst();
+        generatorTrait.ifPresent(genesisTrait -> {
+            generators.get(genesisTrait).generate(json, traits);
+        });
     }
 
     private HashSet<GenesisTrait> parseTraits(JsonObject json) {
