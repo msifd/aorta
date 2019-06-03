@@ -83,7 +83,7 @@ public class DBHandler {
                 Class.forName("com.mysql.cj.jdbc.Driver");
 
                 final ConfigSection.DB config = this.config.get().database;
-                final String url = String.format("jdbc:mysql://%s:%d/%s?characterEncoding=UTF-8&serverTimezone=Europe/Moscow", config.host, config.port, config.database);
+                final String url = String.format("jdbc:mysql://%s:%d/%s?characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Europe/Moscow", config.host, config.port, config.database);
                 connection = DriverManager.getConnection(url, config.username, config.password);
                 Logs.LOGGER.info("Successfully connected to database.");
 
