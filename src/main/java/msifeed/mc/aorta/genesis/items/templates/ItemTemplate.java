@@ -50,11 +50,20 @@ public class ItemTemplate extends Item implements IItemTemplate {
         return unit.hasTrait(GenesisTrait.action_bow) ? EnumAction.bow : EnumAction.none;
     }
 
-    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
+    @Override
+    public int getMaxItemUseDuration(ItemStack itemStack) {
         if (unit.maxUsages > 0)
-            player.setItemInUse(itemStack, 32);
+            return 32;
         else if (unit.hasTrait(GenesisTrait.action_bow))
-            player.setItemInUse(itemStack, 72000);
+            return 72000;
+        else
+            return 0;
+    }
+
+    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
+        final int duration = getMaxItemUseDuration(itemStack);
+        if (duration > 0)
+            player.setItemInUse(itemStack, duration);
         return itemStack;
     }
 
