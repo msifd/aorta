@@ -15,6 +15,11 @@ public class ItemBlockTemplate extends ItemBlock  {
     }
 
     @Override
+    public String getItemStackDisplayName(ItemStack itemStack) {
+        return BlockTraitCommons.getItemStackDisplayName(field_150939_a, itemStack);
+    }
+
+    @Override
     public void addInformation(ItemStack itemStack, EntityPlayer player, List lines, boolean debug) {
         if (!(field_150939_a instanceof BlockTraitCommons.Getter))
             return;

@@ -119,6 +119,11 @@ public class DoorTemplate extends BlockDoor implements ITileEntityProvider, Spec
             setTextureName(unit.textureString + "_item");
         }
 
+        @Override
+        public String getItemStackDisplayName(ItemStack itemStack) {
+            return BlockTraitCommons.getItemStackDisplayName(block, itemStack);
+        }
+
         public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
             if (side != 1) {
                 return false;

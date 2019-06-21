@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import msifeed.mc.aorta.genesis.AortaCreativeTab;
 import msifeed.mc.aorta.genesis.blocks.BlockGenesisUnit;
+import msifeed.mc.aorta.genesis.blocks.BlockTraitCommons;
 import msifeed.mc.aorta.genesis.blocks.SpecialBlockRegisterer;
 import net.minecraft.block.BlockBed;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -86,6 +87,11 @@ public class BedTemplate extends BlockBed implements SpecialBlockRegisterer {
 
             setUnlocalizedName(unit.id);
             setTextureName(unit.textureString);
+        }
+
+        @Override
+        public String getItemStackDisplayName(ItemStack itemStack) {
+            return BlockTraitCommons.getItemStackDisplayName(block, itemStack);
         }
 
         public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int p_77648_7_, float p_77648_8_, float p_77648_9_, float p_77648_10_) {

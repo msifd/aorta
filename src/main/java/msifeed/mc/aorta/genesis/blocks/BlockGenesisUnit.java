@@ -15,6 +15,7 @@ public class BlockGenesisUnit extends GenesisUnit {
     public String textureString = null;
     List<String> textureArray = null;
     int[] textureLayout = null;
+    public String title = null;
     public String[] description;
 
     BlockGenesisUnit(JsonObject json, HashSet<GenesisTrait> traits) {
@@ -47,12 +48,14 @@ public class BlockGenesisUnit extends GenesisUnit {
             }
         }
 
+        JsonUtils.consumeString(json, Props.title, s -> title = s);
         JsonUtils.consumeString(json, Props.desc, s -> description = s.split("\n"));
     }
 
     private static class Props {
         static final String texture = "texture";
         static final String textureLayout = "texture_layout";
+        static final String title = "title";
         static final String desc = "description";
     }
 }

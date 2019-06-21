@@ -8,8 +8,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Facing;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -164,6 +166,16 @@ public class BlockTraitCommons {
             case ROTATABLE:
                 return getRotatedOrt(meta);
         }
+    }
+
+    public static String getItemStackDisplayName(Block block, ItemStack itemStack) {
+        if (!(block instanceof BlockTraitCommons.Getter))
+            return itemStack.getItem().getItemStackDisplayName(itemStack);
+
+        final BlockTraitCommons commons = ((BlockTraitCommons.Getter) block).getCommons();
+        return commons.unit.title != null
+                ? commons.unit.title
+                : StatCollector.translateToLocal(itemStack.getItem().getUnlocalizedName(itemStack) + ".name");
     }
 
     public static int getRotatedOrt(int meta) {

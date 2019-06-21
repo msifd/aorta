@@ -1,6 +1,7 @@
 [
   {
     "id": "test_barrel_apples",
+    "title": "Apples barrel",
     "description": "A barrel full of §4apples",
     "texture": [
       "aorta:barrel_bottom",
