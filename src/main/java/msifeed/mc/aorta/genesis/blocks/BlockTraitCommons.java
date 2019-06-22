@@ -170,12 +170,16 @@ public class BlockTraitCommons {
 
     public static String getItemStackDisplayName(Block block, ItemStack itemStack) {
         if (!(block instanceof BlockTraitCommons.Getter))
-            return itemStack.getItem().getItemStackDisplayName(itemStack);
+            return defaultItemStackDisplayName(itemStack);
 
         final BlockTraitCommons commons = ((BlockTraitCommons.Getter) block).getCommons();
         return commons.unit.title != null
                 ? commons.unit.title
-                : StatCollector.translateToLocal(itemStack.getItem().getUnlocalizedName(itemStack) + ".name");
+                : defaultItemStackDisplayName(itemStack);
+    }
+
+    public static String defaultItemStackDisplayName(ItemStack itemStack) {
+        return StatCollector.translateToLocal(itemStack.getItem().getUnlocalizedName(itemStack) + ".name");
     }
 
     public static int getRotatedOrt(int meta) {

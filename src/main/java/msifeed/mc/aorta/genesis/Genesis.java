@@ -1,7 +1,10 @@
 package msifeed.mc.aorta.genesis;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import msifeed.mc.aorta.genesis.blocks.BlockGenerator;

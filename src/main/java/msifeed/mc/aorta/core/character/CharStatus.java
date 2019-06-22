@@ -15,6 +15,7 @@ public class CharStatus {
     public byte sanity = 100;
     public byte psionics = 0;
     public Modifiers modifiers = new Modifiers();
+    public Illness illness = new Illness();
 
     public CharStatus() {
     }
@@ -27,6 +28,7 @@ public class CharStatus {
         sanity = s.sanity;
         psionics = s.psionics;
         modifiers = new Modifiers(s.modifiers);
+        illness.unpack(s.illness.pack());
     }
 
     public int countVitality(int vitalityThreshold) {
@@ -87,6 +89,7 @@ public class CharStatus {
         c.setByte(Tags.psionics, psionics);
         c.setInteger(Tags.modifiersRoll, modifiers.rollMod);
         c.setTag(Tags.modifiers, mc);
+        c.setInteger(Tags.illness, illness.pack());
 
         return c;
     }
@@ -112,6 +115,7 @@ public class CharStatus {
         shield.fromNBT(compound.getCompoundTag(Tags.shield));
         sanity = compound.getByte(Tags.sanity);
         psionics = compound.getByte(Tags.psionics);
+        illness.unpack(compound.getInteger(Tags.illness));
     }
 
     public void cleanup(Character c) {
@@ -138,5 +142,6 @@ public class CharStatus {
         static final String psionics = "psionics";
         static final String modifiers = "mods";
         static final String modifiersRoll = "roll";
+        static final String illness = "illness";
     }
 }

@@ -91,6 +91,14 @@
     "spoiler_open": {
       "pos": [116,32],
       "9slice": [[2,2], [6,5], [2,3]]
+    },
+    "checkbox_off": {
+      "pos": [32,48],
+      "size": [8,7]
+    },
+    "checkbox_on": {
+      "pos": [32,55],
+      "size": [8,7]
     }
   },
   "colors": {

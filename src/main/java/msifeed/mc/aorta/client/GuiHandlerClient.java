@@ -13,6 +13,8 @@ import msifeed.mc.aorta.client.hud.StatusHudReplacer;
 import msifeed.mc.aorta.client.lock.HudLock;
 import msifeed.mc.aorta.client.lock.ScreenDigitalLock;
 import msifeed.mc.aorta.client.lock.ScreenSkeletalKey;
+import msifeed.mc.aorta.core.attributes.CharacterAttribute;
+import msifeed.mc.aorta.core.traits.Trait;
 import msifeed.mc.aorta.locks.LockObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -47,14 +49,18 @@ public class GuiHandlerClient extends GuiHandler {
 
     @Override
     public void toggleStatusEditor(EntityLivingBase entity) {
-        if (entity.worldObj.isRemote)
-            toggleGui(ScreenStatus.class, () -> new ScreenStatus(entity, true));
+        if (entity.worldObj.isRemote) {
+            final boolean isGm = CharacterAttribute.has(Minecraft.getMinecraft().thePlayer, Trait.gm);
+            toggleGui(ScreenStatus.class, () -> new ScreenStatus(entity, true, isGm));
+        }
     }
 
     @Override
     public void toggleStatus(EntityLivingBase entity) {
-        if (entity.worldObj.isRemote)
-            toggleGui(ScreenStatus.class, () -> new ScreenStatus(entity, false));
+        if (entity.worldObj.isRemote) {
+            final boolean isGm = CharacterAttribute.has(Minecraft.getMinecraft().thePlayer, Trait.gm);
+            toggleGui(ScreenStatus.class, () -> new ScreenStatus(entity, false, isGm));
+        }
     }
 
     @Override
