@@ -7,6 +7,7 @@ import msifeed.mc.aorta.client.Keybinds;
 import msifeed.mc.aorta.client.ResponsiveEntityStatus;
 import msifeed.mc.aorta.genesis.AortaCreativeTab;
 import msifeed.mc.aorta.sys.utils.DRM;
+import msifeed.mc.aorta.tweaks.GameWindowOptions;
 import msifeed.mc.mellow.Mellow;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.util.ResourceLocation;
@@ -19,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 public class AortaClient extends Aorta {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
+        GameWindowOptions.preInit();
         super.preInit(event);
         initMellow();
     }
