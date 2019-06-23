@@ -38,6 +38,8 @@ public class Composer {
 
     private static String getTextFromTranslation(ChatComponentTranslation chatComponent) {
         final Object[] args = chatComponent.getFormatArgs();
+        if (args.length == 0)
+            return "";
         final Object formatObj = args[args.length - 1]; // pick last "text" arg
         if (formatObj instanceof IChatComponent)
             return ((IChatComponent) formatObj).getUnformattedText();
