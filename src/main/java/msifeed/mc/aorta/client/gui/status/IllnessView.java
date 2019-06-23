@@ -8,12 +8,12 @@ import msifeed.mc.mellow.widgets.basic.Label;
 import msifeed.mc.mellow.widgets.button.Checkbox;
 import msifeed.mc.mellow.widgets.input.TextInput;
 
-class OtherView extends Widget {
+class IllnessView extends Widget {
     private final CharStatus status;
     private final boolean editable;
     private final boolean gmEditor;
 
-    OtherView(CharStatus status, boolean editable, boolean gmEditor) {
+    IllnessView(CharStatus status, boolean editable, boolean gmEditor) {
         this.status = status;
         this.editable = editable;
         this.gmEditor = gmEditor;

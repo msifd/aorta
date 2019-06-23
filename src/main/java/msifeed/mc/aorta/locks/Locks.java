@@ -8,6 +8,7 @@ import msifeed.mc.aorta.locks.items.*;
 import msifeed.mc.aorta.sys.rpc.Rpc;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.oredict.RecipeSorter;
 
 public enum Locks {
     INSTANCE;
@@ -25,7 +26,9 @@ public enum Locks {
         GameRegistry.registerItem(new AdvancedAccessTunerItem(), AdvancedAccessTunerItem.ID);
         GameRegistry.registerItem(new SkeletalKeyItem(), SkeletalKeyItem.ID);
         GameRegistry.registerTileEntity(LockTileEntity.class, LockTileEntity.ID);
+
         GameRegistry.addRecipe(new CopyKeyRecipe());
+        RecipeSorter.register("aorta:copy_key", CopyKeyRecipe.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
 
         Rpc.register(rpcHandler);
         MinecraftForge.EVENT_BUS.register(INSTANCE);

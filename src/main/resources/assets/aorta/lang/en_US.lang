@@ -49,7 +49,6 @@ aorta.gui.status.body=Body
 aorta.gui.status.injured=injured
 aorta.gui.status.name=Name
 aorta.gui.status.fatal=fatal
-aorta.gui.status.other=Other
 aorta.gui.status.illness_win=Illness win
 aorta.gui.status.illness_max=Illness max
 aorta.gui.status.illness_max_visible=Illness max visible

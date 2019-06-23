@@ -48,7 +48,6 @@ aorta.gui.status.body=Тело
 aorta.gui.status.injured=травма
 aorta.gui.status.name=Имя
 aorta.gui.status.fatal=фатально
-aorta.gui.status.other=Прочее
 aorta.gui.status.illness_win=Болезнь победила!
 aorta.gui.status.illness_max=Предел болезни
 aorta.gui.status.illness_max_visible=Показывать предел болезни
