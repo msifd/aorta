@@ -22,7 +22,7 @@ public class DBHandler {
     private JsonConfig<ConfigSection> config = ConfigManager.getConfig(ConfigMode.SERVER, TypeToken.get(ConfigSection.class), "database.json");
 
     private final ExecutorService threadPool = Executors.newCachedThreadPool();
-    private HikariDataSource dataSource = new HikariDataSource();
+    private HikariDataSource dataSource;
 
     @SubscribeEvent
     public void onReloadDone(ConfigEvent.Updated event) {
@@ -36,7 +36,7 @@ public class DBHandler {
             config.setJdbcUrl(String.format("jdbc:mysql://%s:%d/%s", dbConfig.host, dbConfig.port, dbConfig.database));
             config.setUsername(dbConfig.username);
             config.setPassword(dbConfig.password);
-            config.setDriverClassName("com.mysql.cj.jdbc.Driver");
+            config.setDriverClassName("com.mysql.jdbc.Driver");
             config.addDataSourceProperty("serverTimezone", "Europe/Moscow");
 
             dataSource = new HikariDataSource(config);

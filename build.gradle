@@ -16,7 +16,7 @@ apply plugin: 'idea'
 apply plugin: 'net.nemerosa.versioning'
 
 
-version = "0.27.6-$versioning.info.build"
+version = "0.27.7-$versioning.info.build"
 group = "msifeed.mc.aorta"
 archivesBaseName = "aorta"
 
@@ -26,12 +26,27 @@ minecraft {
 
     replaceIn "Aorta.java"
     replace "@VERSION@", project.version
+
+    srgExtra "PK: com/zaxxer/HikariCP com/zaxxer/HikariCP"
+}
+
+configurations {
+    shade
+    compile.extendsFrom shade
 }
 
 dependencies {
-    runtime 'mysql:mysql-connector-java:8.0.15'
-    compile 'com.zaxxer:HikariCP:2.7.8'
+    runtime 'mysql:mysql-connector-java:5.1.14'
+    shade 'com.zaxxer:HikariCP:3.3.1'
     testCompile 'junit:junit:4.12'
+}
+
+jar {
+    configurations.shade.each { dep ->
+        from(project.zipTree(dep)){
+            exclude 'META-INF', 'META-INF/**'
+        }
+    }
 }
 
 processResources {
