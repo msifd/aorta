@@ -19,11 +19,13 @@ public class ScreenDigitalLock extends MellowGuiScreen {
     private final LockObject lock;
 
     private String input = "";
-    private boolean resetMode = false;
+    private Mode mode = Mode.NORMAL;
 
     private HashMap<Character, SquareButton> keyButtons = new HashMap<>();
     private SquareButton keyPressedButton = null;
     private long keyPressedTime = 0;
+
+    private final SquareButton resetBtn;
 
     public ScreenDigitalLock(LockObject lock) {
         this.lock = lock;
@@ -46,9 +48,12 @@ public class ScreenDigitalLock extends MellowGuiScreen {
 
         final Widget bottomLine = new Widget();
         bottomLine.setLayout(ListLayout.HORIZONTAL);
-        bottomLine.addChild(makeKeyResponsiveButton('C', this::pressClear));
+        bottomLine.addChild(makeKeyResponsiveButton('C', this::clear));
         bottomLine.addChild(makeKeyResponsiveButton('0', () -> selectDigit('0')));
-        bottomLine.addChild(new SquareButton('R', this::pressReset));
+
+        resetBtn = new SquareButton('R', this::pressReset);
+        updateResetBtn();
+        bottomLine.addChild(resetBtn);
 
         content.addChild(bottomLine);
     }
@@ -97,46 +102,63 @@ public class ScreenDigitalLock extends MellowGuiScreen {
 
     private void selectDigit(char digit) {
         input += digit;
-        if (!resetMode)
-            unlock();
-    }
-
-    private void pressClear() {
-        input = "";
+        switch (mode) {
+            case NORMAL:
+                unlock();
+                break;
+            case RESET_CHECK:
+                if (lock.canUnlockWith(input)) {
+                    input = "";
+                    mode = Mode.RESET_INPUT;
+                    updateResetBtn();
+                }
+                break;
+        }
     }
 
     private void pressReset() {
         if (lock.isLocked())
             return;
-        if (resetMode) {
-            if (!input.isEmpty()) {
+
+        switch (mode) {
+            case NORMAL:
+                input = "";
+                mode = Mode.RESET_CHECK;
+                updateResetBtn();
+                break;
+            case RESET_INPUT:
+                final TileEntity te = lock.getTileEntity();
+                Rpc.sendToServer(LocksRpc.resetDigital, te.xCoord, te.yCoord, te.zCoord, input);
                 lock.setSecret(input); // Update client side early
-                sendActionRequest();
-                resetMode = false;
-            }
-        } else {
-            resetMode = true;
+                clear();
+                break;
         }
+    }
+
+    private void clear() {
         input = "";
+        mode = Mode.NORMAL;
+        updateResetBtn();
     }
 
     private void unlock() {
         if (lock.canUnlockWith(input)) {
-            sendActionRequest();
+            final TileEntity te = lock.getTileEntity();
+            Rpc.sendToServer(LocksRpc.toggleDigital, te.xCoord, te.yCoord, te.zCoord, input);
             closeScreen();
         }
     }
 
-    private void sendActionRequest() {
-        final TileEntity te = lock.getTileEntity();
-        if (resetMode)
-            Rpc.sendToServer(LocksRpc.resetDigital, te.xCoord, te.yCoord, te.zCoord, input);
-        else
-            Rpc.sendToServer(LocksRpc.toggleDigital, te.xCoord, te.yCoord, te.zCoord, input);
+    private void updateResetBtn() {
+        resetBtn.setDisabled(lock.isLocked() || mode == Mode.RESET_CHECK);
     }
 
     private void closeScreen() {
         Minecraft.getMinecraft().displayGuiScreen(null);
+    }
+
+    private enum Mode {
+        NORMAL, RESET_CHECK, RESET_INPUT
     }
 
     private static class SquareButton extends ButtonLabel {

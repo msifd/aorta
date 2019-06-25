@@ -16,7 +16,7 @@ apply plugin: 'idea'
 apply plugin: 'net.nemerosa.versioning'
 
 
-version = "0.27.7-$versioning.info.build"
+version = "0.27.8-$versioning.info.build"
 group = "msifeed.mc.aorta"
 archivesBaseName = "aorta"
 
