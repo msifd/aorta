@@ -37,6 +37,8 @@ public class DBHandler {
             config.setUsername(dbConfig.username);
             config.setPassword(dbConfig.password);
             config.setDriverClassName("com.mysql.jdbc.Driver");
+            config.addDataSourceProperty("useUnicode","true");
+            config.addDataSourceProperty("characterEncoding","utf8");
             config.addDataSourceProperty("serverTimezone", "Europe/Moscow");
 
             dataSource = new HikariDataSource(config);
