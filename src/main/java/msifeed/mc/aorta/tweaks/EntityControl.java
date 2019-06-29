@@ -28,14 +28,14 @@ public enum EntityControl {
 
     private static Logger logger = LogManager.getLogger("Aorta.EntityControl");
     private final TypeToken<ArrayList<ConfigContent>> configContentType = new TypeToken<ArrayList<ConfigContent>>() {};
-    private JsonConfig<ArrayList<ConfigContent>> config = ConfigManager.getConfig(ConfigMode.CLIENT, configContentType, "entity_control.json");
+    private JsonConfig<ArrayList<ConfigContent>> config = ConfigManager.getConfig(ConfigMode.SERVER, configContentType, "entity_control.json");
 
     public static void init() {
         MinecraftForge.EVENT_BUS.register(INSTANCE);
     }
 
     @SubscribeEvent
-    public void onConfigUpdated(ConfigEvent.Updated event) {
+    public void onConfigUpdated(ConfigEvent.AfterUpdate event) {
         compileConfig();
 
         final MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();

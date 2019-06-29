@@ -3,15 +3,20 @@ package msifeed.mc.aorta.sys.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import msifeed.mc.aorta.sys.config.adapters.ZoneIdAdapter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.lang.reflect.Constructor;
+import java.time.ZoneId;
 
 public class JsonConfig<T> {
     private static final Logger LOGGER = LogManager.getLogger("Aorta.Config");
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final Gson GSON = new GsonBuilder()
+            .setPrettyPrinting()
+            .registerTypeAdapter(ZoneId.class, new ZoneIdAdapter())
+            .create();
     private ConfigMode mode;
     private TypeToken<T> type;
     private String filename;
@@ -32,15 +37,19 @@ public class JsonConfig<T> {
         value = v;
     }
 
-    public String getFilename() {
+    boolean isSyncable() {
+        return mode.sync;
+    }
+
+    String getFilename() {
         return filename;
     }
 
-    public String toJson() {
+    String toJson() {
         return GSON.toJson(value);
     }
 
-    public void fromJson(String json) {
+    void fromJson(String json) {
         try {
             value = GSON.fromJson(json, type.getType());
         } catch (Exception e) {
@@ -49,46 +58,43 @@ public class JsonConfig<T> {
         }
     }
 
-    public void reload() {
+    void reload() {
         if (mode.doFileIO()) {
-            read(getConfigFile());
+            read();
             if (value == null)
                 value = getDefaultConfig();
-            write(getConfigFile());
+            write();
         }
     }
 
-    public void save() {
+    void save() {
         if (mode.doFileIO()) {
             if (value == null)
                 value = getDefaultConfig();
-            write(getConfigFile());
+            write();
         }
     }
 
-    private void read(File configFile) {
-        if (!configFile.exists())
+    private void read() {
+        final File filepath = ConfigManager.getConfigFile(filename);
+        if (!filepath.exists())
             return;
 
         try {
-            value = GSON.fromJson(new FileReader(configFile), type.getType());
+            value = GSON.fromJson(new FileReader(filepath), type.getType());
         } catch (IOException e) {
             LOGGER.error("Error while reading '{}' config: {}", filename, e.getMessage());
             throw new RuntimeException("Failed to read config file: '" + filename  + "'");
         }
     }
 
-    private void write(File configFile) {
-        try (Writer writer = new FileWriter(configFile)) {
+    private void write() {
+        try (Writer writer = new FileWriter(ConfigManager.getConfigFile(filename))) {
             GSON.toJson(value, writer);
         } catch (IOException e) {
             LOGGER.error("Error while writing '{}' config: {}", filename, e.getMessage());
             throw new RuntimeException("Failed to write config file: '" + filename  + "'");
         }
-    }
-
-    private File getConfigFile() {
-        return new File(ConfigManager.config_dir, filename);
     }
 
     private T getDefaultConfig() {

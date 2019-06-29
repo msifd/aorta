@@ -13,6 +13,12 @@ public class WorldEnvMapData extends WorldSavedData {
         super(DATA_NAME);
     }
 
+    public WorldEnvMapData(WorldEnv env) {
+        super(DATA_NAME);
+        this.rainAccumulated = env.rain.accumulated;
+        this.markDirty();
+    }
+
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         rainAccumulated = compound.getShort("rainAcc");

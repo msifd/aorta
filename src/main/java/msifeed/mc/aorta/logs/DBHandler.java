@@ -13,8 +13,12 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChunkCoordinates;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -25,7 +29,7 @@ public class DBHandler {
     private HikariDataSource dataSource;
 
     @SubscribeEvent
-    public void onReloadDone(ConfigEvent.Updated event) {
+    public void onReloadDone(ConfigEvent.AfterUpdate event) {
         if (FMLCommonHandler.instance().getSide().isClient())
             return;
 
@@ -39,12 +43,11 @@ public class DBHandler {
             config.setDriverClassName("com.mysql.jdbc.Driver");
             config.addDataSourceProperty("useUnicode","true");
             config.addDataSourceProperty("characterEncoding","utf8");
-            config.addDataSourceProperty("serverTimezone", "Europe/Moscow");
 
             dataSource = new HikariDataSource(config);
             dataSource.validate();
         } catch (Exception e) {
-            Logs.LOGGER.throwing(e);
+            Logs.LOGGER.error("Error during connection to DB", e);
         }
     }
 
@@ -53,21 +56,27 @@ public class DBHandler {
     }
 
     private void asyncLog(ICommandSender sender, String cmd, String text) {
-        try {
-            final String chatTable = config.get().chat_table;
-            final String query = "INSERT INTO `" + chatTable +
+        try (Connection conn = dataSource.getConnection()) {
+            if (conn == null) {
+                Logs.LOGGER.error("Can't get connection to DB!");
+                return;
+            }
+
+            final ConfigSection cfg = config.get();
+            final String query = "INSERT INTO `" + cfg.chat_table +
                     "` (`chara`,`uuid`,`time`,`world`,`X`,`Y`,`Z`,`command`,`text`) " +
                     "VALUES (?,?,?,?,?,?,?,?,?);";
 
             final String uuid = (sender instanceof EntityPlayerMP)
                     ? ((EntityPlayerMP) sender).getUniqueID().toString()
                     : "";
+            final long timeSecs = LocalDateTime.now(cfg.timezone).toEpochSecond(ZoneOffset.UTC);
             final ChunkCoordinates coord = sender.getPlayerCoordinates();
 
-            final PreparedStatement s = dataSource.getConnection().prepareStatement(query);
+            final PreparedStatement s = conn.prepareStatement(query);
             s.setString(1, sender.getCommandSenderName());
             s.setString(2, uuid);
-            s.setLong(3, System.currentTimeMillis());
+            s.setLong(3, timeSecs * 1000);
             s.setString(4, sender.getEntityWorld().getWorldInfo().getWorldName());
             s.setInt(5, coord.posX);
             s.setInt(6, coord.posY);
@@ -76,13 +85,14 @@ public class DBHandler {
             s.setString(9, text);
             s.executeUpdate();
         } catch (SQLException e) {
-            Logs.LOGGER.error("Failed to send log to the database! {}", e);
+            Logs.LOGGER.error("Failed to send log to the database!", e);
         }
     }
 
     public static class ConfigSection {
         DB database = new DB();
         String chat_table = "chat_logs";
+        ZoneId timezone = ZoneId.of("UTC+3");
 
         static class DB {
             String host = "localhost";

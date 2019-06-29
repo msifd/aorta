@@ -1,13 +1,17 @@
 package msifeed.mc.aorta.environment;
 
 import com.google.gson.reflect.TypeToken;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import msifeed.mc.aorta.sys.config.ConfigEvent;
 import msifeed.mc.aorta.sys.config.ConfigManager;
 import msifeed.mc.aorta.sys.config.ConfigMode;
 import msifeed.mc.aorta.sys.config.JsonConfig;
 import net.minecraft.command.CommandHandler;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
 
@@ -44,9 +48,37 @@ public enum EnvironmentManager {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    private void onWorldLoad(WorldEvent.Load event) {
-        final WorldEnvMapData data = (WorldEnvMapData) event.world.mapStorage.loadData(WorldEnvMapData.class, WorldEnvMapData.DATA_NAME);
-        final WorldEnv env = getEnv(event.world.provider.dimensionId);
+    public void onWorldLoad(WorldEvent.Load event) {
+        loadEnvData(event.world);
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public void onWorldSave(WorldEvent.Save event) {
+        saveEnvData(event.world);
+    }
+
+    @SubscribeEvent
+    public void beforeConfigUpdated(ConfigEvent.BeforeUpdate event) {
+        final WorldServer[] worldServers = FMLCommonHandler.instance().getMinecraftServerInstance().worldServers;
+        for (WorldServer ws : worldServers)
+            saveEnvData(ws.provider.worldObj);
+    }
+
+    @SubscribeEvent
+    public void afterConfigUpdated(ConfigEvent.AfterUpdate event) {
+        final WorldServer[] worldServers = FMLCommonHandler.instance().getMinecraftServerInstance().worldServers;
+        for (WorldServer ws : worldServers)
+            loadEnvData(ws.provider.worldObj);
+    }
+
+    private void saveEnvData(World world) {
+        final WorldEnv env = getEnv(world.provider.dimensionId);
+        world.perWorldStorage.setData(WorldEnvMapData.DATA_NAME, new WorldEnvMapData(env));
+    }
+
+    private void loadEnvData(World world) {
+        final WorldEnvMapData data = (WorldEnvMapData) world.perWorldStorage.loadData(WorldEnvMapData.class, WorldEnvMapData.DATA_NAME);
+        final WorldEnv env = getEnv(world.provider.dimensionId);
         env.load(data);
     }
 }

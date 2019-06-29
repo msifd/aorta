@@ -8,8 +8,6 @@ import msifeed.mc.aorta.core.character.BodyPartHealth;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.traits.Trait;
-import msifeed.mc.aorta.environment.EnvironmentManager;
-import msifeed.mc.aorta.environment.WorldEnv;
 import msifeed.mc.aorta.tools.ItemDebugTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -53,7 +51,6 @@ public enum DebugHud {
         lines.add("Entity: " + entity.getCommandSenderName());
         addCharProps(lines, entity);
         addLang(lines, entity);
-        addWeather(lines, EnvironmentManager.getEnv(mc.theWorld.provider.dimensionId));
 
         GL11.glPushMatrix();
         GL11.glScalef(0.5f, 0.5f, 0.5f);
@@ -134,17 +131,6 @@ public enum DebugHud {
     private void addLang(ArrayList<String> lines, EntityLivingBase entity) {
         LangAttribute.get(entity).ifPresent(lang -> lines.add("Language: " + lang.name()));
     }
-
-    private void addWeather(ArrayList<String> lines, WorldEnv env) {
-        final WorldEnv.Rain r = env.rain;
-        lines.add("Rain {");
-        lines.add("  acc: " + r.accumulated);
-        lines.add("  min: " + r.minThreshold);
-        lines.add("  max: " + r.maxThreshold);
-        lines.add("  thunder: " + r.thunderThreshold);
-        lines.add("  +/-: " + String.format("%d/%d", r.income, r.outcome));
-        lines.add("  dice: d" + r.rainfallDice);
-        lines.add("}");    }
 
     @Nullable
     private Entity getEntityLookingAt() {

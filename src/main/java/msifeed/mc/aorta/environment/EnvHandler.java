@@ -12,9 +12,8 @@ import net.minecraft.world.storage.WorldInfo;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneOffset;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 public class EnvHandler {
@@ -54,10 +53,7 @@ public class EnvHandler {
         final float rate = 1 / 20f;
         final int maxStackedSnow = 7;
 
-
         final int passes = (int) (chunks.size() * rate);
-//        final int baseRate = 16;
-//        final int passes = baseRate + chunks.size() / 64;
         for (int i = 0; i < passes; ++i) {
             final Chunk c = chunks.get(world.rand.nextInt(chunks.size()));
             final int x = world.rand.nextInt(16);
@@ -93,7 +89,7 @@ public class EnvHandler {
     protected void handleTime(World world, WorldEnv env) {
         switch (env.time.mode) {
             case "real":
-                setRealTime(world, env.time.offsetHours);
+                setRealTime(world, env.time.timezone);
                 break;
             case "scaled":
                 setScaledTime(world, env.time.scale);
@@ -104,13 +100,13 @@ public class EnvHandler {
         }
     }
 
-    private void setRealTime(World world, int offsetHours) {
+    private void setRealTime(World world, ZoneId timezone) {
         final Duration mcTimeFix = Duration.ofHours(6);
-        final LocalTime utcTime = LocalTime.now(ZoneOffset.UTC);
-        final LocalTime now = utcTime.minus(mcTimeFix).plusHours(offsetHours);
-        final long secs = now.toSecondOfDay();
+        final LocalDateTime now = LocalDateTime.now(timezone).minus(mcTimeFix);
 
-        final long day = LocalDate.now(ZoneOffset.UTC).toEpochDay();
+        final long secs = now.toLocalTime().toSecondOfDay();
+
+        final long day = now.toLocalDate().toEpochDay();
         final long moonPhaseTime = (day % 8) * 24000;
 
         final long time = (secs * 23999) / 86400;

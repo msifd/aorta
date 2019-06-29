@@ -1,5 +1,8 @@
 package msifeed.mc.aorta.environment;
 
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+
 public class WorldEnv {
 
     public boolean snow = false;
@@ -9,12 +12,14 @@ public class WorldEnv {
     public Rain rain = new Rain();
 
     void load(WorldEnvMapData data) {
+        if (data == null)
+            return;
         rain.accumulated = data.rainAccumulated;
     }
 
     public static class Time {
         public String mode = "vanilla";
-        public int offsetHours = 0;
+        public ZoneId timezone = ZoneOffset.UTC;
         public double scale = 1;
         public long fixedTime = 0;
     }

@@ -22,17 +22,29 @@ public class EnvironmentCommand extends ExtCommand {
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
         final EntityPlayer player = (EntityPlayer) sender;
-        if (!CharacterAttribute.has(player, Trait.gm)) {
-            error(sender, "You are not GM!");
+        if (!CharacterAttribute.has(player, Trait.__admin)) {
+            error(sender, "You are not admin!");
             return;
         }
 
-        if (args.length < 1)
+        if (args.length < 1) {
+            printHelp(sender);
             return;
+        }
 
         final int dim = player.worldObj.provider.dimensionId;
         final WorldEnv worldEnv = EnvironmentManager.getEnv(dim);
         switch (args[0].toLowerCase()) {
+            case "help":
+                break;
+            case "rain":
+                final WorldEnv.Rain r = worldEnv.rain;
+                title(sender, "Rain info");
+                info(sender, "  acc: %d +%d/-%d", r.accumulated, r.income, r.outcome);
+                info(sender, "  min/max: %d/%d", r.minThreshold, r.maxThreshold);
+                info(sender, "  thunder: %d", r.thunderThreshold);
+                info(sender, "  dice: %d", r.rainfallDice);
+                break;
             case "snow":
                 worldEnv.snow = !worldEnv.snow;
                 sender.addChatMessage(new ChatComponentText("snow: " + worldEnv.snow));
@@ -47,6 +59,15 @@ public class EnvironmentCommand extends ExtCommand {
                 break;
         }
 
-        ConfigManager.INSTANCE.broadcast();
+        ConfigManager.broadcast();
+    }
+
+    private void printHelp(ICommandSender sender) {
+        title(sender, "AEnv help");
+        info(sender, "current dim: %d", sender.getEntityWorld().provider.dimensionId);
+        info(sender, "  rain - show rain info");
+        info(sender, "  snow - toggle drop random snow");
+        info(sender, "  melt - toggle melt random snow");
+        info(sender, "  stacksnow - toggle snow stack");
     }
 }

@@ -5,21 +5,19 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.aorta.sys.rpc.Rpc;
-import msifeed.mc.aorta.sys.rpc.RpcMethod;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public enum ConfigManager {
     INSTANCE;
 
-    private static final String broadcastRpc = "aorta:config.broadcast";
-    static File config_dir;
+    private File configDir;
     private ArrayList<JsonConfig> handlers = new ArrayList<>();
 
     public static <T> JsonConfig<T> getConfig(ConfigMode mode, TypeToken<T> t, String filename) {
@@ -29,9 +27,10 @@ public enum ConfigManager {
     }
 
     public static void init(FMLPreInitializationEvent event) {
-        config_dir = new File(event.getModConfigurationDirectory(), "aorta");
-        config_dir.mkdirs();
+        INSTANCE.configDir = new File(event.getModConfigurationDirectory(), "aorta");
+        INSTANCE.configDir.mkdirs();
 
+        Rpc.register(ConfigRpc.INSTANCE);
         FMLCommonHandler.instance().bus().register(INSTANCE);
         reload();
     }
@@ -39,9 +38,10 @@ public enum ConfigManager {
     public static void reload() {
         final HashMap<String, String> backup = INSTANCE.collectConfigs();
         try {
+            MinecraftForge.EVENT_BUS.post(new ConfigEvent.BeforeUpdate());
             for (JsonConfig c : INSTANCE.handlers)
                 c.reload();
-            MinecraftForge.EVENT_BUS.post(new ConfigEvent.Updated());
+            MinecraftForge.EVENT_BUS.post(new ConfigEvent.AfterUpdate());
             save();
         } catch (Exception e) {
             for (JsonConfig c : INSTANCE.handlers)
@@ -49,32 +49,42 @@ public enum ConfigManager {
         }
     }
 
-    public static void broadcast() {
-        Rpc.sendToAll(broadcastRpc, INSTANCE.collectConfigs());
-    }
-
     public static void save() {
         for (JsonConfig c : INSTANCE.handlers)
             c.save();
     }
 
-    @RpcMethod(broadcastRpc)
-    public void onBroadcast(MessageContext ctx, HashMap<String, String> configs) {
-        if (ctx.side.isServer())
-            return;
-        for (JsonConfig c : INSTANCE.handlers)
-            c.fromJson(configs.get(c.getFilename()));
+    public static void broadcast() {
+        ConfigRpc.broadcast(INSTANCE.collectSyncConfigs());
+    }
+
+    static File getConfigFile(String filename) {
+        return new File(INSTANCE.configDir, filename);
     }
 
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        Rpc.sendTo((EntityPlayerMP) event.player, broadcastRpc, collectConfigs());
+        ConfigRpc.sendTo((EntityPlayerMP) event.player, collectSyncConfigs());
+    }
+
+    void onConfigSync(Map<String, String> configs) {
+        handlers.stream().filter(JsonConfig::isSyncable).forEach(c -> {
+            c.fromJson(configs.get(c.getFilename()));
+        });
     }
 
     private HashMap<String, String> collectConfigs() {
         final HashMap<String, String> r = new HashMap<>();
-        for (JsonConfig c : INSTANCE.handlers)
-           r.put(c.getFilename(), c.toJson());
+        for (JsonConfig c : handlers)
+            r.put(c.getFilename(), c.toJson());
         return r;
+    }
+
+    private HashMap<String, String> collectSyncConfigs() {
+        final HashMap<String, String> map = new HashMap<>();
+        for (JsonConfig c : handlers)
+            if (c.isSyncable())
+                map.put(c.getFilename(), c.toJson());
+        return map;
     }
 }

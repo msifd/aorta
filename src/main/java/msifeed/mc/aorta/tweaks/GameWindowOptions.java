@@ -21,7 +21,7 @@ public enum GameWindowOptions {
     }
 
     @SubscribeEvent
-    public void onConfigUpdated(ConfigEvent.Updated event) {
+    public void onConfigUpdated(ConfigEvent.AfterUpdate event) {
         Display.setTitle(config.get().title);
         MinecraftForge.EVENT_BUS.unregister(INSTANCE);
     }

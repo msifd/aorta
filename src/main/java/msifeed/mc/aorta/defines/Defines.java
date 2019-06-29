@@ -11,8 +11,8 @@ import msifeed.mc.aorta.sys.config.JsonConfig;
 import java.util.Arrays;
 
 public class Defines {
-    private JsonConfig<AortaDefines> config = ConfigManager.getConfig(ConfigMode.SYNC, TypeToken.get(AortaDefines.class), "defines.json");
-    private JsonConfig<FightRules> rules = ConfigManager.getConfig(ConfigMode.SYNC, TypeToken.get(FightRules.class), "rules.json");
+    private JsonConfig<AortaDefines> config = ConfigManager.getConfig(ConfigMode.SERVER, TypeToken.get(AortaDefines.class), "defines.json");
+    private JsonConfig<FightRules> rules = ConfigManager.getConfig(ConfigMode.SERVER, TypeToken.get(FightRules.class), "rules.json");
 
     public Defines() {
         // Default rules for client
