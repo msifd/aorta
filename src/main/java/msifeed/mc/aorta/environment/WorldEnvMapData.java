@@ -7,7 +7,7 @@ import net.minecraft.world.WorldSavedData;
 public class WorldEnvMapData extends WorldSavedData {
     static final String DATA_NAME = Aorta.MODID + ".env";
 
-    int rainAccumulated = 0;
+    long rainAccumulated = 0;
 
     public WorldEnvMapData() {
         super(DATA_NAME);
@@ -21,12 +21,12 @@ public class WorldEnvMapData extends WorldSavedData {
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
-        rainAccumulated = compound.getShort("rainAcc");
+        rainAccumulated = compound.getLong("racc");
     }
 
     @Override
     public void writeToNBT(NBTTagCompound compound) {
-        compound.setShort("rainAcc", (short) rainAccumulated);
+        compound.setLong("racc", rainAccumulated);
     }
 
 }

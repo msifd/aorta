@@ -32,6 +32,6 @@ public class WorldEnv {
         public int thunderThreshold = 10;
         public int rainfallDice = 100;
 
-        public transient int accumulated = 0;
+        public transient long accumulated = 0;
     }
 }

@@ -136,6 +136,8 @@ public class EnvHandler {
         } else {
             r.accumulated += r.income;
             final boolean roll = r.accumulated >= r.minThreshold && world.rand.nextInt(r.rainfallDice) == 0;
+            if (roll)
+                System.out.println("AENV: successful rainfall dice roll");
             if (roll || r.accumulated > r.maxThreshold) {
                 wi.setRaining(true);
                 wi.setThundering(r.accumulated > r.thunderThreshold);
