@@ -40,7 +40,7 @@ public enum  DRM {
 
         final InetAddress address = ((InetSocketAddress) socket).getAddress();
         LOG.info("Connecting to {}", address.getHostName());
-        if (address.isLoopbackAddress() || SERVERS.contains(address))
+        if ( address.isLoopbackAddress() || address.isSiteLocalAddress() ||SERVERS.contains(address))
             return;
 
         LOG.info("Connection attempt rejected");
