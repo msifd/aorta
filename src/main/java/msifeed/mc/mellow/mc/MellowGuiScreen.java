@@ -11,6 +11,7 @@ import msifeed.mc.mellow.widgets.scene.Scene;
 import msifeed.mc.mellow.widgets.window.Window;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.entity.RenderItem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
@@ -18,6 +19,10 @@ import org.lwjgl.input.Keyboard;
 public class MellowGuiScreen extends GuiScreen {
     private static final Logger LOGGER = LogManager.getLogger("Mellow.GuiScreen");
     protected Scene scene = new ProfilingScene();
+
+    public static RenderItem getRenderItem() {
+        return itemRender;
+    }
 
     @Override
     public boolean doesGuiPauseGame() {

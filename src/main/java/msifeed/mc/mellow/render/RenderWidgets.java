@@ -3,6 +3,7 @@ package msifeed.mc.mellow.render;
 import msifeed.mc.mellow.utils.Geom;
 import msifeed.mc.mellow.widgets.Widget;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import org.lwjgl.opengl.GL11;
 
@@ -45,9 +46,13 @@ public final class RenderWidgets {
     }
 
     public static void string(Geom geom, String text, int color) {
+        string(text, geom.x, geom.y, geom.z, color, RenderManager.instance.getFontRenderer());
+    }
+
+    public static void string(String text, int x, int y, int z, int color, FontRenderer fr) {
         GL11.glPushMatrix();
-        GL11.glTranslatef(0, 0, geom.z);
-        RenderManager.instance.getFontRenderer().drawString(text, geom.x, geom.y + 1, color); // +1 tuning
+        GL11.glTranslatef(0, 0, z);
+        fr.drawString(text, x, y + 1, color); // +1 tuning
         GL11.glColor4f(1, 1, 1, 1);
         GL11.glPopMatrix();
     }

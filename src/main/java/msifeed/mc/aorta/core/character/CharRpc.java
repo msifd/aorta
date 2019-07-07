@@ -1,6 +1,7 @@
 package msifeed.mc.aorta.core.character;
 
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import cpw.mods.fml.relauncher.Side;
 import msifeed.mc.aorta.chat.ChatHandler;
 import msifeed.mc.aorta.chat.Language;
 import msifeed.mc.aorta.chat.composer.Composer;
@@ -17,12 +18,14 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Optional;
 
 public enum CharRpc {
@@ -32,6 +35,8 @@ public enum CharRpc {
     private static final String updateChar = "aorta:core.char.char";
     private static final String updateStatus = "aorta:core.char.status";
     private static final String clearEntity = "aorta:core.char.clear";
+    private static final String requestHand = "aorta:core.char.hand.req";
+    private static final String responseHand = "aorta:core.char.hand.res";
 
     public static void setLang(int entityId, Language lang) {
         Rpc.sendToServer(setLang, entityId, lang);
@@ -58,6 +63,10 @@ public enum CharRpc {
 
     public static void clearEntity(int entityId) {
         Rpc.sendToServer(clearEntity, entityId);
+    }
+
+    public static void requestHand(int entityId) {
+        Rpc.sendToServer(requestHand, entityId);
     }
 
     @RpcMethod(setLang)
@@ -161,5 +170,60 @@ public enum CharRpc {
 
         CharacterAttribute.INSTANCE.set(entity, null);
         StatusAttribute.INSTANCE.set(entity, null);
+    }
+
+    @RpcMethod(value = requestHand)
+    public void onRequestHand(MessageContext ctx, int entityId) {
+        if (ctx.side == Side.CLIENT)
+            return;
+
+        final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
+        final Entity targetEntity = sender.worldObj.getEntityByID(entityId);
+        if (!(targetEntity instanceof EntityPlayer))
+            return;
+        final EntityPlayer target = (EntityPlayer) targetEntity;
+
+        final ItemStack[] inv = target.inventory.mainInventory;
+        final NBTTagCompound root = new NBTTagCompound();
+        int itemCount = 0;
+
+        for (int i = 0; i < 9; i++) {
+            final ItemStack is = inv[i];
+            if (is == null)
+                continue;
+            final NBTTagCompound tag = new NBTTagCompound();
+            is.writeToNBT(tag);
+            root.setTag(String.valueOf(i), tag);
+            itemCount++;
+        }
+
+        try {
+            final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            final DataOutputStream dos = new DataOutputStream(bos);
+            CompressedStreamTools.write(root, dos);
+
+            Rpc.sendTo(sender, responseHand, entityId, itemCount, bos.toByteArray());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RpcMethod(responseHand)
+    public void onResponseHand(MessageContext ctx, int entityId, int itemCount, byte[] bytes) {
+        try {
+            final ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+            final DataInputStream dis = new DataInputStream(bis);
+            final NBTTagCompound root = CompressedStreamTools.read(dis);
+
+            final ArrayList<ItemStack> items = new ArrayList<>(itemCount);
+            for (int i = 0; i < 9; i++) {
+                final NBTTagCompound tag = root.getCompoundTag(String.valueOf(i));
+                items.add(ItemStack.loadItemStackFromNBT(tag));
+            }
+
+            CharHand.setHand(entityId, items);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

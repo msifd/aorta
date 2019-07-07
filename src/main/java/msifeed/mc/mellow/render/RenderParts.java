@@ -44,18 +44,22 @@ public final class RenderParts {
         slice(x, y, z, part.size.x, part.size.y, part.pos.x, part.pos.y, part.size.x, part.size.y);
     }
 
+
     public static void nineSlice(Part part, Geom geom) {
+        nineSlice(part, geom.x, geom.y, geom.z, geom.w, geom.h);
+    }
+
+    public static void nineSlice(Part part, int x, int y, int z, int w, int h) {
         if (part == null || part.slicesSize == null)
             return;
 
         bindThemeTexture(part);
 
-        final double midWidth = Math.max(geom.w - part.slicesSize[0].x - part.slicesSize[3].x, 0);
-        final double midHeight = Math.max(geom.h - part.slicesSize[0].y - part.slicesSize[6].y, 0);
+        final double midWidth = Math.max(w - part.slicesSize[0].x - part.slicesSize[3].x, 0);
+        final double midHeight = Math.max(h - part.slicesSize[0].y - part.slicesSize[6].y, 0);
 
-        double x = geom.x;
-        double y = geom.y;
-        double z = geom.z;
+        double offX = x;
+        double offY = y;
         for (int i = 0; i < 9; i++) {
             final int xth = i % 3;
             final int yth = i / 3;
@@ -65,13 +69,13 @@ public final class RenderParts {
             final double width = xth == 1 ? midWidth : sliceSize.x;
             final double height = yth == 1 ? midHeight : sliceSize.y;
 
-            slice(x, y, z, width, height, sliceUV.x, sliceUV.y, sliceSize.x, sliceSize.y);
+            slice(offX, offY, z, width, height, sliceUV.x, sliceUV.y, sliceSize.x, sliceSize.y);
 
             if (xth == 2) {
-                x = geom.x;
-                y += height;
+                offX = x;
+                offY += height;
             } else {
-                x += width;
+                offX += width;
             }
         }
     }

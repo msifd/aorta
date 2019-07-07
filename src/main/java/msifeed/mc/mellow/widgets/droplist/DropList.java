@@ -32,7 +32,7 @@ public class DropList<T> extends Widget {
 
         selectItem(0);
         header.setZLevel(1);
-        popupList.setZLevel(10); // Over other headers
+        popupList.setZLevel(400); // Over other headers
         popupList.setVisible(false);
 
         addChild(header);

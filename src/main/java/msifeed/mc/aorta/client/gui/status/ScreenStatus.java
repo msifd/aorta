@@ -13,7 +13,9 @@ import msifeed.mc.mellow.widgets.basic.Separator;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
 import msifeed.mc.mellow.widgets.tabs.TabArea;
 import msifeed.mc.mellow.widgets.window.Window;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 
 public class ScreenStatus extends MellowGuiScreen {
     private Character character;
@@ -48,6 +50,11 @@ public class ScreenStatus extends MellowGuiScreen {
         if (editable)
             tabs.addTab(L10n.tr("aorta.gui.status.name"), new NameView(status));
         content.addChild(tabs);
+
+        if (entity instanceof EntityPlayer && entity != Minecraft.getMinecraft().thePlayer) {
+            content.addChild(new Separator());
+            content.addChild(new PlayerHandView((EntityPlayer) entity));
+        }
 
         if (editable) {
             final ButtonLabel submitBtn = new ButtonLabel(L10n.tr("aorta.gui.apply"));
