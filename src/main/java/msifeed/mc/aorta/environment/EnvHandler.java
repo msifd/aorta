@@ -3,8 +3,10 @@ package msifeed.mc.aorta.environment;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.launchwrapper.Launch;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
@@ -17,6 +19,8 @@ import java.time.ZoneId;
 import java.util.List;
 
 public class EnvHandler {
+    private static final int WORLD_RESET_TIME = 8 * 24000;
+
     public void init() {
         FMLCommonHandler.instance().bus().register(this);
         MinecraftForge.EVENT_BUS.register(this);
@@ -34,6 +38,9 @@ public class EnvHandler {
         if (FMLCommonHandler.instance().getMinecraftServerInstance().getTickCounter() % 20 == 0) {
             handleTime(event.world, worldEnv);
             handleRain(event.world, worldEnv);
+
+            if (event.world.getTotalWorldTime() >= WORLD_RESET_TIME)
+                resetWorldTime(event.world);
         }
     }
 
@@ -145,5 +152,11 @@ public class EnvHandler {
                 wi.setThundering(r.accumulated > r.thunderThreshold);
             }
         }
+    }
+
+    private void resetWorldTime(World world) {
+        final String fieldName = (Boolean) Launch.blackboard.getOrDefault("fml.deobfuscatedEnvironment", false)
+                ? "totalTime" : "g";
+        ReflectionHelper.setPrivateValue(WorldInfo.class, world.getWorldInfo(), 0, fieldName);
     }
 }
