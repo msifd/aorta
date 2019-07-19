@@ -13,6 +13,10 @@ public class WorldEnvMapData extends WorldSavedData {
         super(DATA_NAME);
     }
 
+    public WorldEnvMapData(String dataName) {
+        super(dataName);
+    }
+
     public WorldEnvMapData(WorldEnv env) {
         super(DATA_NAME);
         this.rainAccumulated = env.rain.accumulated;

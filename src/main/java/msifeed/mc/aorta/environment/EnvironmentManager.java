@@ -10,6 +10,7 @@ import msifeed.mc.aorta.sys.config.ConfigManager;
 import msifeed.mc.aorta.sys.config.ConfigMode;
 import msifeed.mc.aorta.sys.config.JsonConfig;
 import net.minecraft.command.CommandHandler;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
@@ -59,15 +60,19 @@ public enum EnvironmentManager {
 
     @SubscribeEvent
     public void beforeConfigUpdated(ConfigEvent.BeforeUpdate event) {
-        final WorldServer[] worldServers = FMLCommonHandler.instance().getMinecraftServerInstance().worldServers;
-        for (WorldServer ws : worldServers)
+        final MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+        if (server == null)
+            return;
+        for (WorldServer ws : server.worldServers)
             saveEnvData(ws.provider.worldObj);
     }
 
     @SubscribeEvent
     public void afterConfigUpdated(ConfigEvent.AfterUpdate event) {
-        final WorldServer[] worldServers = FMLCommonHandler.instance().getMinecraftServerInstance().worldServers;
-        for (WorldServer ws : worldServers)
+        final MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+        if (server == null)
+            return;
+        for (WorldServer ws : server.worldServers)
             loadEnvData(ws.provider.worldObj);
     }
 
