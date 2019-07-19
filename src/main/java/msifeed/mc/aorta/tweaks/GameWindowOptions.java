@@ -1,7 +1,9 @@
 package msifeed.mc.aorta.tweaks;
 
 import com.google.gson.reflect.TypeToken;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import msifeed.mc.aorta.sys.config.ConfigEvent;
 import msifeed.mc.aorta.sys.config.ConfigManager;
 import msifeed.mc.aorta.sys.config.ConfigMode;
@@ -17,13 +19,19 @@ public enum GameWindowOptions {
 
 
     public static void preInit() {
-        MinecraftForge.EVENT_BUS.register(INSTANCE);
+        FMLCommonHandler.instance().bus().register(INSTANCE);
     }
 
     @SubscribeEvent
-    public void onConfigUpdated(ConfigEvent.AfterUpdate event) {
-        Display.setTitle(config.get().title);
-        MinecraftForge.EVENT_BUS.unregister(INSTANCE);
+    public void onClientTick(TickEvent.ClientTickEvent event) {
+        if (event.phase == TickEvent.Phase.END)
+            setTitle();
+    }
+
+    private void setTitle() {
+        final String title = config.get().title;
+        if (!Display.getTitle().equals(title))
+            Display.setTitle(title);
     }
 
     public static class Content {
