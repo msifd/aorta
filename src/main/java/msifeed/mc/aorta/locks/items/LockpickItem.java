@@ -15,6 +15,7 @@ import msifeed.mc.aorta.core.rolls.FeatureRoll;
 import msifeed.mc.aorta.genesis.AortaCreativeTab;
 import msifeed.mc.aorta.locks.LockObject;
 import msifeed.mc.aorta.locks.LockType;
+import msifeed.mc.aorta.logs.Logs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -101,8 +102,10 @@ public class LockpickItem extends Item {
             return false;
 
         if (canPick(lock) && tryToPick(lock, itemStack, player)) {
-            if (!world.isRemote)
+            if (!world.isRemote) {
                 successMessage(lock, player);
+                Logs.log(player, "lockpick", lock.isLocked() ? "[locked]" : "[unlocked]");
+            }
         }
 
         return true;
