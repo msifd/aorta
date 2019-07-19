@@ -9,7 +9,7 @@ public final class RenderUtils {
     public static int getScreenScaleFactor() {
         final Minecraft mc = Minecraft.getMinecraft();
 
-        final int sizeHint = mc.displayWidth + mc.displayHeight + (mc.func_152349_b() ? 1 : 2);
+        final int sizeHint = mc.displayWidth + mc.displayHeight + (mc.func_152349_b() ? 1 : 2) + mc.gameSettings.guiScale;
         if (cacheSizeHint == sizeHint)
             return cacheScaleFactor;
 
