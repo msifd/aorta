@@ -29,6 +29,8 @@ public enum GameWindowOptions {
     }
 
     private void setTitle() {
+        if (!config.valid())
+            return;
         final String title = config.get().title;
         if (!Display.getTitle().equals(title))
             Display.setTitle(title);

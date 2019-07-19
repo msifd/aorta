@@ -29,6 +29,10 @@ public class JsonConfig<T> {
         this.value = getDefaultConfig();
     }
 
+    public boolean valid() {
+        return value != null;
+    }
+
     public T get() {
         return value;
     }
