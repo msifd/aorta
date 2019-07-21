@@ -17,15 +17,15 @@ public class JsonConfig<T> {
             .setPrettyPrinting()
             .registerTypeAdapter(ZoneId.class, new ZoneIdAdapter())
             .create();
-    private ConfigMode mode;
+    private boolean sync;
     private TypeToken<T> type;
     private String filename;
     private T value;
 
-    JsonConfig(ConfigMode mode, TypeToken<T> type, String filename) {
-        this.mode = mode;
+    JsonConfig(TypeToken<T> type, String filename, boolean sync) {
         this.type = type;
         this.filename = filename;
+        this.sync = sync;
         this.value = getDefaultConfig();
     }
 
@@ -42,7 +42,7 @@ public class JsonConfig<T> {
     }
 
     boolean isSyncable() {
-        return mode.sync;
+        return sync;
     }
 
     String getFilename() {
@@ -63,20 +63,16 @@ public class JsonConfig<T> {
     }
 
     void reload() {
-        if (mode.doFileIO()) {
-            read();
-            if (value == null)
-                value = getDefaultConfig();
-            write();
-        }
+        read();
+        if (value == null)
+            value = getDefaultConfig();
+        write();
     }
 
     void save() {
-        if (mode.doFileIO()) {
-            if (value == null)
-                value = getDefaultConfig();
-            write();
-        }
+        if (value == null)
+            value = getDefaultConfig();
+        write();
     }
 
     private void read() {

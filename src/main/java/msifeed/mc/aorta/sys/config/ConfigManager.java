@@ -20,8 +20,14 @@ public enum ConfigManager {
     private File configDir;
     private ArrayList<JsonConfig> handlers = new ArrayList<>();
 
-    public static <T> JsonConfig<T> getConfig(ConfigMode mode, TypeToken<T> t, String filename) {
-        JsonConfig<T> handler = new JsonConfig<>(mode, t, filename);
+    public static <T> JsonConfig<T> getLocalConfig(TypeToken<T> t, String filename) {
+        JsonConfig<T> handler = new JsonConfig<>(t, filename, false);
+        INSTANCE.handlers.add(handler);
+        return handler;
+    }
+
+    public static <T> JsonConfig<T> getSyncConfig(TypeToken<T> t, String filename) {
+        JsonConfig<T> handler = new JsonConfig<>(t, filename, true);
         INSTANCE.handlers.add(handler);
         return handler;
     }

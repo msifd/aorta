@@ -7,7 +7,6 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.aorta.sys.config.ConfigEvent;
 import msifeed.mc.aorta.sys.config.ConfigManager;
-import msifeed.mc.aorta.sys.config.ConfigMode;
 import msifeed.mc.aorta.sys.config.JsonConfig;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -23,7 +22,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class DBHandler {
-    private JsonConfig<ConfigSection> config = ConfigManager.getConfig(ConfigMode.SERVER, TypeToken.get(ConfigSection.class), "database.json");
+    private JsonConfig<ConfigSection> config = ConfigManager.getLocalConfig(TypeToken.get(ConfigSection.class), "database.json");
 
     private final ExecutorService threadPool = Executors.newCachedThreadPool();
     private HikariDataSource dataSource;

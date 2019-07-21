@@ -6,7 +6,6 @@ import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.aorta.sys.config.ConfigEvent;
 import msifeed.mc.aorta.sys.config.ConfigManager;
-import msifeed.mc.aorta.sys.config.ConfigMode;
 import msifeed.mc.aorta.sys.config.JsonConfig;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -28,7 +27,7 @@ public enum EntityControl {
 
     private static Logger logger = LogManager.getLogger("Aorta.EntityControl");
     private final TypeToken<ArrayList<ConfigContent>> configContentType = new TypeToken<ArrayList<ConfigContent>>() {};
-    private JsonConfig<ArrayList<ConfigContent>> config = ConfigManager.getConfig(ConfigMode.SERVER, configContentType, "entity_control.json");
+    private JsonConfig<ArrayList<ConfigContent>> config = ConfigManager.getLocalConfig(configContentType, "entity_control.json");
 
     public static void init() {
         MinecraftForge.EVENT_BUS.register(INSTANCE);
