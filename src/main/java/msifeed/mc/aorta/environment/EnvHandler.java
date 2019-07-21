@@ -134,6 +134,9 @@ public class EnvHandler {
         final WorldInfo wi = world.getWorldInfo();
         final WorldEnv.Rain r = env.rain;
 
+        wi.setRainTime(Integer.MAX_VALUE);
+        wi.setThunderTime(Integer.MAX_VALUE);
+
         if (wi.isRaining()) {
             r.accumulated -= r.outcome;
             if (r.accumulated <= 0) {
@@ -156,7 +159,7 @@ public class EnvHandler {
 
     private void resetWorldTime(World world) {
         final String fieldName = (Boolean) Launch.blackboard.getOrDefault("fml.deobfuscatedEnvironment", false)
-                ? "totalTime" : "g";
+                ? "totalTime" : "field_82575_g";
         ReflectionHelper.setPrivateValue(WorldInfo.class, world.getWorldInfo(), 0, fieldName);
     }
 }

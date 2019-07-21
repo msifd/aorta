@@ -10,7 +10,12 @@ public class EnableDesertRain {
     public static void apply() {
         final String rainField = (Boolean) Launch.blackboard.getOrDefault("fml.deobfuscatedEnvironment", false)
                 ? "enableRain" : "field_76765_S";
-        for (BiomeGenBase biome : BiomeGenBase.getBiomeGenArray()) {
+
+        final String listField = (Boolean) Launch.blackboard.getOrDefault("fml.deobfuscatedEnvironment", false)
+                ? "biomeList" : "field_76773_a";
+        final BiomeGenBase[] biomes = ReflectionHelper.getPrivateValue(BiomeGenBase.class, null, listField);
+
+        for (BiomeGenBase biome : biomes) {
             if (biome != null && !isSpecialBiome(biome) && biome.rainfall == 0) {
                 ReflectionHelper.setPrivateValue(BiomeGenBase.class, biome, true, rainField);
 //                biome.rainfall = 0.4f; // Plains value
