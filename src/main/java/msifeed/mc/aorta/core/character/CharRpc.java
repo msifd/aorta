@@ -1,5 +1,6 @@
 package msifeed.mc.aorta.core.character;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import msifeed.mc.aorta.chat.ChatHandler;
@@ -34,6 +35,7 @@ public enum CharRpc {
     private static final String setLang = "aorta:core.char.lang";
     private static final String updateChar = "aorta:core.char.char";
     private static final String updateStatus = "aorta:core.char.status";
+    private static final String refreshName = "aorta:core.char.refreshName";
     private static final String clearEntity = "aorta:core.char.clear";
     private static final String requestHand = "aorta:core.char.hand.req";
     private static final String responseHand = "aorta:core.char.hand.res";
@@ -139,14 +141,23 @@ public enum CharRpc {
                     sendLogs(sender, (EntityLivingBase) entity, "status", Differ.status(c, before, optStatus.get()));
                 });
 
-                if (!before.name.equals(optStatus.get().name))
+                if (!before.name.equals(optStatus.get().name)) {
                     ((EntityPlayer) entity).refreshDisplayName();
+                    Rpc.sendToAll(refreshName, entityId);
+                }
             } else {
                 StatusAttribute.INSTANCE.update(entity, s -> s.fromNBT(statusNbt));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @RpcMethod(refreshName)
+    public void onRefreshName(MessageContext ctx, int entityId) {
+        final Entity entity = FMLClientHandler.instance().getWorldClient().getEntityByID(entityId);
+        if (entity instanceof EntityPlayer)
+            ((EntityPlayer) entity).refreshDisplayName();
     }
 
     private void sendLogs(EntityPlayerMP sender, EntityLivingBase who, String type, String message) {

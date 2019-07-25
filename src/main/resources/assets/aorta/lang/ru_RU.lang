@@ -156,7 +156,7 @@ aorta.diff.status.add_health=%s восполняет %d %s здоровья
 aorta.diff.status.rem_health=%s теряет %d %s здоровья
 aorta.diff.status.add_armor=%s получает %d %s брони
 aorta.diff.status.rem_armor=%s теряет %d %s брони
-aorta.diff.status.name=сменил имя на %s
+aorta.diff.status.name=сменил имя на '%s'
 
 aorta.diff.status.sanity_level=теперь в %s
 aorta.diff.status.sanity.0=предельном стрессе
