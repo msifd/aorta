@@ -88,10 +88,12 @@ class Differ {
             final BodyPartHealth a = e.getValue();
             if (b.health != a.health) {
                 final int n = Math.abs(b.health - a.health);
-                diffs.add(L10n.fmt(
-                        b.health < a.health ? "aorta.diff.status.add_health" : "aorta.diff.status.rem_health",
-                        e.getKey(), n, trPoints(n)
-                ));
+                final String line = b.health < a.health
+                        ? "aorta.diff.status.add_health"
+                        : b.health - a.health > a.armor
+                            ? "aorta.diff.status.rem_health_wound"
+                            : "aorta.diff.status.rem_health";
+                diffs.add(L10n.fmt(line, e.getKey(), n, trPoints(n)));
             }
             if (b.armor != a.armor) {
                 final int n = Math.abs(b.armor - a.armor);

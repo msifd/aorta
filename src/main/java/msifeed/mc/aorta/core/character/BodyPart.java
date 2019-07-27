@@ -4,7 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class BodyPart implements Comparable {
     public String name;
-    public Type type;
+    public Type type = Type.values()[0];
     public short max;
     public boolean fatal;
 

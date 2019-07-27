@@ -158,6 +158,7 @@ aorta.diff.status.add_shield=восстановил %d %s щита
 aorta.diff.status.rem_shield=потерял %d %s щита
 aorta.diff.status.add_health=%s восполняет %d %s здоровья
 aorta.diff.status.rem_health=%s теряет %d %s здоровья
+aorta.diff.status.rem_health_wound=%s теряет %d %s здоровья (рана)
 aorta.diff.status.add_armor=%s получает %d %s брони
 aorta.diff.status.rem_armor=%s теряет %d %s брони
 aorta.diff.status.name=сменил имя на '%s'
