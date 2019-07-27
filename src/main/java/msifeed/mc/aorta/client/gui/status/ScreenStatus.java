@@ -44,11 +44,11 @@ public class ScreenStatus extends MellowGuiScreen {
         final ParamsView paramsView = new ParamsView(character, status, editable);
         final BodypartHealthView bodypartView = new BodypartHealthView(character, status, editable);
         final IllnessView illnessView = new IllnessView(status, editable, isGm);
+        final OtherView otherView = new OtherView(status, editable);
         tabs.addTab(L10n.tr("aorta.gui.status.status"), paramsView);
         tabs.addTab(L10n.tr("aorta.gui.status.body"), bodypartView);
         tabs.addTab(L10n.tr("aorta.gui.status.illness"), illnessView);
-        if (editable)
-            tabs.addTab(L10n.tr("aorta.gui.status.name"), new NameView(status));
+        tabs.addTab(L10n.tr("aorta.gui.status.other"), otherView);
         content.addChild(tabs);
 
         if (entity instanceof EntityPlayer && entity != Minecraft.getMinecraft().thePlayer) {
@@ -68,6 +68,7 @@ public class ScreenStatus extends MellowGuiScreen {
                     paramsView.refill();
                     bodypartView.refill();
                     illnessView.refill();
+                    otherView.refill();
                 }
             });
             content.addChild(new Separator());

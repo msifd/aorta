@@ -10,6 +10,7 @@ import java.util.Set;
 
 public class CharStatus {
     public String name = "";
+    public String wikiPage = "";
     public Map<String, BodyPartHealth> health = new LinkedHashMap<>();
     public BodyShield shield = new BodyShield();
     public byte sanity = 100;
@@ -22,6 +23,7 @@ public class CharStatus {
 
     public CharStatus(CharStatus s) {
         name = s.name;
+        wikiPage = s.wikiPage;
         for (Map.Entry<String, BodyPartHealth> e : s.health.entrySet())
             health.put(e.getKey(), new BodyPartHealth(e.getValue()));
         shield = new BodyShield(s.shield);
@@ -73,6 +75,7 @@ public class CharStatus {
         final NBTTagCompound c = new NBTTagCompound();
 
         c.setString(Tags.name, name);
+        c.setString(Tags.wiki, wikiPage);
 
         final NBTTagCompound hc = new NBTTagCompound();
         for (Map.Entry<String, BodyPartHealth> e : health.entrySet()) {
@@ -96,6 +99,7 @@ public class CharStatus {
 
     public void fromNBT(NBTTagCompound compound) {
         name = compound.getString(Tags.name);
+        wikiPage = compound.getString(Tags.wiki);
 
         health.clear();
         final NBTTagCompound hc = compound.getCompoundTag(Tags.health);
@@ -136,6 +140,7 @@ public class CharStatus {
 
     private static class Tags {
         static final String name = "name";
+        static final String wiki = "wiki";
         static final String health = "health";
         static final String shield = "shield";
         static final String sanity = "sanity";

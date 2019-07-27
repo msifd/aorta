@@ -10,6 +10,7 @@ import msifeed.mc.mellow.utils.Geom;
 import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.input.Keyboard;
@@ -124,6 +125,27 @@ public class TextInput extends Widget implements KeyHandler {
 
     @Override
     public void onKeyboard(char c, int key) {
+        switch (c) {
+//            case 1:
+//                this.setCursorPositionEnd();
+//                this.setSelectionPos(0);
+//                return true;
+            case 3:
+                GuiScreen.setClipboardString(text);
+                return;
+            case 22:
+                tryChange(GuiScreen.getClipboardString(), -cursor);
+                return;
+//            case 24:
+//                GuiScreen.setClipboardString(this.getSelectedText());
+//
+//                if (this.isEnabled) {
+//                    this.writeText("");
+//                }
+//
+//                return true;
+        }
+
         switch (key) {
             case Keyboard.KEY_LEFT:
                 moveCursor(-1);

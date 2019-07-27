@@ -12,7 +12,7 @@ public final class RenderShapes {
         tessellator.startDrawing(GL11.GL_LINES);
         tessellator.setColorRGBA_I(color, 255);
         tessellator.addVertex(geom.x, geom.y + 0.3, geom.z);
-        tessellator.addVertex(geom.w, geom.h + 0.3, geom.z);
+        tessellator.addVertex(geom.x + geom.w, geom.y + geom.h + 0.3, geom.z);
         tessellator.draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
     }

@@ -44,7 +44,7 @@ public class Label extends Widget {
 
     @Override
     protected void renderSelf() {
-        RenderWidgets.string(getGeometry(), text, color);
+        RenderWidgets.string(getGeometry(), text, getColor());
     }
 
 }

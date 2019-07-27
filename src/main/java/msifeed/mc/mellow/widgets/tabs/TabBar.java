@@ -53,17 +53,16 @@ class TabBar extends Widget {
         final Geom self = getGeometry();
         final Geom active = activeTab.getGeometry();
 
-        final Geom geom = new Geom(getGeometry());
+        final Geom geom = new Geom();
         geom.z = active.z + 1;
         geom.y = active.y + active.h - 1;
-        geom.h = geom.y;
 
         geom.x = self.x;
-        geom.w = active.x;
+        geom.w = active.x - self.x;
         RenderShapes.line(geom, thickness, borderColor);
 
         geom.x = active.x + active.w;
-        geom.w = self.x + self.w;
+        geom.w = self.x + self.w - geom.x;
         RenderShapes.line(geom, thickness, borderColor);
     }
 }
