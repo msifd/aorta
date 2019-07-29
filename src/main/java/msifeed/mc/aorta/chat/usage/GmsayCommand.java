@@ -8,6 +8,7 @@ import msifeed.mc.aorta.chat.gm.GmsaySettings;
 import msifeed.mc.aorta.chat.net.ChatMessage;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.traits.Trait;
+import msifeed.mc.aorta.logs.Logs;
 import msifeed.mc.aorta.sys.cmd.ExtCommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -76,12 +77,12 @@ public class GmsayCommand extends ExtCommand {
 
         final String text = String.join(" ", args);
         final ChatMessage message = Composer.makeMessage(SpeechType.GM, player, text);
+        Logs.log(sender, "gms", message.text);
 
         if (player instanceof EntityPlayerMP)
-            ChatHandler.sendSystemChatMessage((EntityPlayerMP) player, message);
-        else {
+            ChatHandler.sendSystemChatMessage(player, message);
+        else
             player.addChatMessage(Composer.formatMessage(player, message));
-        }
     }
 
     private void printHelp(EntityPlayer player) {

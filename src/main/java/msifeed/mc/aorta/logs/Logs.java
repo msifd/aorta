@@ -3,23 +3,25 @@ package msifeed.mc.aorta.logs;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import msifeed.mc.aorta.sys.rpc.Rpc;
+import msifeed.mc.aorta.sys.rpc.RpcMethod;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.CommandEvent;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public enum Logs {
     INSTANCE;
 
-    static Logger LOGGER = LogManager.getLogger("Aorta.Logs");
-    private static DBHandler dbHandler = new DBHandler();
+    static final String requestLogCommand = "aorta:logs.cmd";
+    private static final DBHandler dbHandler = new DBHandler();
 
     public static void init() {
         if (FMLCommonHandler.instance().getSide().isServer()) {
             MinecraftForge.EVENT_BUS.register(dbHandler);
             MinecraftForge.EVENT_BUS.register(INSTANCE);
             FMLCommonHandler.instance().bus().register(INSTANCE);
+            Rpc.register(INSTANCE);
         }
     }
 
@@ -40,9 +42,9 @@ public enum Logs {
             log(event.player, "logout", "[logout]");
     }
 
-    @SubscribeEvent
-    public void onCommandSend(CommandEvent event) {
-        if (!event.sender.getEntityWorld().isRemote)
-            log(event.sender, "cmd", String.format("/%s %s", event.command.getCommandName(), String.join(" ", event.parameters)));
+    @RpcMethod(requestLogCommand)
+    public void onLogCommand(MessageContext ctx, String cmd) {
+        final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
+        log(sender, "cmd", "/" + cmd);
     }
 }

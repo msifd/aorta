@@ -11,6 +11,8 @@ import msifeed.mc.aorta.sys.config.JsonConfig;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChunkCoordinates;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,6 +24,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class DBHandler {
+    private final Logger LOGGER = LogManager.getLogger("Aorta.Logs");
     private JsonConfig<ConfigSection> config = ConfigManager.getLocalConfig(TypeToken.get(ConfigSection.class), "database.json");
 
     private final ExecutorService threadPool = Executors.newCachedThreadPool();
@@ -46,7 +49,7 @@ public class DBHandler {
             dataSource = new HikariDataSource(config);
             dataSource.validate();
         } catch (Exception e) {
-            Logs.LOGGER.error("Error during connection to DB", e);
+            LOGGER.error("Error during connection to DB", e);
         }
     }
 
@@ -57,7 +60,7 @@ public class DBHandler {
     private void asyncLog(ICommandSender sender, String cmd, String text) {
         try (Connection conn = dataSource.getConnection()) {
             if (conn == null) {
-                Logs.LOGGER.error("Can't get connection to DB!");
+                LOGGER.error("Can't get connection to DB!");
                 return;
             }
 
@@ -84,7 +87,7 @@ public class DBHandler {
             s.setString(9, text);
             s.executeUpdate();
         } catch (SQLException e) {
-            Logs.LOGGER.error("Failed to send log to the database!", e);
+            LOGGER.error("Failed to send log to the database!", e);
         }
     }
 
