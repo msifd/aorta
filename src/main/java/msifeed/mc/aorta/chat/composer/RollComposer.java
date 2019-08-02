@@ -46,12 +46,12 @@ public class RollComposer implements ChatComposer {
     }
 
     private static String makeRollText(String type, String player, String action, Roll roll) {
-        final String modsStr = formatNumber(roll.mods.rollMod) + formatSanity(roll.sanity);
+        final String modsStr = formatNumber(roll.mods.rollMod) + formatStatusMod(roll.statusMod);
         if (modsStr.isEmpty()) {
             // [TYPE] player ACTION: (feat mods) res CRIT
             return String.format("[%s] \u00a7r%s\u00a76 %s:%s %d%s", type, player, action, formatFeatMods(roll.mods), roll.result, formatCrit(roll.critical));
         } else {
-            // [TYPE] player ACTION: (feat mods) [roll] - mod - san = res CRIT
+            // [TYPE] player ACTION: (feat mods) [roll] - mod - stat = res CRIT
             return String.format("[%s] \u00a7r%s\u00a76 %s:%s [%s]%s = %d%s", type, player, action, formatFeatMods(roll.mods), roll.roll, modsStr, roll.result, formatCrit(roll.critical));
         }
     }
@@ -80,7 +80,7 @@ public class RollComposer implements ChatComposer {
         }
     }
 
-    private static String formatSanity(int san) {
+    private static String formatStatusMod(int san) {
         final String f = formatNumber(san);
         return f.isEmpty() ? "" : "\u00a77" + f + "\u00a76";
     }

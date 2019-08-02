@@ -10,17 +10,16 @@ public class FeatureRoll extends Roll {
     public Feature[] features;
 
     public FeatureRoll(Character character, CharStatus status, Feature... feats) {
+        super(status);
+
         final double rollAvg = Stream.of(feats)
                 .map(f -> character.features.get(f) + status.modifiers.feat(f))
                 .mapToDouble(Dices::feature)
                 .sum() / feats.length;
 
         this.features = feats;
-        this.mods = status.modifiers;
-        this.sanity = sanityMod(status.sanity);
         this.roll = Dices.randRound(rollAvg);
-        this.result = roll + mods.rollMod + sanity;
-        this.critical = Critical.roll();
+        this.result = roll + mods.rollMod + statusMod;
     }
 
     public boolean check(int difficulty) {

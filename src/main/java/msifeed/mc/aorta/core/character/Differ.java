@@ -104,6 +104,16 @@ class Differ {
             }
         }
 
+        // Illness
+        if (before.illness.illness < after.illness.illness)
+            diffs.add(L10n.fmt("aorta.diff.status.illness.add_illness", after.illness.illness - before.illness.illness));
+        if (before.illness.illness > after.illness.illness)
+            diffs.add(L10n.fmt("aorta.diff.status.illness.rem_illness", before.illness.illness - after.illness.illness));
+        if (before.illness.treatment < after.illness.treatment)
+            diffs.add(L10n.fmt("aorta.diff.status.illness.add_treatment", after.illness.treatment - before.illness.treatment));
+        if (before.illness.treatment > after.illness.treatment)
+            diffs.add(L10n.fmt("aorta.diff.status.illness.rem_treatment", before.illness.treatment - after.illness.treatment));
+
         return String.join(", ", diffs);
     }
 
@@ -130,7 +140,7 @@ class Differ {
         }
     }
 
-    static String status(Character character, CharStatus before, CharStatus after) {
+    static String finalStatus(Character character, CharStatus before, CharStatus after) {
         final ArrayList<String> diffs = new ArrayList<>();
 
         if (!before.name.equalsIgnoreCase(after.name))
@@ -159,6 +169,16 @@ class Differ {
             else
                 diffs.add(L10n.fmt("aorta.diff.status.psionics_level", psionicsAfter));
         }
+
+        // Illness
+        if (before.illness.level() != after.illness.level())
+            diffs.add(L10n.fmt("aorta.diff.status.illness." + after.illness.level()));
+        if (!before.illness.cured() && after.illness.cured())
+            diffs.add(L10n.tr("aorta.diff.status.illness.cured"));
+        if (!before.illness.lost() && after.illness.lost())
+            diffs.add(L10n.tr("aorta.diff.status.illness.lost"));
+        if (before.illness.debuff() != after.illness.debuff())
+            diffs.add(L10n.fmt("aorta.diff.status.illness.debuff", after.illness.debuff()));
 
         return String.join(", ", diffs);
     }

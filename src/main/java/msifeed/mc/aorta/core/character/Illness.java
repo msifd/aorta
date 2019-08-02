@@ -3,24 +3,63 @@ package msifeed.mc.aorta.core.character;
 public class Illness {
     private static final int MASK = 0x3ff; // 10 bits per value
 
-    public int illnessThreshold = 0;
+    public int limit = 0;
     public int illness = 0;
     public int treatment = 0;
-    public boolean thresholdVisible = false;
+    public boolean limitVisible = false;
 
     public Illness() {}
 
     public int pack() {
-        return ((thresholdVisible ? 1 : 0) << 30)
-                | (illnessThreshold & MASK) << 20
+        return ((limitVisible ? 1 : 0) << 30)
+                | (limit & MASK) << 20
                 | (illness & MASK) << 10
                 | treatment & MASK;
     }
 
     public void unpack(int i) {
-        thresholdVisible = (i >> 30 & 1) == 1;
-        illnessThreshold = (i >> 20) & MASK;
+        limitVisible = (i >> 30 & 1) == 1;
+        limit = (i >> 20) & MASK;
         illness = (i >> 10) & MASK;
         treatment = i & MASK;
+    }
+
+    public boolean cured() {
+        return limit > 0 && treatment >= limit;
+    }
+
+    public boolean lost() {
+        return limit > 0 && illness >= limit;
+    }
+
+    /// На отрезке [0, 7] от плохого самочувствия к хорошему
+    public int level() {
+        final int diff = treatment - illness;
+        if (diff >= 50)
+            return 7;
+        else if (diff >= 30)
+            return 6;
+        else if (diff >= 10)
+            return 5;
+        else if (diff >= 0)
+            return 4;
+        else if (diff >= -10)
+            return 3;
+        else if (diff >= -30)
+            return 2;
+        else if (diff >= -50)
+            return 1;
+        else
+            return 0;
+    }
+
+    public int debuff() {
+        final int l = level();
+        if (l > 3)
+            return 0;
+        else if (l == 3)
+            return -2;
+        else
+            return -10;
     }
 }

@@ -138,7 +138,7 @@ public enum CharRpc {
                     sendLogs(sender, (EntityLivingBase) entity, "update_status", Differ.diff(before, optStatus.get()));
 
                 CharacterAttribute.get(entity).ifPresent(c -> {
-                    sendLogs(sender, (EntityLivingBase) entity, "status", Differ.status(c, before, optStatus.get()));
+                    sendLogs(sender, (EntityLivingBase) entity, "status", Differ.finalStatus(c, before, optStatus.get()));
                 });
 
                 if (!before.name.equals(optStatus.get().name)) {
