@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import msifeed.mc.aorta.genesis.GenesisTrait;
 import msifeed.mc.aorta.genesis.GenesisUnit;
 import msifeed.mc.aorta.genesis.JsonUtils;
+import msifeed.mc.aorta.genesis.blocks.data.TrapData;
 
 import java.util.HashSet;
 import java.util.List;
@@ -17,6 +18,7 @@ public class BlockGenesisUnit extends GenesisUnit {
     int[] textureLayout = null;
     public String title = null;
     public String[] description;
+    public TrapData trapData = null;
 
     BlockGenesisUnit(JsonObject json, HashSet<GenesisTrait> traits) {
         super(json, traits);
@@ -50,6 +52,12 @@ public class BlockGenesisUnit extends GenesisUnit {
 
         JsonUtils.consumeString(json, Props.title, s -> title = s);
         JsonUtils.consumeString(json, Props.desc, s -> description = s.split("\n"));
+
+        if (json.has(Props.trap)) {
+            final JsonElement e = json.get(Props.trap);
+            if (e.isJsonObject())
+                trapData = new TrapData(e.getAsJsonObject());
+        }
     }
 
     private static class Props {
@@ -57,5 +65,6 @@ public class BlockGenesisUnit extends GenesisUnit {
         static final String textureLayout = "texture_layout";
         static final String title = "title";
         static final String desc = "description";
+        static final String trap = "trap";
     }
 }

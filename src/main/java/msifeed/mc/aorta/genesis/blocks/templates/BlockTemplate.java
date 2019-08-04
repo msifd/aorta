@@ -16,6 +16,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.Random;
 
 public class BlockTemplate extends Block implements BlockTraitCommons.Getter {
     private BlockTraitCommons traits;
@@ -77,6 +78,16 @@ public class BlockTemplate extends Block implements BlockTraitCommons.Getter {
     }
 
     @Override
+    public void updateTick(World world, int x, int y, int z, Random rand) {
+        traits.updateTick(this, world, x, y, z, rand);
+    }
+
+    @Override
+    public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
+        traits.onEntityCollidedWithBlock(this, world, x, y, z, entity);
+    }
+
+    @Override
     public int onBlockPlaced(World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int meta) {
         return traits.onBlockPlaced(side, meta);
     }
@@ -106,10 +117,10 @@ public class BlockTemplate extends Block implements BlockTraitCommons.Getter {
     }
 
     @Override
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World p_149668_1_, int p_149668_2_, int p_149668_3_, int p_149668_4_) {
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
         if (traits.isNotCollidable())
             return null;
-        return super.getCollisionBoundingBoxFromPool(p_149668_1_, p_149668_2_, p_149668_3_, p_149668_4_);
+        return super.getCollisionBoundingBoxFromPool(world, x, y, z);
     }
 
     @Override
@@ -121,8 +132,8 @@ public class BlockTemplate extends Block implements BlockTraitCommons.Getter {
     }
 
     @Override
-    public IIcon getIcon(IBlockAccess p_149673_1_, int p_149673_2_, int p_149673_3_, int p_149673_4_, int p_149673_5_) {
-        return super.getIcon(p_149673_1_, p_149673_2_, p_149673_3_, p_149673_4_, p_149673_5_);
+    public IIcon getIcon(IBlockAccess access, int x, int y, int z, int side) {
+        return super.getIcon(access, x, y, z, side);
     }
 
     @Override

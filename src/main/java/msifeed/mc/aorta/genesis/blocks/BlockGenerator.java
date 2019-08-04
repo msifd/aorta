@@ -154,7 +154,7 @@ public class BlockGenerator implements Generator {
             if (unit.hasTrait(with_alpha))
                 traits.useAlphaChannel = true;
             if (unit.hasTrait(not_collidable))
-                traits.not_collidable = true;
+                traits.notCollidable = true;
 
             if (unit.hasTrait(large))
                 traits.size = BlockTraitCommons.Size.LARGE;

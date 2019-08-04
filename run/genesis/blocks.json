@@ -128,5 +128,19 @@
       "block",
       "bed"
     ]
+  },
+  {
+    "id": "test_trap",
+    "texture": "minecraft:stone",
+    "trap": {
+      "message": "Congrats, you've lost a leg.",
+      "radius": 5,
+      "destroy": false
+    },
+    "traits": [
+      "block",
+      "half",
+      "tiny"
+    ]
   }
 ]

@@ -18,6 +18,7 @@ public class Composer {
         COMPOSERS.put(SpeechType.GM_GLOBAL, new GmGlobalComposer());
         COMPOSERS.put(SpeechType.ROLL, new RollComposer());
         COMPOSERS.put(SpeechType.LOG, new LogComposer());
+        COMPOSERS.put(SpeechType.ENV, new EnvComposer());
     }
 
     public static ChatMessage makeMessage(SpeechType type, EntityPlayer player, ChatComponentTranslation comp) {

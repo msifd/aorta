@@ -2,11 +2,17 @@ package msifeed.mc.aorta.genesis.blocks;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import msifeed.mc.aorta.chat.ChatHandler;
+import msifeed.mc.aorta.chat.composer.Composer;
+import msifeed.mc.aorta.chat.composer.SpeechType;
+import msifeed.mc.aorta.chat.net.ChatMessage;
 import msifeed.mc.aorta.genesis.GenesisTrait;
 import msifeed.mc.aorta.genesis.blocks.client.GenesisBlockRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPistonBase;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Facing;
@@ -14,6 +20,8 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import java.util.Random;
 
 public class BlockTraitCommons {
     private static final int[] ROTATION_MATRIX = new int[]{
@@ -28,7 +36,7 @@ public class BlockTraitCommons {
     public BlockGenesisUnit unit;
     public BlockTextureLayout textureLayout = null;
     public boolean half = false;
-    public boolean not_collidable = false;
+    public boolean notCollidable = false;
     public boolean transparent = false;
     public boolean useAlphaChannel = false;
     public Type type = Type.SIMPLE;
@@ -47,7 +55,7 @@ public class BlockTraitCommons {
     }
 
     public boolean isNotCollidable() {
-        return not_collidable;
+        return notCollidable || unit.trapData != null;
     }
 
     public boolean isSolid(int side, int meta) {
@@ -102,6 +110,31 @@ public class BlockTraitCommons {
         if (type == Type.PILLAR)
             return getPillarMeta(side, meta);
         return meta;
+    }
+
+    public void updateTick(Block block, World world, int x, int y, int z, Random rand) {
+        if (!world.isRemote && unit.trapData != null) {
+            final int meta = world.getBlockMetadata(x, y, z);
+            if (meta > 0) {
+                world.setBlockMetadataWithNotify(x, y, z, meta - 1,4);
+                world.scheduleBlockUpdate(x, y, z, block, meta);
+            }
+        }
+    }
+
+    public void onEntityCollidedWithBlock(Block block, World world, int x, int y, int z, Entity entity) {
+        if (!world.isRemote && unit.trapData != null && entity instanceof EntityPlayer) {
+            final int meta = world.getBlockMetadata(x, y, z);
+            if (meta == 0) {
+                final ChatMessage msg = Composer.makeMessage(SpeechType.ENV, null, unit.trapData.message);
+                msg.radius = unit.trapData.radius;
+                ChatHandler.sendSystemChatMessage((EntityPlayer) entity, msg);
+                if (unit.trapData.destroy)
+                    world.setBlockToAir(x, y, z);
+                world.scheduleBlockUpdate(x, y, z, block, 20);
+            }
+            world.setBlockMetadataWithNotify(x, y, z, 4,4);
+        }
     }
 
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity) {
