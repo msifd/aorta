@@ -11,6 +11,8 @@ item.tool_roller.name=Роллер-тул
 item.tool_designer.name=Дэсигнер-тул
 
 item.remote_book.name=Загрузчик текстов инфосферы
+item.remote_note.name=Чистый лист
+
 item.lock_blank_key.name=Заготовка ключа
 item.lock_key.name=Ключ
 item.lock_build_in.name=Встроенный замок

@@ -5,6 +5,7 @@ import msifeed.mc.aorta.client.gui.ScreenItemDesigner;
 import msifeed.mc.aorta.client.gui.ScreenLangSelector;
 import msifeed.mc.aorta.client.gui.book.ScreenBookEditor;
 import msifeed.mc.aorta.client.gui.book.ScreenBookViewer;
+import msifeed.mc.aorta.client.gui.book.ScreenNoteEditor;
 import msifeed.mc.aorta.client.gui.chareditor.ScreenCharEditor;
 import msifeed.mc.aorta.client.gui.roller.ScreenRoller;
 import msifeed.mc.aorta.client.gui.status.ScreenStatus;
@@ -79,6 +80,11 @@ public class GuiHandlerClient extends GuiHandler {
     public void toggleBookEditor(EntityPlayer player) {
         if (player.worldObj.isRemote)
             toggleGui(ScreenBookEditor.class, () -> new ScreenBookEditor(player));
+    }
+
+    public void toggleNoteEditor(EntityPlayer player) {
+        if (player.worldObj.isRemote)
+            toggleGui(ScreenNoteEditor.class, () -> new ScreenNoteEditor(player));
     }
 
     @Override

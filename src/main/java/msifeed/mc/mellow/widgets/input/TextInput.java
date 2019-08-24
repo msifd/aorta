@@ -261,6 +261,10 @@ public class TextInput extends Widget implements KeyHandler {
         }
     }
 
+    public static boolean isJavaName(String s) {
+        return s.codePoints().allMatch(Character::isJavaIdentifierStart);
+    }
+
     public static boolean isValidName(String s) {
         return s.codePoints().allMatch(c -> Character.isLetter(c) || c == ' ');
     }

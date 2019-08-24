@@ -37,8 +37,8 @@ public enum RemoteBookManager {
         INSTANCE.booksDir = new File(mcRootDir, "books");
         INSTANCE.booksDir.mkdirs();
 
-        final ItemRemoteBook wikiBook = new ItemRemoteBook();
-        GameRegistry.registerItem(wikiBook, "remote_book");
+        GameRegistry.registerItem(new ItemRemoteBook(), "remote_book");
+        GameRegistry.registerItem(new ItemRemoteNote(), "remote_note");
     }
 
     public void fetchBook(String index, Consumer<RemoteBook> consumer) {

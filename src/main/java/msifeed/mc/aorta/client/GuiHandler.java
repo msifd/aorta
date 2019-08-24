@@ -13,6 +13,7 @@ public class GuiHandler {
     public void toggleLangSelector(EntityLivingBase entity) { }
     public void toggleBookViewer(EntityPlayer player) { }
     public void toggleBookEditor(EntityPlayer player) { }
+    public void toggleNoteEditor(EntityPlayer player) { }
     public void toggleDigitalLock(LockObject lock) { }
     public void toggleSkeletalKey(LockObject lock) { }
     public void toggleDesignerScreen() { }

@@ -21,7 +21,7 @@ public class ScreenBookEditor extends MellowGuiScreen {
 
     public ScreenBookEditor(EntityPlayer player) {
         final Window window = new Window();
-        window.setTitle(L10n.tr("item.remote_book.value"));
+        window.setTitle(L10n.tr("item.remote_book.name"));
         scene.addChild(window);
 
         final Widget content = window.getContent();
@@ -29,6 +29,7 @@ public class ScreenBookEditor extends MellowGuiScreen {
 
         final TextInput input = new TextInput();
         input.setPlaceholderText("ITDB-ключ текста");
+        input.setFilter(TextInput::isJavaName);
         input.setCallback(s -> {
             status = CheckStatus.NONE;
             updateStatus("");
