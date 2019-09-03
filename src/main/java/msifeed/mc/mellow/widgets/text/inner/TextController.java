@@ -1,43 +1,106 @@
-package msifeed.mc.mellow.widgets.input;
+package msifeed.mc.mellow.widgets.text.inner;
 
 import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
-import java.util.function.BiConsumer;
+import java.util.List;
 import java.util.stream.Stream;
 
-class TextController {
-    private ArrayList<StringBuilder> lines = new ArrayList<>();
+public class TextController {
+    private List<StringBuilder> lines = new ArrayList<>();
     private int curLine = 0;
     private int curColumn = 0;
+    private int maxColumns = 50;
+    private int skip = 0;
+    private int limit = 10;
 
-    private int maxLines = Integer.MAX_VALUE;
-    private int maxChars = 75;
-
-    private BiConsumer<TextController, StringBuilder> onChange = (c, l) -> {};
-
-    TextController() {
+    public TextController() {
         clear();
     }
 
-    boolean isEmpty() {
-        return lines.size() == 1 && lines.get(0).length() == 0;
-    }
-
-    int getCurColumn() {
-        return curColumn;
-    }
-
-    int getCurLine() {
+    public int getCurLine() {
         return curLine;
     }
 
-    void clear() {
+    public int getCurLineView() {
+        return curLine % limit;
+    }
+
+    public int getCurColumn() {
+        return curColumn;
+    }
+
+    public int getMaxColumns() {
+        return maxColumns;
+    }
+
+    public void setMaxColumns(int maxColumns) {
+        this.maxColumns = maxColumns;
+    }
+
+    public int getSkip() {
+        return skip;
+    }
+
+    public void setSkip(int skip) {
+        this.skip = Math.max(0, Math.min(skip, getLineCount() - 1));
+    }
+
+    public void updateSkip(int delta) {
+        setSkip(skip + delta);
+    }
+
+    public int getLimit() {
+        return limit;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
+
+    public StringBuilder getCurrentLine() {
+        return lines.get(Math.max(0, Math.min(curLine, lines.size() - 1)));
+    }
+
+    public StringBuilder getLine(int n) {
+        return lines.get(Math.max(0, Math.min(n, lines.size() - 1)));
+    }
+
+    public int getLineCount() {
+        return lines.size();
+    }
+
+    public String toJoinedString() {
+        final StringBuilder sb = new StringBuilder();
+        for (StringBuilder l : lines) {
+            sb.append(l);
+            sb.append('\n');
+        }
+        return sb.toString();
+//        return String.join("\n", lines);
+    }
+
+    public Stream<String> toLineStream() {
+        return lines.stream()
+                .skip(skip)
+                .limit(limit)
+                .map(StringBuilder::toString);
+    }
+
+    public void setLines(List<String> lines) {
+        this.lines.clear();
+        for (String s : lines)
+            this.lines.add(new StringBuilder(s));
+        if (this.lines.isEmpty())
+            this.lines.add(new StringBuilder());
+    }
+
+    public void clear() {
         lines.clear();
         lines.add(new StringBuilder());
     }
 
-    void moveCursor(int line, int column) {
+    public void moveCursor(int line, int column) {
         line = Math.max(0, Math.min(line, lines.size() - 1));
         final StringBuilder sb = lines.get(line);
         column = Math.max(0, Math.min(column, sb.length()));
@@ -46,22 +109,22 @@ class TextController {
         curColumn = column;
     }
 
-    void moveCursorLine(boolean down) {
-        final int target = curLine + (down ? 1 : -1);
-        if (target >= 0 && target < lines.size()) {
+    public void moveCursorLine(int delta) {
+        final int target = Math.max(0, Math.min(curLine + delta, lines.size() - 1));
+        if (target != curLine) {
             curLine = target;
             curColumn = Math.min(curColumn, lines.get(curLine).length());
         }
     }
 
-    void moveCursorColumn(boolean right) {
+    public void moveCursorColumn(boolean right) {
         final StringBuilder sb = lines.get(curLine);
         final int target = getColumnTarget(sb, right);
         if (target >= 0 && target <= sb.length())
             curColumn = target;
     }
 
-    void remove(boolean right) {
+    public void remove(boolean right) {
         final StringBuilder sb = lines.get(curLine);
         final int target = getColumnTarget(sb, right);
 
@@ -90,7 +153,6 @@ class TextController {
             sb.delete(start, end);
             if (!right)
                 curColumn = target;
-            changed(sb);
         }
     }
 
@@ -103,7 +165,7 @@ class TextController {
         }
     }
 
-    void input(char c) {
+    public void insert(char c) {
         switch (Character.getType(c)) {
             case Character.CONTROL:     // \p{Cc}
             case Character.FORMAT:      // \p{Cf}
@@ -114,27 +176,20 @@ class TextController {
         }
 
         StringBuilder sb = getCurrentLine();
-        if (sb.length() >= maxChars) {
-            if (lines.size() >= maxLines)
-                return;
+        if (sb.length() >= maxColumns) {
             breakLine();
             sb = getCurrentLine();
         }
         sb.insert(curColumn, c);
         curColumn++;
-        changed(sb);
     }
 
-    void input(String str) {
-        if (isMultiLine()) {
-            final String[] lines = str.split("\n");
-            for (String line : lines) {
-                inputSolidLine(line);
-                if (line != lines[lines.length - 1])
-                    breakLine();
-            }
-        } else {
-            inputSolidLine(str.replaceAll("\n", " "));
+    public void insert(String str) {
+        final String[] lines = str.split("\n");
+        for (int i = 0; i < lines.length; i++) {
+            inputSolidLine(lines[i]);
+            if (i < lines.length - 1)
+                breakLine();
         }
     }
 
@@ -145,56 +200,28 @@ class TextController {
         int strOffset = 0;
         StringBuilder sb = lines.get(curLine);
         while (strOffset < str.length()) {
-            if (sb.length() < maxChars) {
-                final int charsFit = maxChars - sb.length();
+            if (sb.length() < maxColumns) {
+                final int charsFit = maxColumns - sb.length();
                 final int offsetEnd = strOffset + Math.min(charsFit, str.length() - strOffset);
                 sb.append(str, strOffset, offsetEnd);
                 curColumn += offsetEnd - strOffset;
                 strOffset = offsetEnd;
             } else {
-                changed(sb);
                 breakLine();
                 sb = lines.get(lines.size() - 1);
             }
         }
-
-        changed(sb);
     }
 
-    void breakLine() {
+    public void breakLine() {
         // TODO: переносить часть строки на новую при разрыве в середине
         final StringBuilder sb = new StringBuilder();
         lines.add(curLine + 1, sb);
         curLine++;
         curColumn = 0;
-        changed(sb);
-    }
-
-    private boolean isMultiLine() {
-        return maxLines > 0;
-    }
-
-    StringBuilder getCurrentLine() {
-        return lines.get(curLine);
-    }
-
-    Stream<String> toLinesStream() {
-        return lines.stream().map(StringBuilder::toString);
-    }
-
-    String toJoinedString() {
-        return String.join("\n", lines);
-    }
-
-    private void changed(StringBuilder sb) {
-        onChange.accept(this, sb);
     }
 
     private static boolean moveByWord() {
         return Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL);
-    }
-
-    private static boolean moveAndSelect() {
-        return Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
     }
 }

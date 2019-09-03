@@ -20,6 +20,7 @@ public class DropList<T> extends Widget {
     public DropList(List<T> items) {
         this.items = items;
         this.popupList = new DropListPopup(this);
+        selectItem(0);
         refill();
     }
 

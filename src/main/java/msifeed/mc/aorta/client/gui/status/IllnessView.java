@@ -5,10 +5,10 @@ import msifeed.mc.aorta.sys.utils.L10n;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.widgets.Widget;
-import msifeed.mc.mellow.widgets.basic.Label;
 import msifeed.mc.mellow.widgets.basic.Separator;
 import msifeed.mc.mellow.widgets.button.Checkbox;
-import msifeed.mc.mellow.widgets.input.TextInput;
+import msifeed.mc.mellow.widgets.text.Label;
+import msifeed.mc.mellow.widgets.text.TextInput;
 
 class IllnessView extends Widget {
     private final CharStatus status;

@@ -1,23 +1,22 @@
 package msifeed.mc.aorta.books;
 
 import msifeed.mc.aorta.Aorta;
+import msifeed.mc.aorta.genesis.AortaCreativeTab;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class ItemRemoteNote extends ItemRemoteBook {
-    public ItemRemoteNote() {
-        super();
-        setUnlocalizedName("remote_note");
+public class ItemRemoteBookEditor extends Item {
+    public ItemRemoteBookEditor() {
+        setUnlocalizedName("remote_book_editor");
         setTextureName("minecraft:paper");
+        setCreativeTab(AortaCreativeTab.TOOLS);
     }
 
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-        if (itemStack.hasTagCompound())
-            Aorta.GUI_HANDLER.toggleBookViewer(player);
-        else
-            Aorta.GUI_HANDLER.toggleNoteEditor(player);
+        Aorta.GUI_HANDLER.toggleBookEditor(player);
         return itemStack;
     }
 }

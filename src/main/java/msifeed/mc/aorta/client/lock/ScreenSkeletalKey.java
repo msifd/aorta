@@ -6,7 +6,7 @@ import msifeed.mc.aorta.sys.rpc.Rpc;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
-import msifeed.mc.mellow.widgets.input.TextInput;
+import msifeed.mc.mellow.widgets.text.TextInput;
 import msifeed.mc.mellow.widgets.window.Window;
 import net.minecraft.tileentity.TileEntity;
 

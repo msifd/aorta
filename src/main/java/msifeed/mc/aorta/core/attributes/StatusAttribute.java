@@ -3,6 +3,7 @@ package msifeed.mc.aorta.core.attributes;
 import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.core.character.CharStatus;
 import msifeed.mc.aorta.sys.attributes.EntityLivingAttribute;
+import msifeed.mc.aorta.sys.attributes.MissingRequiredAttributeException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,6 +17,10 @@ public class StatusAttribute extends EntityLivingAttribute<CharStatus> {
 
     public static Optional<CharStatus> get(Entity e) {
         return INSTANCE.getValue(e);
+    }
+
+    public static CharStatus require(Entity e) {
+        return INSTANCE.getValue(e).orElseThrow(() -> new MissingRequiredAttributeException(INSTANCE, e));
     }
 
     private StatusAttribute() {

@@ -10,8 +10,9 @@ item.tool_status.name=Status tool
 item.tool_roller.name=Roller tool
 item.tool_designer.name=Designer tool
 
-item.remote_book.name=Infosphere text downloader
-item.remote_note.name=Blank paper
+item.remote_book.name=Book copy
+item.remote_book_editor.name=Writing kit
+item.remote_book_loader.name=Infosphere text downloader
 
 item.lock_blank_key.name=Blank key
 item.lock_key.name=Key

@@ -3,7 +3,7 @@ package msifeed.mc.aorta.client.gui.status;
 import msifeed.mc.mellow.handlers.MouseHandler;
 import msifeed.mc.mellow.render.RenderShapes;
 import msifeed.mc.mellow.utils.Geom;
-import msifeed.mc.mellow.widgets.basic.Label;
+import msifeed.mc.mellow.widgets.text.Label;
 
 import java.awt.*;
 import java.net.URI;

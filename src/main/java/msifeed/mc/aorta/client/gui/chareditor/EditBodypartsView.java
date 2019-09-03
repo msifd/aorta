@@ -6,10 +6,10 @@ import msifeed.mc.aorta.core.character.CharStatus;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.widgets.Widget;
-import msifeed.mc.mellow.widgets.basic.Label;
 import msifeed.mc.mellow.widgets.basic.Separator;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
 import msifeed.mc.mellow.widgets.button.FlatButtonLabel;
+import msifeed.mc.mellow.widgets.text.Label;
 
 import java.util.stream.Stream;
 

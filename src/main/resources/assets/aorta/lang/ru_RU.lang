@@ -10,8 +10,9 @@ item.tool_status.name=Статус-тул
 item.tool_roller.name=Роллер-тул
 item.tool_designer.name=Дэсигнер-тул
 
-item.remote_book.name=Загрузчик текстов инфосферы
-item.remote_note.name=Чистый лист
+item.remote_book.name=Экземпляр книги
+item.remote_book_editor.name=Набор для письма
+item.remote_book_loader.name=Загрузчик текстов инфосферы
 
 item.lock_blank_key.name=Заготовка ключа
 item.lock_key.name=Ключ

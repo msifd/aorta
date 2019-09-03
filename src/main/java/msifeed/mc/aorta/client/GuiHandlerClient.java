@@ -3,7 +3,7 @@ package msifeed.mc.aorta.client;
 import cpw.mods.fml.client.FMLClientHandler;
 import msifeed.mc.aorta.client.gui.ScreenItemDesigner;
 import msifeed.mc.aorta.client.gui.ScreenLangSelector;
-import msifeed.mc.aorta.client.gui.book.ScreenBookEditor;
+import msifeed.mc.aorta.client.gui.book.ScreenBookLoader;
 import msifeed.mc.aorta.client.gui.book.ScreenBookViewer;
 import msifeed.mc.aorta.client.gui.book.ScreenNoteEditor;
 import msifeed.mc.aorta.client.gui.chareditor.ScreenCharEditor;
@@ -17,19 +17,16 @@ import msifeed.mc.aorta.client.lock.ScreenSkeletalKey;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.traits.Trait;
 import msifeed.mc.aorta.locks.LockObject;
+import msifeed.mc.mellow.mc.MellowGuiScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.function.Supplier;
 
 public class GuiHandlerClient extends GuiHandler {
-    private final Logger LOG = LogManager.getLogger("Aorta.GuiHandler");
-
     public void init() {
         StatusHudReplacer.init();
         MinecraftForge.EVENT_BUS.register(DebugHud.INSTANCE);
@@ -77,12 +74,12 @@ public class GuiHandlerClient extends GuiHandler {
     }
 
     @Override
-    public void toggleBookEditor(EntityPlayer player) {
+    public void toggleBookLoader(EntityPlayer player) {
         if (player.worldObj.isRemote)
-            toggleGui(ScreenBookEditor.class, () -> new ScreenBookEditor(player));
+            toggleGui(ScreenBookLoader.class, () -> new ScreenBookLoader(player));
     }
 
-    public void toggleNoteEditor(EntityPlayer player) {
+    public void toggleBookEditor(EntityPlayer player) {
         if (player.worldObj.isRemote)
             toggleGui(ScreenNoteEditor.class, () -> new ScreenNoteEditor(player));
     }
@@ -107,13 +104,20 @@ public class GuiHandlerClient extends GuiHandler {
 
     private void toggleGui(Class<?> c, Supplier<GuiScreen> screenSupplier) {
         final Minecraft mc = Minecraft.getMinecraft();
-        if (c.isInstance(mc.currentScreen)) {
-            mc.displayGuiScreen(null);
+        final Class<?> currentScreenClass = mc.currentScreen == null ? null : mc.currentScreen.getClass();
+        if (mc.currentScreen instanceof MellowGuiScreen) {
+            ((MellowGuiScreen) mc.currentScreen).closeGui();
+            if (mc.currentScreen != null)
+                return;
         } else {
+            mc.displayGuiScreen(null);
+        }
+
+        if (currentScreenClass != c) {
             try {
                 FMLClientHandler.instance().displayGuiScreen(mc.thePlayer, screenSupplier.get());
             } catch (Exception e) {
-                LOG.throwing(e);
+                e.printStackTrace();
             }
         }
     }

@@ -7,8 +7,8 @@ import msifeed.mc.aorta.sys.utils.L10n;
 import msifeed.mc.mellow.layout.AnchorLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.widgets.Widget;
-import msifeed.mc.mellow.widgets.basic.Label;
 import msifeed.mc.mellow.widgets.button.FlatButtonLabel;
+import msifeed.mc.mellow.widgets.text.Label;
 
 class BodypartHealthView extends Widget {
     private final Character character;

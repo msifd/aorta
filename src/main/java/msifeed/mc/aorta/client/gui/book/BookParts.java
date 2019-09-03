@@ -5,8 +5,9 @@ import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.utils.Point;
 
 enum BookParts {
-    REGULAR(RemoteBook.Style.REGULAR), RICH_BOOK(RemoteBook.Style.RICH), PAD(RemoteBook.Style.PAD), NOTE(RemoteBook.Style.NOTE);
+    REGULAR(RemoteBook.Style.REGULAR), RICH(RemoteBook.Style.RICH), PAD(RemoteBook.Style.PAD), NOTE(RemoteBook.Style.NOTE);
 
+    RemoteBook.Style style;
     Part bookBg = new Part();
     Part leftBtn = new Part();
     Part leftBtnHover = new Part();
@@ -14,6 +15,7 @@ enum BookParts {
     Part rightBtnHover = new Part();
 
     BookParts(RemoteBook.Style style) {
+        this.style = style;
         bookBg.sprite = style.sprite;
         bookBg.pos = new Point(0, 0);
         bookBg.size = new Point(192, 192);

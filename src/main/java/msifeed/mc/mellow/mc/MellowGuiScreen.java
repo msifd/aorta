@@ -8,7 +8,6 @@ import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.scene.ProfilingScene;
 import msifeed.mc.mellow.widgets.scene.Scene;
-import msifeed.mc.mellow.widgets.window.Window;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -113,24 +112,25 @@ public class MellowGuiScreen extends GuiScreen {
         final int k = Keyboard.getEventKey();
 
         if (k == Keyboard.KEY_ESCAPE) {
-            Widget focusedWindow = Widget.focusedWidget;
-
-            if (focusedWindow != null) {
-                while (focusedWindow != null && !(focusedWindow instanceof Window))
-                    focusedWindow = focusedWindow.getParent();
-            } else {
-                for (Widget w : scene.getChildren()) {
-                    if (w instanceof Window) {
-                        focusedWindow = w;
-                        break;
-                    }
-                }
-            }
-
-            if (focusedWindow != null) {
-                focusedWindow.getParent().removeChild(focusedWindow);
-                Widget.setFocused(null);
-            }
+            closeGui();
+//            Widget focusedWindow = Widget.focusedWidget;
+//
+//            if (focusedWindow != null) {
+//                while (focusedWindow != null && !(focusedWindow instanceof Window))
+//                    focusedWindow = focusedWindow.getParent();
+//            } else {
+//                for (Widget w : scene.getChildren()) {
+//                    if (w instanceof Window) {
+//                        focusedWindow = w;
+//                        break;
+//                    }
+//                }
+//            }
+//
+//            if (focusedWindow != null) {
+//                focusedWindow.getParent().removeChild(focusedWindow);
+//                Widget.setFocused(null);
+//            }
             return;
         }
 

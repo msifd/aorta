@@ -1,4 +1,4 @@
-package msifeed.mc.mellow.widgets.basic;
+package msifeed.mc.mellow.widgets.text;
 
 import msifeed.mc.mellow.Mellow;
 import msifeed.mc.mellow.render.RenderWidgets;

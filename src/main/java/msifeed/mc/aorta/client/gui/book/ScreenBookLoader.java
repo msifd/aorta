@@ -6,20 +6,20 @@ import msifeed.mc.aorta.sys.utils.L10n;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.mellow.widgets.Widget;
-import msifeed.mc.mellow.widgets.basic.Label;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
-import msifeed.mc.mellow.widgets.input.TextInput;
+import msifeed.mc.mellow.widgets.text.Label;
+import msifeed.mc.mellow.widgets.text.TextInput;
 import msifeed.mc.mellow.widgets.window.Window;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.Random;
 
-public class ScreenBookEditor extends MellowGuiScreen {
+public class ScreenBookLoader extends MellowGuiScreen {
     private final ButtonLabel getBtn;
     private Label statusLabel = new Label();
     private CheckStatus status = CheckStatus.NONE;
 
-    public ScreenBookEditor(EntityPlayer player) {
+    public ScreenBookLoader(EntityPlayer player) {
         final Window window = new Window();
         window.setTitle(L10n.tr("item.remote_book.name"));
         scene.addChild(window);
@@ -43,7 +43,7 @@ public class ScreenBookEditor extends MellowGuiScreen {
                     check(input.getText());
                     break;
                 case EXISTS:
-                    RemoteBookManager.INSTANCE.requestSign(input.getText());
+                    RemoteBookManager.INSTANCE.requestLoad(input.getText());
                     closeGui();
                     break;
                 case MISSING:

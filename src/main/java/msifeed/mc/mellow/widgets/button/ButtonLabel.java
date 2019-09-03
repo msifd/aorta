@@ -4,7 +4,7 @@ import msifeed.mc.mellow.Mellow;
 import msifeed.mc.mellow.layout.AnchorLayout;
 import msifeed.mc.mellow.render.RenderParts;
 import msifeed.mc.mellow.theme.Part;
-import msifeed.mc.mellow.widgets.basic.Label;
+import msifeed.mc.mellow.widgets.text.Label;
 
 public class ButtonLabel extends Button {
     private Part normalPart = Mellow.getPart("button_normal");

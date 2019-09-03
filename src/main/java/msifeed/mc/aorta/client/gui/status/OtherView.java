@@ -4,8 +4,8 @@ import msifeed.mc.aorta.core.character.CharStatus;
 import msifeed.mc.aorta.sys.utils.L10n;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.widgets.Widget;
-import msifeed.mc.mellow.widgets.basic.Label;
-import msifeed.mc.mellow.widgets.input.TextInput;
+import msifeed.mc.mellow.widgets.text.Label;
+import msifeed.mc.mellow.widgets.text.TextInput;
 
 class OtherView extends Widget {
     private final CharStatus status;

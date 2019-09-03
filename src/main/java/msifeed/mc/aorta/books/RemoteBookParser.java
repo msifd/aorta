@@ -2,39 +2,52 @@ package msifeed.mc.aorta.books;
 
 import msifeed.mc.aorta.chat.Language;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+
 class RemoteBookParser {
-    static RemoteBook parse(String raw) throws RuntimeException {
-        final RemoteBook book = new RemoteBook();
+    static RemoteBook parse(String text) throws RuntimeException {
+        if (text.trim().isEmpty())
+            return null;
 
-        final String cleanedRaw = raw.replaceAll("\r", "");
-        if (cleanedRaw.trim().isEmpty()) throw new RuntimeException("Remote book is empty!");
+        try {
+            final BufferedReader reader = new BufferedReader(new StringReader(text));
+            final String firstLine = reader.readLine();
+            if (firstLine == null)
+                return null;
+            final RemoteBook book = new RemoteBook();
+            int minBodyOffset = firstLine.length();
 
-        int pos;
+            if (firstLine.startsWith("#!")) {
+                final String[] header = firstLine.substring(2).trim().split(" ");
 
-        final int firstLineIndex = cleanedRaw.indexOf('\n');
-        final String firstLine = cleanedRaw.substring(0, firstLineIndex).trim();
-        pos = firstLineIndex + 1;
+                if (header.length > 0)
+                    book.style = RemoteBook.Style.valueOf(header[0].toUpperCase());
+                if (header.length > 1)
+                    book.lang = Language.valueOf(header[1].toUpperCase());
 
-        if (firstLine.startsWith("#!")) {
-            final String[] header = firstLine.substring(2).split(" ");
-            book.style = RemoteBook.Style.valueOf(header[0].toUpperCase());
+                book.title = reader.readLine();
+                if (book.title == null)
+                    return null;
+                minBodyOffset += book.title.length();
+            } else {
+                book.title = firstLine;
+            }
 
-            if (header.length > 1)
-                book.lang = Language.valueOf(header[1].toUpperCase());
-            else
-                book.lang = Language.COMMON;
+            final String bodyLine = reader.readLine();
+            if (bodyLine == null)
+                return null;
 
-            final int secondLineIndex = cleanedRaw.indexOf('\n', pos);
-            if (secondLineIndex < 0) throw new RuntimeException("Book has only header!");
-            book.title = cleanedRaw.substring(pos, secondLineIndex).trim();
-            pos = secondLineIndex + 1;
-        } else {
-            book.title = firstLine;
+            final String bodyLineTrimmed = bodyLine.substring(0, Math.min(bodyLine.length(), 10));
+            final int bodyIndex = text.indexOf(bodyLineTrimmed, minBodyOffset);
+
+            book.text = text.substring(bodyIndex);
+
+            return book;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
-
-        if (pos == cleanedRaw.length()) throw new RuntimeException("Book has no body text!");
-        book.text = cleanedRaw.substring(pos);
-
-        return book;
     }
 }

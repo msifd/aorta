@@ -3,14 +3,16 @@ package msifeed.mc.aorta.client.gui.book;
 import msifeed.mc.aorta.books.RemoteBookManager;
 import msifeed.mc.aorta.genesis.items.templates.BookTemplate;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
+import msifeed.mc.mellow.widgets.text.MultilineLabel;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
 import org.lwjgl.input.Keyboard;
 
+import java.util.Collections;
+
 public class ScreenBookViewer extends MellowGuiScreen {
-    private BookView bookView = new BookView();
+    private BookView bookView = new BookView(new MultilineLabel());
 
     public ScreenBookViewer(EntityPlayer player) {
         ItemStack itemStack = player.getHeldItem();
@@ -31,11 +33,12 @@ public class ScreenBookViewer extends MellowGuiScreen {
             }
         }
 
+        bookView.setLines(Collections.singletonList("Looking for book..."));
         scene.addChild(bookView);
 
         RemoteBookManager.INSTANCE.fetchBook(name, book -> {
             if (book == null) {
-                player.addChatMessage(new ChatComponentText("Unknown book."));
+//                player.addChatMessage(new ChatComponentText("Unknown book."));
                 closeGui();
                 return;
             }

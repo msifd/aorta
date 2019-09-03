@@ -4,6 +4,7 @@ import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.chat.Language;
 import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.character.Character;
+import msifeed.mc.aorta.sys.attributes.MissingRequiredAttributeException;
 import msifeed.mc.aorta.sys.attributes.PlayerAttribute;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,6 +19,10 @@ public class LangAttribute extends PlayerAttribute<Language> {
 
     public static Optional<Language> get(Entity e) {
         return INSTANCE.getValue(e);
+    }
+
+    public static Language require(Entity e) {
+        return INSTANCE.getValue(e).orElseThrow(() -> new MissingRequiredAttributeException(INSTANCE, e));
     }
 
     private LangAttribute() {

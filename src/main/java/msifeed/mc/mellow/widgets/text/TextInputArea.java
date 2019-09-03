@@ -1,63 +1,88 @@
-package msifeed.mc.mellow.widgets.input;
+package msifeed.mc.mellow.widgets.text;
 
 import msifeed.mc.mellow.Mellow;
 import msifeed.mc.mellow.handlers.KeyHandler;
 import msifeed.mc.mellow.handlers.MouseHandler;
 import msifeed.mc.mellow.render.RenderParts;
 import msifeed.mc.mellow.render.RenderShapes;
-import msifeed.mc.mellow.render.RenderWidgets;
 import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.utils.Geom;
 import msifeed.mc.mellow.utils.SizePolicy;
-import msifeed.mc.mellow.widgets.Widget;
+import msifeed.mc.mellow.widgets.text.inner.TextController;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.entity.RenderManager;
 import org.lwjgl.input.Keyboard;
 
-public class TextArea extends Widget implements KeyHandler, MouseHandler.Click {
+import java.util.List;
+import java.util.stream.Stream;
+
+public class TextInputArea extends TextWall implements KeyHandler, MouseHandler.Click {
     protected Part normalPart = Mellow.getPart("sunken");
     protected Part focusedPart = Mellow.getPart("sunken_focused");
     protected int darkColor = Mellow.getColor("text_dark");
-    protected int brightColor = Mellow.getColor("text_bright");
 
     private TextController controller = new TextController();
     private long lastTimePressed = 0;
 
-    public TextArea() {
+    public TextInputArea() {
         setSizeHint(10, 13);
         setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.MINIMUM);
     }
 
+    public TextController getController() {
+        return controller;
+    }
+
+    public String getText() {
+        return controller.toJoinedString();
+    }
+
+    @Override
+    public int getColor() {
+        return darkColor;
+    }
+
+    @Override
+    public int getLineSkip() {
+        return controller.getSkip();
+    }
+
+    @Override
+    public void setLineSkip(int skip) {
+        controller.setSkip(skip);
+    }
+
+    @Override
+    public void setLineLimit(int limit) {
+        controller.setLimit(limit);
+    }
+
+    @Override
+    public int getLineCount() {
+        return controller.getLineCount();
+    }
+
+    @Override
+    public Stream<String> getLines() {
+        return controller.toLineStream();
+    }
+
+    @Override
+    public void setLines(List<String> lines) {
+        super.setLines(lines);
+        controller.setLines(lines);
+    }
+
     @Override
     protected void renderSelf() {
-        try {
-            renderBackground();
-            renderText();
-            if (isFocused())
-                renderCursor();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        super.renderSelf();
+        if (isFocused())
+            renderCursor();
     }
 
     protected void renderBackground() {
         RenderParts.nineSlice(isFocused() ? focusedPart : normalPart, getGeometry());
-    }
-
-    protected void renderText() {
-        if (controller.isEmpty())
-            return;
-
-        final FontRenderer fr = RenderManager.instance.getFontRenderer();
-        final Geom textGeom = new Geom(getGeometry());
-        textGeom.translate(3, 2, 1);
-
-        final int lineHeight = lineHeight(fr);
-        controller.toLinesStream().forEach(line -> {
-            RenderWidgets.string(textGeom, line, darkColor);
-            textGeom.y += lineHeight;
-        });
     }
 
     protected void renderCursor() {
@@ -66,12 +91,13 @@ public class TextArea extends Widget implements KeyHandler, MouseHandler.Click {
 
         final FontRenderer fr = RenderManager.instance.getFontRenderer();
         final String subline = controller.getCurrentLine().substring(0, controller.getCurColumn());
+        final int lineHeight = lineHeight();
 
         final Geom cursorGeom = new Geom(getGeometry());
-        cursorGeom.x += 3;
-        cursorGeom.y += 4 + lineHeight(fr) * controller.getCurLine();
+        cursorGeom.x += 0;
+        cursorGeom.y += 2 + lineHeight * controller.getCurLineView();
         cursorGeom.w = 0;
-        cursorGeom.h = lineHeight(fr) - 1;
+        cursorGeom.h = lineHeight - 1;
         cursorGeom.translate(fr.getStringWidth(subline), 0, 1);
 
         RenderShapes.line(cursorGeom, 3, 0);
@@ -88,7 +114,7 @@ public class TextArea extends Widget implements KeyHandler, MouseHandler.Click {
                 GuiScreen.setClipboardString(controller.toJoinedString());
                 return;
             case 22:
-                controller.input(GuiScreen.getClipboardString());
+                controller.insert(GuiScreen.getClipboardString());
                 return;
 //            case 24:
 //                GuiScreen.setClipboardString(this.getSelectedText());
@@ -100,6 +126,8 @@ public class TextArea extends Widget implements KeyHandler, MouseHandler.Click {
 //                return true;
         }
 
+        final int curLine = controller.getCurLineView();
+
         switch (key) {
             case Keyboard.KEY_LEFT:
                 controller.moveCursorColumn(false);
@@ -108,25 +136,36 @@ public class TextArea extends Widget implements KeyHandler, MouseHandler.Click {
                 controller.moveCursorColumn(true);
                 break;
             case Keyboard.KEY_UP:
-                controller.moveCursorLine(false);
+                if (curLine == 0 && controller.getSkip() > 0)
+                        controller.updateSkip(-controller.getLimit());
+                controller.moveCursorLine(-1);
                 break;
             case Keyboard.KEY_DOWN:
-                controller.moveCursorLine(true);
+                controller.moveCursorLine(1);
+                if (curLine == controller.getLimit() - 1 && controller.getCurLineView() == 0)
+                    controller.updateSkip(controller.getLimit());
                 break;
             case Keyboard.KEY_DELETE:
                 controller.remove(true);
                 break;
             case Keyboard.KEY_BACK:
                 controller.remove(false);
+                if (curLine == 0 && controller.getCurLineView() > 0)
+                    controller.updateSkip(-controller.getLimit());
                 break;
             case Keyboard.KEY_RETURN:
                 controller.breakLine();
+                if (curLine == controller.getLimit() - 1 && controller.getCurLineView() == 0)
+                    controller.updateSkip(controller.getLimit());
                 break;
             default:
-                controller.input(c);
-                lastTimePressed = System.currentTimeMillis();
+                controller.insert(c);
+                if (curLine == controller.getLimit() - 1 && controller.getCurLineView() == 0)
+                    controller.updateSkip(controller.getLimit());
                 break;
         }
+
+        lastTimePressed = System.currentTimeMillis();
     }
 
     @Override
@@ -134,15 +173,11 @@ public class TextArea extends Widget implements KeyHandler, MouseHandler.Click {
         final FontRenderer fr = RenderManager.instance.getFontRenderer();
         final Geom geom = getGeometry();
 
-        final int lineHeight = lineHeight(fr);
-        final int line = (yMouse - geom.y - lineHeight / 2) / lineHeight;
-        final int tune = 2;
-        final int column = fr.trimStringToWidth(controller.getCurrentLine().toString(), xMouse - geom.x - tune).length();
+        final int lineHeight = lineHeight();
+        final int line = controller.getSkip() + (yMouse - geom.y - lineHeight / 2) / lineHeight;
+        final int tune = -1;
+        final int column = fr.trimStringToWidth(controller.getLine(line).toString(), xMouse - geom.x - tune).length();
 
         controller.moveCursor(line, column);
-    }
-
-    private int lineHeight(FontRenderer fr) {
-        return fr.FONT_HEIGHT - 2;
     }
 }

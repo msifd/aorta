@@ -4,8 +4,8 @@ import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.traits.Trait;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.widgets.Widget;
-import msifeed.mc.mellow.widgets.basic.Label;
-import msifeed.mc.mellow.widgets.input.TextInput;
+import msifeed.mc.mellow.widgets.text.Label;
+import msifeed.mc.mellow.widgets.text.TextInput;
 
 class EditParamsView extends Widget {
     EditParamsView(Character character) {

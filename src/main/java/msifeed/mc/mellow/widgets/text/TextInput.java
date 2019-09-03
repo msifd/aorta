@@ -1,4 +1,4 @@
-package msifeed.mc.mellow.widgets.input;
+package msifeed.mc.mellow.widgets.text;
 
 import msifeed.mc.mellow.Mellow;
 import msifeed.mc.mellow.handlers.KeyHandler;
@@ -99,9 +99,8 @@ public class TextInput extends Widget implements KeyHandler {
     }
 
     protected void renderText() {
-        final Geom geom = getGeometry();
-        final Geom textGeom = new Geom(geom);
-        textGeom.translate(3, 2, 1);
+        final Geom textGeom = new Geom(getGeometry());
+        textGeom.translate(2, 1, 1);
 
         if (text.isEmpty())
             RenderWidgets.string(textGeom, placeholderText, darkColor);
