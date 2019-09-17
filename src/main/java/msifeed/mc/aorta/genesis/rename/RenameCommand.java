@@ -1,7 +1,7 @@
 package msifeed.mc.aorta.genesis.rename;
 
-import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.traits.Trait;
+import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import msifeed.mc.aorta.sys.cmd.ExtCommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;

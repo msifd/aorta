@@ -6,11 +6,11 @@ import msifeed.mc.aorta.chat.composer.Composer;
 import msifeed.mc.aorta.chat.composer.RollComposer;
 import msifeed.mc.aorta.chat.composer.SpeechType;
 import msifeed.mc.aorta.chat.net.ChatMessage;
-import msifeed.mc.aorta.core.attributes.CharacterAttribute;
-import msifeed.mc.aorta.core.attributes.StatusAttribute;
-import msifeed.mc.aorta.core.character.CharStatus;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
+import msifeed.mc.aorta.core.meta.MetaInfo;
+import msifeed.mc.aorta.core.utils.CharacterAttribute;
+import msifeed.mc.aorta.core.utils.MetaAttribute;
 import msifeed.mc.aorta.sys.rpc.Rpc;
 import msifeed.mc.aorta.sys.rpc.RpcMethod;
 import net.minecraft.entity.Entity;
@@ -46,9 +46,8 @@ public enum RollRpc {
         if (!(entity instanceof EntityLivingBase))
             return;
 
-        StatusAttribute.get(entity).ifPresent(status -> {
-            status.modifiers = modifiers;
-            StatusAttribute.INSTANCE.broadcast(world, entity);
+        MetaAttribute.INSTANCE.update(entity, meta -> {
+            meta.modifiers = modifiers;
         });
     }
 
@@ -61,9 +60,9 @@ public enum RollRpc {
             return;
 
         final Optional<Character> charOpt = CharacterAttribute.get(entity);
-        final Optional<CharStatus> statusOpt = StatusAttribute.get(entity);
-        if (charOpt.isPresent() && statusOpt.isPresent()) {
-            final FeatureRoll roll = new FeatureRoll(charOpt.get(), statusOpt.get(), features);
+        final Optional<MetaInfo> metaOpt = MetaAttribute.get(entity);
+        if (charOpt.isPresent() && metaOpt.isPresent()) {
+            final FeatureRoll roll = new FeatureRoll(charOpt.get(), metaOpt.get(), features);
             final String text = RollComposer.makeText((EntityLivingBase) entity, roll);
             final ChatMessage m = Composer.makeMessage(SpeechType.ROLL, player, text);
             ChatHandler.sendChatMessage(player, m);
@@ -79,9 +78,9 @@ public enum RollRpc {
             return;
 
         final Optional<Character> charOpt = CharacterAttribute.get(entity);
-        final Optional<CharStatus> statusOpt = StatusAttribute.get(entity);
-        if (charOpt.isPresent() && statusOpt.isPresent()) {
-            final FightRoll roll = new FightRoll(charOpt.get(), statusOpt.get(), action);
+        final Optional<MetaInfo> metaOpt = MetaAttribute.get(entity);
+        if (charOpt.isPresent() && metaOpt.isPresent()) {
+            final FightRoll roll = new FightRoll(charOpt.get(), metaOpt.get(), action);
             final String text = RollComposer.makeText((EntityLivingBase) entity, roll);
             final ChatMessage m = Composer.makeMessage(SpeechType.ROLL, player, text);
             ChatHandler.sendChatMessage(player, m);

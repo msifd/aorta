@@ -1,13 +1,11 @@
 package msifeed.mc.aorta.client.hud;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import msifeed.mc.aorta.chat.usage.LangAttribute;
-import msifeed.mc.aorta.core.attributes.CharacterAttribute;
-import msifeed.mc.aorta.core.attributes.StatusAttribute;
-import msifeed.mc.aorta.core.character.BodyPartHealth;
-import msifeed.mc.aorta.core.character.Character;
+import msifeed.mc.aorta.core.character.BodyPart;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.traits.Trait;
+import msifeed.mc.aorta.core.utils.CharacterAttribute;
+import msifeed.mc.aorta.core.utils.LangAttribute;
 import msifeed.mc.aorta.tools.ItemDebugTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -23,7 +21,6 @@ import org.lwjgl.opengl.GL11;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.Map;
 
 public enum DebugHud {
     INSTANCE;
@@ -66,20 +63,18 @@ public enum DebugHud {
         CharacterAttribute.get(entity).ifPresent(character -> {
             lines.add("Character {");
 
+            lines.add("  name: '" + character.name + "'");
+            lines.add("  wiki: '" + character.wikiPage + "'");
+
             lines.add("  features: {");
-            for (EnumMap.Entry<Feature, Integer> e : character.features.entrySet()) {
+            for (EnumMap.Entry<Feature, Integer> e : character.features.entrySet())
                 lines.add("    " + e.getKey().toString().toLowerCase() + ": " + e.getValue());
-            }
             lines.add("  }");
 
             lines.add("  bodyParts: {");
-            character.getBodyParts().stream().sorted().forEach(bp -> {
-                lines.add("    " + bp.toLineString());
-            });
+            for (BodyPart bp : character.bodyParts.values())
+                lines.add("    " + bp.toString());
             lines.add("  }");
-
-            lines.add("  vitaity rate: " + character.vitalityRate);
-            lines.add("  max psionics: " + character.psionics);
 
             lines.add("  traits [");
             final StringBuilder sb = new StringBuilder("    ");
@@ -97,32 +92,15 @@ public enum DebugHud {
             }
             lines.add("  ]");
 
-            lines.add("}");
-
-            addStatusProp(lines, entity, character);
-        });
-    }
-
-    private void addStatusProp(ArrayList<String> lines, EntityLivingBase entity, Character character) {
-        StatusAttribute.get(entity).ifPresent(status -> {
-            lines.add("Status {");
-
-            lines.add("  name: '" + status.name + "'");
-
+            lines.add("  vitaity rate: " + character.vitalityRate);
             final int vitalityThreshold = character.countVitalityThreshold();
-            final int vitality = status.countVitality(vitalityThreshold);
+            final int vitality = character.countVitality(vitalityThreshold);
             final double vitalityPercents = vitality / (double) vitalityThreshold;
             lines.add(String.format("  vitality: %d/%d (%f)", vitality, vitalityThreshold, vitalityPercents));
 
-            lines.add("  bodyparts health: {");
-            for (Map.Entry<String, BodyPartHealth> e : status.health.entrySet()) {
-                lines.add("    " + e.getKey().toLowerCase() + ": " + e.getValue().toString());
-            }
-            lines.add("  }");
-
-            lines.add("  shield: " + status.shield);
-            lines.add("  sanity: " + status.sanity);
-            lines.add("  psionics: " + status.psionics + " / " + character.psionics);
+            lines.add("  shield: " + character.shield);
+            lines.add("  sanity: " + character.sanity);
+            lines.add(String.format("  psionics: %d/%d", character.psionics, character.maxPsionics));
 
             lines.add("}");
         });

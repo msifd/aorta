@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.chat.usage;
+package msifeed.mc.aorta.chat.commands;
 
 import msifeed.mc.aorta.chat.ChatHandler;
 import msifeed.mc.aorta.chat.composer.Composer;
@@ -6,8 +6,8 @@ import msifeed.mc.aorta.chat.composer.SpeechType;
 import msifeed.mc.aorta.chat.gm.GmSpeech;
 import msifeed.mc.aorta.chat.gm.GmsaySettings;
 import msifeed.mc.aorta.chat.net.ChatMessage;
-import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.traits.Trait;
+import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import msifeed.mc.aorta.logs.Logs;
 import msifeed.mc.aorta.sys.cmd.ExtCommand;
 import net.minecraft.command.ICommandSender;

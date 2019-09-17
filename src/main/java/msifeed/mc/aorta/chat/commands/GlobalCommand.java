@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.chat.usage;
+package msifeed.mc.aorta.chat.commands;
 
 import msifeed.mc.aorta.chat.ChatHandler;
 import msifeed.mc.aorta.chat.composer.Composer;

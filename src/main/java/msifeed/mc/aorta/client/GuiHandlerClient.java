@@ -6,7 +6,7 @@ import msifeed.mc.aorta.client.gui.ScreenLangSelector;
 import msifeed.mc.aorta.client.gui.book.ScreenBookLoader;
 import msifeed.mc.aorta.client.gui.book.ScreenBookViewer;
 import msifeed.mc.aorta.client.gui.book.ScreenNoteEditor;
-import msifeed.mc.aorta.client.gui.chareditor.ScreenCharEditor;
+import msifeed.mc.aorta.client.gui.morph.ScreenMorph;
 import msifeed.mc.aorta.client.gui.roller.ScreenRoller;
 import msifeed.mc.aorta.client.gui.status.ScreenStatus;
 import msifeed.mc.aorta.client.hud.DebugHud;
@@ -14,8 +14,8 @@ import msifeed.mc.aorta.client.hud.StatusHudReplacer;
 import msifeed.mc.aorta.client.lock.HudLock;
 import msifeed.mc.aorta.client.lock.ScreenDigitalLock;
 import msifeed.mc.aorta.client.lock.ScreenSkeletalKey;
-import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.traits.Trait;
+import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import msifeed.mc.aorta.locks.LockObject;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
 import net.minecraft.client.Minecraft;
@@ -42,7 +42,7 @@ public class GuiHandlerClient extends GuiHandler {
     @Override
     public void openCharEditor(EntityLivingBase entity) {
         if (entity.worldObj.isRemote)
-            FMLClientHandler.instance().displayGuiScreen(Minecraft.getMinecraft().thePlayer, new ScreenCharEditor(entity));
+            FMLClientHandler.instance().displayGuiScreen(Minecraft.getMinecraft().thePlayer, new ScreenMorph(entity));
     }
 
     @Override

@@ -2,38 +2,67 @@ package msifeed.mc.aorta.core.character;
 
 import net.minecraft.nbt.NBTTagCompound;
 
-public class BodyPart implements Comparable {
+public class BodyPart {
     public String name;
-    public Type type = Type.values()[0];
-    public short max;
-    public boolean fatal;
+    public short maxHealth;
+    public boolean vital;
+
+    public short health;
+    public short armor;
 
     public BodyPart() {
     }
 
     public BodyPart(BodyPart bp) {
-        this.name = bp.name;
-        this.type = bp.type;
-        this.max = bp.max;
-        this.fatal = bp.fatal;
+        this(bp.name, bp.maxHealth, bp.vital);
+        health = bp.health;
+        armor = bp.armor;
     }
 
-    public BodyPart(String name, Type type, int max, boolean fatal) {
+    public BodyPart(NBTTagCompound nbt) {
+        fromNBT(nbt);
+    }
+
+    public BodyPart(String name, int maxHealth, boolean vital) {
         this.name = name;
-        this.type = type;
-        this.max = (short) max;
-        this.fatal = fatal;
+        this.maxHealth = (short) maxHealth;
+        this.vital = vital;
+        this.health = this.maxHealth;
     }
 
-    public short getMaxHealth() {
-        return max;
+    public int getMaxHealth() {
+        return maxHealth;
     }
 
-    @Override
-    public int compareTo(Object o) {
-        if (!(o instanceof BodyPart))
-            return 1;
-        return type.compareTo(((BodyPart) o).type);
+    public int getHealth() {
+        return health;
+    }
+
+    public boolean isInjured() {
+        final int percent = 100 * health / maxHealth;
+        return percent <= 20;
+    }
+
+    public boolean isVitalGone() {
+        return vital && health <= 0;
+    }
+
+    public NBTTagCompound toNBT() {
+        final NBTTagCompound c = new NBTTagCompound();
+        c.setString("name", name);
+        c.setShort("max", maxHealth);
+        c.setBoolean("vital", vital);
+        c.setShort("hp", health);
+        c.setShort("armor", armor);
+        return c;
+    }
+
+    public void fromNBT(NBTTagCompound c) {
+        name = c.getString("name");
+        maxHealth = c.getShort("max");
+        vital = c.getBoolean("vital");
+        health = c.getShort("hp");
+        armor = c.getShort("armor");
     }
 
     @Override
@@ -42,33 +71,14 @@ public class BodyPart implements Comparable {
             return false;
         final BodyPart b = (BodyPart) o;
         return b.name.equals(name)
-                && b.type == type
-                && b.max == max
-                && b.fatal == fatal;
+                && b.maxHealth == maxHealth
+                && b.vital == vital;
     }
 
-    public NBTTagCompound toNBT() {
-        final NBTTagCompound compound = new NBTTagCompound();
-        compound.setString("value", name);
-        compound.setByte("type", (byte) type.ordinal());
-        compound.setShort("max", max);
-        compound.setBoolean("fatal", fatal);
-        return compound;
-    }
-
-    public void fromNBT(NBTTagCompound compound) {
-        name = compound.getString("value");
-        type = Type.values()[compound.getByte("type")];
-        max = compound.getShort("max");
-        fatal = compound.getBoolean("fatal");
-    }
-
-    public String toLineString() {
-        // head [head] 25 fatal
-        return String.format("%s [%s] %d%s", name, type.toString().toLowerCase(), max, fatal ? " fatal" : "");
-    }
-
-    public enum Type {
-        HEAD, BODY, HAND, LEG, OTHER
+    @Override
+    public String toString() {
+        // 'head' vital 12/12 [0]
+        // 'left hand' 10/15 [3]
+        return String.format("'%s' %s%d/%d [%d]", name, vital ? "vital " : "", health, maxHealth, armor);
     }
 }

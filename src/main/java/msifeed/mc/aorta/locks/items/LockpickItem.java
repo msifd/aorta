@@ -6,12 +6,12 @@ import msifeed.mc.aorta.chat.composer.Composer;
 import msifeed.mc.aorta.chat.composer.RollComposer;
 import msifeed.mc.aorta.chat.composer.SpeechType;
 import msifeed.mc.aorta.chat.net.ChatMessage;
-import msifeed.mc.aorta.core.attributes.CharacterAttribute;
-import msifeed.mc.aorta.core.attributes.StatusAttribute;
-import msifeed.mc.aorta.core.character.CharStatus;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
+import msifeed.mc.aorta.core.meta.MetaInfo;
 import msifeed.mc.aorta.core.rolls.FeatureRoll;
+import msifeed.mc.aorta.core.utils.CharacterAttribute;
+import msifeed.mc.aorta.core.utils.MetaAttribute;
 import msifeed.mc.aorta.genesis.AortaCreativeTab;
 import msifeed.mc.aorta.locks.LockObject;
 import msifeed.mc.aorta.locks.LockType;
@@ -23,8 +23,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
-
-import java.util.Optional;
 
 public class LockpickItem extends Item {
     public static final String ID = "lock_lockpick";
@@ -43,12 +41,10 @@ public class LockpickItem extends Item {
         if (lock.getDifficulty() >= 100)
             return false;
 
-        final Optional<Character> charOpt = CharacterAttribute.get(player);
-        final Optional<CharStatus> statusOpt = StatusAttribute.get(player);
-        if (!charOpt.isPresent() || !statusOpt.isPresent())
-            return false;
+        final Character character = CharacterAttribute.require(player);
+        final MetaInfo meta = MetaAttribute.require(player);
 
-        final FeatureRoll roll = new FeatureRoll(charOpt.get(), statusOpt.get(), Feature.DEX, Feature.INT);
+        final FeatureRoll roll = new FeatureRoll(character, meta, Feature.DEX, Feature.INT);
         consumePick(lock, pick, player, roll);
 
         if (player instanceof EntityPlayerMP) {

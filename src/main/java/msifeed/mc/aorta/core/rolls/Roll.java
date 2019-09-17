@@ -1,6 +1,7 @@
 package msifeed.mc.aorta.core.rolls;
 
-import msifeed.mc.aorta.core.character.CharStatus;
+import msifeed.mc.aorta.core.character.Character;
+import msifeed.mc.aorta.core.meta.MetaInfo;
 
 public abstract class Roll {
     public Modifiers mods;
@@ -9,13 +10,18 @@ public abstract class Roll {
     public int result;
     public Critical critical;
 
-    public Roll(CharStatus s) {
-        this.mods = s.modifiers;
-        this.statusMod = sanityMod(s.sanity) + s.illness.debuff();
+    public Roll(Character character, MetaInfo meta) {
+        this.mods = meta.modifiers;
         this.critical = Critical.roll();
+        rules(character, meta);
     }
 
-    private static int sanityMod(int sanity) {
+    private void rules(Character character, MetaInfo meta) {
+        statusMod += sanityMod(character.sanity);
+        statusMod += character.illness.debuff();
+    }
+
+    public static int sanityMod(int sanity) {
         if (sanity > 100)
             return 1;
         else if (sanity > 75)

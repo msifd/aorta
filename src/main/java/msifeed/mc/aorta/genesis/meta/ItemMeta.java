@@ -1,9 +1,9 @@
-package msifeed.mc.aorta.core.meta;
+package msifeed.mc.aorta.genesis.meta;
 
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.traits.Trait;
+import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;

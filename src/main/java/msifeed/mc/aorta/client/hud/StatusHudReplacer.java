@@ -3,10 +3,8 @@ package msifeed.mc.aorta.client.hud;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.aorta.Aorta;
-import msifeed.mc.aorta.core.attributes.CharacterAttribute;
-import msifeed.mc.aorta.core.attributes.StatusAttribute;
-import msifeed.mc.aorta.core.character.CharStatus;
 import msifeed.mc.aorta.core.character.Character;
+import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import msifeed.mc.mellow.render.RenderParts;
 import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.utils.Point;
@@ -16,8 +14,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.opengl.GL11;
-
-import java.util.Optional;
 
 public enum StatusHudReplacer {
     INSTANCE;
@@ -66,29 +62,24 @@ public enum StatusHudReplacer {
             return;
 
         final EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-        final Optional<Character> optChar = CharacterAttribute.get(player);
-        final Optional<CharStatus> optStatus = StatusAttribute.get(player);
-        if (!optChar.isPresent() || !optStatus.isPresent())
-            return;
-        final Character character = optChar.get();
-        final CharStatus status = optStatus.get();
+        final Character character = CharacterAttribute.require(player);
 
         GL11.glPushMatrix();
         GL11.glScalef(.5f, .5f, 1f);
 
         int y = 10;
 
-        final int sanityLevel = status.sanityLevel();
+        final int sanityLevel = character.sanityLevel();
         RenderParts.slice(sanitySprites[sanitySprites.length - sanityLevel - 1], 10, y, 10);
         y += 40;
 
-        final int vitalityLevel = status.vitalityLevel(character);
+        final int vitalityLevel = character.vitalityLevel();
         if (vitalityLevel > 0) {
             RenderParts.slice(vitalitySprites[vitalityLevel - 1], 10, y, 10);
             y += 40;
         }
 
-        final int psionicsLevel = status.psionicsLevel(character);
+        final int psionicsLevel = character.psionicsLevel();
         if (psionicsLevel > 0) {
             RenderParts.slice(psionicsSprites[psionicsLevel - 1], 10, y, 10);
         }

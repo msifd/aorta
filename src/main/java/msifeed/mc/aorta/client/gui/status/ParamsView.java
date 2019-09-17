@@ -1,7 +1,6 @@
 package msifeed.mc.aorta.client.gui.status;
 
 import msifeed.mc.aorta.core.character.BodyShield;
-import msifeed.mc.aorta.core.character.CharStatus;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.traits.Trait;
 import msifeed.mc.aorta.sys.utils.L10n;
@@ -16,12 +15,10 @@ import java.util.Arrays;
 
 class ParamsView extends Widget {
     private final Character character;
-    private final CharStatus status;
     private final boolean editable;
 
-    ParamsView(Character character, CharStatus status, boolean editable) {
+    ParamsView(Character character, boolean editable) {
         this.character = character;
-        this.status = status;
         this.editable = editable;
         refill();
     }
@@ -39,8 +36,8 @@ class ParamsView extends Widget {
         setLayout(new GridLayout());
 
         final int vitalityThreshold = character.countVitalityThreshold();
-        final int vitality = status.countVitality(vitalityThreshold);
-        final int vitalityLevel = status.vitalityLevel(vitality, vitalityThreshold);
+        final int vitality = character.countVitality(vitalityThreshold);
+        final int vitalityLevel = character.vitalityLevel(vitality, vitalityThreshold);
         final String vitalityLevelStr = L10n.tr("aorta.status.vitality." + vitalityLevel);
 
         addChild(new Label(L10n.tr("aorta.gui.status.vitality")));
@@ -51,26 +48,26 @@ class ParamsView extends Widget {
         final TextInput sanityInput = new TextInput();
         sanityInput.getSizeHint().x = 25;
         sanityInput.setFilter(s -> TextInput.isUnsignedIntBetween(s, 1, 125));
-        sanityInput.setCallback(s -> status.sanity = (byte) sanityInput.getInt());
-        sanityInput.setText(String.valueOf(status.sanity));
+        sanityInput.setCallback(s -> character.sanity = (byte) sanityInput.getInt());
+        sanityInput.setText(String.valueOf(character.sanity));
         addChild(sanityInput);
 
         addChild(new Label(L10n.tr("aorta.gui.status.shield_type")));
         final DropList<BodyShield.Type> shieldType = new DropList<>(Arrays.asList(BodyShield.Type.values()));
-        shieldType.selectItem(status.shield.type.ordinal());
-        shieldType.setSelectCallback(type -> status.shield.type = type);
+        shieldType.selectItem(character.shield.type.ordinal());
+        shieldType.setSelectCallback(type -> character.shield.type = type);
         addChild(shieldType);
 
         addChild(new Label(L10n.tr("aorta.gui.status.shield_power")));
         final TextInput shieldPower = new TextInput();
         shieldPower.getSizeHint().x = 30;
-        shieldPower.setText(String.valueOf(status.shield.power));
+        shieldPower.setText(String.valueOf(character.shield.power));
         shieldPower.setFilter(s -> TextInput.isUnsignedIntBetween(s, 0, 100));
-        shieldPower.setCallback(s -> status.shield.power = (short) shieldPower.getInt());
+        shieldPower.setCallback(s -> character.shield.power = (short) shieldPower.getInt());
         addChild(shieldPower);
 
         if (character.has(Trait.psionic)) {
-            addChild(new Label(L10n.tr("aorta.gui.status.psionics")));
+            addChild(new Label(L10n.tr("aorta.gui.status.maxPsionics")));
 
             final Widget psiRight = new Widget();
             psiRight.setLayout(ListLayout.HORIZONTAL);
@@ -81,13 +78,13 @@ class ParamsView extends Widget {
 
             final TextInput psionicsInput = new TextInput();
             psionicsInput.getSizeHint().x = 25;
-            psionicsInput.setFilter(s -> TextInput.isUnsignedIntBetween(s, 0, character.psionics));
+            psionicsInput.setFilter(s -> TextInput.isUnsignedIntBetween(s, 0, character.maxPsionics));
             psionicsInput.setCallback(s -> {
-                status.psionics = (byte) psionicsInput.getInt();
-                final int psiPercent = character.psionics > 0 ? Math.floorDiv(status.psionics * 100, character.psionics) : 0;
-                psiDesc.setText(String.format("/%d (%d%%)", character.psionics, psiPercent));
+                character.psionics = (byte) psionicsInput.getInt();
+                final int psiPercent = character.maxPsionics > 0 ? Math.floorDiv(character.psionics * 100, character.maxPsionics) : 0;
+                psiDesc.setText(String.format("/%d (%d%%)", character.maxPsionics, psiPercent));
             });
-            psionicsInput.setText(String.valueOf(status.psionics));
+            psionicsInput.setText(String.valueOf(character.psionics));
 
             psiRight.addChild(psionicsInput);
             psiRight.addChild(psiDesc);
@@ -98,28 +95,28 @@ class ParamsView extends Widget {
         setLayout(new GridLayout(5));
 
         final int vitalityThreshold = character.countVitalityThreshold();
-        final int vitality = status.countVitality(vitalityThreshold);
-        final int vitalityLevel = status.vitalityLevel(vitality, vitalityThreshold);
+        final int vitality = character.countVitality(vitalityThreshold);
+        final int vitalityLevel = character.vitalityLevel(vitality, vitalityThreshold);
         addChild(new Label(L10n.tr("aorta.gui.status.vitality")));
         addChild(new Label(String.format("%d/%d (%s)",
                 vitality,
                 vitalityThreshold,
                 L10n.tr("aorta.status.vitality." + vitalityLevel))));
 
-        if (status.shield.type != BodyShield.Type.NONE && status.shield.power > 0) {
+        if (character.shield.type != BodyShield.Type.NONE && character.shield.power > 0) {
             addChild(new Label(L10n.tr("aorta.gui.status.shield_type")));
-            addChild(new Label(status.shield.type.toString()));
+            addChild(new Label(character.shield.type.toString()));
 
             addChild(new Label(L10n.tr("aorta.gui.status.shield_power")));
-            addChild(new Label(String.valueOf(status.shield.power)));
+            addChild(new Label(String.valueOf(character.shield.power)));
         }
 
         if (character.has(Trait.psionic)) {
-            final int psionicsLevel = status.psionicsLevel(character);
-            addChild(new Label(L10n.tr("aorta.gui.status.psionics")));
+            final int psionicsLevel = character.psionicsLevel();
+            addChild(new Label(L10n.tr("aorta.gui.status.maxPsionics")));
             addChild(new Label(String.format("%d (%s)",
-                    status.psionics,
-                    L10n.tr("aorta.status.psionics." + psionicsLevel))));
+                    character.psionics,
+                    L10n.tr("aorta.status.maxPsionics." + psionicsLevel))));
         }
     }
 }

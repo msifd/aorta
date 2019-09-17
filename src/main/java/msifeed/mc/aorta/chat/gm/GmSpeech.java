@@ -1,7 +1,7 @@
 package msifeed.mc.aorta.chat.gm;
 
-import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.traits.Trait;
+import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.util.HashMap;

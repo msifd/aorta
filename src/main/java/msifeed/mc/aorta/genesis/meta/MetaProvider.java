@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.core.meta;
+package msifeed.mc.aorta.genesis.meta;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

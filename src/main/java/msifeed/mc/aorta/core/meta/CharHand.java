@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.core.character;
+package msifeed.mc.aorta.core.meta;
 
 import net.minecraft.item.ItemStack;
 

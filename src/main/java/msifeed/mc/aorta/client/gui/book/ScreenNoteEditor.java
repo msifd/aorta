@@ -2,9 +2,9 @@ package msifeed.mc.aorta.client.gui.book;
 
 import msifeed.mc.aorta.books.RemoteBookRpc;
 import msifeed.mc.aorta.chat.Language;
-import msifeed.mc.aorta.chat.usage.LangAttribute;
-import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.character.Character;
+import msifeed.mc.aorta.core.utils.CharacterAttribute;
+import msifeed.mc.aorta.core.utils.LangAttribute;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.mellow.utils.SizePolicy;

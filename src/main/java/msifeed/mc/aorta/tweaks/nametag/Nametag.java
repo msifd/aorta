@@ -3,8 +3,8 @@ package msifeed.mc.aorta.tweaks.nametag;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import msifeed.mc.aorta.core.attributes.StatusAttribute;
-import msifeed.mc.aorta.core.character.CharStatus;
+import msifeed.mc.aorta.core.character.Character;
+import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import msifeed.mc.aorta.sys.rpc.Rpc;
 import msifeed.mc.aorta.sys.rpc.RpcMethod;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,9 +37,9 @@ public class Nametag {
     }
 
     protected String getPreferredName(EntityPlayer player) {
-        final CharStatus s = StatusAttribute.get(player).orElse(null);
-        return s == null || s.name.isEmpty()
+        final Character c = CharacterAttribute.get(player).orElse(null);
+        return c == null || c.name.isEmpty()
                 ? player.getCommandSenderName()
-                : s.name;
+                : c.name;
     }
 }

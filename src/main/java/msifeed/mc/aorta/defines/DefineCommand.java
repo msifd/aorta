@@ -2,8 +2,8 @@ package msifeed.mc.aorta.defines;
 
 import com.google.gson.Gson;
 import msifeed.mc.aorta.Aorta;
-import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.traits.Trait;
+import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import msifeed.mc.aorta.sys.cmd.ExtCommand;
 import msifeed.mc.aorta.sys.config.ConfigManager;
 import net.minecraft.command.ICommandSender;

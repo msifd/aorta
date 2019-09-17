@@ -1,15 +1,23 @@
-package msifeed.mc.aorta.core.character;
+package msifeed.mc.aorta.core.utils;
 
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
+import msifeed.mc.aorta.core.character.BodyPart;
+import msifeed.mc.aorta.core.character.BodyShield;
+import msifeed.mc.aorta.core.character.Character;
+import msifeed.mc.aorta.core.character.Feature;
+import msifeed.mc.aorta.core.rolls.Roll;
 import msifeed.mc.aorta.sys.utils.L10n;
 
 import java.util.ArrayList;
 import java.util.Map;
 
-class Differ {
-    static String diff(Character before, Character after) {
+public class Differ {
+    public static String diff(Character before, Character after) {
         final ArrayList<String> diffs = new ArrayList<>();
+
+        if (!before.name.equalsIgnoreCase(after.name))
+            diffs.add(L10n.fmt("aorta.diff.status.name", after.name));
 
         for (Map.Entry<Feature, Integer> e : after.features.entrySet()) {
             final int b = before.features.get(e.getKey());
@@ -18,7 +26,7 @@ class Differ {
                 diffs.add(L10n.fmt("aorta.diff.char.feature", e.getKey().tr(), b, a));
         }
 
-        final MapDifference<String, BodyPart> bpDiff = Maps.difference(before.getBodyPartsMap(), after.getBodyPartsMap());
+        final MapDifference<String, BodyPart> bpDiff = Maps.difference(before.bodyParts, after.bodyParts);
         for (String name : bpDiff.entriesOnlyOnRight().keySet()) {
             diffs.add(L10n.fmt("aorta.diff.char.add_bodypart", name));
         }
@@ -33,15 +41,9 @@ class Differ {
             diffs.add(L10n.fmt("aorta.diff.char.vitality", before.vitalityRate, after.vitalityRate));
         }
 
-        if (before.psionics != after.psionics) {
-            diffs.add(L10n.fmt("aorta.diff.char.psionics", before.psionics, after.psionics));
+        if (before.maxPsionics != after.maxPsionics) {
+            diffs.add(L10n.fmt("aorta.diff.char.psionics", before.maxPsionics, after.maxPsionics));
         }
-
-        return String.join(", ", diffs);
-    }
-
-    static String diff(CharStatus before, CharStatus after) {
-        final ArrayList<String> diffs = new ArrayList<>();
 
         if (before.sanity != after.sanity) {
             final int n = Math.abs(before.sanity - after.sanity);
@@ -83,16 +85,18 @@ class Differ {
             ));
         }
 
-        for (Map.Entry<String, BodyPartHealth> e : after.health.entrySet()) {
-            final BodyPartHealth b = before.health.get(e.getKey());
-            final BodyPartHealth a = e.getValue();
+        for (Map.Entry<String, BodyPart> e : after.bodyParts.entrySet()) {
+            final BodyPart b = before.bodyParts.get(e.getKey());
+            final BodyPart a = e.getValue();
+            if (b == null)
+                continue;
             if (b.health != a.health) {
                 final int n = Math.abs(b.health - a.health);
                 final String line = b.health < a.health
                         ? "aorta.diff.status.add_health"
                         : b.health - a.health > a.armor
-                            ? "aorta.diff.status.rem_health_wound"
-                            : "aorta.diff.status.rem_health";
+                        ? "aorta.diff.status.rem_health_wound"
+                        : "aorta.diff.status.rem_health";
                 diffs.add(L10n.fmt(line, e.getKey(), n, trPoints(n)));
             }
             if (b.armor != a.armor) {
@@ -140,29 +144,32 @@ class Differ {
         }
     }
 
-    static String finalStatus(Character character, CharStatus before, CharStatus after) {
+    public static String diffResults(Character before, Character after) {
         final ArrayList<String> diffs = new ArrayList<>();
-
-        if (!before.name.equalsIgnoreCase(after.name))
-            diffs.add(L10n.fmt("aorta.diff.status.name", after.name));
 
         if (before.sanityLevel() != after.sanityLevel())
             diffs.add(L10n.fmt("aorta.diff.status.sanity_level", L10n.tr("aorta.diff.status.sanity." + after.sanityLevel())));
 
-        final int vitalityBefore = before.vitalityLevel(character);
-        final int vitalityAfter = after.vitalityLevel(character);
+        final int vitalityBefore = before.vitalityLevel();
+        final int vitalityAfter = after.vitalityLevel();
         if (vitalityAfter != vitalityBefore)
             diffs.add(L10n.fmt("aorta.diff.status.vitality_level", L10n.tr("aorta.diff.status.vitality." + vitalityAfter)));
 
-        for (BodyPart bp : character.getBodyParts()) {
-            final boolean bInjured = before.health.get(bp.name).isInjured(bp);
-            final boolean aInjured = after.health.get(bp.name).isInjured(bp);
-            if (aInjured && !bInjured)
-                diffs.add(L10n.fmt("aorta.diff.status.injure", bp.name));
+        for (BodyPart abp : after.bodyParts.values()) {
+            final BodyPart bbp = before.bodyParts.get(abp.name);
+            if (bbp != null && abp.isInjured() && !bbp.isInjured())
+                diffs.add(L10n.fmt("aorta.diff.status.injure", abp.name));
         }
 
-        final int psionicsBefore = before.psionicsLevel(character);
-        final int psionicsAfter = after.psionicsLevel(character);
+        final int sanityModBefore = Roll.sanityMod(before.sanity);
+        final int sanityModAfter = Roll.sanityMod(after.sanity);
+        if (sanityModBefore != sanityModAfter) {
+            // TODO: fill text
+            diffs.add(L10n.fmt("aorta.diff.status.sanity_mod", sanityModAfter));
+        }
+
+        final int psionicsBefore = before.psionicsLevel();
+        final int psionicsAfter = after.psionicsLevel();
         if (psionicsAfter != psionicsBefore) {
             if (psionicsAfter >= 4)
                 diffs.add(L10n.tr("aorta.diff.status.psionics_critical"));

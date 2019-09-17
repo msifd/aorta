@@ -2,8 +2,8 @@ package msifeed.mc.aorta.chat.composer;
 
 import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.chat.Language;
+import msifeed.mc.aorta.chat.commands.GlobalCommand;
 import msifeed.mc.aorta.chat.net.ChatMessage;
-import msifeed.mc.aorta.chat.usage.GlobalCommand;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;

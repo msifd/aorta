@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.client.gui.chareditor;
+package msifeed.mc.aorta.client.gui.morph;
 
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;

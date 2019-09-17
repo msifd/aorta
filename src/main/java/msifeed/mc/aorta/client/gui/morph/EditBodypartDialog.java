@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.client.gui.chareditor;
+package msifeed.mc.aorta.client.gui.morph;
 
 import msifeed.mc.aorta.core.character.BodyPart;
 import msifeed.mc.mellow.layout.GridLayout;
@@ -45,23 +45,17 @@ class EditBodypartDialog extends Window {
         nameInput.setCallback(s -> bodypart.name = s);
         params.addChild(nameInput);
 
-        params.addChild(new Label("Type"));
-        final DropList<BodyPart.Type> typeList = new DropList<>(Arrays.asList(BodyPart.Type.values()));
-        typeList.selectItem(bodypart.type != null ? bodypart.type.ordinal() : 0);
-        typeList.setSelectCallback(type -> bodypart.type = type);
-        params.addChild(typeList);
-
         params.addChild(new Label("Max health"));
         final TextInput healthInput = new TextInput();
-        healthInput.setText(String.valueOf(bodypart.max));
+        healthInput.setText(String.valueOf(bodypart.maxHealth));
         healthInput.setFilter(EditBodypartDialog::healthFilter);
-        healthInput.setCallback(s -> bodypart.max = (short) healthInput.getInt());
+        healthInput.setCallback(s -> bodypart.maxHealth = (short) healthInput.getInt());
         params.addChild(healthInput);
 
         params.addChild(new Label("Fatal"));
         final DropList<Boolean> fatalList = new DropList<>(Arrays.asList(false, true));
-        fatalList.selectItem(bodypart.fatal ? 1 : 0);
-        fatalList.setSelectCallback(f -> bodypart.fatal = f);
+        fatalList.selectItem(bodypart.vital ? 1 : 0);
+        fatalList.setSelectCallback(f -> bodypart.vital = f);
         params.addChild(fatalList);
 
         content.addChild(new Separator());
@@ -102,8 +96,7 @@ class EditBodypartDialog extends Window {
     private boolean isBodypartInvalid() {
         return bodypart.name == null
                 || bodypart.name.isEmpty()
-                || bodypart.type == null
-                || bodypart.max < 1;
+                || bodypart.maxHealth < 1;
     }
 
     private static boolean healthFilter(String s) {

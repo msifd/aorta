@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.client.gui.chareditor;
+package msifeed.mc.aorta.client.gui.morph;
 
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.traits.Trait;
@@ -23,9 +23,9 @@ class EditParamsView extends Widget {
             addChild(new Label("Psionics"));
             final TextInput psionicsInput = new TextInput();
             psionicsInput.getSizeHint().x = 30;
-            psionicsInput.setText(String.valueOf(character.psionics));
+            psionicsInput.setText(String.valueOf(character.maxPsionics));
             psionicsInput.setFilter(s -> TextInput.isUnsignedIntBetween(s, 0, 100));
-            psionicsInput.setCallback(s -> character.psionics = (byte) psionicsInput.getInt());
+            psionicsInput.setCallback(s -> character.maxPsionics = (byte) psionicsInput.getInt());
             addChild(psionicsInput);
         }
     }

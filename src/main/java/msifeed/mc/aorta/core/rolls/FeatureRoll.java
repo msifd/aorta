@@ -1,19 +1,19 @@
 package msifeed.mc.aorta.core.rolls;
 
-import msifeed.mc.aorta.core.character.CharStatus;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
+import msifeed.mc.aorta.core.meta.MetaInfo;
 
 import java.util.stream.Stream;
 
 public class FeatureRoll extends Roll {
     public Feature[] features;
 
-    public FeatureRoll(Character character, CharStatus status, Feature... feats) {
-        super(status);
+    public FeatureRoll(Character character, MetaInfo meta, Feature... feats) {
+        super(character, meta);
 
         final double rollAvg = Stream.of(feats)
-                .map(f -> character.features.get(f) + status.modifiers.feat(f))
+                .map(f -> character.features.get(f) + meta.modifiers.feat(f))
                 .mapToDouble(Dices::feature)
                 .sum() / feats.length;
 

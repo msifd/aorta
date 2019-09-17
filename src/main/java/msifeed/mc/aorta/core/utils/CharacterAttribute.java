@@ -1,4 +1,4 @@
-package msifeed.mc.aorta.core.attributes;
+package msifeed.mc.aorta.core.utils;
 
 import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.core.character.Character;

@@ -1,10 +1,10 @@
 package msifeed.mc.aorta.client.gui;
 
 import msifeed.mc.aorta.chat.Language;
-import msifeed.mc.aorta.chat.usage.LangAttribute;
-import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.character.CharRpc;
 import msifeed.mc.aorta.core.character.Character;
+import msifeed.mc.aorta.core.utils.CharacterAttribute;
+import msifeed.mc.aorta.core.utils.LangAttribute;
 import msifeed.mc.aorta.sys.utils.L10n;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;

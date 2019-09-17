@@ -1,7 +1,8 @@
-package msifeed.mc.aorta.chat.usage;
+package msifeed.mc.aorta.chat.commands;
 
 import msifeed.mc.aorta.chat.Language;
-import msifeed.mc.aorta.core.attributes.CharacterAttribute;
+import msifeed.mc.aorta.core.utils.CharacterAttribute;
+import msifeed.mc.aorta.core.utils.LangAttribute;
 import msifeed.mc.aorta.sys.cmd.ExtCommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.EntityLivingBase;

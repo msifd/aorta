@@ -1,7 +1,7 @@
 package msifeed.mc.aorta.client.gui.status;
 
-import msifeed.mc.aorta.core.character.CharHand;
-import msifeed.mc.aorta.core.character.CharRpc;
+import msifeed.mc.aorta.core.meta.CharHand;
+import msifeed.mc.aorta.core.meta.MetaRpc;
 import msifeed.mc.mellow.layout.FreeLayout;
 import msifeed.mc.mellow.render.RenderItemStack;
 import msifeed.mc.mellow.render.RenderShapes;
@@ -24,7 +24,7 @@ public class PlayerHandView extends Widget {
         setSizePolicy(SizePolicy.FIXED);
         setLayout(FreeLayout.INSTANCE);
 
-        CharRpc.requestHand(player.getEntityId());
+        MetaRpc.requestHand(player.getEntityId());
 
         int offsetX = 0;
         for (int i = 0; i < 9; i++) {

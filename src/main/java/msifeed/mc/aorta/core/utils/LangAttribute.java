@@ -1,8 +1,7 @@
-package msifeed.mc.aorta.chat.usage;
+package msifeed.mc.aorta.core.utils;
 
 import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.chat.Language;
-import msifeed.mc.aorta.core.attributes.CharacterAttribute;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.sys.attributes.MissingRequiredAttributeException;
 import msifeed.mc.aorta.sys.attributes.PlayerAttribute;

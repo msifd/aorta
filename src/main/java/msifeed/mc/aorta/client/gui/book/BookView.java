@@ -3,7 +3,7 @@ package msifeed.mc.aorta.client.gui.book;
 import msifeed.mc.aorta.books.RemoteBook;
 import msifeed.mc.aorta.chat.Language;
 import msifeed.mc.aorta.chat.composer.SpeechComposer;
-import msifeed.mc.aorta.core.attributes.CharacterAttribute;
+import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import msifeed.mc.mellow.layout.AnchorLayout;
 import msifeed.mc.mellow.layout.FreeLayout;
 import msifeed.mc.mellow.layout.ListLayout;
