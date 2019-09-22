@@ -33,6 +33,14 @@ public class TabArea extends Widget {
             tabBar.selectTab(0);
     }
 
+    public int getCurrentTabIndex() {
+        return tabBar.getCurrentIndex();
+    }
+
+    public void selectTab(int index) {
+        tabBar.selectTab(index);
+    }
+
     void selectContent(int i) {
         contentWrap.clearChildren();
         contentWrap.addChild(contents.get(i));

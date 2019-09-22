@@ -177,6 +177,8 @@ public class TextController {
 
         StringBuilder sb = getCurrentLine();
         if (sb.length() >= maxColumns) {
+            if (curColumn < maxColumns) // Break line only on line end
+                return;
             breakLine();
             sb = getCurrentLine();
         }

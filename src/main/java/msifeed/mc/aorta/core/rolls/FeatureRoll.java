@@ -7,17 +7,17 @@ import msifeed.mc.aorta.core.meta.MetaInfo;
 import java.util.stream.Stream;
 
 public class FeatureRoll extends Roll {
-    public Feature[] features;
+    public Feature feature;
 
-    public FeatureRoll(Character character, MetaInfo meta, Feature... feats) {
-        super(character, meta);
+    public FeatureRoll(Character character, MetaInfo meta, String target, Feature feature) {
+        super(character, meta, target);
 
-        final double rollAvg = Stream.of(feats)
+        final double rollAvg = Stream.of(feature.feats)
                 .map(f -> character.features.get(f) + meta.modifiers.feat(f))
                 .mapToDouble(Dices::feature)
-                .sum() / feats.length;
+                .sum() / feature.feats.length;
 
-        this.features = feats;
+        this.feature = feature;
         this.roll = Dices.randRound(rollAvg);
         this.result = roll + mods.rollMod + statusMod;
     }

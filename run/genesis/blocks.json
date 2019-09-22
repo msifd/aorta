@@ -133,8 +133,10 @@
     "id": "test_trap",
     "texture": "minecraft:stone",
     "trap": {
-      "message": "Congrats, you've lost a leg.",
-      "radius": 5,
+      "closeMessage": "Congrats, %s had lost a leg.",
+      "closeRadius": 5,
+      "farMessage": "The leg cutter had striked somewhere",
+      "farRadius": 50,
       "destroy": false
     },
     "traits": [

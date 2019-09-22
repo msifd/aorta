@@ -17,6 +17,7 @@ import msifeed.mc.mellow.widgets.text.TextWall;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -30,10 +31,14 @@ public class BookView extends Widget {
 
     private BookParts bookStyle = BookParts.REGULAR;
     private final TextWall textWall;
-    private final Controls controls = new Controls(this);
+    private final Controls controls;
+
+    private final int defaultColor;
 
     BookView(TextWall textWall) {
         this.textWall = textWall;
+        this.controls = new Controls(this);
+        this.defaultColor = textWall.getColor();
 
         setLayout(FreeLayout.INSTANCE);
         setSizeHint(192, 192);
@@ -55,6 +60,9 @@ public class BookView extends Widget {
     public void setBookStyle(BookParts bookStyle) {
         this.bookStyle = bookStyle;
         setStyle(bookStyle.style);
+
+        textWall.setColor(bookStyle.style == RemoteBook.Style.PAD ? Color.green.getRGB() : defaultColor);
+        controls.setColor(textWall.getColor());
     }
 
     public void setLines(List<String> lines) {
@@ -151,11 +159,15 @@ public class BookView extends Widget {
 
             pageNum.label.setText("1");
             pageNum.getSizeHint().x = BOOK_TEXT_WIDTH - view.bookStyle.leftBtn.size.x * 2;
-            pageNum.label.setColor(pageNum.label.darkColor);
+            pageNum.label.setColor(view.textWall.getColor());
 
             addChild(leftButton);
             addChild(pageNum);
             addChild(rightButton);
+        }
+
+        void setColor(int color) {
+            pageNum.label.setColor(color);
         }
 
         void updateControls(int page, int totalPages) {

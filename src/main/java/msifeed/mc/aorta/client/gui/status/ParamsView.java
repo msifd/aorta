@@ -43,6 +43,14 @@ class ParamsView extends Widget {
         addChild(new Label(L10n.tr("aorta.gui.status.vitality")));
         addChild(new Label(String.format("%d/%d (%s)", vitality, vitalityThreshold, vitalityLevelStr)));
 
+        addChild(new Label(L10n.tr("aorta.gui.status.load")));
+        final TextInput loadInput = new TextInput();
+        loadInput.getSizeHint().x = 25;
+        loadInput.setFilter(s -> TextInput.isUnsignedIntBetween(s, 1, 100));
+        loadInput.setCallback(s -> character.load = (byte) loadInput.getInt());
+        loadInput.setText(String.valueOf(character.load));
+        addChild(loadInput);
+
         addChild(new Label(L10n.tr("aorta.gui.status.sanity")));
 
         final TextInput sanityInput = new TextInput();
@@ -92,7 +100,7 @@ class ParamsView extends Widget {
     }
 
     private void fillNonEditable() {
-        setLayout(new GridLayout(5));
+        setLayout(new GridLayout(2));
 
         final int vitalityThreshold = character.countVitalityThreshold();
         final int vitality = character.countVitality(vitalityThreshold);
@@ -102,6 +110,10 @@ class ParamsView extends Widget {
                 vitality,
                 vitalityThreshold,
                 L10n.tr("aorta.status.vitality." + vitalityLevel))));
+
+
+        addChild(new Label(L10n.tr("aorta.gui.status.load")));
+        addChild(new Label(String.valueOf(character.load)));
 
         if (character.shield.type != BodyShield.Type.NONE && character.shield.power > 0) {
             addChild(new Label(L10n.tr("aorta.gui.status.shield_type")));

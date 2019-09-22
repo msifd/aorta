@@ -126,15 +126,23 @@ public class BlockTraitCommons {
         if (!world.isRemote && unit.trapData != null && entity instanceof EntityPlayer) {
             final int meta = world.getBlockMetadata(x, y, z);
             if (meta == 0) {
-                final ChatMessage msg = Composer.makeMessage(SpeechType.ENV, null, unit.trapData.message);
-                msg.radius = unit.trapData.radius;
-                ChatHandler.sendSystemChatMessage((EntityPlayer) entity, msg);
+                final EntityPlayer player = (EntityPlayer) entity;
+                if (!unit.trapData.farMessage.isEmpty())
+                    sendEnvMessage(player, unit.trapData.farMessage, unit.trapData.farRadius);
+                if (!unit.trapData.closeMessage.isEmpty())
+                    sendEnvMessage(player, String.format(unit.trapData.closeMessage, player.getDisplayName()), unit.trapData.closeRadius);
                 if (unit.trapData.destroy)
                     world.setBlockToAir(x, y, z);
                 world.scheduleBlockUpdate(x, y, z, block, 20);
             }
             world.setBlockMetadataWithNotify(x, y, z, 4,4);
         }
+    }
+
+    private void sendEnvMessage(EntityPlayer center, String text, int radius) {
+        final ChatMessage msg = Composer.makeMessage(SpeechType.ENV, null, text);
+        msg.radius = radius;
+        ChatHandler.sendSystemChatMessage(center, msg);
     }
 
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity) {

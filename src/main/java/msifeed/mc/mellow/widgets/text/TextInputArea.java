@@ -20,10 +20,11 @@ import java.util.stream.Stream;
 public class TextInputArea extends TextWall implements KeyHandler, MouseHandler.Click {
     protected Part normalPart = Mellow.getPart("sunken");
     protected Part focusedPart = Mellow.getPart("sunken_focused");
-    protected int darkColor = Mellow.getColor("text_dark");
 
     private TextController controller = new TextController();
     private long lastTimePressed = 0;
+
+    protected int color = Mellow.getColor("text_dark");
 
     public TextInputArea() {
         setSizeHint(10, 13);
@@ -40,7 +41,12 @@ public class TextInputArea extends TextWall implements KeyHandler, MouseHandler.
 
     @Override
     public int getColor() {
-        return darkColor;
+        return color;
+    }
+
+    @Override
+    public void setColor(int color) {
+        this.color = color;
     }
 
     @Override
@@ -100,7 +106,7 @@ public class TextInputArea extends TextWall implements KeyHandler, MouseHandler.
         cursorGeom.h = lineHeight - 1;
         cursorGeom.translate(fr.getStringWidth(subline), 0, 1);
 
-        RenderShapes.line(cursorGeom, 3, 0);
+        RenderShapes.line(cursorGeom, 3, getColor());
     }
 
     @Override

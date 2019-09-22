@@ -50,7 +50,7 @@ public enum DebugHud {
         addLang(lines, entity);
 
         GL11.glPushMatrix();
-        GL11.glScalef(0.5f, 0.5f, 0.5f);
+        GL11.glScalef(0.5f, 0.5f, 0);
         int y = 5;
         for (String l : lines) {
             fr.drawString(l, 5, y, 0xed5050);

@@ -11,12 +11,13 @@ import java.util.stream.Stream;
 
 public class FightRoll extends Roll {
     public FightAction action;
+    public String target;
 
-    public FightRoll(Character character, MetaInfo meta, FightAction action) {
-        super(character, meta);
+    public FightRoll(Character character, MetaInfo meta, String target, FightAction action) {
+        super(character, meta, target);
 
         final List<Double> factors = Aorta.DEFINES.rules().modifiers.get(action);
-        final double featSum = Stream.of(Feature.values())
+        final double featSum = Stream.of(Feature.mainFeatures())
                 .mapToDouble(f -> Dices.feature(character.features.get(f) + meta.modifiers.feat(f)) * factors.get(f.ordinal()))
                 .sum();
 

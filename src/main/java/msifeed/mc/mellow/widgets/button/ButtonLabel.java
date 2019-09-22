@@ -27,6 +27,10 @@ public class ButtonLabel extends Button {
         setLabel(text);
     }
 
+    public String getLabel() {
+        return label.getText();
+    }
+
     public void setLabel(String text) {
         this.label.setText(text);
     }

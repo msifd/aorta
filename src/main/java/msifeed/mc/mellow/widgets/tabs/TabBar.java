@@ -37,6 +37,10 @@ class TabBar extends Widget {
         parent.selectContent(i);
     }
 
+    public int getCurrentIndex() {
+        return tabs.indexOf(activeTab);
+    }
+
     @Override
     public void clearChildren() {
         tabs.clear();

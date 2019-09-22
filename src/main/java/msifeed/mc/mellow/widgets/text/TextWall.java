@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 
 public abstract class TextWall extends Widget {
     public abstract int getColor();
+    public abstract void setColor(int color);
 
     public abstract int getLineSkip();
     public abstract void setLineSkip(int skip);

@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class MultilineLabel extends TextWall {
-    protected int darkColor = Mellow.getColor("text_dark");
-
     protected List<String> lines = Collections.emptyList();
     protected int lineSkip = 0;
     protected int lineLimit = 10;
+
+    protected int color = Mellow.getColor("text_dark");
 
     public MultilineLabel() {
         setZLevel(1);
@@ -21,7 +21,12 @@ public class MultilineLabel extends TextWall {
 
     @Override
     public int getColor() {
-        return darkColor;
+        return color;
+    }
+
+    @Override
+    public void setColor(int color) {
+        this.color = color;
     }
 
     @Override

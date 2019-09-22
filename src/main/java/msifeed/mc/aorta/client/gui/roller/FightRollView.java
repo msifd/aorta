@@ -2,36 +2,28 @@ package msifeed.mc.aorta.client.gui.roller;
 
 import msifeed.mc.aorta.core.rolls.FightAction;
 import msifeed.mc.aorta.core.rolls.RollRpc;
-import msifeed.mc.aorta.sys.utils.L10n;
 import msifeed.mc.mellow.layout.GridLayout;
-import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
 import net.minecraft.entity.EntityLivingBase;
 
 class FightRollView extends Widget {
     private final EntityLivingBase entity;
+    private final TargetView targetView;
 
-    FightRollView(EntityLivingBase entity) {
+    FightRollView(EntityLivingBase entity, TargetView targetView) {
         this.entity = entity;
-        setLayout(ListLayout.VERTICAL);
+        this.targetView = targetView;
 
-        final Widget actions = new Widget();
-        actions.setLayout(new GridLayout());
-        actions.addChild(makeActionButton(FightAction.HIT));
-        actions.addChild(makeActionButton(FightAction.SPECIAL_HIT));
-        actions.addChild(makeActionButton(FightAction.SHOT));
-        actions.addChild(makeActionButton(FightAction.SPECIAL_SHOT));
-        actions.addChild(makeActionButton(FightAction.SELF_USE));
-        actions.addChild(makeActionButton(FightAction.ENEMY_USE));
-        actions.addChild(makeActionButton(FightAction.BLOCK));
-        actions.addChild(makeActionButton(FightAction.DODGE));
-        addChild(actions);
+        setLayout(new GridLayout());
+
+        for (FightAction action : FightAction.values())
+            addChild(makeRollButton(action));
     }
 
-    private Widget makeActionButton(FightAction action) {
-        final String s = L10n.tr("aorta.action." + action.name().toLowerCase());
-        final ButtonLabel b = new ButtonLabel(s);
+    private Widget makeRollButton(FightAction action) {
+        final ButtonLabel b = new ButtonLabel(action.tr());
+        b.getSizeHint().x = 30;
         b.setClickCallback(() -> roll(action));
         return b;
     }
@@ -40,7 +32,8 @@ class FightRollView extends Widget {
         if (System.currentTimeMillis() - ScreenRoller.prevRollTime < 1000)
             return;
 
-        RollRpc.rollAction(entity.getEntityId(), action);
+        final String target = action.canTarget() ? targetView.getTarget() : "";
+        RollRpc.rollAction(entity.getEntityId(), action, target);
         ScreenRoller.prevRollTime = System.currentTimeMillis();
     }
 }

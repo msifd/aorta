@@ -11,6 +11,7 @@ import msifeed.mc.aorta.core.traits.Trait;
 import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import msifeed.mc.aorta.core.utils.Differ;
 import msifeed.mc.aorta.core.utils.LangAttribute;
+import msifeed.mc.aorta.core.utils.MetaAttribute;
 import msifeed.mc.aorta.logs.Logs;
 import msifeed.mc.aorta.sys.rpc.Rpc;
 import msifeed.mc.aorta.sys.rpc.RpcMethod;
@@ -134,7 +135,9 @@ public enum CharRpc {
         if (!(entity instanceof EntityLivingBase) || entity instanceof EntityPlayer)
             return;
 
-        if (CharacterAttribute.require(sender).has(Trait.gm))
+        if (CharacterAttribute.require(sender).has(Trait.gm)) {
             CharacterAttribute.INSTANCE.set(entity, null);
+            MetaAttribute.INSTANCE.set(entity, null);
+        }
     }
 }

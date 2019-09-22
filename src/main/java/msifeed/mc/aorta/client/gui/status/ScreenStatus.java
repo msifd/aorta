@@ -38,7 +38,8 @@ public class ScreenStatus extends MellowGuiScreen {
         final OtherView otherView = new OtherView(character, editable);
         tabs.addTab(L10n.tr("aorta.gui.status.status"), paramsView);
         tabs.addTab(L10n.tr("aorta.gui.status.body"), bodypartsView);
-        tabs.addTab(L10n.tr("aorta.gui.status.illness"), illnessView);
+        if (editable || character.illness.limit > 0)
+            tabs.addTab(L10n.tr("aorta.gui.status.illness"), illnessView);
         tabs.addTab(L10n.tr("aorta.gui.status.other"), otherView);
         content.addChild(tabs);
 

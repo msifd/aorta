@@ -65,16 +65,16 @@ public class Differ {
                 if (after.shield.type == BodyShield.Type.PSIONIC)
                     diffs.add(L10n.fmt("aorta.diff.status.cast_psionic_shield", after.shield.power));
                 else
-                    diffs.add(L10n.fmt("aorta.diff.status.enable_shield", after.shield.type.tr(), after.shield.power));
+                    diffs.add(L10n.fmt("aorta.diff.status.enable_shield", after.shield.type.toString(), after.shield.power));
             } else if (after.shield.type == BodyShield.Type.NONE) {
                 if (before.shield.type == BodyShield.Type.PSIONIC)
                     diffs.add(L10n.tr("aorta.diff.status.dispell_psionic_shield"));
                 else
-                    diffs.add(L10n.fmt("aorta.diff.status.disable_shield", before.shield.type.tr()));
+                    diffs.add(L10n.fmt("aorta.diff.status.disable_shield", before.shield.type.toString()));
             } else {
                 diffs.add(L10n.fmt("aorta.diff.status.change_shield",
-                        before.shield.type.tr(), before.shield.power,
-                        after.shield.type.tr(), after.shield.power
+                        before.shield.type.toString(), before.shield.power,
+                        after.shield.type.toString(), after.shield.power
                 ));
             }
         } else if (before.shield.power != after.shield.power) {

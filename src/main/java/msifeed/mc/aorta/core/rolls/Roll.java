@@ -4,13 +4,15 @@ import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.meta.MetaInfo;
 
 public abstract class Roll {
+    public String target;
     public Modifiers mods;
     public int statusMod;
     public int roll;
     public int result;
     public Critical critical;
 
-    public Roll(Character character, MetaInfo meta) {
+    public Roll(Character character, MetaInfo meta, String target) {
+        this.target = target;
         this.mods = meta.modifiers;
         this.critical = Critical.roll();
         rules(character, meta);

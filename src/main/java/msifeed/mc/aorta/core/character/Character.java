@@ -26,7 +26,7 @@ public class Character {
     public byte psionics = 0;
 
     public Character() {
-        for (Feature f : Feature.values())
+        for (Feature f : Feature.mainFeatures())
             features.put(f, 5);
     }
 
@@ -106,7 +106,9 @@ public class Character {
         c.setString(Tags.name, name);
         c.setString(Tags.wiki, wikiPage);
 
-        c.setIntArray(Tags.features, features.values().stream().mapToInt(Integer::intValue).toArray());
+        c.setIntArray(Tags.features, features.entrySet().stream()
+                .filter(e -> e.getKey().isMain())
+                .mapToInt(Map.Entry::getValue).toArray());
 
         final NBTTagList bodyParts = new NBTTagList();
         for (BodyPart p : this.bodyParts.values())
@@ -133,7 +135,7 @@ public class Character {
         wikiPage = c.getString(Tags.wiki);
 
         final int[] featuresArr = c.getIntArray(Tags.features);
-        for (Feature f : Feature.values())
+        for (Feature f : Feature.mainFeatures())
             features.put(f, featuresArr[f.ordinal()]);
 
         final NBTTagList bodyParts = c.getTagList(Tags.bodyParts, 10); // 10 - NBTTagCompound

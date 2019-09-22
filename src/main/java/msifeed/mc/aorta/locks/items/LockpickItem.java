@@ -44,7 +44,7 @@ public class LockpickItem extends Item {
         final Character character = CharacterAttribute.require(player);
         final MetaInfo meta = MetaAttribute.require(player);
 
-        final FeatureRoll roll = new FeatureRoll(character, meta, Feature.DEX, Feature.INT);
+        final FeatureRoll roll = new FeatureRoll(character, meta, "", Feature.HND);
         consumePick(lock, pick, player, roll);
 
         if (player instanceof EntityPlayerMP) {

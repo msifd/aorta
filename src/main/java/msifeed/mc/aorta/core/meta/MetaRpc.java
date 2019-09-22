@@ -42,7 +42,13 @@ public enum MetaRpc {
 
         try {
             final NBTTagCompound metaNbt = CompressedStreamTools.func_152457_a(metaBytes, new NBTSizeTracker(2097152L));
-            MetaAttribute.INSTANCE.update(entity, meta -> meta.fromNBT(metaNbt));
+            if (entity instanceof EntityPlayer)
+                MetaAttribute.INSTANCE.update(entity, meta -> meta.fromNBT(metaNbt));
+            else {
+                final MetaInfo m = new MetaInfo();
+                m.fromNBT(metaNbt);
+                MetaAttribute.INSTANCE.set(entity, m);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

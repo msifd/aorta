@@ -23,7 +23,8 @@ public class BodyShield {
     public enum Type {
         NONE, ENERGY, KINNALIAN, PSIONIC, INDUSTRIAL;
 
-        public String tr() {
+        @Override
+        public String toString() {
             return L10n.tr("aorta.shield." + name().toLowerCase());
         }
     }

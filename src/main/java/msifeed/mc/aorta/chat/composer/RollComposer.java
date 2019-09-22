@@ -5,16 +5,14 @@ import msifeed.mc.aorta.chat.Language;
 import msifeed.mc.aorta.chat.net.ChatMessage;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.rolls.*;
+import msifeed.mc.aorta.sys.utils.L10n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class RollComposer implements ChatComposer {
     @Override
@@ -36,9 +34,7 @@ public class RollComposer implements ChatComposer {
     }
 
     public static String makeText(EntityLivingBase entity, FeatureRoll roll) {
-        final List<String> featNames = Stream.of(roll.features).map(Feature::toString).collect(Collectors.toList());
-        final String feat = String.join("+", featNames);
-        return makeRollText("ROLL", getName(entity), feat, roll);
+        return makeRollText("ROLL", getName(entity), roll.feature.trShort(), roll);
     }
 
     public static String makeText(EntityLivingBase entity, FightRoll roll) {
@@ -46,13 +42,14 @@ public class RollComposer implements ChatComposer {
     }
 
     private static String makeRollText(String type, String player, String action, Roll roll) {
+        final String actionStr = roll.target.isEmpty() ? action : action + " в " + roll.target;
         final String modsStr = formatNumber(roll.mods.rollMod) + formatStatusMod(roll.statusMod);
         if (modsStr.isEmpty()) {
             // [TYPE] player ACTION: (feat mods) res CRIT
-            return String.format("[%s] \u00a7r%s\u00a76 %s:%s %d%s", type, player, action, formatFeatMods(roll.mods), roll.result, formatCrit(roll.critical));
+            return String.format("[%s] \u00a7r%s\u00a76 %s:%s %d%s", type, player, actionStr, formatFeatMods(roll.mods), roll.result, formatCrit(roll.critical));
         } else {
             // [TYPE] player ACTION: (feat mods) [roll] - mod - stat = res CRIT
-            return String.format("[%s] \u00a7r%s\u00a76 %s:%s [%s]%s = %d%s", type, player, action, formatFeatMods(roll.mods), roll.roll, modsStr, roll.result, formatCrit(roll.critical));
+            return String.format("[%s] \u00a7r%s\u00a76 %s:%s [%s]%s = %d%s", type, player, actionStr, formatFeatMods(roll.mods), roll.roll, modsStr, roll.result, formatCrit(roll.critical));
         }
     }
 
@@ -99,9 +96,9 @@ public class RollComposer implements ChatComposer {
             default:
                 return "";
             case LUCK:
-                return " \u00a72LUCK";
+                return " \u00a72" + L10n.tr("aorta.gui.roller.luck");
             case FAIL:
-                return " \u00a74FAIL";
+                return " \u00a74" + L10n.tr("aorta.gui.roller.fail");
         }
     }
 }
