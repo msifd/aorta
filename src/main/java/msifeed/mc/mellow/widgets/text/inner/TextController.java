@@ -1,5 +1,7 @@
 package msifeed.mc.mellow.widgets.text.inner;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
@@ -7,10 +9,11 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class TextController {
-    private List<StringBuilder> lines = new ArrayList<>();
+    private FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+    private List<Line> lines = new ArrayList<>();
     private int curLine = 0;
     private int curColumn = 0;
-    private int maxColumns = 50;
+    private int maxWidth = 50;
     private int skip = 0;
     private int limit = 10;
 
@@ -30,12 +33,8 @@ public class TextController {
         return curColumn;
     }
 
-    public int getMaxColumns() {
-        return maxColumns;
-    }
-
-    public void setMaxColumns(int maxColumns) {
-        this.maxColumns = maxColumns;
+    public void setMaxWidth(int maxWidth) {
+        this.maxWidth = maxWidth;
     }
 
     public int getSkip() {
@@ -58,11 +57,11 @@ public class TextController {
         this.limit = limit;
     }
 
-    public StringBuilder getCurrentLine() {
+    public Line getCurrentLine() {
         return lines.get(Math.max(0, Math.min(curLine, lines.size() - 1)));
     }
 
-    public StringBuilder getLine(int n) {
+    public Line getLine(int n) {
         return lines.get(Math.max(0, Math.min(n, lines.size() - 1)));
     }
 
@@ -72,37 +71,36 @@ public class TextController {
 
     public String toJoinedString() {
         final StringBuilder sb = new StringBuilder();
-        for (StringBuilder l : lines) {
-            sb.append(l);
+        for (Line l : lines) {
+            sb.append(l.sb);
             sb.append('\n');
         }
         return sb.toString();
-//        return String.join("\n", lines);
     }
 
     public Stream<String> toLineStream() {
         return lines.stream()
                 .skip(skip)
                 .limit(limit)
-                .map(StringBuilder::toString);
+                .map(l -> l.sb.toString());
     }
 
     public void setLines(List<String> lines) {
         this.lines.clear();
         for (String s : lines)
-            this.lines.add(new StringBuilder(s));
+            this.lines.add(new Line(s));
         if (this.lines.isEmpty())
-            this.lines.add(new StringBuilder());
+            this.lines.add(new Line());
     }
 
     public void clear() {
         lines.clear();
-        lines.add(new StringBuilder());
+        lines.add(new Line());
     }
 
     public void moveCursor(int line, int column) {
         line = Math.max(0, Math.min(line, lines.size() - 1));
-        final StringBuilder sb = lines.get(line);
+        final StringBuilder sb = lines.get(line).sb;
         column = Math.max(0, Math.min(column, sb.length()));
 
         curLine = line;
@@ -113,20 +111,20 @@ public class TextController {
         final int target = Math.max(0, Math.min(curLine + delta, lines.size() - 1));
         if (target != curLine) {
             curLine = target;
-            curColumn = Math.min(curColumn, lines.get(curLine).length());
+            curColumn = Math.min(curColumn, lines.get(curLine).sb.length());
         }
     }
 
     public void moveCursorColumn(boolean right) {
-        final StringBuilder sb = lines.get(curLine);
+        final StringBuilder sb = lines.get(curLine).sb;
         final int target = getColumnTarget(sb, right);
         if (target >= 0 && target <= sb.length())
             curColumn = target;
     }
 
     public void remove(boolean right) {
-        final StringBuilder sb = lines.get(curLine);
-        final int target = getColumnTarget(sb, right);
+        final Line line = lines.get(curLine);
+        final int target = getColumnTarget(line.sb, right);
 
         if (curColumn == target)
             return;
@@ -134,24 +132,21 @@ public class TextController {
         final int start = curColumn < target ? curColumn : target;
         final int end = curColumn > target ? curColumn : target;
 
-        // TODO: удаление строк c переносом
         if (start < 0) { // backspace line
             if (curLine == 0)
                 return;
-            if (sb.length() == 0) {
+            if (line.sb.length() == 0) {
                 lines.remove(curLine);
                 curLine--;
-                curColumn = getCurrentLine().length();
+                curColumn = getCurrentLine().sb.length();
             }
-        } else if (end > sb.length()) { // delete line
+        } else if (end > line.sb.length()) { // delete line
             if (curLine == lines.size() - 1)
                 return;
-            if (sb.length() == 0) {
+            if (line.sb.length() == 0)
                 lines.remove(curLine);
-            }
         } else {
-            sb.delete(start, end);
-            if (!right)
+            if (line.remove(start, end) && !right)
                 curColumn = target;
         }
     }
@@ -175,15 +170,10 @@ public class TextController {
                 return;
         }
 
-        StringBuilder sb = getCurrentLine();
-        if (sb.length() >= maxColumns) {
-            if (curColumn < maxColumns) // Break line only on line end
-                return;
+        if (!getCurrentLine().insert(c)) {
             breakLine();
-            sb = getCurrentLine();
+            getCurrentLine().insert(c);
         }
-        sb.insert(curColumn, c);
-        curColumn++;
     }
 
     public void insert(String str) {
@@ -199,31 +189,68 @@ public class TextController {
         if (str.isEmpty())
             return;
 
-        int strOffset = 0;
-        StringBuilder sb = lines.get(curLine);
-        while (strOffset < str.length()) {
-            if (sb.length() < maxColumns) {
-                final int charsFit = maxColumns - sb.length();
-                final int offsetEnd = strOffset + Math.min(charsFit, str.length() - strOffset);
-                sb.append(str, strOffset, offsetEnd);
-                curColumn += offsetEnd - strOffset;
-                strOffset = offsetEnd;
-            } else {
-                breakLine();
-                sb = lines.get(lines.size() - 1);
-            }
+        String overflow = getCurrentLine().insert(str);
+        while (!overflow.isEmpty()) {
+            breakLine();
+            overflow = getCurrentLine().insert(overflow);
         }
     }
 
     public void breakLine() {
-        // TODO: переносить часть строки на новую при разрыве в середине
-        final StringBuilder sb = new StringBuilder();
-        lines.add(curLine + 1, sb);
+        final String ending = getCurrentLine().sb.substring(curColumn);
+        if (ending.isEmpty()) {
+            lines.add(curLine + 1, new Line());
+        } else {
+            getCurrentLine().remove(curColumn, curColumn + ending.length());
+            lines.add(curLine + 1, new Line(ending));
+        }
         curLine++;
         curColumn = 0;
     }
 
     private static boolean moveByWord() {
         return Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL);
+    }
+
+    public class Line {
+        public StringBuilder sb = new StringBuilder();
+        public int width = 0;
+
+        public Line() {
+
+        }
+        public Line(String s) {
+            sb.append(s);
+            width = fontRenderer.getStringWidth(s);
+        }
+
+        public boolean insert(char c) {
+            final int cw = fontRenderer.getCharWidth(c);
+            if (width + cw > maxWidth)
+                return false;
+            sb.insert(curColumn, c);
+            width += cw;
+            curColumn++;
+            return true;
+        }
+
+        public String insert(String s) {
+            final String ts = fontRenderer.trimStringToWidth(s, maxWidth - width);
+            if (ts.isEmpty())
+                return s;
+            sb.insert(curColumn, ts);
+            width += fontRenderer.getStringWidth(ts);
+            curColumn += ts.length();
+            return s.substring(ts.length());
+        }
+
+        public boolean remove(int start, int end) {
+            if (sb.length() == 0)
+                return false;
+            final int w = fontRenderer.getStringWidth(sb.substring(start, end));
+            sb.delete(start, end);
+            width -= w;
+            return true;
+        }
     }
 }

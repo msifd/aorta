@@ -44,6 +44,7 @@ public class ScreenStatus extends MellowGuiScreen {
         content.addChild(tabs);
 
         if (entity instanceof EntityPlayer && entity != Minecraft.getMinecraft().thePlayer) {
+//        if (entity instanceof EntityPlayer) {
             content.addChild(new Separator());
             content.addChild(new PlayerHandView((EntityPlayer) entity));
         }

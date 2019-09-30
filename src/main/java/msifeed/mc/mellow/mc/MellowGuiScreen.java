@@ -10,6 +10,7 @@ import msifeed.mc.mellow.widgets.scene.ProfilingScene;
 import msifeed.mc.mellow.widgets.scene.Scene;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.entity.RenderItem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,8 +32,8 @@ public class MellowGuiScreen extends GuiScreen {
     @Override
     public void initGui() {
         final Minecraft mc = Minecraft.getMinecraft();
-        final int scaleFactor = RenderUtils.getScreenScaleFactor();
-        scene.getGeometry().set(0, 0, mc.displayWidth / scaleFactor, mc.displayHeight / scaleFactor);
+        final ScaledResolution scale = RenderUtils.getScaledResolution();
+        scene.getGeometry().set(0, 0, scale.getScaledWidth(), scale.getScaledHeight());
     }
 
     @Override

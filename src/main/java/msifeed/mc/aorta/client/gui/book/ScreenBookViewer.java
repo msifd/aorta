@@ -1,5 +1,6 @@
 package msifeed.mc.aorta.client.gui.book;
 
+import msifeed.mc.aorta.books.RemoteBook;
 import msifeed.mc.aorta.books.RemoteBookManager;
 import msifeed.mc.aorta.genesis.items.templates.BookTemplate;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
@@ -7,6 +8,7 @@ import msifeed.mc.mellow.widgets.text.MultilineLabel;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MathHelper;
 import org.lwjgl.input.Keyboard;
 
 import java.util.Collections;
@@ -32,6 +34,10 @@ public class ScreenBookViewer extends MellowGuiScreen {
                 return;
             }
         }
+
+        final RemoteBook.Style[] styles = RemoteBook.Style.values();
+        final RemoteBook.Style currentStyle = styles[MathHelper.clamp_int(itemStack.getItemDamage(), 0, styles.length)];
+        bookView.setStyle(currentStyle);
 
         bookView.setLines(Collections.singletonList("Looking for book..."));
         scene.addChild(bookView);

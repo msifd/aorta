@@ -5,6 +5,7 @@ import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.mellow.theme.Part;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -79,10 +80,9 @@ public class RenderItemStack {
         if (lines.size() > 1)
             height += 1 + (lines.size() - 1) * 10;
 
-        final Minecraft mc = Minecraft.getMinecraft();
-        final int scaleFactor = RenderUtils.getScreenScaleFactor();
-        final int displayWidth = mc.displayWidth / scaleFactor;
-        final int displayHeight = mc.displayHeight / scaleFactor;
+        final ScaledResolution scale = RenderUtils.getScaledResolution();
+        final int displayWidth = scale.getScaledWidth();
+        final int displayHeight = scale.getScaledHeight();
 
         if (offsetX + maxLineWidth > displayWidth)
             offsetX -= 28 + maxLineWidth;

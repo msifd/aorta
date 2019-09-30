@@ -55,7 +55,7 @@ public class Differ {
 
         if (before.psionics != after.psionics) {
             diffs.add(L10n.fmt(
-                    before.psionics < after.psionics ? "aorta.diff.status.add_psionics" : "aorta.diff.status.rem_psionics",
+                    before.psionics > after.psionics ? "aorta.diff.status.add_psionics" : "aorta.diff.status.rem_psionics",
                     Math.abs(before.psionics - after.psionics)
             ));
         }

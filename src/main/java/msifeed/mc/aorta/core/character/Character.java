@@ -89,10 +89,10 @@ public class Character {
     }
 
     public int psionicsLevel() {
-        if (psionics <= 0 || maxPsionics <= 0)
+        if (maxPsionics <= 0)
             return 0;
         final int p = MathHelper.clamp_int(psionics, 0, maxPsionics);
-        final int percent = (p * 100) / maxPsionics;
+        final int percent = 100 - (p * 100) / maxPsionics;
         return MathHelper.clamp_int(percent / 25, 0, 4);
     }
 

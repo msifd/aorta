@@ -51,6 +51,7 @@ aorta.gui.status.load=Загруженность
 aorta.gui.status.shield_type=Тип щита
 aorta.gui.status.shield_power=Мощность
 aorta.gui.status.psionics=Псионические Очки
+aorta.gui.status.psionics_mixture=Смена смеси: %d ПО
 aorta.gui.status.body=Тело
 aorta.gui.status.injured=травма
 aorta.gui.status.vital=жизненно важный
@@ -184,7 +185,7 @@ aorta.diff.status.vitality.3=при смерти
 aorta.diff.status.vitality.4=убит
 aorta.diff.status.injure=%s - получена травма
 aorta.diff.status.psionics_level=теперь на %d уровне псионической усталости
-aorta.diff.status.psionics_critical=теперь перегружен и сейчас взорвется!
+aorta.diff.status.psionics_critical=теперь истощен и сейчас взорвется!
 
 aorta.diff.status.illness.add_illness=болезнь прогрессирует на %d пунктов
 aorta.diff.status.illness.rem_illness=болезнь отступает на %d пунктов

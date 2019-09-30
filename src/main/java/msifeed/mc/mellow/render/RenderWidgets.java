@@ -13,7 +13,7 @@ public final class RenderWidgets {
 
     public static void beginCropped(Geom geom) {
         final Minecraft mc = Minecraft.getMinecraft();
-        final int sf = RenderUtils.getScreenScaleFactor();
+        final int sf = RenderUtils.getScaledResolution().getScaleFactor();
         final int x = geom.x * sf;
         final int y = geom.y * sf;
         final int w = geom.w * sf;

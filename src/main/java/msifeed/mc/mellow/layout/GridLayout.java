@@ -50,6 +50,9 @@ public class GridLayout implements Layout {
             leftWidget = !leftWidget;
         }
 
+        if (!leftWidget)
+            yOffset += lineHeight + spacing;
+
         final Point contentSize = new Point(maxLeftWidth + maxRightWidth + spacing, yOffset - spacing);
         final Margins margin = parent.getMargin();
         contentSize.translate(margin.horizontal(), margin.vertical());

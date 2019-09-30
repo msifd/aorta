@@ -9,7 +9,7 @@ import msifeed.mc.mellow.render.RenderUtils;
 import msifeed.mc.mellow.utils.Geom;
 import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.input.Mouse;
@@ -91,10 +91,11 @@ public class PlayerHandView extends Widget {
             RenderItemStack.itemStack(item, geom.x, geom.y, geom.z);
 
             if (isHovered()) {
-                final Minecraft mc = Minecraft.getMinecraft();
-                final int scaleFactor = RenderUtils.getScreenScaleFactor();
-                final int displayHeight = mc.displayHeight / scaleFactor;
-                RenderItemStack.tooltip(item, player, Mouse.getX() / scaleFactor, displayHeight - Mouse.getY() / scaleFactor, geom.z);
+                final ScaledResolution scale = RenderUtils.getScaledResolution();
+//                final Minecraft mc = Minecraft.getMinecraft();
+//                final int scaleFactor = RenderUtils.getScreenScaleFactor();
+//                final int displayHeight = mc.displayHeight / scaleFactor;
+                RenderItemStack.tooltip(item, player, Mouse.getX() / scale.getScaleFactor(), scale.getScaledHeight() - Mouse.getY() / scale.getScaleFactor(), geom.z);
             }
         }
     }

@@ -6,6 +6,7 @@ import msifeed.mc.aorta.core.traits.Trait;
 import msifeed.mc.aorta.sys.utils.L10n;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.layout.ListLayout;
+import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.droplist.DropList;
 import msifeed.mc.mellow.widgets.text.Label;
@@ -52,7 +53,6 @@ class ParamsView extends Widget {
         addChild(loadInput);
 
         addChild(new Label(L10n.tr("aorta.gui.status.sanity")));
-
         final TextInput sanityInput = new TextInput();
         sanityInput.getSizeHint().x = 25;
         sanityInput.setFilter(s -> TextInput.isUnsignedIntBetween(s, 1, 125));
@@ -75,14 +75,15 @@ class ParamsView extends Widget {
         addChild(shieldPower);
 
         if (character.has(Trait.psionic)) {
-            addChild(new Label(L10n.tr("aorta.gui.status.maxPsionics")));
+            addChild(new Label(L10n.tr("aorta.gui.status.psionics")));
 
-            final Widget psiRight = new Widget();
-            psiRight.setLayout(ListLayout.HORIZONTAL);
-            addChild(psiRight);
+            final Widget psiAmount = new Widget();
+            psiAmount.setLayout(ListLayout.HORIZONTAL);
+            addChild(psiAmount);
 
             final Label psiDesc = new Label();
-            psiDesc.getPos().y = 2;
+            psiDesc.getPos().y = 1;
+            psiDesc.setSizePolicy(SizePolicy.FIXED);
 
             final TextInput psionicsInput = new TextInput();
             psionicsInput.getSizeHint().x = 25;
@@ -90,12 +91,18 @@ class ParamsView extends Widget {
             psionicsInput.setCallback(s -> {
                 character.psionics = (byte) psionicsInput.getInt();
                 final int psiPercent = character.maxPsionics > 0 ? Math.floorDiv(character.psionics * 100, character.maxPsionics) : 0;
-                psiDesc.setText(String.format("/%d (%d%%)", character.maxPsionics, psiPercent));
+                final int psiLevel = character.psionicsLevel();
+                psiDesc.setText(String.format("/%d (%d%%, %d)", character.maxPsionics, psiPercent, psiLevel));
             });
             psionicsInput.setText(String.valueOf(character.psionics));
 
-            psiRight.addChild(psionicsInput);
-            psiRight.addChild(psiDesc);
+            psiAmount.addChild(psionicsInput);
+            psiAmount.addChild(psiDesc);
+
+            final Label mixture = new Label(L10n.fmt("aorta.gui.status.psionics_mixture", character.psionics / 5));
+            mixture.getPos().y = -4;
+            addChild(new Widget());
+            addChild(mixture);
         }
     }
 
@@ -129,6 +136,11 @@ class ParamsView extends Widget {
             addChild(new Label(String.format("%d (%s)",
                     character.psionics,
                     L10n.tr("aorta.status.maxPsionics." + psionicsLevel))));
+
+            addChild(new Widget());
+            addChild(new Label(L10n.fmt("aorta.gui.status.psionics_mixture", character.psionics / 5)));
+//            addChild(new Label(L10n.tr("aorta.gui.status.psionics_mixture")));
+//            addChild(new Label(String.format("%d ПО", character.psionics / 5)));
         }
     }
 }

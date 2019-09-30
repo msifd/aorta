@@ -26,7 +26,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class BookView extends Widget {
-    private static final int BOOK_TEXT_WIDTH = 115;
+    public static final int BOOK_TEXT_WIDTH = 115;
     private static final int BOOK_LINES_PER_PAGE = 19;
 
     private BookParts bookStyle = BookParts.REGULAR;
@@ -57,14 +57,6 @@ public class BookView extends Widget {
         addChild(controls);
     }
 
-    public void setBookStyle(BookParts bookStyle) {
-        this.bookStyle = bookStyle;
-        setStyle(bookStyle.style);
-
-        textWall.setColor(bookStyle.style == RemoteBook.Style.PAD ? Color.green.getRGB() : defaultColor);
-        controls.setColor(textWall.getColor());
-    }
-
     public void setLines(List<String> lines) {
         textWall.setLines(lines);
     }
@@ -90,7 +82,7 @@ public class BookView extends Widget {
         controls.updateControls(textWall.getLineSkip() / BOOK_LINES_PER_PAGE + 1, (textWall.getLineCount() - 1) / BOOK_LINES_PER_PAGE + 1);
     }
 
-    private void setStyle(RemoteBook.Style style) {
+    public void setStyle(RemoteBook.Style style) {
         if (style == RemoteBook.Style.RICH)
             bookStyle = BookParts.RICH;
         else if (style == RemoteBook.Style.PAD)
@@ -104,6 +96,9 @@ public class BookView extends Widget {
         controls.leftButton.hover = bookStyle.leftBtnHover;
         controls.rightButton.normal = bookStyle.rightBtn;
         controls.rightButton.hover = bookStyle.rightBtnHover;
+
+        textWall.setColor(style == RemoteBook.Style.PAD ? Color.green.getRGB() : defaultColor);
+        controls.setColor(textWall.getColor());
     }
 
     private static boolean doIKnowLanguage(Language language) {

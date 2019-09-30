@@ -21,7 +21,8 @@ public class Label extends Widget {
     public Label(String text) {
         setZLevel(1);
         setText(text);
-        setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.MINIMUM);
+        setSizePolicy(SizePolicy.FIXED);
+//        setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.MINIMUM);
     }
 
     public String getText() {

@@ -1,5 +1,6 @@
 package msifeed.mc.aorta.client.gui.book;
 
+import msifeed.mc.aorta.books.RemoteBook;
 import msifeed.mc.aorta.books.RemoteBookRpc;
 import msifeed.mc.aorta.chat.Language;
 import msifeed.mc.aorta.core.character.Character;
@@ -30,7 +31,8 @@ public class ScreenNoteEditor extends MellowGuiScreen {
 
     public ScreenNoteEditor(EntityPlayer player) {
         final TextInputArea textArea = new TextInputArea();
-        textArea.getController().setMaxColumns(TEXT_COLS);
+        textArea.getController().setMaxWidth(BookView.BOOK_TEXT_WIDTH);
+//        textArea.getController().setMaxColumns(TEXT_COLS);
 
         this.bookView = new BookView(textArea);
 
@@ -50,8 +52,8 @@ public class ScreenNoteEditor extends MellowGuiScreen {
         final TextInput title = new TextInput();
         publishTab.addChild(title);
 
-        final DropList<BookParts> style = new DropList<>(Arrays.asList(BookParts.values()));
-        style.setSelectCallback(bookView::setBookStyle);
+        final DropList<RemoteBook.Style> style = new DropList<>(Arrays.asList(RemoteBook.Style.values()));
+        style.setSelectCallback(bookView::setStyle);
         style.selectItem(BookParts.NOTE.ordinal());
         publishTab.addChild(style);
 
@@ -68,15 +70,24 @@ public class ScreenNoteEditor extends MellowGuiScreen {
             final String text = textArea.getText();
             if (text.length() < 3 || title.getText().length() < 3)
                 return;
-            RemoteBookRpc.publish(text, title.getText(), style.getSelectedItem().style, lang.getSelectedItem());
+            RemoteBookRpc.publish(text, title.getText(), style.getSelectedItem(), lang.getSelectedItem());
 //            textArea.getController().clear();
 //            closeGui();
         });
         publishTab.addChild(publishBtn);
+
+        // //
+
+        final Widget closeTab = new Widget();
+        closeTab.setSizeHint(bookView.getSizeHint());
+        tabs.addTab("Close", closeTab);
+
+        final ButtonLabel closeBtn = new ButtonLabel("Close editor");
+        closeBtn.setClickCallback(super::closeGui);
+        closeTab.addChild(closeBtn);
     }
 
     @Override
     public void closeGui() {
-        super.closeGui();
     }
 }

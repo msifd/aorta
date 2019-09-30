@@ -96,7 +96,7 @@ public class TextInputArea extends TextWall implements KeyHandler, MouseHandler.
             return;
 
         final FontRenderer fr = RenderManager.instance.getFontRenderer();
-        final String subline = controller.getCurrentLine().substring(0, controller.getCurColumn());
+        final String subline = controller.getCurrentLine().sb.substring(0, controller.getCurColumn());
         final int lineHeight = lineHeight();
 
         final Geom cursorGeom = new Geom(getGeometry());
