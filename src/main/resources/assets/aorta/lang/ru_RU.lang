@@ -1,8 +1,8 @@
 aorta=Аорта
 
-itemGroup.aorta.blocks=Аорта Блоки
-itemGroup.aorta.items=Аорта Предметы
-itemGroup.aorta.tools=Аорта Тулсы
+itemGroup.aorta.blocks=Аорта блоки
+itemGroup.aorta.items=Аорта предметы
+itemGroup.aorta.tools=Аорта тулсы
 
 item.tool_debug.name=Дэбаг-тул
 item.tool_char.name=Чар-тул
@@ -35,7 +35,7 @@ aorta.gui.roller.fight=Бой
 aorta.gui.roller.target=Цель
 aorta.gui.roller.mods=Модификаторы
 aorta.gui.roller.mods.roll=Мод. броска:
-aorta.gui.roller.mods.feat=Мод. характеристик
+aorta.gui.roller.mods.feat=Мод. характеристик:
 aorta.gui.roller.luck=КРИТЛАК
 aorta.gui.roller.fail=КРИТФЭЙЛ
 
@@ -50,7 +50,7 @@ aorta.gui.status.sanity=Мент. состояние
 aorta.gui.status.load=Загруженность
 aorta.gui.status.shield_type=Тип щита
 aorta.gui.status.shield_power=Мощность
-aorta.gui.status.psionics=Псионические Очки
+aorta.gui.status.psionics=Пси. очки
 aorta.gui.status.body=Тело
 aorta.gui.status.injured=травма
 aorta.gui.status.vital=жизненно важный
@@ -136,10 +136,10 @@ aorta.lang.kshemin=Кшеминский
 aorta.lang.kshemin.short=кшм.
 
 aorta.shield.none=нет
-aorta.shield.energy=энергитический
-aorta.shield.kinnalian=киналлийский
+aorta.shield.energy=энергетический
+aorta.shield.kinnalian=киннальский
 aorta.shield.psionic=псионический
-aorta.shield.industrial=индустриальный
+aorta.shield.industrial=промышленный
 
 aorta.diff.s=очко
 aorta.diff.g=очка
