@@ -7,6 +7,7 @@ import msifeed.mc.mellow.render.RenderWidgets;
 import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.utils.Geom;
 import msifeed.mc.mellow.utils.Point;
+import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
 
 class DropListHeader extends ButtonLabel {
@@ -22,7 +23,7 @@ class DropListHeader extends ButtonLabel {
 
     DropListHeader(DropList parent) {
         this.parent = parent;
-        getMargin().set(1, 0, 1, 3);
+        getMargin().set(2, 0, 2, 3);
         setLayout(new AnchorLayout(AnchorLayout.Anchor.LEFT, AnchorLayout.Anchor.CENTER));
 
         label.setColor(label.darkColor);
@@ -31,14 +32,14 @@ class DropListHeader extends ButtonLabel {
     @Override
     public Point getContentSize() {
         final Point p = super.getContentSize();
-        p.x = parent.popupList.getContentSize().x + buttonNormalPart.size.x + 4;
+        p.x = parent.popupList.getContentSize().x + buttonNormalPart.size.x;
         return p;
     }
 
     @Override
     protected void updateSelf() {
         textBgGeom.set(getGeometry());
-        textBgGeom.w -= buttonNormalPart.size.x + 2;
+        textBgGeom.w -= buttonNormalPart.size.x + 1;
 
         buttonBgGeom.set(getGeometry());
         buttonBgGeom.x += textBgGeom.w;
@@ -46,7 +47,7 @@ class DropListHeader extends ButtonLabel {
 
         iconGeom.set(buttonBgGeom);
         iconGeom.setSize(downIconPart.size);
-        iconGeom.translate((buttonNormalPart.size.x - iconGeom.w) / 2, (buttonNormalPart.size.y - iconGeom.h) / 2, 1);
+        iconGeom.translate(2, 4, 1);
     }
 
     @Override

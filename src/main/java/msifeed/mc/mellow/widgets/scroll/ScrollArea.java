@@ -26,9 +26,8 @@ public class ScrollArea extends Widget {
         addChild(thumb);
     }
 
-    @Override
-    public Point getContentSize() {
-        return super.getContentSize();
+    public void setContent(Widget content) {
+        this.content = content;
     }
 
     public Widget getContent() {

@@ -3,6 +3,7 @@ package msifeed.mc.aorta.client;
 import cpw.mods.fml.client.FMLClientHandler;
 import msifeed.mc.aorta.client.gui.ScreenItemDesigner;
 import msifeed.mc.aorta.client.gui.ScreenLangSelector;
+import msifeed.mc.aorta.client.gui.ScreenRenamer;
 import msifeed.mc.aorta.client.gui.book.ScreenBookLoader;
 import msifeed.mc.aorta.client.gui.book.ScreenBookViewer;
 import msifeed.mc.aorta.client.gui.book.ScreenNoteEditor;
@@ -100,6 +101,12 @@ public class GuiHandlerClient extends GuiHandler {
     public void toggleDesignerScreen() {
         if (Minecraft.getMinecraft().theWorld.isRemote)
             toggleGui(ScreenItemDesigner.class, ScreenItemDesigner::new);
+    }
+
+    @Override
+    public void toggleRenamer() {
+        if (Minecraft.getMinecraft().theWorld.isRemote)
+            toggleGui(ScreenRenamer.class, () -> new ScreenRenamer(Minecraft.getMinecraft().thePlayer));
     }
 
     private void toggleGui(Class<?> c, Supplier<GuiScreen> screenSupplier) {

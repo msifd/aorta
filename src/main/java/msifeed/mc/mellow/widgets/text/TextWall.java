@@ -10,6 +10,10 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public abstract class TextWall extends Widget {
+    public Geom getTextGeom() {
+        return new Geom(getGeometry());
+    }
+
     public abstract int getColor();
     public abstract void setColor(int color);
 
@@ -33,14 +37,16 @@ public abstract class TextWall extends Widget {
 
     @Override
     protected void renderSelf() {
-        final Geom geom = new Geom(getGeometry());
+        final Geom geom = getTextGeom();
+        geom.offsetPos(getMargin());
+        geom.offsetSize(getMargin());
+
         final int color = getColor();
         final int lineHeight = lineHeight();
-        getLines()
-                .forEach(line -> {
-                    RenderWidgets.string(geom, line, color);
-                    geom.y += lineHeight;
-                });
+        getLines().forEach(line -> {
+            RenderWidgets.string(geom, line, color);
+            geom.y += lineHeight;
+        });
     }
 
     public int lineHeight() {

@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagString;
 import java.util.*;
 
 public class RenameProvider {
+
     public static boolean hasTitle(ItemStack itemStack) {
         return itemStack.hasTagCompound()
                 && itemStack.stackTagCompound.hasKey("display", 10)
@@ -19,8 +20,20 @@ public class RenameProvider {
             if (itemStack.hasTagCompound() && itemStack.stackTagCompound.hasKey("display", 10))
                 itemStack.stackTagCompound.getCompoundTag("display").removeTag("Name");
         } else {
-            itemStack.setStackDisplayName(replaceFormattingCode(title));
+            itemStack.setStackDisplayName(fromAmpersandFormatting(title));
         }
+    }
+
+    public static List<String> getDescription(ItemStack itemStack) {
+        if (!hasDescription(itemStack))
+            return Collections.emptyList();
+        final NBTTagList tags = itemStack.stackTagCompound
+                .getCompoundTag("display")
+                .getTagList(Tags.description, 8);
+        final ArrayList<String> lines = new ArrayList<>();
+        for (int i = 0; i < tags.tagCount(); i++)
+            lines.add(intoAmpersandFormatting(tags.getStringTagAt(i).substring(2)));
+        return lines;
     }
 
     public static boolean hasDescription(ItemStack itemStack) {
@@ -45,7 +58,14 @@ public class RenameProvider {
         final NBTTagList lines = itemStack.stackTagCompound
                 .getCompoundTag("display")
                 .getTagList(Tags.description, 8);
-        lines.appendTag(new NBTTagString(replaceFormattingCode("\u00A7r" + line)));
+        lines.appendTag(new NBTTagString(fromAmpersandFormatting("\u00A7r" + line)));
+    }
+
+    public static void setDescription(ItemStack itemStack, NBTTagList desc) {
+        createDescriptionIfNeeded(itemStack);
+        itemStack.stackTagCompound
+                .getCompoundTag("display")
+                .setTag(Tags.description, desc);
     }
 
     public static void removeDescriptionLine(ItemStack itemStack) {
@@ -87,7 +107,7 @@ public class RenameProvider {
         if (value == null)
             values.removeTag(key);
         else
-            values.setString(replaceFormattingCode(key), replaceFormattingCode(value));
+            values.setString(fromAmpersandFormatting(key), fromAmpersandFormatting(value));
     }
 
     public static Map<String, String> getOverriddenValues(ItemStack itemStack) {
@@ -112,8 +132,12 @@ public class RenameProvider {
             itemStack.stackTagCompound = new NBTTagCompound();
     }
 
-    private static String replaceFormattingCode(String str) {
+    static String fromAmpersandFormatting(String str) {
         return str.replace('&', '\u00A7');
+    }
+
+    public static String intoAmpersandFormatting(String str) {
+        return str.replace('\u00A7', '&');
     }
 
     static class Tags {

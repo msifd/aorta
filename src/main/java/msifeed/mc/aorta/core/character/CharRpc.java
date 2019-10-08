@@ -125,7 +125,7 @@ public enum CharRpc {
     private void sendMessage(EntityPlayerMP sender, EntityLivingBase who, String message) {
         final ChatMessage m = Composer.makeMessage(SpeechType.LOG, sender, message);
         m.speaker = (who instanceof EntityPlayer) ? ((EntityPlayer) who).getDisplayName() : who.getCommandSenderName();
-        ChatHandler.sendSystemChatMessage(sender, m);
+        ChatHandler.sendSystemChatMessage(sender, "log", m);
     }
 
     @RpcMethod(clearEntity)

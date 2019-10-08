@@ -30,6 +30,15 @@ public enum Logs {
             dbHandler.logCommand(sender, type, message);
     }
 
+    public static void logCommand(String cmd) {
+        Rpc.sendToServer(Logs.requestLogCommand, cmd);
+    }
+
+    @RpcMethod(requestLogCommand)
+    public void onLogCommand(MessageContext ctx, String cmd) {
+        log(ctx.getServerHandler().playerEntity, "cmd", "/" + cmd);
+    }
+
     @SubscribeEvent
     public void onPlayerJoined(PlayerEvent.PlayerLoggedInEvent event) {
         if (!event.player.worldObj.isRemote)
@@ -40,11 +49,5 @@ public enum Logs {
     public void onPlayerLeft(PlayerEvent.PlayerLoggedOutEvent event) {
         if (!event.player.worldObj.isRemote)
             log(event.player, "logout", "[logout]");
-    }
-
-    @RpcMethod(requestLogCommand)
-    public void onLogCommand(MessageContext ctx, String cmd) {
-        final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
-        log(sender, "cmd", "/" + cmd);
     }
 }

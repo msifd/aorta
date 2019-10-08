@@ -8,6 +8,7 @@ import msifeed.mc.aorta.genesis.GenesisTrait;
 import msifeed.mc.aorta.genesis.items.IItemTemplate;
 import msifeed.mc.aorta.genesis.items.ItemCommons;
 import msifeed.mc.aorta.genesis.items.ItemGenesisUnit;
+import msifeed.mc.aorta.logs.Logs;
 import msifeed.mc.aorta.sys.utils.L10n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
@@ -81,7 +82,7 @@ public class ItemTemplate extends Item implements IItemTemplate {
             if (!world.isRemote) {
                 final ChatMessage m = Composer.makeMessage(SpeechType.LOG, player, L10n.fmt("aorta.used", itemStack.getDisplayName()));
                 m.speaker = player.getDisplayName();
-                ChatHandler.sendSystemChatMessage(player, m);
+                ChatHandler.sendSystemChatMessage(player, "log", m);
             }
         }
         return itemStack;

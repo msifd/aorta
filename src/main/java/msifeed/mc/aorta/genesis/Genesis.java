@@ -9,6 +9,8 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import msifeed.mc.aorta.genesis.blocks.BlockGenerator;
 import msifeed.mc.aorta.genesis.items.ItemGenerator;
+import msifeed.mc.aorta.genesis.rename.RenameRpc;
+import msifeed.mc.aorta.sys.rpc.Rpc;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,6 +32,8 @@ public class Genesis {
     private static boolean abortLoading = false;
 
     public void init() {
+        Rpc.register(RenameRpc.INSTANCE);
+
         for (Generator g : generators.values())
             g.init();
         generate();

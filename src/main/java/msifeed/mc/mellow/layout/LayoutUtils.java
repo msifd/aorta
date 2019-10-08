@@ -31,12 +31,12 @@ public class LayoutUtils {
     }
 
     public static int getPreferredWidth(int target, Widget widget) {
-        final int width = widget.getSizeHint().x;
+        final int width = widget.getSizeHint().x + widget.getMargin().horizontal();
         return getPreferred(target, width, widget.getSizePolicy().horizontalPolicy);
     }
 
     public static int getPreferredHeight(int target, Widget widget) {
-        final int height = widget.getSizeHint().y;
+        final int height = widget.getSizeHint().y + widget.getMargin().vertical();
         return getPreferred(target, height, widget.getSizePolicy().verticalPolicy);
     }
 

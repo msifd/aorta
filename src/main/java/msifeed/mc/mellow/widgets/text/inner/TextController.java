@@ -13,12 +13,19 @@ public class TextController {
     private List<Line> lines = new ArrayList<>();
     private int curLine = 0;
     private int curColumn = 0;
+
     private int maxWidth = 50;
+    private int maxLines = Integer.MAX_VALUE;
+
     private int skip = 0;
-    private int limit = 10;
+    private int skipLimit = 10;
 
     public TextController() {
         clear();
+    }
+
+    public boolean isEmpty() {
+        return lines.size() == 1 && lines.get(0).width == 0;
     }
 
     public int getCurLine() {
@@ -26,7 +33,7 @@ public class TextController {
     }
 
     public int getCurLineView() {
-        return curLine % limit;
+        return curLine % skipLimit;
     }
 
     public int getCurColumn() {
@@ -37,24 +44,33 @@ public class TextController {
         this.maxWidth = maxWidth;
     }
 
-    public int getSkip() {
+    public int getMaxLines() {
+        return maxLines;
+    }
+
+    public void setMaxLines(int n) {
+        this.maxLines = n;
+        setSkipLimit(n);
+    }
+
+    public int getLineSkip() {
         return skip;
     }
 
-    public void setSkip(int skip) {
+    public void setLineSkip(int skip) {
         this.skip = Math.max(0, Math.min(skip, getLineCount() - 1));
     }
 
-    public void updateSkip(int delta) {
-        setSkip(skip + delta);
+    public void updateLineSkip(int delta) {
+        setLineSkip(skip + delta);
     }
 
-    public int getLimit() {
-        return limit;
+    public int getSkipLimit() {
+        return skipLimit;
     }
 
-    public void setLimit(int limit) {
-        this.limit = limit;
+    public void setSkipLimit(int limit) {
+        this.skipLimit = limit;
     }
 
     public Line getCurrentLine() {
@@ -81,7 +97,7 @@ public class TextController {
     public Stream<String> toLineStream() {
         return lines.stream()
                 .skip(skip)
-                .limit(limit)
+                .limit(skipLimit)
                 .map(l -> l.sb.toString());
     }
 
@@ -160,20 +176,24 @@ public class TextController {
         }
     }
 
-    public void insert(char c) {
+    public boolean insert(char c) {
         switch (Character.getType(c)) {
             case Character.CONTROL:     // \p{Cc}
             case Character.FORMAT:      // \p{Cf}
             case Character.PRIVATE_USE: // \p{Co}
             case Character.SURROGATE:   // \p{Cs}
             case Character.UNASSIGNED:  // \p{Cn}
-                return;
+                return false;
         }
 
-        if (!getCurrentLine().insert(c)) {
-            breakLine();
-            getCurrentLine().insert(c);
-        }
+        final int lc = getLineCount();
+        final int lw = getCurrentLine().width;
+
+        if (!getCurrentLine().insert(c))
+            if (breakLine())
+                getCurrentLine().insert(c);
+
+        return lc != getLineCount() || lw != getCurrentLine().width;
     }
 
     public void insert(String str) {
@@ -181,7 +201,8 @@ public class TextController {
         for (int i = 0; i < lines.length; i++) {
             inputSolidLine(lines[i]);
             if (i < lines.length - 1)
-                breakLine();
+                if (!breakLine())
+                    break;
         }
     }
 
@@ -191,12 +212,16 @@ public class TextController {
 
         String overflow = getCurrentLine().insert(str);
         while (!overflow.isEmpty()) {
-            breakLine();
+            if (!breakLine())
+                break;
             overflow = getCurrentLine().insert(overflow);
         }
     }
 
-    public void breakLine() {
+    public boolean breakLine() {
+        if (curLine >= maxLines)
+            return false;
+
         final String ending = getCurrentLine().sb.substring(curColumn);
         if (ending.isEmpty()) {
             lines.add(curLine + 1, new Line());
@@ -206,6 +231,7 @@ public class TextController {
         }
         curLine++;
         curColumn = 0;
+        return true;
     }
 
     private static boolean moveByWord() {

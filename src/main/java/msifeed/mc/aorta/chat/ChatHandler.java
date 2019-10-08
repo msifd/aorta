@@ -9,6 +9,7 @@ import msifeed.mc.aorta.chat.gm.GmSpeech;
 import msifeed.mc.aorta.chat.net.ChatMessage;
 import msifeed.mc.aorta.logs.Logs;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.ServerChatEvent;
 
@@ -22,9 +23,10 @@ public class ChatHandler {
         event.setCanceled(true);
     }
 
-    public static void sendSystemChatMessage(EntityLivingBase at, ChatMessage message) {
+    public static void sendSystemChatMessage(EntityPlayer at, String type, ChatMessage message) {
         final NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(at.dimension, at.posX, at.posY, at.posZ, message.radius);
         Speechat.CHANNEL.sendToAllAround(message, point);
+        Logs.log(at, type, message.text);
     }
 
     public static void sendChatMessage(EntityPlayerMP sender, ChatMessage message) {

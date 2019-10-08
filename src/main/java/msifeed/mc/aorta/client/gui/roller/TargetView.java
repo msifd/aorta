@@ -18,7 +18,6 @@ class TargetView extends Widget {
         setLayout(ListLayout.VERTICAL);
 
         addChild(new Label("Атаковать в ..."));
-        addChild(new Separator());
 
         final Widget targetBtns = new Widget();
         targetBtns.setLayout(new GridLayout(1));

@@ -9,7 +9,7 @@ class ListEntryButton extends ButtonLabel {
 
     ListEntryButton(DropList parent, int n) {
         this.itemN = n;
-        getMargin().set(2, 0);
+        getMargin().set(1, 2, 1, 2);
         setLayout(new AnchorLayout(AnchorLayout.Anchor.LEFT, AnchorLayout.Anchor.CENTER));
 
         setLabel(parent.getItems().get(n).toString());

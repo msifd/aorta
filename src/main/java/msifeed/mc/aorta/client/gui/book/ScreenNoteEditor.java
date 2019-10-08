@@ -11,10 +11,12 @@ import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
+import msifeed.mc.mellow.widgets.button.FlatButtonLabel;
 import msifeed.mc.mellow.widgets.droplist.DropList;
 import msifeed.mc.mellow.widgets.tabs.TabArea;
 import msifeed.mc.mellow.widgets.text.TextInput;
 import msifeed.mc.mellow.widgets.text.TextInputArea;
+import msifeed.mc.mellow.widgets.window.Window;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.Arrays;
@@ -23,16 +25,14 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ScreenNoteEditor extends MellowGuiScreen {
-    private static final int TEXT_ROWS = 15;
-    private static final int TEXT_COLS = 26;
-    private static String textBackup = null;
-
     private final BookView bookView;
+    private Window closeDialog = null;
 
     public ScreenNoteEditor(EntityPlayer player) {
         final TextInputArea textArea = new TextInputArea();
-        textArea.getController().setMaxWidth(BookView.BOOK_TEXT_WIDTH);
-//        textArea.getController().setMaxColumns(TEXT_COLS);
+        textArea.setWithBackground(false);
+        textArea.setMaxLineWidth(BookView.BOOK_TEXT_WIDTH);
+        textArea.setLineLimit(Integer.MAX_VALUE);
 
         this.bookView = new BookView(textArea);
 
@@ -78,16 +78,35 @@ public class ScreenNoteEditor extends MellowGuiScreen {
 
         // //
 
-        final Widget closeTab = new Widget();
-        closeTab.setSizeHint(bookView.getSizeHint());
-        tabs.addTab("Close", closeTab);
 
-        final ButtonLabel closeBtn = new ButtonLabel("Close editor");
-        closeBtn.setClickCallback(super::closeGui);
-        closeTab.addChild(closeBtn);
     }
 
     @Override
     public void closeGui() {
+        if (closeDialog != null)
+            return;
+
+        closeDialog = new Window();
+        closeDialog.setTitle("Close editor?");
+        closeDialog.setZLevel(100);
+
+        final Widget content = closeDialog.getContent();
+        content.setLayout(ListLayout.HORIZONTAL);
+
+        final ButtonLabel yesBtn = new ButtonLabel();
+        yesBtn.setLabel("Yes");
+        yesBtn.setClickCallback(super::closeGui);
+        content.addChild(yesBtn);
+
+        final ButtonLabel noBtn = new ButtonLabel("No!");
+        noBtn.setSizeHint(40, 10);
+        noBtn.setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.MINIMUM);
+        noBtn.setClickCallback(() -> {
+            scene.removeChild(closeDialog);
+            closeDialog = null;
+        });
+        content.addChild(noBtn);
+
+        scene.addChild(closeDialog);
     }
 }

@@ -47,7 +47,7 @@ public class RollCommand extends ExtCommand {
 
         if (sender instanceof EntityPlayer) {
             final EntityPlayer s = (EntityPlayer) sender;
-            ChatHandler.sendSystemChatMessage(s, Composer.makeMessage(SpeechType.ROLL, s, text));
+            ChatHandler.sendSystemChatMessage(s, "roll", Composer.makeMessage(SpeechType.ROLL, s, text));
         } else {
             sender.addChatMessage(new ChatComponentText(text));
         }

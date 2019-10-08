@@ -3,10 +3,13 @@ package msifeed.mc.mellow.widgets.text;
 import msifeed.mc.mellow.Mellow;
 import msifeed.mc.mellow.handlers.KeyHandler;
 import msifeed.mc.mellow.handlers.MouseHandler;
+import msifeed.mc.mellow.layout.LayoutUtils;
 import msifeed.mc.mellow.render.RenderParts;
 import msifeed.mc.mellow.render.RenderShapes;
+import msifeed.mc.mellow.render.RenderWidgets;
 import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.utils.Geom;
+import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.text.inner.TextController;
 import net.minecraft.client.gui.FontRenderer;
@@ -21,14 +24,17 @@ public class TextInputArea extends TextWall implements KeyHandler, MouseHandler.
     protected Part normalPart = Mellow.getPart("sunken");
     protected Part focusedPart = Mellow.getPart("sunken_focused");
 
-    private TextController controller = new TextController();
-    private long lastTimePressed = 0;
+    protected TextController controller = new TextController();
+    protected long lastTimePressed = 0;
 
     protected int color = Mellow.getColor("text_dark");
+    protected boolean withBackground = true;
 
     public TextInputArea() {
         setSizeHint(10, 13);
         setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.MINIMUM);
+
+        getMargin().set(2, 3, 2, 3);
     }
 
     public TextController getController() {
@@ -37,6 +43,11 @@ public class TextInputArea extends TextWall implements KeyHandler, MouseHandler.
 
     public String getText() {
         return controller.toJoinedString();
+    }
+
+    public void setMaxLineWidth(int w) {
+        controller.setMaxWidth(w);
+        getContentSize().x = w;
     }
 
     @Override
@@ -49,19 +60,23 @@ public class TextInputArea extends TextWall implements KeyHandler, MouseHandler.
         this.color = color;
     }
 
+    public void setWithBackground(boolean withBackground) {
+        this.withBackground = withBackground;
+    }
+
     @Override
     public int getLineSkip() {
-        return controller.getSkip();
+        return controller.getLineSkip();
     }
 
     @Override
     public void setLineSkip(int skip) {
-        controller.setSkip(skip);
+        controller.setLineSkip(skip);
     }
 
     @Override
     public void setLineLimit(int limit) {
-        controller.setLimit(limit);
+        controller.setSkipLimit(limit);
     }
 
     @Override
@@ -81,14 +96,41 @@ public class TextInputArea extends TextWall implements KeyHandler, MouseHandler.
     }
 
     @Override
+    public Point getContentSize() {
+        return super.getContentSize();
+    }
+
+    @Override
+    public Geom getTextGeom() {
+        return LayoutUtils.getGeomWithMargin(this);
+    }
+
+    @Override
+    protected void updateSelf() {
+        super.updateSelf();
+    }
+
+    @Override
     protected void renderSelf() {
-        super.renderSelf();
+        if (withBackground)
+            renderBackground();
+        renderText();
         if (isFocused())
             renderCursor();
     }
 
     protected void renderBackground() {
         RenderParts.nineSlice(isFocused() ? focusedPart : normalPart, getGeometry());
+    }
+
+    protected void renderText() {
+        final Geom geom = getTextGeom();
+        final int color = getColor();
+        final int lineHeight = lineHeight();
+        getLines().forEach(line -> {
+            RenderWidgets.string(geom, line, color);
+            geom.y += lineHeight;
+        });
     }
 
     protected void renderCursor() {
@@ -99,7 +141,7 @@ public class TextInputArea extends TextWall implements KeyHandler, MouseHandler.
         final String subline = controller.getCurrentLine().sb.substring(0, controller.getCurColumn());
         final int lineHeight = lineHeight();
 
-        final Geom cursorGeom = new Geom(getGeometry());
+        final Geom cursorGeom = getTextGeom();
         cursorGeom.x += 0;
         cursorGeom.y += 2 + lineHeight * controller.getCurLineView();
         cursorGeom.w = 0;
@@ -142,32 +184,30 @@ public class TextInputArea extends TextWall implements KeyHandler, MouseHandler.
                 controller.moveCursorColumn(true);
                 break;
             case Keyboard.KEY_UP:
-                if (curLine == 0 && controller.getSkip() > 0)
-                        controller.updateSkip(-controller.getLimit());
+                if (curLine == 0 && controller.getLineSkip() > 0)
+                    controller.updateLineSkip(-controller.getSkipLimit());
                 controller.moveCursorLine(-1);
                 break;
             case Keyboard.KEY_DOWN:
                 controller.moveCursorLine(1);
-                if (curLine == controller.getLimit() - 1 && controller.getCurLineView() == 0)
-                    controller.updateSkip(controller.getLimit());
+                if (curLine == controller.getSkipLimit() - 1 && controller.getCurLineView() == 0)
+                    controller.updateLineSkip(controller.getSkipLimit());
                 break;
             case Keyboard.KEY_DELETE:
                 controller.remove(true);
                 break;
             case Keyboard.KEY_BACK:
                 controller.remove(false);
-                if (curLine == 0 && controller.getCurLineView() > 0)
-                    controller.updateSkip(-controller.getLimit());
+                if (curLine == 0 && controller.getCurLineView() > 0 || getLineSkip() >= getLineCount())
+                    controller.updateLineSkip(-controller.getSkipLimit());
                 break;
             case Keyboard.KEY_RETURN:
-                controller.breakLine();
-                if (curLine == controller.getLimit() - 1 && controller.getCurLineView() == 0)
-                    controller.updateSkip(controller.getLimit());
+                if (controller.breakLine() && curLine == controller.getSkipLimit() - 1 && controller.getCurLineView() == 0)
+                    controller.updateLineSkip(controller.getSkipLimit());
                 break;
             default:
-                controller.insert(c);
-                if (curLine == controller.getLimit() - 1 && controller.getCurLineView() == 0)
-                    controller.updateSkip(controller.getLimit());
+                if (controller.insert(c) && curLine == controller.getSkipLimit() - 1 && controller.getCurLineView() == 0)
+                    controller.updateLineSkip(controller.getSkipLimit());
                 break;
         }
 
@@ -177,10 +217,10 @@ public class TextInputArea extends TextWall implements KeyHandler, MouseHandler.
     @Override
     public void onClick(int xMouse, int yMouse, int button) {
         final FontRenderer fr = RenderManager.instance.getFontRenderer();
-        final Geom geom = getGeometry();
+        final Geom geom = getTextGeom();
 
         final int lineHeight = lineHeight();
-        final int line = controller.getSkip() + (yMouse - geom.y - lineHeight / 2) / lineHeight;
+        final int line = controller.getLineSkip() + (yMouse - geom.y - lineHeight / 2) / lineHeight;
         final int tune = -1;
         final int column = fr.trimStringToWidth(controller.getLine(line).toString(), xMouse - geom.x - tune).length();
 

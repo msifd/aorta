@@ -41,6 +41,10 @@ aorta.gui.roller.fail=КРИТФЭЙЛ
 
 aorta.gui.lang_selector=Языковыбиратель
 
+aorta.gui.renamer=Переименовыватель
+aorta.gui.renamer.title=Название
+aorta.gui.renamer.desc=Описание
+
 aorta.gui.status=Статус
 aorta.gui.status.title=Статус: %s
 aorta.gui.status.status=Статус

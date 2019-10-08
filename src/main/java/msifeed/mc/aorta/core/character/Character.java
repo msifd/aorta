@@ -135,8 +135,9 @@ public class Character {
         wikiPage = c.getString(Tags.wiki);
 
         final int[] featuresArr = c.getIntArray(Tags.features);
-        for (Feature f : Feature.mainFeatures())
-            features.put(f, featuresArr[f.ordinal()]);
+        if (featuresArr.length == Feature.mainFeatures().length)
+            for (Feature f : Feature.mainFeatures())
+                features.put(f, featuresArr[f.ordinal()]);
 
         final NBTTagList bodyParts = c.getTagList(Tags.bodyParts, 10); // 10 - NBTTagCompound
         this.bodyParts.clear();
