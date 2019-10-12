@@ -181,6 +181,7 @@ aorta.diff.status.sanity.1=сильном стрессе
 aorta.diff.status.sanity.2=стрессе
 aorta.diff.status.sanity.3=нормальном настроении
 aorta.diff.status.sanity.4=приподнятом настроении
+aorta.diff.status.sanity_mod=метальный мод. теперь равен %d
 aorta.diff.status.vitality_level=теперь %s
 aorta.diff.status.vitality.0=здоров
 aorta.diff.status.vitality.1=ранен

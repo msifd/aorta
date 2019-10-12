@@ -37,7 +37,7 @@ public class GmGlobalCommand extends ExtCommand {
         final ChatMessage message = Composer.makeMessage(SpeechType.GM_GLOBAL, player, text);
 
         if (player instanceof EntityPlayerMP)
-            ChatHandler.sendGlobalChatMessage((EntityPlayerMP) player, message);
+            ChatHandler.sendGlobalChatMessage(player, message);
         else {
             player.addChatMessage(Composer.formatMessage(player, message));
         }

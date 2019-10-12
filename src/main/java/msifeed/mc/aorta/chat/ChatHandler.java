@@ -8,9 +8,7 @@ import msifeed.mc.aorta.chat.composer.SpeechType;
 import msifeed.mc.aorta.chat.gm.GmSpeech;
 import msifeed.mc.aorta.chat.net.ChatMessage;
 import msifeed.mc.aorta.logs.Logs;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.ServerChatEvent;
 
 public class ChatHandler {
@@ -23,22 +21,21 @@ public class ChatHandler {
         event.setCanceled(true);
     }
 
-    public static void sendSystemChatMessage(EntityPlayer at, String type, ChatMessage message) {
+    public static void sendSystemChatMessage(EntityPlayer at, ChatMessage message) {
         final NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(at.dimension, at.posX, at.posY, at.posZ, message.radius);
         Speechat.CHANNEL.sendToAllAround(message, point);
-        Logs.log(at, type, message.text);
     }
 
-    public static void sendChatMessage(EntityPlayerMP sender, ChatMessage message) {
+    public static void sendChatMessage(EntityPlayer sender, ChatMessage message) {
         final NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(sender.dimension, sender.posX, sender.posY, sender.posZ, message.radius);
         Speechat.CHANNEL.sendToAllAround(message, point);
         final String langPrefix = message.language == Language.VANILLA || message.language == Language.COMMON
                 ? "" : String.format("[%s] ", message.language.shortTr());
-        Logs.log(sender, "chat", langPrefix + message.text);
+        Logs.log(sender, message.type.toString().toLowerCase(), langPrefix + message.text);
     }
 
-    public static void sendGlobalChatMessage(EntityPlayerMP sender, ChatMessage message) {
+    public static void sendGlobalChatMessage(EntityPlayer sender, ChatMessage message) {
         Speechat.CHANNEL.sendToAll(message);
-        Logs.log(sender, "chat.global", message.text);
+        Logs.log(sender, message.type.toString().toLowerCase(), message.text);
     }
 }

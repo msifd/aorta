@@ -15,22 +15,13 @@ class FeatureRollsView extends Widget {
         this.entity = entity;
         this.targetView = targetView;
 
-//        getSizeHint().x = 120;
         setLayout(new GridLayout());
-
         for (Feature feature : Feature.values())
             addChild(makeRollButton(feature));
-//        for (Feature f : Feature.values()) {
-//            final ButtonLabel b = new ButtonLabel(f.tr());
-//            b.setSizePolicy(SizePolicy.Policy.FIXED, SizePolicy.Policy.PREFERRED);
-//            b.setClickCallback(() -> roll(f));
-//            addChild(b);
-//        }
     }
 
     private Widget makeRollButton(Feature feature) {
         final ButtonLabel b = new ButtonLabel(feature.tr());
-//        b.getSizeHint().x = 30;
         b.setClickCallback(() -> roll(feature));
         return b;
     }

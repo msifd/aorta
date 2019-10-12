@@ -40,17 +40,17 @@ class BodypartDialog extends Window {
         params.addChild(new Label("Health"));
         final TextInput healthInput = new TextInput();
         healthInput.getSizeHint().x = 30;
-        healthInput.setText(String.valueOf(bodypart.health));
         healthInput.setFilter(s -> TextInput.isUnsignedIntBetween(s, 0, bodypart.maxHealth));
         healthInput.setCallback(s -> bodypart.health = (short) healthInput.getInt());
+        healthInput.setText(String.valueOf(bodypart.health));
         params.addChild(healthInput);
 
         params.addChild(new Label("Armor"));
         final TextInput armorInput = new TextInput();
         armorInput.getSizeHint().x = 30;
-        armorInput.setText(String.valueOf(bodypart.armor));
         armorInput.setFilter(BodypartDialog::healthFilter);
         armorInput.setCallback(s -> bodypart.armor = (short) armorInput.getInt());
+        armorInput.setText(String.valueOf(bodypart.armor));
         params.addChild(armorInput);
 
         content.addChild(new Separator());

@@ -82,7 +82,8 @@ public class ItemTemplate extends Item implements IItemTemplate {
             if (!world.isRemote) {
                 final ChatMessage m = Composer.makeMessage(SpeechType.LOG, player, L10n.fmt("aorta.used", itemStack.getDisplayName()));
                 m.speaker = player.getDisplayName();
-                ChatHandler.sendSystemChatMessage(player, "log", m);
+                ChatHandler.sendSystemChatMessage(player, m);
+                Logs.log(player, "log", m.text);
             }
         }
         return itemStack;

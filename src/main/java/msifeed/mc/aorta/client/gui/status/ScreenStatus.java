@@ -9,7 +9,6 @@ import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.basic.Separator;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
 import msifeed.mc.mellow.widgets.tabs.TabArea;
-import msifeed.mc.mellow.widgets.text.Label;
 import msifeed.mc.mellow.widgets.window.Window;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
@@ -19,17 +18,17 @@ public class ScreenStatus extends MellowGuiScreen {
     private Character character;
 
     public ScreenStatus(EntityLivingBase entity, boolean editable, boolean isGm) {
+        CharacterAttribute.get(entity).ifPresent(c -> character = new Character(c));
+        if (character == null) {
+            closeGui();
+            return;
+        }
+
         final Window window = new Window();
-        window.setTitle(L10n.fmt("aorta.gui.status.title", entity.getCommandSenderName()));
+        window.setTitle(L10n.fmt("aorta.gui.status.title", character.name.isEmpty() ? entity.getCommandSenderName() : character.name));
         scene.addChild(window);
 
         final Widget content = window.getContent();
-
-        CharacterAttribute.get(entity).ifPresent(c -> character = new Character(c));
-        if (character == null) {
-            content.addChild(new Label("Missing character data!"));
-            return;
-        }
 
         final TabArea tabs = new TabArea();
         final ParamsView paramsView = new ParamsView(character, editable);

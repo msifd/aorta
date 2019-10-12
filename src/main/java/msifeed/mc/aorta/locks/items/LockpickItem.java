@@ -1,5 +1,6 @@
 package msifeed.mc.aorta.locks.items;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.chat.ChatHandler;
 import msifeed.mc.aorta.chat.composer.Composer;
@@ -17,7 +18,6 @@ import msifeed.mc.aorta.locks.LockObject;
 import msifeed.mc.aorta.locks.LockType;
 import msifeed.mc.aorta.logs.Logs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -47,10 +47,11 @@ public class LockpickItem extends Item {
         final FeatureRoll roll = new FeatureRoll(character, meta, "", Feature.HND);
         consumePick(lock, pick, player, roll);
 
-        if (player instanceof EntityPlayerMP) {
-            final String text = RollComposer.makeText(player, roll);
+        if (!player.worldObj.isRemote) {
+            final String text = RollComposer.makeText(player, character, roll);
             final ChatMessage m = Composer.makeMessage(SpeechType.ROLL, player, text);
-            ChatHandler.sendChatMessage((EntityPlayerMP) player, m);
+            ChatHandler.sendSystemChatMessage(player, m);
+            Logs.log(player, "feature", ChatFormatting.stripFormatting(text));
         }
 
         return roll.check(lock.getDifficulty());
@@ -100,7 +101,7 @@ public class LockpickItem extends Item {
         if (canPick(lock) && tryToPick(lock, itemStack, player)) {
             if (!world.isRemote) {
                 successMessage(lock, player);
-                Logs.log(player, "lockpick", lock.isLocked() ? "[locked]" : "[unlocked]");
+                Logs.log(player, "log", lock.isLocked() ? "[locked]" : "[unlocked]");
             }
         }
 

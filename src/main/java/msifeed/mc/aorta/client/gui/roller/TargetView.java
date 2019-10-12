@@ -3,7 +3,6 @@ package msifeed.mc.aorta.client.gui.roller;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.widgets.Widget;
-import msifeed.mc.mellow.widgets.basic.Separator;
 import msifeed.mc.mellow.widgets.button.Checkbox;
 import msifeed.mc.mellow.widgets.button.FlatButtonLabel;
 import msifeed.mc.mellow.widgets.text.Label;

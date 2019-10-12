@@ -1,5 +1,6 @@
 package msifeed.mc.aorta.core.rolls;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.aorta.chat.ChatHandler;
 import msifeed.mc.aorta.chat.composer.Composer;
@@ -11,6 +12,7 @@ import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.meta.MetaInfo;
 import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import msifeed.mc.aorta.core.utils.MetaAttribute;
+import msifeed.mc.aorta.logs.Logs;
 import msifeed.mc.aorta.sys.rpc.Rpc;
 import msifeed.mc.aorta.sys.rpc.RpcMethod;
 import net.minecraft.entity.Entity;
@@ -46,9 +48,12 @@ public enum RollRpc {
         final Optional<MetaInfo> metaOpt = MetaAttribute.get(entity);
         if (charOpt.isPresent() && metaOpt.isPresent()) {
             final FeatureRoll roll = new FeatureRoll(charOpt.get(), metaOpt.get(), target, feature);
-            final String text = RollComposer.makeText((EntityLivingBase) entity, roll);
+            final String text = RollComposer.makeText((EntityLivingBase) entity, charOpt.get(), roll);
             final ChatMessage m = Composer.makeMessage(SpeechType.ROLL, player, text);
-            ChatHandler.sendChatMessage(player, m);
+            ChatHandler.sendSystemChatMessage(player, m);
+
+            final String prefix = player != entity ? ">> " : "";
+            Logs.log(player, "feature", prefix + ChatFormatting.stripFormatting(text));
         }
     }
 
@@ -64,9 +69,12 @@ public enum RollRpc {
         final Optional<MetaInfo> metaOpt = MetaAttribute.get(entity);
         if (charOpt.isPresent() && metaOpt.isPresent()) {
             final FightRoll roll = new FightRoll(charOpt.get(), metaOpt.get(), target, action);
-            final String text = RollComposer.makeText((EntityLivingBase) entity, roll);
+            final String text = RollComposer.makeText((EntityLivingBase) entity, charOpt.get(), roll);
             final ChatMessage m = Composer.makeMessage(SpeechType.ROLL, player, text);
-            ChatHandler.sendChatMessage(player, m);
+            ChatHandler.sendSystemChatMessage(player, m);
+
+            final String prefix = player != entity ? ">> " : "";
+            Logs.log(player, "action", prefix + ChatFormatting.stripFormatting(text));
         }
     }
 }

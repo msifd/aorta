@@ -38,7 +38,7 @@ public class TabArea extends Widget {
     }
 
     public void selectTab(int index) {
-        tabBar.selectTab(index);
+        tabBar.selectTab(Math.max(0, index));
     }
 
     void selectContent(int i) {

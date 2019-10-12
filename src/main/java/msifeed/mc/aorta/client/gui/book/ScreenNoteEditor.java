@@ -11,7 +11,6 @@ import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
-import msifeed.mc.mellow.widgets.button.FlatButtonLabel;
 import msifeed.mc.mellow.widgets.droplist.DropList;
 import msifeed.mc.mellow.widgets.tabs.TabArea;
 import msifeed.mc.mellow.widgets.text.TextInput;

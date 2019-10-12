@@ -78,9 +78,10 @@ public class GmsayCommand extends ExtCommand {
         final String text = String.join(" ", args);
         final ChatMessage message = Composer.makeMessage(SpeechType.GM, player, text);
 
-        if (player instanceof EntityPlayerMP)
-            ChatHandler.sendSystemChatMessage(player, "gms", message);
-        else
+        if (player instanceof EntityPlayerMP) {
+            ChatHandler.sendSystemChatMessage(player, message);
+            Logs.log(player, "gm", text);
+        } else
             player.addChatMessage(Composer.formatMessage(player, message));
     }
 

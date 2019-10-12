@@ -143,7 +143,8 @@ public class BlockTraitCommons {
     private void sendEnvMessage(EntityPlayer center, String text, int radius) {
         final ChatMessage msg = Composer.makeMessage(SpeechType.ENV, null, text);
         msg.radius = radius;
-        ChatHandler.sendSystemChatMessage(center, "trap", msg);
+        ChatHandler.sendSystemChatMessage(center, msg);
+        Logs.log(center, "log", text);
     }
 
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity) {

@@ -163,10 +163,8 @@ public class Differ {
 
         final int sanityModBefore = Roll.sanityMod(before.sanity);
         final int sanityModAfter = Roll.sanityMod(after.sanity);
-        if (sanityModBefore != sanityModAfter) {
-            // TODO: fill text
+        if (sanityModBefore != sanityModAfter)
             diffs.add(L10n.fmt("aorta.diff.status.sanity_mod", sanityModAfter));
-        }
 
         final int psionicsBefore = before.psionicsLevel();
         final int psionicsAfter = after.psionicsLevel();

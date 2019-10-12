@@ -7,7 +7,6 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.aorta.sys.rpc.Rpc;
 import msifeed.mc.aorta.sys.rpc.RpcMethod;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
 
 public enum Logs {
@@ -42,12 +41,12 @@ public enum Logs {
     @SubscribeEvent
     public void onPlayerJoined(PlayerEvent.PlayerLoggedInEvent event) {
         if (!event.player.worldObj.isRemote)
-            log(event.player, "login", "[login]");
+            log(event.player, "log", "[login]");
     }
 
     @SubscribeEvent
     public void onPlayerLeft(PlayerEvent.PlayerLoggedOutEvent event) {
         if (!event.player.worldObj.isRemote)
-            log(event.player, "logout", "[logout]");
+            log(event.player, "log", "[logout]");
     }
 }

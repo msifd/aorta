@@ -1,5 +1,9 @@
 package msifeed.mc.aorta.client.gui.roller;
 
+import msifeed.mc.aorta.core.character.Character;
+import msifeed.mc.aorta.core.meta.MetaInfo;
+import msifeed.mc.aorta.core.utils.CharacterAttribute;
+import msifeed.mc.aorta.core.utils.MetaAttribute;
 import msifeed.mc.aorta.sys.utils.L10n;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
@@ -7,6 +11,8 @@ import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.tabs.TabArea;
 import msifeed.mc.mellow.widgets.window.Window;
 import net.minecraft.entity.EntityLivingBase;
+
+import java.util.Optional;
 
 public class ScreenRoller extends MellowGuiScreen {
     private static int lastRollTab = 0;
@@ -17,9 +23,18 @@ public class ScreenRoller extends MellowGuiScreen {
     private final TabArea optionsTabs = new TabArea();
 
     public ScreenRoller(EntityLivingBase entity) {
+        final Optional<Character> charOpt = CharacterAttribute.get(entity);
+        final Optional<MetaInfo> metaOpt = MetaAttribute.get(entity);
+        if (!charOpt.isPresent() || !metaOpt.isPresent()) {
+            closeGui();
+            return;
+        }
+
         final Window window = new Window();
-        window.setTitle(L10n.fmt("aorta.gui.roller.title", entity.getCommandSenderName()));
         scene.addChild(window);
+
+        final String name = charOpt.map(c -> c.name).orElse(entity.getCommandSenderName());
+        window.setTitle(L10n.fmt("aorta.gui.roller.title", name));
 
         final Widget content = window.getContent();
         content.setLayout(new ListLayout(ListLayout.Direction.HORIZONTAL, 2));
@@ -40,8 +55,10 @@ public class ScreenRoller extends MellowGuiScreen {
 
     @Override
     public void closeGui() {
-        lastRollTab = rollTabs.getCurrentTabIndex();
-        lastOptionsTab = optionsTabs.getCurrentTabIndex();
+        if (!scene.getChildren().isEmpty()) {
+            lastRollTab = rollTabs.getCurrentTabIndex();
+            lastOptionsTab = optionsTabs.getCurrentTabIndex();
+        }
         super.closeGui();
     }
 }

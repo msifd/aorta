@@ -3,6 +3,7 @@ package msifeed.mc.aorta.chat.composer;
 import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.chat.Language;
 import msifeed.mc.aorta.chat.net.ChatMessage;
+import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.rolls.*;
 import msifeed.mc.aorta.sys.utils.L10n;
@@ -33,12 +34,12 @@ public class RollComposer implements ChatComposer {
         return comp;
     }
 
-    public static String makeText(EntityLivingBase entity, FeatureRoll roll) {
-        return makeRollText("ROLL", getName(entity), roll.feature.trShort(), roll);
+    public static String makeText(EntityLivingBase entity, Character character, FeatureRoll roll) {
+        return makeRollText("ROLL", getName(entity, character), roll.feature.trShort(), roll);
     }
 
-    public static String makeText(EntityLivingBase entity, FightRoll roll) {
-        return makeRollText("ACTION", getName(entity), roll.action.tr(), roll);
+    public static String makeText(EntityLivingBase entity, Character character, FightRoll roll) {
+        return makeRollText("ACTION", getName(entity, character), roll.action.tr(), roll);
     }
 
     private static String makeRollText(String type, String player, String action, Roll roll) {
@@ -53,8 +54,8 @@ public class RollComposer implements ChatComposer {
         }
     }
 
-    private static String getName(EntityLivingBase entity) {
-        return entity instanceof EntityPlayer ? ((EntityPlayer) entity).getDisplayName() : entity.getCommandSenderName();
+    private static String getName(EntityLivingBase entity, Character character) {
+        return character.name.isEmpty() ? entity.getCommandSenderName() : character.name;
     }
 
     private static String formatFeatMods(Modifiers mod) {

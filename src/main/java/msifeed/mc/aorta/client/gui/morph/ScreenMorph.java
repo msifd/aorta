@@ -28,8 +28,10 @@ public class ScreenMorph extends MellowGuiScreen {
         this.character = CharacterAttribute.get(entity).map(Character::new).orElse(null);
         this.metaInfo = MetaAttribute.get(entity).map(MetaInfo::new).orElse(null);
 
+        final String name = character == null || character.name.isEmpty() ? entity.getCommandSenderName() : character.name;
+
         final Window window = new Window();
-        window.setTitle("Morph: " + entity.getCommandSenderName());
+        window.setTitle("Morpher: " + name);
         scene.addChild(window);
 
         content = window.getContent();

@@ -102,7 +102,9 @@ public class TextInputArea extends TextWall implements KeyHandler, MouseHandler.
 
     @Override
     public Geom getTextGeom() {
-        return LayoutUtils.getGeomWithMargin(this);
+        final Geom g = LayoutUtils.getGeomWithMargin(this);
+        g.z += 1;
+        return g;
     }
 
     @Override
@@ -142,11 +144,10 @@ public class TextInputArea extends TextWall implements KeyHandler, MouseHandler.
         final int lineHeight = lineHeight();
 
         final Geom cursorGeom = getTextGeom();
-        cursorGeom.x += 0;
+        cursorGeom.x += fr.getStringWidth(subline);
         cursorGeom.y += 2 + lineHeight * controller.getCurLineView();
         cursorGeom.w = 0;
         cursorGeom.h = lineHeight - 1;
-        cursorGeom.translate(fr.getStringWidth(subline), 0, 1);
 
         RenderShapes.line(cursorGeom, 3, getColor());
     }

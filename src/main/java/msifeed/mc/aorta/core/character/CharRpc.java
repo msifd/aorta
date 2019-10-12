@@ -73,24 +73,28 @@ public enum CharRpc {
         final boolean targetIsPlayer = entity instanceof EntityPlayer;
 
         if (!senderIsGm && !senderIsTarget && targetIsPlayer) {
-            Logs.log(sender, "warning", String.format("%s tried to change character %s", sender.getCommandSenderName(), entity.getCommandSenderName()));
+            Logs.log(sender, "warning", String.format("%s tried to change character %s while not GM!", sender.getCommandSenderName(), entity.getCommandSenderName()));
+            ctx.getServerHandler().kickPlayerFromServer("Forbidden!");
             return;
         }
 
         try {
             final NBTTagCompound charNbt = CompressedStreamTools.func_152457_a(charBytes, new NBTSizeTracker(2097152L));
 
-            if (entity instanceof EntityPlayer) {
-                final Character after = CharacterAttribute.require(entity);
+            final Character after = CharacterAttribute.get(entity).orElse(null);
+            if (after != null) {
                 final Character before = new Character(after);
                 CharacterAttribute.INSTANCE.update(entity, c -> c.fromNBT(charNbt));
 
                 final String diffChanges = Differ.diff(before, after);
                 final String diffResults = Differ.diffResults(before, after);
-                sendLogs(sender, (EntityLivingBase) entity, "update_char", diffChanges);
-                sendLogs(sender, (EntityLivingBase) entity, "status", diffResults);
 
-                if (!before.name.equals(after.name)) {
+                final String speaker = before.name.isEmpty() ? entity.getCommandSenderName() : before.name;
+                final String logPrefix = sender == entity ? "" : "(" + speaker + ") ";
+                sendLogs(sender, speaker, logPrefix, diffChanges);
+                sendLogs(sender, speaker, logPrefix, diffResults);
+
+                if (entity instanceof EntityPlayer && !before.name.equals(after.name)) {
                     ((EntityPlayer) entity).refreshDisplayName();
                     Rpc.sendToAll(refreshName, entityId);
                 }
@@ -99,7 +103,6 @@ public enum CharRpc {
                 c.fromNBT(charNbt);
                 CharacterAttribute.INSTANCE.set(entity, c);
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -112,20 +115,15 @@ public enum CharRpc {
             ((EntityPlayer) entity).refreshDisplayName();
     }
 
-    private void sendLogs(EntityPlayerMP sender, EntityLivingBase who, String type, String message) {
+    private void sendLogs(EntityPlayerMP sender, String speaker, String logPrefix, String message) {
         if (message.isEmpty())
             return;
 
-        final String namePrefix = sender == who ? "" : who.getCommandSenderName() + ": ";
-        Logs.log(sender, type, namePrefix + message);
-
-        sendMessage(sender, who, message);
-    }
-
-    private void sendMessage(EntityPlayerMP sender, EntityLivingBase who, String message) {
         final ChatMessage m = Composer.makeMessage(SpeechType.LOG, sender, message);
-        m.speaker = (who instanceof EntityPlayer) ? ((EntityPlayer) who).getDisplayName() : who.getCommandSenderName();
-        ChatHandler.sendSystemChatMessage(sender, "log", m);
+        m.speaker = speaker;
+        ChatHandler.sendSystemChatMessage(sender, m);
+
+        Logs.log(sender, "log", logPrefix + message);
     }
 
     @RpcMethod(clearEntity)

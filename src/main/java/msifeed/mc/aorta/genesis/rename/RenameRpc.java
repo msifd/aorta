@@ -4,7 +4,6 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.sys.rpc.Rpc;
 import msifeed.mc.aorta.sys.rpc.RpcMethod;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
