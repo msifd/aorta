@@ -17,6 +17,7 @@ public enum  RenameRpc {
     INSTANCE;
 
     private static final String rename = "aorta:genesis.rename";
+    private static final String setValue = "aorta:genesis.rename.value.set";
     private static final String openRenameGui = "aorta:genesis.rename.gui";
 
     public static void rename(String title, List<String> desc) {
@@ -54,6 +55,23 @@ public enum  RenameRpc {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void setValue(String key, String value) {
+        if (!key.isEmpty())
+            Rpc.sendToServer(setValue, key, value == null ? "[del]" : value);
+    }
+
+    @RpcMethod(setValue)
+    public void onSetValue(MessageContext ctx, String key, String value) {
+        if (ctx.side.isClient())
+            return;
+        final EntityPlayer sender = ctx.getServerHandler().playerEntity;
+        final ItemStack itemStack = sender.getHeldItem();
+        if (itemStack == null)
+            return;
+
+        RenameProvider.setValue(itemStack, key, value.equals("[del]") ? null : value);
     }
 
     public static void openRenameGui(EntityPlayerMP player) {

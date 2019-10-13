@@ -17,7 +17,8 @@ public class ItemCommons {
         final LinkedHashMap<String, String> values = new LinkedHashMap<>(unit.values);
         values.putAll(RenameProvider.getOverriddenValues(itemStack));
         for (Map.Entry<String, String> entry : values.entrySet())
-            lines.add("\u00A7r" + entry.getKey() + "\u00A7r: " + entry.getValue());
+            if (!entry.getValue().isEmpty())
+                lines.add("\u00A7r" + entry.getKey() + "\u00A7r: " + entry.getValue());
 
         if (unit.maxUsages > 0)
             lines.add("\u00A7r" + L10n.fmt("aorta.uses_left", itemStack.getItemDamage()));

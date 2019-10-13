@@ -12,6 +12,11 @@ public class FlatButtonLabel extends ButtonLabel {
         getMargin().set(1, 2, 2, 2);
     }
 
+    public FlatButtonLabel(String label) {
+        this();
+        setLabel(label);
+    }
+
     @Override
     protected void renderSelf() {
         if (!isDisabled() && isHovered())
