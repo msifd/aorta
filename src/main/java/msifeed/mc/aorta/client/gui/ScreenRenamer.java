@@ -2,6 +2,7 @@ package msifeed.mc.aorta.client.gui;
 
 import msifeed.mc.aorta.core.traits.Trait;
 import msifeed.mc.aorta.core.utils.CharacterAttribute;
+import msifeed.mc.aorta.genesis.items.IItemTemplate;
 import msifeed.mc.aorta.genesis.rename.RenameProvider;
 import msifeed.mc.aorta.genesis.rename.RenameRpc;
 import msifeed.mc.aorta.sys.utils.L10n;
@@ -20,6 +21,9 @@ import msifeed.mc.mellow.widgets.window.Window;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -58,7 +62,7 @@ public class ScreenRenamer extends MellowGuiScreen {
 
         renameTab.addChild(new Label(L10n.tr("aorta.gui.renamer.desc")));
         renameTab.addChild(descInput);
-        descInput.setLines(RenameProvider.getDescription(heldItem)); // first line has title
+        descInput.setLines(getItemDesc(heldItem)); // first line has title
         descInput.setSizeHint(400, 60);
         descInput.setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.MINIMUM);
         descInput.setMaxLineWidth(400);
@@ -66,11 +70,22 @@ public class ScreenRenamer extends MellowGuiScreen {
         descInput.getController().setMaxLines(10);
         descInput.setColor(descInput.getColor());
 
+        final Widget footer = new Widget();
+        footer.setLayout(ListLayout.HORIZONTAL);
+        renameTab.addChild(footer);
+
         final ButtonLabel applyBtn = new ButtonLabel(L10n.tr("aorta.gui.apply"));
-        applyBtn.setClickCallback(() -> {
-            RenameRpc.rename(titleInput.getText(), descInput.getLines().collect(Collectors.toList()));
+        applyBtn.getSizeHint().x = 200;
+        applyBtn.setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.PREFERRED);
+        applyBtn.setClickCallback(() -> RenameRpc.rename(titleInput.getText(), descInput.getLines().collect(Collectors.toList())));
+        footer.addChild(applyBtn);
+
+        final ButtonLabel clearBtn = new ButtonLabel("Remove custom title & description");
+        clearBtn.setClickCallback(() -> {
+            RenameRpc.clear();
+            closeGui();
         });
-        renameTab.addChild(applyBtn);
+        footer.addChild(clearBtn);
 
         // // // //
 
@@ -81,6 +96,22 @@ public class ScreenRenamer extends MellowGuiScreen {
 
             refillValues(valuesTab, player);
         }
+    }
+
+    private List<String> getItemDesc(ItemStack itemStack) {
+        final List<String> customDesc = RenameProvider.getDescription(itemStack);
+        if (!customDesc.isEmpty())
+            return customDesc;
+
+        if ((itemStack.getItem() instanceof IItemTemplate)) {
+            final String[] desc = ((IItemTemplate) itemStack.getItem()).getUnit().desc;
+            final ArrayList<String> res = new ArrayList<>(desc.length);
+            for (String s : desc)
+                res.add(RenameProvider.intoAmpersandFormatting(s));
+            return res;
+        }
+        else
+            return Collections.emptyList();
     }
 
     private void refillValues(Widget valuesTab, EntityPlayer player) {

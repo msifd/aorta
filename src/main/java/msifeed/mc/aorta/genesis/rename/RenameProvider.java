@@ -3,7 +3,6 @@ package msifeed.mc.aorta.genesis.rename;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
 
 import java.util.*;
 
@@ -12,16 +11,22 @@ public class RenameProvider {
     public static boolean hasTitle(ItemStack itemStack) {
         return itemStack.hasTagCompound()
                 && itemStack.stackTagCompound.hasKey("display", 10)
-                && itemStack.stackTagCompound.getCompoundTag("display").hasKey("Name");
+                && itemStack.stackTagCompound.getCompoundTag("display").hasKey(Tags.title);
     }
 
     public static void setTitle(ItemStack itemStack, String title) {
         if (title == null) {
             if (itemStack.hasTagCompound() && itemStack.stackTagCompound.hasKey("display", 10))
-                itemStack.stackTagCompound.getCompoundTag("display").removeTag("Name");
+                itemStack.stackTagCompound.getCompoundTag("display").removeTag(Tags.title);
         } else {
             itemStack.setStackDisplayName(fromAmpersandFormatting(title));
         }
+    }
+
+    public static boolean hasDescription(ItemStack itemStack) {
+        return itemStack.hasTagCompound()
+                && itemStack.stackTagCompound.hasKey("display", 10)
+                && itemStack.stackTagCompound.getCompoundTag("display").hasKey(Tags.description);
     }
 
     public static List<String> getDescription(ItemStack itemStack) {
@@ -36,31 +41,6 @@ public class RenameProvider {
         return lines;
     }
 
-    public static boolean hasDescription(ItemStack itemStack) {
-        return itemStack.hasTagCompound()
-                && itemStack.stackTagCompound.hasKey("display", 10)
-                && itemStack.stackTagCompound.getCompoundTag("display").hasKey(Tags.description);
-    }
-
-    public static void addDescriptionToList(ItemStack itemStack, List<String> list) {
-        if (!hasDescription(itemStack))
-            return;
-        final NBTTagList lines = itemStack.stackTagCompound
-                .getCompoundTag("display")
-                .getTagList(Tags.description, 8);
-        for (int i = 0; i < lines.tagCount(); i++) {
-            list.add(lines.getStringTagAt(i));
-        }
-    }
-
-    public static void addDescription(ItemStack itemStack, String line) {
-        createDescriptionIfNeeded(itemStack);
-        final NBTTagList lines = itemStack.stackTagCompound
-                .getCompoundTag("display")
-                .getTagList(Tags.description, 8);
-        lines.appendTag(new NBTTagString(fromAmpersandFormatting("\u00A7r" + line)));
-    }
-
     public static void setDescription(ItemStack itemStack, NBTTagList desc) {
         createDescriptionIfNeeded(itemStack);
         itemStack.stackTagCompound
@@ -68,21 +48,8 @@ public class RenameProvider {
                 .setTag(Tags.description, desc);
     }
 
-    public static void removeDescriptionLine(ItemStack itemStack) {
-        if (!hasDescription(itemStack))
-            return;
-        final NBTTagList lines = itemStack.stackTagCompound
-                .getCompoundTag("display")
-                .getTagList(Tags.description, 8);
-        if (lines.tagCount() > 1)
-            lines.removeTag(lines.tagCount() - 1);
-        else
-            clearDescription(itemStack);
-    }
-
-    public static void clearDescription(ItemStack itemStack) {
-        if (!hasDescription(itemStack))
-            return;
+    public static void clearAll(ItemStack itemStack) {
+        itemStack.stackTagCompound.getCompoundTag("display").removeTag(Tags.title);
         itemStack.stackTagCompound.getCompoundTag("display").removeTag(Tags.description);
     }
 
@@ -142,7 +109,7 @@ public class RenameProvider {
 
     static class Tags {
         static final String title = "Name";
-        static final String description = "Lore";
+        static final String description = "aorta.desc";
         static final String values = "aorta.values";
     }
 }

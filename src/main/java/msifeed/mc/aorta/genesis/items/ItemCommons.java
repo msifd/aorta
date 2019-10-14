@@ -11,7 +11,10 @@ import java.util.Map;
 
 public class ItemCommons {
     public static void addInformation(ItemGenesisUnit unit, ItemStack itemStack, List<String> lines) {
-        if (unit.desc != null)
+        final List<String> customDesc = RenameProvider.getDescription(itemStack);
+        if (!customDesc.isEmpty())
+            lines.addAll(customDesc);
+        else if (unit.desc != null)
             Collections.addAll(lines, unit.desc);
 
         final LinkedHashMap<String, String> values = new LinkedHashMap<>(unit.values);
