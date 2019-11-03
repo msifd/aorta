@@ -8,6 +8,7 @@ import msifeed.mc.aorta.sys.cmd.ExtCommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.ChatComponentText;
 
 import java.util.Collections;
 import java.util.List;
@@ -32,8 +33,14 @@ public class GlobalCommand extends ExtCommand {
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
+        if (!(sender instanceof EntityPlayer)) {
+            error(sender, "You should be at least player!");
+            return;
+        }
+
         if (args.length == 0) {
             receiveMessages = !receiveMessages;
+            sender.addChatMessage(new ChatComponentText(receiveMessages ? "global +" : "global -"));
             return;
         }
 
@@ -42,12 +49,6 @@ public class GlobalCommand extends ExtCommand {
 
         final EntityPlayer player = (EntityPlayer) sender;
         final String text = String.join(" ", args);
-        final ChatMessage message = Composer.makeMessage(SpeechType.GLOBAL, player, text);
-
-        if (player instanceof EntityPlayerMP)
-            ChatHandler.sendGlobalChatMessage((EntityPlayerMP) player, message);
-        else {
-            player.addChatMessage(Composer.formatMessage(player, message));
-        }
+        ChatHandler.sendGlobalChatMessage(player, Composer.makeMessage(SpeechType.GLOBAL, player, text));
     }
 }

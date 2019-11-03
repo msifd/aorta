@@ -71,9 +71,10 @@ public class TraitSetCommand extends ExtCommand {
     private boolean isAllowedToSet(ICommandSender sender, Trait trait) {
         if (FMLCommonHandler.instance().getSide().isClient() || sender instanceof MinecraftServer)
             return true;
+        final EntityLivingBase e = (EntityLivingBase) sender;
         if (trait.type == TraitType.SYSTEM)
-            return sender instanceof EntityLivingBase && CharacterAttribute.has((EntityLivingBase) sender, Trait.__admin);
-        return CharacterAttribute.has((EntityLivingBase) sender, Trait.gm);
+            return CharacterAttribute.has(e, Trait.__admin);
+        return CharacterAttribute.has(e, Trait.gm) || CharacterAttribute.has(e, Trait.__admin);
     }
 
     @Override

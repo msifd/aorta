@@ -32,12 +32,6 @@ public class OfftopCommand extends ExtCommand {
 
         final EntityPlayer player = (EntityPlayer) sender;
         final String text = String.join(" ", args);
-        final ChatMessage message = Composer.makeMessage(SpeechType.OFFTOP, player, text);
-
-        if (player instanceof EntityPlayerMP)
-            ChatHandler.sendChatMessage(player, message);
-        else {
-            player.addChatMessage(Composer.formatMessage(player, message));
-        }
+        ChatHandler.sendChatMessage(player, Composer.makeMessage(SpeechType.OFFTOP, player, text));
     }
 }
