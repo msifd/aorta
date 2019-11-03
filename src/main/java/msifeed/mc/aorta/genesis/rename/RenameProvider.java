@@ -1,5 +1,6 @@
 package msifeed.mc.aorta.genesis.rename;
 
+import msifeed.mc.aorta.genesis.items.IItemTemplate;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -26,7 +27,7 @@ public class RenameProvider {
     public static boolean hasDescription(ItemStack itemStack) {
         return itemStack.hasTagCompound()
                 && itemStack.stackTagCompound.hasKey("display", 10)
-                && itemStack.stackTagCompound.getCompoundTag("display").hasKey(Tags.description);
+                && itemStack.stackTagCompound.getCompoundTag("display").hasKey(getDescKey(itemStack));
     }
 
     public static List<String> getDescription(ItemStack itemStack) {
@@ -34,7 +35,7 @@ public class RenameProvider {
             return Collections.emptyList();
         final NBTTagList tags = itemStack.stackTagCompound
                 .getCompoundTag("display")
-                .getTagList(Tags.description, 8);
+                .getTagList(getDescKey(itemStack), 8);
         final ArrayList<String> lines = new ArrayList<>();
         for (int i = 0; i < tags.tagCount(); i++)
             lines.add(intoAmpersandFormatting(tags.getStringTagAt(i).substring(2)));
@@ -45,20 +46,21 @@ public class RenameProvider {
         createDescriptionIfNeeded(itemStack);
         itemStack.stackTagCompound
                 .getCompoundTag("display")
-                .setTag(Tags.description, desc);
+                .setTag(getDescKey(itemStack), desc);
     }
 
     public static void clearAll(ItemStack itemStack) {
         itemStack.stackTagCompound.getCompoundTag("display").removeTag(Tags.title);
         itemStack.stackTagCompound.getCompoundTag("display").removeTag(Tags.description);
+        itemStack.stackTagCompound.getCompoundTag("display").removeTag(Tags.vanillaDescription);
     }
 
     private static void createDescriptionIfNeeded(ItemStack itemStack) {
         createCompoundIfNeeded(itemStack);
         if (!itemStack.stackTagCompound.hasKey("display"))
             itemStack.stackTagCompound.setTag("display", new NBTTagCompound());
-        if (!itemStack.stackTagCompound.getCompoundTag("display").hasKey(Tags.description))
-            itemStack.stackTagCompound.getCompoundTag("display").setTag(Tags.description, new NBTTagList());
+        if (!itemStack.stackTagCompound.getCompoundTag("display").hasKey(getDescKey(itemStack)))
+            itemStack.stackTagCompound.getCompoundTag("display").setTag(getDescKey(itemStack), new NBTTagList());
     }
 
     public static boolean hasOverriddenValues(ItemStack itemStack) {
@@ -99,6 +101,12 @@ public class RenameProvider {
             itemStack.stackTagCompound = new NBTTagCompound();
     }
 
+    private static String getDescKey(ItemStack itemStack) {
+        return itemStack.getItem() instanceof IItemTemplate
+                ? Tags.description
+                : Tags.vanillaDescription;
+    }
+
     static String fromAmpersandFormatting(String str) {
         return str.replace('&', '\u00A7');
     }
@@ -110,6 +118,7 @@ public class RenameProvider {
     static class Tags {
         static final String title = "Name";
         static final String description = "aorta.desc";
+        static final String vanillaDescription = "Lore";
         static final String values = "aorta.values";
     }
 }

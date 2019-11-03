@@ -56,7 +56,6 @@ public class ScreenRenamer extends MellowGuiScreen {
         renameTab.addChild(new Label(L10n.tr("aorta.gui.renamer.title")));
         renameTab.addChild(titleInput);
         titleInput.setMaxLineWidth(400);
-//        titleInput.getSizeHint().x = 120;
         titleInput.setText(RenameProvider.intoAmpersandFormatting(heldItem.getDisplayName()));
         titleInput.setFilter(s -> !s.startsWith(" "));
 
@@ -105,6 +104,8 @@ public class ScreenRenamer extends MellowGuiScreen {
 
         if ((itemStack.getItem() instanceof IItemTemplate)) {
             final String[] desc = ((IItemTemplate) itemStack.getItem()).getUnit().desc;
+            if (desc == null)
+                return Collections.emptyList();
             final ArrayList<String> res = new ArrayList<>(desc.length);
             for (String s : desc)
                 res.add(RenameProvider.intoAmpersandFormatting(s));
