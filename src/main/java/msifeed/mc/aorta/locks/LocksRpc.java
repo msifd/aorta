@@ -28,10 +28,8 @@ public class LocksRpc {
         lock.setLocked(locked);
         lock.setDifficulty(diff);
 
-        if (!world.isRemote) {
-            final String msg = String.format("Lock overridden; locked: %b, diff: %d", locked, diff);
-            player.addChatMessage(new ChatComponentText(msg));
-        }
+        final String msg = String.format("Lock overridden; locked: %b, diff: %d", locked, diff);
+        player.addChatMessage(new ChatComponentText(msg));
     }
 
     @RpcMethod(toggleDigital)
@@ -44,10 +42,8 @@ public class LocksRpc {
 
         if (lock.canUnlockWith(secret)) {
             lock.toggleLocked();
-            if (!world.isRemote) {
-                final String msg = lock.isLocked() ? "aorta.lock.locked" : "aorta.lock.unlocked";
-                player.addChatMessage(new ChatComponentTranslation(msg));
-            }
+            final String msg = lock.isLocked() ? "aorta.lock.locked" : "aorta.lock.unlocked";
+            player.addChatMessage(new ChatComponentTranslation(msg));
         }
     }
 

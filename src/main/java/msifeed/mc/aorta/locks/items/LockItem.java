@@ -61,7 +61,6 @@ public class LockItem extends Item {
 
         if (isBlank(itemStack)) {
             final String secret = type == LockType.DIGITAL ? DEFAULT_DIGITAL_SECRET : String.valueOf(world.rand.nextInt());
-            System.out.println("install client: " + world.isRemote + " sec: " + secret);
             lock.setSecret(secret);
             lock.setLockType(type);
             if (type != LockType.DIGITAL) {
@@ -73,9 +72,7 @@ public class LockItem extends Item {
         }
 
         ((EntityPlayerMP) player).sendContainerToPlayer(player.inventoryContainer);
-
-        if (!world.isRemote)
-            player.addChatMessage(new ChatComponentTranslation(messageId));
+        player.addChatMessage(new ChatComponentTranslation(messageId));
     }
 
     private boolean isBlank(ItemStack itemStack) {

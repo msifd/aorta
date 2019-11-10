@@ -1,6 +1,5 @@
 package msifeed.mc.aorta.core.rolls;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.aorta.chat.ChatHandler;
 import msifeed.mc.aorta.chat.composer.Composer;
@@ -15,6 +14,7 @@ import msifeed.mc.aorta.core.utils.MetaAttribute;
 import msifeed.mc.aorta.logs.Logs;
 import msifeed.mc.aorta.sys.rpc.Rpc;
 import msifeed.mc.aorta.sys.rpc.RpcMethod;
+import msifeed.mc.aorta.sys.utils.ChatUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -53,7 +53,7 @@ public enum RollRpc {
             ChatHandler.sendSystemChatMessage(player, m);
 
             final String prefix = player != entity ? ">> " : "";
-            Logs.log(player, "feature", prefix + ChatFormatting.stripFormatting(text));
+            Logs.log(player, "feature", prefix + ChatUtils.stripFormatting(text));
         }
     }
 
@@ -74,7 +74,7 @@ public enum RollRpc {
             ChatHandler.sendSystemChatMessage(player, m);
 
             final String prefix = player != entity ? ">> " : "";
-            Logs.log(player, "action", prefix + ChatFormatting.stripFormatting(text));
+            Logs.log(player, "action", prefix + ChatUtils.stripFormatting(text));
         }
     }
 }
