@@ -69,6 +69,11 @@ aorta.gui.status.treatment=Лечение
 aorta.gui.status.other=Прочее
 aorta.gui.status.other.name=Имя
 aorta.gui.status.other.wiki=Вики
+aorta.gui.status.health.title=Изменить здоровье
+aorta.gui.status.health.bodypart=Часть тела:
+aorta.gui.status.health.max_health=Макс. ХП
+aorta.gui.status.health.health=Текущее ХП
+aorta.gui.status.health.armor=Броня
 
 aorta.status.sanity.0=Предельный стресс
 aorta.status.sanity.1=Сильный стресс

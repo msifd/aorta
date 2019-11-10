@@ -3,7 +3,6 @@ package msifeed.mc.mellow.widgets.droplist;
 import msifeed.mc.mellow.Mellow;
 import msifeed.mc.mellow.layout.AnchorLayout;
 import msifeed.mc.mellow.render.RenderParts;
-import msifeed.mc.mellow.render.RenderWidgets;
 import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.utils.Geom;
 import msifeed.mc.mellow.utils.Point;
@@ -31,14 +30,14 @@ class DropListHeader extends ButtonLabel {
     @Override
     public Point getContentSize() {
         final Point p = super.getContentSize();
-        p.x = parent.popupList.getContentSize().x + buttonNormalPart.size.x;
+        p.x = parent.popupList.getContentSize().x + buttonNormalPart.size.x + 4;
         return p;
     }
 
     @Override
     protected void updateSelf() {
         textBgGeom.set(getGeometry());
-        textBgGeom.w -= buttonNormalPart.size.x + 1;
+        textBgGeom.w -= buttonNormalPart.size.x + 2;
 
         buttonBgGeom.set(getGeometry());
         buttonBgGeom.x += textBgGeom.w;
@@ -47,13 +46,6 @@ class DropListHeader extends ButtonLabel {
         iconGeom.set(buttonBgGeom);
         iconGeom.setSize(downIconPart.size);
         iconGeom.translate(2, 4, 1);
-    }
-
-    @Override
-    public void render() {
-        if (parent.isOpened()) RenderWidgets.toggleCropping();
-        super.render();
-        if (parent.isOpened()) RenderWidgets.toggleCropping();
     }
 
     @Override
