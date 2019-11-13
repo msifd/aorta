@@ -27,8 +27,7 @@ public class RenderItemStack {
         RenderHelper.enableGUIStandardItemLighting();
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-        GL11.glTranslatef(0.0F, 0.0F, 32.0F);
-        itemRender.zLevel = z + 50;
+        itemRender.zLevel = z - 50;
 
         FontRenderer font = null;
         if (itemStack != null)
@@ -40,7 +39,7 @@ public class RenderItemStack {
         itemRender.renderItemAndEffectIntoGUI(font, textureManager, itemStack, x, y);
 //        itemRender.renderItemOverlayIntoGUI(font, textureManager, itemStack, x, y -  8, null);
 
-        itemRender.zLevel = z;
+        itemRender.zLevel = z - 50;
 
         OpenGlHelper.glBlendFunc(770, 771, 1, 0); // fix after item glint
         GL11.glEnable(GL11.GL_LIGHTING);
