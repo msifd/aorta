@@ -2,9 +2,9 @@ package msifeed.mc.aorta.tweaks.nametag;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.ReflectionHelper;
-import msifeed.mc.aorta.sys.rpc.Rpc;
 import msifeed.mc.aorta.sys.rpc.RpcMethod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
@@ -25,6 +25,7 @@ public class NametagClient extends Nametag {
     private HashMap<Integer, Long> typingPlayers = new HashMap<>();
     private long lastNotify = 0;
     private char lastCharPressed = 0;
+    private boolean chatIsOpened = false;
 
     @Override
     public void init() {
@@ -45,34 +46,49 @@ public class NametagClient extends Nametag {
         final EntityPlayer player = (EntityPlayer) event.entity;
 
         final Long typingStarted = typingPlayers.get(player.getEntityId());
+        boolean isTyping = false;
         if (typingStarted != null) {
             final long now = System.currentTimeMillis();
             if (now - typingStarted > TYPING_PING_MS) {
+                // End typing
                 typingPlayers.remove(player.getEntityId());
                 player.refreshDisplayName();
             } else {
+                // Refresh typing
                 final String dots = TYPING_REPLACER[(int) (now / TYPING_TAG_INTERVAL_MS % TYPING_REPLACER.length)];
                 ReflectionHelper.setPrivateValue(EntityPlayer.class, player, dots, "displayname");
+                isTyping = true;
             }
         } else {
+            // Show nicknames
             final String name = displayOriginalUsername() ? player.getCommandSenderName() : getPreferredName(player);
             if (!name.equals(player.getDisplayName()))
                 ReflectionHelper.setPrivateValue(EntityPlayer.class, player, name, "displayname");
         }
 
         final float distance = self.getDistanceToEntity(player);
-        if (distance > MAX_NAMETAG_DISTANCE)
+        final int visibleRange = isTyping ? MAX_TYPING_NAMETAG_DISTANCE : MAX_NAMETAG_DISTANCE;
+        if (distance > visibleRange)
             event.setCanceled(true);
+    }
+    
+    @SubscribeEvent
+    public void onClientTick(TickEvent.ClientTickEvent event) {
+        if (event.phase == TickEvent.Phase.END && chatIsOpened)
+            chatIsOpened = Minecraft.getMinecraft().currentScreen instanceof GuiChat;
     }
 
     @SubscribeEvent
     public void onDrawScreen(GuiScreenEvent.DrawScreenEvent.Post event) {
         if (!(Minecraft.getMinecraft().currentScreen instanceof GuiChat))
             return;
+
         final char c = Keyboard.getEventCharacter();
         if (lastCharPressed != c) {
+            if (chatIsOpened && c != 0)
+                sendNotifyTyping();
+            chatIsOpened = true;
             lastCharPressed = c;
-            notifyTyping();
         }
     }
 
@@ -81,11 +97,11 @@ public class NametagClient extends Nametag {
         super.onNameFormat(event);
     }
 
-    private void notifyTyping() {
+    private void sendNotifyTyping() {
         if (System.currentTimeMillis() - lastNotify < TYPING_PING_MS / 2)
             return;
         lastNotify = System.currentTimeMillis();
-        Rpc.sendToServer(Nametag.notifyTyping, Minecraft.getMinecraft().thePlayer.getEntityId());
+        Nametag.notifyTyping();
     }
 
     private static boolean displayOriginalUsername() {

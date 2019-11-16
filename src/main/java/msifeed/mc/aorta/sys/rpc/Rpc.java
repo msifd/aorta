@@ -55,6 +55,10 @@ public class Rpc {
         INSTANCE.CHANNEL.sendToAll(new RpcMessage(method, args));
     }
 
+    public static void sendToAllAround(String method, NetworkRegistry.TargetPoint point, Serializable... args) {
+        INSTANCE.CHANNEL.sendToAllAround(new RpcMessage(method, args), point);
+    }
+
     static void onMessage(RpcMessage message, MessageContext ctx) {
         final Handler h = INSTANCE.handlers.get(message.method);
         if (h == null)

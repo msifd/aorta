@@ -2,12 +2,16 @@ package msifeed.mc.aorta.tweaks.nametag;
 
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import msifeed.mc.aorta.sys.rpc.Rpc;
 import msifeed.mc.aorta.sys.rpc.RpcMethod;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 
@@ -18,17 +22,27 @@ public class Nametag {
     )
     public static Nametag INSTANCE;
 
-    static final String notifyTyping = "aorta:nametags.notify";
+    static final int MAX_TYPING_NAMETAG_DISTANCE = 8;
     static final String broadcastTyping = "aorta:nametags.broadcast";
+    private static final String notifyTyping = "aorta:nametags.notify";
 
     public void init() {
         Rpc.register(this);
         MinecraftForge.EVENT_BUS.register(this);
     }
 
+    public static void notifyTyping() {
+        Rpc.sendToServer(Nametag.notifyTyping, Minecraft.getMinecraft().thePlayer.getEntityId());
+    }
+
     @RpcMethod(Nametag.notifyTyping)
     public void onNotifyTyping(MessageContext ctx, int id) {
-        Rpc.sendToAll(Nametag.broadcastTyping, id);
+        final EntityPlayerMP player = ctx.getServerHandler().playerEntity;
+        final ChunkCoordinates coord = player.getPlayerCoordinates();
+        final NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(
+                player.dimension, coord.posX, coord.posY, coord.posZ, MAX_TYPING_NAMETAG_DISTANCE * 2
+        );
+        Rpc.sendToAllAround(Nametag.broadcastTyping, point, id);
     }
 
     @SubscribeEvent
