@@ -219,7 +219,7 @@ public class TextController {
     }
 
     public boolean breakLine() {
-        if (curLine >= maxLines)
+        if (getLineCount() >= maxLines)
             return false;
 
         final String ending = getCurrentLine().sb.substring(curColumn);

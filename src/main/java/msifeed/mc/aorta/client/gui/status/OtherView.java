@@ -33,7 +33,7 @@ class OtherView extends Widget {
 
         addChild(new Label(L10n.tr("aorta.gui.status.other.name")));
         final TextInput nameInput = new TextInput();
-        nameInput.getSizeHint().x = 100;
+        nameInput.getSizeHint().x = 300;
         nameInput.setText(String.valueOf(character.name));
         nameInput.setFilter(TextInput::isValidName);
         nameInput.setCallback(s -> character.name = s);
@@ -41,9 +41,8 @@ class OtherView extends Widget {
 
         addChild(new Label(L10n.tr("aorta.gui.status.other.wiki")));
         final TextInput wikiInput = new TextInput();
-        wikiInput.getSizeHint().x = 100;
+        wikiInput.getSizeHint().x = 300;
         wikiInput.setText(String.valueOf(character.wikiPage));
-        wikiInput.setFilter(s -> s.length() < 256);
         wikiInput.setCallback(s -> character.wikiPage = s);
         addChild(wikiInput);
     }

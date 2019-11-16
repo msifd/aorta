@@ -108,11 +108,6 @@ public class TextInputArea extends TextWall implements KeyHandler, MouseHandler.
     }
 
     @Override
-    protected void updateSelf() {
-        super.updateSelf();
-    }
-
-    @Override
     protected void renderSelf() {
         if (withBackground)
             renderBackground();
