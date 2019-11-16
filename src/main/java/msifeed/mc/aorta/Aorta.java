@@ -9,6 +9,7 @@ import msifeed.mc.aorta.books.RemoteBookManager;
 import msifeed.mc.aorta.chat.Speechat;
 import msifeed.mc.aorta.client.GuiHandler;
 import msifeed.mc.aorta.core.Core;
+import msifeed.mc.aorta.core.commands.DumpRollsCommand;
 import msifeed.mc.aorta.defines.DefineCommand;
 import msifeed.mc.aorta.defines.Defines;
 import msifeed.mc.aorta.environment.EnvironmentManager;
@@ -85,6 +86,7 @@ public class Aorta {
         commandHandler.registerCommand(new DefineCommand());
         commandHandler.registerCommand(new RenameCommand());
         commandHandler.registerCommand(new UnstuckCommand());
+        commandHandler.registerCommand(new DumpRollsCommand());
 
         CORE.registerCommands(commandHandler);
         Speechat.registerCommands(commandHandler);
