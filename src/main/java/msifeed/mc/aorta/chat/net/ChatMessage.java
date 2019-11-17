@@ -9,6 +9,7 @@ import msifeed.mc.aorta.chat.composer.SpeechType;
 public class ChatMessage implements IMessage {
     public SpeechType type;
     public int radius;
+    public int senderId;
     public String speaker;
     public Language language;
     public String text;
@@ -17,6 +18,8 @@ public class ChatMessage implements IMessage {
     public void fromBytes(ByteBuf buf) {
         type = SpeechType.values()[buf.readByte()];
         language = Language.values()[buf.readByte()];
+        radius = buf.readInt();
+        senderId = buf.readInt();
         speaker = ByteBufUtils.readUTF8String(buf);
         text = ByteBufUtils.readUTF8String(buf);
     }
@@ -25,6 +28,8 @@ public class ChatMessage implements IMessage {
     public void toBytes(ByteBuf buf) {
         buf.writeByte(type.ordinal());
         buf.writeByte(language.ordinal());
+        buf.writeInt(radius);
+        buf.writeInt(senderId);
         ByteBufUtils.writeUTF8String(buf, speaker);
         ByteBufUtils.writeUTF8String(buf, text);
     }

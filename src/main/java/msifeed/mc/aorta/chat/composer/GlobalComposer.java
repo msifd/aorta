@@ -16,6 +16,7 @@ class GlobalComposer implements ChatComposer {
         message.type = SpeechType.GLOBAL;
         message.language = Language.VANILLA;
         message.radius = Aorta.DEFINES.get().chat.offtopRadius;
+        message.senderId = player.getEntityId();
         message.speaker = player.getDisplayName();
         message.text = text;
         return message;

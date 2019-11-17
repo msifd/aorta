@@ -21,6 +21,7 @@ class GmsayComposer implements ChatComposer {
         message.type = SpeechType.GM;
         message.language = Language.VANILLA;
         message.radius = settings.radius;
+        message.senderId = player.getEntityId();
         message.speaker = player.getCommandSenderName();
         message.text = colorsOnlyPattern.matcher(settings.prefix).matches()
                 ? settings.prefix + text

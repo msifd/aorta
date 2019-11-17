@@ -15,6 +15,7 @@ class OfftopComposer implements ChatComposer {
         message.type = SpeechType.OFFTOP;
         message.language = Language.VANILLA;
         message.radius = Aorta.DEFINES.get().chat.offtopRadius;
+        message.senderId = player.getEntityId();
         message.speaker = player.getDisplayName();
         message.text = text;
         return message;

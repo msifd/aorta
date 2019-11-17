@@ -22,6 +22,7 @@ public class RollComposer implements ChatComposer {
         message.type = SpeechType.ROLL;
         message.language = Language.VANILLA;
         message.radius = Aorta.DEFINES.get().chat.rollRadius;
+        message.senderId = player.getEntityId();
         message.speaker = player.getDisplayName();
         message.text = text;
         return message;

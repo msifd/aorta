@@ -1,7 +1,6 @@
 package msifeed.mc.aorta.chat.composer;
 
 import msifeed.mc.aorta.Aorta;
-import msifeed.mc.aorta.chat.ChatComponentComposer;
 import msifeed.mc.aorta.chat.Language;
 import msifeed.mc.aorta.chat.composer.parser.SpeechToken;
 import msifeed.mc.aorta.chat.composer.parser.SpeechTokenParser;
@@ -10,9 +9,7 @@ import msifeed.mc.aorta.chat.obfuscation.LangObfuscator;
 import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import msifeed.mc.aorta.core.utils.LangAttribute;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.*;
 
 import java.util.List;
 
@@ -23,6 +20,7 @@ public class SpeechComposer implements ChatComposer {
         message.type = SpeechType.SPEECH;
         message.language = LangAttribute.get(player).orElse(Language.VANILLA);
         message.radius = getSpeechRadius(text);
+        message.senderId = player.getEntityId();
         message.speaker = player.getDisplayName();
         message.text = text;
         return message;
@@ -31,7 +29,7 @@ public class SpeechComposer implements ChatComposer {
     @Override
     public IChatComponent format(EntityPlayer self, ChatMessage message) {
         final String text;
-        if (!isMyNameIs(self, message.speaker) && !doIKnowLanguage(self, message.language)) {
+        if (!isMyMessage(self, message) && !doIKnowLanguage(self, message.language)) {
             text = obfuscateWith(message.language.obfuscator, message.text);
         } else {
             final String langPrefix = message.language.shortTr();
@@ -39,17 +37,25 @@ public class SpeechComposer implements ChatComposer {
             text = finalPrefix + message.text;
         }
 
-        final ChatComponentText root = new ChatComponentText("");
-        root.appendText(text);
+        final String name = message.speaker.isEmpty() ? self.getDisplayName() : message.speaker;
+        final ChatComponentText cName = getNamePrefix(name, isMyMessage(self, message));
+        final ChatComponentText cText = new ChatComponentText(": " + text);
 
-        if (!message.speaker.isEmpty())
-            ChatComponentComposer.addNamePrefix(root, message.speaker, isMyNameIs(self, message.speaker));
+        final ChatComponentStyle root = new ChatComponentText("");
+        root.appendSibling(cName);
+        root.appendSibling(cText);
 
         return root;
     }
 
-    private static boolean isMyNameIs(EntityPlayer self, String name) {
-        return self.getDisplayName().equals(name);
+    private static ChatComponentText getNamePrefix(String name, boolean myName) {
+        final ChatComponentText cName = new ChatComponentText(name);
+        cName.getChatStyle().setColor(myName ? EnumChatFormatting.YELLOW : EnumChatFormatting.GREEN);
+        return cName;
+    }
+
+    private static boolean isMyMessage(EntityPlayer self, ChatMessage message) {
+        return self.getEntityId() == message.senderId;
     }
 
     private static boolean doIKnowLanguage(EntityPlayer self, Language language) {
