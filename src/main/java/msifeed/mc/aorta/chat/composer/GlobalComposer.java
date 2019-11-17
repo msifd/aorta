@@ -2,15 +2,14 @@ package msifeed.mc.aorta.chat.composer;
 
 import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.chat.Language;
-import msifeed.mc.aorta.chat.commands.GlobalCommand;
 import msifeed.mc.aorta.chat.net.ChatMessage;
+import msifeed.mc.aorta.core.utils.MetaAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
 class GlobalComposer implements ChatComposer {
-
     @Override
     public ChatMessage compose(EntityPlayer player, String text) {
         final ChatMessage message = new ChatMessage();
@@ -32,6 +31,6 @@ class GlobalComposer implements ChatComposer {
 
     @Override
     public boolean canReceiveMessage(EntityPlayer self, ChatMessage message) {
-        return GlobalCommand.receiveMessages;
+        return MetaAttribute.require(self).receiveGlobal;
     }
 }

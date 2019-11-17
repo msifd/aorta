@@ -6,6 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 public class MetaInfo {
     public Modifiers modifiers = new Modifiers();
+    public boolean receiveGlobal = true;
 
     public MetaInfo() {
     }
@@ -24,6 +25,9 @@ public class MetaInfo {
         for (int i = 0; i < feats.length; i++)
             featsArray[i] = modifiers.featureMods.getOrDefault(feats[i], 0);
         c.setIntArray("fmod", featsArray);
+
+        c.setBoolean("recglob", receiveGlobal);
+
         return c;
     }
 
@@ -35,5 +39,7 @@ public class MetaInfo {
         final int[] featsArray = c.getIntArray("fmod");
         for (int i = 0; i < feats.length; i++)
             modifiers.featureMods.put(feats[i], featsArray[i]);
+
+        receiveGlobal = c.getBoolean("recglob");
     }
 }
