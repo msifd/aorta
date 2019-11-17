@@ -32,7 +32,7 @@ class EditBodypartsView extends Widget {
 
     private void addEditButtons() {
         final ButtonLabel addPartBtn = new ButtonLabel("Add part");
-        addPartBtn.setClickCallback(() -> getTopParent().addChild(new EditBodypartDialog(bp -> {
+        addPartBtn.setClickCallback(() -> getTopParent().addChild(new EditBodypartDialog(this, bp -> {
             bp.health = bp.maxHealth;
             character.bodyParts.put(bp.name, bp);
             refill();
@@ -58,7 +58,7 @@ class EditBodypartsView extends Widget {
         for (BodyPart bp : character.bodyParts.values()) {
             final FlatButtonLabel btn = new FlatButtonLabel();
             btn.setLabel(bp.toString());
-            btn.setClickCallback(() -> getTopParent().addChild(new EditBodypartDialog(bp, newBp -> {
+            btn.setClickCallback(() -> getTopParent().addChild(new EditBodypartDialog(this, bp, newBp -> {
                 if (newBp != null)
                     character.bodyParts.put(newBp.name, newBp);
                 if (newBp == null || !bp.name.equals(newBp.name))

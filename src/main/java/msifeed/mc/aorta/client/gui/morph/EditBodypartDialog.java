@@ -18,13 +18,15 @@ class EditBodypartDialog extends Window {
     private final BodyPart bodypart;
     private final ButtonLabel doneBtn = new ButtonLabel();
 
-    EditBodypartDialog(Consumer<BodyPart> consumer) {
-        this(new BodyPart(), consumer);
+    EditBodypartDialog(Widget origin, Consumer<BodyPart> consumer) {
+        this(origin, new BodyPart(), consumer);
         setTitle("New bodypart");
         doneBtn.setLabel("Add part");
     }
 
-    EditBodypartDialog(BodyPart prevBodyPart, Consumer<BodyPart> consumer) {
+    EditBodypartDialog(Widget origin, BodyPart prevBodyPart, Consumer<BodyPart> consumer) {
+        super(origin);
+
         this.bodypart = new BodyPart(prevBodyPart);
 
         setTitle("Edit bodypart");

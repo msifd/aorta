@@ -43,7 +43,7 @@ class BodypartsView extends Widget {
             b.setLabel(String.format("%s - %d/%d [%d]%s%s", bp.name, bp.health, bp.maxHealth, bp.armor, fatal, injure));
             b.setLayout(new AnchorLayout(AnchorLayout.Anchor.LEFT, AnchorLayout.Anchor.CENTER));
             if (editable) {
-                b.setClickCallback(() -> getTopParent().addChild(new BodypartDialog(bp, h -> {
+                b.setClickCallback(() -> getTopParent().addChild(new BodypartDialog(this, bp, h -> {
                     character.bodyParts.put(bp.name, bp);
                     refill();
                 })));

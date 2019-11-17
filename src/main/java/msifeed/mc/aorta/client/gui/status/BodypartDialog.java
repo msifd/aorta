@@ -18,11 +18,12 @@ class BodypartDialog extends Window {
 
     private final ButtonLabel applyBtn = new ButtonLabel();
 
-    BodypartDialog(BodyPart bodypart, Consumer<BodyPart> consumer) {
+    BodypartDialog(Widget origin, BodyPart bodypart, Consumer<BodyPart> consumer) {
+        super(origin);
+
         this.bodypart = new BodyPart(bodypart);
 
         setTitle(L10n.tr("aorta.gui.status.health.title"));
-        setZLevel(5);
         setFocused(this);
 
         final Widget content = getContent();

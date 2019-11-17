@@ -15,16 +15,21 @@ public class Window extends Widget {
     public Window() {
         setLayout(new ListLayout(ListLayout.Direction.VERTICAL, 0));
         getMargin().set(1);
+        setZLevel(50);
 
         header.setVerSizePolicy(SizePolicy.Policy.FIXED);
         header.setSizeHint(0, 13);
-        header.setZLevel(100);
 
         content.getMargin().set(2, 3, 5, 3);
         content.setLayout(ListLayout.VERTICAL);
 
         addChild(header);
         addChild(content);
+    }
+
+    public Window(Widget origin) {
+        this();
+        setZLevel(getZLevel() + origin.getGeometry().z);
     }
 
     public void setTitle(String text) {
