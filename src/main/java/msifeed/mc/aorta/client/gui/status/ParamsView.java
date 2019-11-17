@@ -36,13 +36,13 @@ class ParamsView extends Widget {
     private void fillEditable() {
         setLayout(new GridLayout());
 
-        final int vitalityThreshold = character.countVitalityThreshold();
-        final int vitality = character.countVitality(vitalityThreshold);
-        final int vitalityLevel = character.vitalityLevel(vitality, vitalityThreshold);
+        final int vitality = character.countVitality();
+        final int maxVitality = character.countMaxVitality();
+        final int vitalityLevel = character.vitalityLevel(vitality, maxVitality);
         final String vitalityLevelStr = L10n.tr("aorta.status.vitality." + vitalityLevel);
 
         addChild(new Label(L10n.tr("aorta.gui.status.vitality")));
-        addChild(new Label(String.format("%d/%d (%s)", vitality, vitalityThreshold, vitalityLevelStr)));
+        addChild(new Label(String.format("%d/%d (%s)", vitality, maxVitality, vitalityLevelStr)));
 
         addChild(new Label(L10n.tr("aorta.gui.status.load")));
         final TextInput loadInput = new TextInput();
@@ -109,13 +109,13 @@ class ParamsView extends Widget {
     private void fillNonEditable() {
         setLayout(new GridLayout(2));
 
-        final int vitalityThreshold = character.countVitalityThreshold();
-        final int vitality = character.countVitality(vitalityThreshold);
-        final int vitalityLevel = character.vitalityLevel(vitality, vitalityThreshold);
+        final int vitality = character.countVitality();
+        final int maxVitality = character.countMaxVitality();
+        final int vitalityLevel = character.vitalityLevel(vitality, maxVitality);
         addChild(new Label(L10n.tr("aorta.gui.status.vitality")));
         addChild(new Label(String.format("%d/%d (%s)",
                 vitality,
-                vitalityThreshold,
+                maxVitality,
                 L10n.tr("aorta.status.vitality." + vitalityLevel))));
 
 

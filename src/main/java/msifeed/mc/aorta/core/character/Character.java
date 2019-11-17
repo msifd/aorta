@@ -15,7 +15,7 @@ public class Character {
     public Map<Feature, Integer> features = new EnumMap<>(Feature.class);
     public Map<String, BodyPart> bodyParts = new LinkedHashMap<>();
     public Set<Trait> traits = new HashSet<>();
-    public byte vitalityRate = 50;
+    public byte vitalityRate = 40;
     public byte maxPsionics = 0;
 
     public BodyShield shield = new BodyShield();
@@ -59,27 +59,26 @@ public class Character {
         return bodyParts.values().stream().mapToInt(BodyPart::getMaxHealth).sum();
     }
 
-    public int countVitalityThreshold() {
-        return vitalityRate * countMaxHealth() / 100;
+    public int countVitality() {
+        final int currentHealth = bodyParts.values().stream().mapToInt(BodyPart::getHealth).sum();
+        final int vitalityThreshold = (100 - vitalityRate) * countMaxHealth() / 100;
+        return Math.max(0, currentHealth - vitalityThreshold);
     }
 
-    public int countVitality(int vitalityThreshold) {
-        final int currentHealth = bodyParts.values().stream().mapToInt(BodyPart::getHealth).sum();
-        return Math.max(0, Math.min(vitalityThreshold, currentHealth - vitalityThreshold));
+    public int countMaxVitality() {
+        return vitalityRate * countMaxHealth() / 100;
     }
 
     public int vitalityLevel() {
         if (isDeadByVitalPart())
             return 4;
-        final int vitalityThreshold = countVitalityThreshold();
-        final int vitality = countVitality(vitalityThreshold);
-        return vitalityLevel(vitality, vitalityThreshold);
+        return vitalityLevel(countVitality(), countMaxVitality());
     }
 
-    public int vitalityLevel(int vitality, int vitalityThreshold) {
-        if (vitalityThreshold <= 0)
+    public int vitalityLevel(int vitality, int maxVitality) {
+        if (maxVitality <= 0)
             return 0;
-        final int percent = 100 - (vitality * 100) / vitalityThreshold;
+        final int percent = 100 - (vitality * 100) / maxVitality;
         return MathHelper.clamp_int(percent / 25, 0, 4);
     }
 
@@ -148,7 +147,7 @@ public class Character {
 
         this.traits = TraitDecoder.decode(c.getIntArray(Tags.traits));
 
-        this.vitalityRate = c.getByte(Tags.vitality);
+        this.vitalityRate = (byte) MathHelper.clamp_int(c.getByte(Tags.vitality), 0, 100);
         this.maxPsionics = c.getByte(Tags.maxPsionics);
 
         shield.unpack(c.getInteger(Tags.shield));

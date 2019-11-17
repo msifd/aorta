@@ -93,10 +93,10 @@ public enum DebugHud {
             lines.add("  ]");
 
             lines.add("  vitaity rate: " + character.vitalityRate);
-            final int vitalityThreshold = character.countVitalityThreshold();
-            final int vitality = character.countVitality(vitalityThreshold);
-            final double vitalityPercents = vitality / (double) vitalityThreshold;
-            lines.add(String.format("  vitality: %d/%d (%f)", vitality, vitalityThreshold, vitalityPercents));
+            final int vitality = character.countVitality();
+            final int maxVitality = character.countMaxVitality();
+            final double vitalityPercents = vitality / (double) maxVitality;
+            lines.add(String.format("  vitality: %d/%d (%f)", vitality, maxVitality, vitalityPercents));
 
             lines.add("  shield: " + character.shield);
             lines.add("  sanity: " + character.sanity);
