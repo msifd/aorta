@@ -5,9 +5,12 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import io.netty.buffer.ByteBuf;
 import msifeed.mc.aorta.chat.Language;
 import msifeed.mc.aorta.chat.composer.SpeechType;
+import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.Vec3;
 
 public class ChatMessage implements IMessage {
     public SpeechType type;
+    public ChunkCoordinates source;
     public int radius;
     public int senderId;
     public String speaker;
@@ -22,6 +25,10 @@ public class ChatMessage implements IMessage {
         senderId = buf.readInt();
         speaker = ByteBufUtils.readUTF8String(buf);
         text = ByteBufUtils.readUTF8String(buf);
+
+        if (type == SpeechType.SPEECH) {
+            source = new ChunkCoordinates(buf.readInt(), buf.readInt(), buf.readInt());
+        }
     }
 
     @Override
@@ -32,6 +39,12 @@ public class ChatMessage implements IMessage {
         buf.writeInt(senderId);
         ByteBufUtils.writeUTF8String(buf, speaker);
         ByteBufUtils.writeUTF8String(buf, text);
+
+        if (type == SpeechType.SPEECH) {
+            buf.writeInt(source.posX);
+            buf.writeInt(source.posY);
+            buf.writeInt(source.posZ);
+        }
     }
 
 }

@@ -18,6 +18,7 @@ public class SpeechComposer implements ChatComposer {
     public ChatMessage compose(EntityPlayer player, String text) {
         final ChatMessage message = new ChatMessage();
         message.type = SpeechType.SPEECH;
+        message.source = player.getPlayerCoordinates();
         message.language = LangAttribute.get(player).orElse(Language.VANILLA);
         message.radius = getSpeechRadius(text);
         message.senderId = player.getEntityId();
@@ -28,24 +29,39 @@ public class SpeechComposer implements ChatComposer {
 
     @Override
     public IChatComponent format(EntityPlayer self, ChatMessage message) {
-        final String text;
-        if (!isMyMessage(self, message) && !doIKnowLanguage(self, message.language)) {
-            text = obfuscateWith(message.language.obfuscator, message.text);
-        } else {
-            final String langPrefix = message.language.shortTr();
-            final String finalPrefix = langPrefix.isEmpty() ? "" : "[" + langPrefix + "] ";
-            text = finalPrefix + message.text;
-        }
-
-        final String name = message.speaker.isEmpty() ? self.getDisplayName() : message.speaker;
-        final ChatComponentText cName = getNamePrefix(name, isMyMessage(self, message));
-        final ChatComponentText cText = new ChatComponentText(": " + text);
+        final boolean myMessage = isMyMessage(self, message);
+        final boolean knowLang = doIKnowLanguage(self, message.language);
 
         final ChatComponentStyle root = new ChatComponentText("");
-        root.appendSibling(cName);
-        root.appendSibling(cText);
+
+        final String name = message.speaker.isEmpty() ? self.getDisplayName() : message.speaker;
+        root.appendSibling(getNamePrefix(name, isMyMessage(self, message)));
+
+        final String langPrefix = message.language.shortTr();
+        root.appendSibling(new ChatComponentText(knowLang && !langPrefix.isEmpty()
+            ? ": [" + langPrefix + "] " : ": "));
+
+        final String rawText;
+        if (!myMessage && !knowLang)
+            rawText = obfuscateWith(message.language.obfuscator, message.text);
+        else
+            rawText = message.text;
+        root.appendSibling(applyDistance(rawText, self, message));
 
         return root;
+    }
+
+    private static ChatComponentText applyDistance(String text, EntityPlayer player, ChatMessage message) {
+        final float distance = MathHelper.sqrt_float(player.getPlayerCoordinates().getDistanceSquaredToChunkCoordinates(message.source));
+
+        final ChatComponentText cc = new ChatComponentText(text);
+        final float grayness = distance / message.radius;
+        if (grayness > 0.7)
+            cc.getChatStyle().setColor(EnumChatFormatting.DARK_GRAY);
+        else if (grayness > 0.4)
+            cc.getChatStyle().setColor(EnumChatFormatting.GRAY);
+
+        return cc;
     }
 
     private static ChatComponentText getNamePrefix(String name, boolean myName) {
