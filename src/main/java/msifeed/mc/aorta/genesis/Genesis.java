@@ -8,6 +8,7 @@ import com.google.gson.JsonParser;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import msifeed.mc.aorta.genesis.blocks.BlockGenerator;
+import msifeed.mc.aorta.genesis.content.EmptySignBlock;
 import msifeed.mc.aorta.genesis.items.ItemGenerator;
 import msifeed.mc.aorta.genesis.rename.RenameRpc;
 import msifeed.mc.aorta.sys.rpc.Rpc;
@@ -33,6 +34,8 @@ public class Genesis {
 
     public void init() {
         Rpc.register(RenameRpc.INSTANCE);
+
+        EmptySignBlock.register();
 
         for (Generator g : generators.values())
             g.init();

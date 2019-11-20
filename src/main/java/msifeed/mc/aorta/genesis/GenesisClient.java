@@ -6,6 +6,8 @@ import msifeed.mc.aorta.genesis.blocks.client.GenesisBlockRenderer;
 import msifeed.mc.aorta.genesis.blocks.client.GenesisChestEntityRenderer;
 import msifeed.mc.aorta.genesis.blocks.client.GenesisChestRenderer;
 import msifeed.mc.aorta.genesis.blocks.templates.ChestTemplate;
+import msifeed.mc.aorta.genesis.content.EmptySignBlock;
+import msifeed.mc.aorta.genesis.content.EmptySignEntityRenderer;
 
 public class GenesisClient extends Genesis {
     @Override
@@ -15,5 +17,6 @@ public class GenesisClient extends Genesis {
         RenderingRegistry.registerBlockHandler(new GenesisBlockRenderer());
         RenderingRegistry.registerBlockHandler(new GenesisChestRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(ChestTemplate.ChestEntity.class, new GenesisChestEntityRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(EmptySignBlock.Tile.class, new EmptySignEntityRenderer());
     }
 }

@@ -4,6 +4,8 @@ itemGroup.aorta.blocks=Аорта блоки
 itemGroup.aorta.items=Аорта предметы
 itemGroup.aorta.tools=Аорта тулсы
 
+item.empty_sign.name=Прозрачный знак
+
 item.tool_debug.name=Дэбаг-тул
 item.tool_char.name=Чар-тул
 item.tool_status.name=Статус-тул

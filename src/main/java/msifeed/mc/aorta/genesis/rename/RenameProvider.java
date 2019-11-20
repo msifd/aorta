@@ -43,6 +43,8 @@ public class RenameProvider {
     }
 
     public static void setDescription(ItemStack itemStack, NBTTagList desc) {
+        if (desc.tagCount() == 0)
+            return;
         createDescriptionIfNeeded(itemStack);
         itemStack.stackTagCompound
                 .getCompoundTag("display")
