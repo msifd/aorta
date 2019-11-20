@@ -67,7 +67,7 @@ public class NametagClient extends Nametag {
         }
 
         final float distance = self.getDistanceToEntity(player);
-        final int visibleRange = isTyping ? MAX_TYPING_NAMETAG_DISTANCE : MAX_NAMETAG_DISTANCE;
+        final int visibleRange = isTyping ? getSpeechRadius() : MAX_NAMETAG_DISTANCE;
         if (distance > visibleRange)
             event.setCanceled(true);
     }

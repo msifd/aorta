@@ -4,6 +4,7 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import msifeed.mc.aorta.sys.rpc.Rpc;
@@ -22,7 +23,6 @@ public class Nametag {
     )
     public static Nametag INSTANCE;
 
-    static final int MAX_TYPING_NAMETAG_DISTANCE = 8;
     static final String broadcastTyping = "aorta:nametags.broadcast";
     private static final String notifyTyping = "aorta:nametags.notify";
 
@@ -40,7 +40,7 @@ public class Nametag {
         final EntityPlayerMP player = ctx.getServerHandler().playerEntity;
         final ChunkCoordinates coord = player.getPlayerCoordinates();
         final NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(
-                player.dimension, coord.posX, coord.posY, coord.posZ, MAX_TYPING_NAMETAG_DISTANCE * 2
+                player.dimension, coord.posX, coord.posY, coord.posZ, getSpeechRadius()
         );
         Rpc.sendToAllAround(Nametag.broadcastTyping, point, id);
     }
@@ -55,5 +55,11 @@ public class Nametag {
         return c == null || c.name.isEmpty()
                 ? player.getCommandSenderName()
                 : c.name;
+    }
+
+    static int getSpeechRadius() {
+        final int[] speechRadius = Aorta.DEFINES.get().chat.speechRadius;
+        final int mid = (speechRadius.length - 1) / 2;
+        return speechRadius[mid];
     }
 }
