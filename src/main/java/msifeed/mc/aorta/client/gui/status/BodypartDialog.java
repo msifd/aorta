@@ -81,9 +81,7 @@ class BodypartDialog extends Window {
     }
 
     private boolean isBodypartInvalid() {
-        return bodypart.health < 0
-                || bodypart.armor < 0
-                || bodypart.health > bodypart.maxHealth;
+        return bodypart.health < 0 || bodypart.health > bodypart.maxHealth || bodypart.armor < 0;
     }
 
     private static boolean healthFilter(String s) {

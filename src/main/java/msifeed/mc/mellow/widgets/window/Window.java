@@ -29,7 +29,7 @@ public class Window extends Widget {
 
     public Window(Widget origin) {
         this();
-        setZLevel(getZLevel() + origin.getGeometry().z);
+        setZLevel(getZLevel() + origin.getGeometryZ());
     }
 
     public void setTitle(String text) {

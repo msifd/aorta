@@ -30,7 +30,6 @@ class EditBodypartDialog extends Window {
         this.bodypart = new BodyPart(prevBodyPart);
 
         setTitle("Edit bodypart");
-        setZLevel(5);
         setFocused(this);
 
         final Widget content = getContent();
@@ -72,6 +71,8 @@ class EditBodypartDialog extends Window {
             if (isBodypartInvalid())
                 return;
             getParent().removeChild(this);
+
+            bodypart.health = (short) Math.min(bodypart.health, bodypart.maxHealth);
             consumer.accept(bodypart);
         });
         footer.addChild(doneBtn);

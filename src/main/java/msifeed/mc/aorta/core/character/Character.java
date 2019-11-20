@@ -61,12 +61,12 @@ public class Character {
 
     public int countVitality() {
         final int currentHealth = bodyParts.values().stream().mapToInt(BodyPart::getHealth).sum();
-        final int vitalityThreshold = (100 - vitalityRate) * countMaxHealth() / 100;
+        final int vitalityThreshold = Math.round((100 - vitalityRate) * countMaxHealth() / 100f);
         return Math.max(0, currentHealth - vitalityThreshold);
     }
 
     public int countMaxVitality() {
-        return vitalityRate * countMaxHealth() / 100;
+        return Math.round(vitalityRate * countMaxHealth() / 100f);
     }
 
     public int vitalityLevel() {
