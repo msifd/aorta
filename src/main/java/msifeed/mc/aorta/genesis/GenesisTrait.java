@@ -31,11 +31,12 @@ public enum GenesisTrait {
 
     // Items // // // // // // // //
     not_stackable, hold_like_tool,
-    usable, action_bow,
+    usable, action_bow, reusable,
+    hidden_uses,
 
     // Armor
     armor, helmet, plate, legs, boots,
-
+    
     // Food
     consumable, no_saturation,
 

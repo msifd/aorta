@@ -25,7 +25,7 @@ public class ItemTemplate extends Item implements IItemTemplate {
         this.unit = unit;
         setUnlocalizedName(unit.id);
     }
-
+    
     @Override
     public String getItemStackDisplayName(ItemStack itemStack) {
         final String name = unit.title != null
@@ -60,6 +60,16 @@ public class ItemTemplate extends Item implements IItemTemplate {
         else
             return 0;
     }
+    
+    @Override
+    public boolean showDurabilityBar(ItemStack itemStack) {
+    	return unit.maxUsages > 0 && itemStack.getItemDamage() < unit.maxUsages;
+    }
+
+    @Override
+    public double getDurabilityForDisplay(ItemStack itemStack) {
+    	return 1 - (double)itemStack.getItemDamage() / unit.maxUsages;
+    }
 
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
         final int duration = getMaxItemUseDuration(itemStack);
@@ -67,20 +77,33 @@ public class ItemTemplate extends Item implements IItemTemplate {
             player.setItemInUse(itemStack, duration);
         return itemStack;
     }
+    
+    public String getUseText() {
+    	if (unit.hasTrait(GenesisTrait.hidden_uses))
+    		return "aorta.attack";
+		else if (unit.hasTrait(GenesisTrait.reusable))
+			return "aorta.shot";
+
+    	return "aorta.used";
+    }
 
     @Override
     public ItemStack onEaten(ItemStack itemStack, World world, EntityPlayer player) {
         if (unit.maxUsages > 0) {
             final int u = itemStack.getItemDamage();
             if (u > 1)
-                itemStack.setItemDamage(u - 1);
+            	if (unit.hasTrait(GenesisTrait.reusable) && u - 1 == 0) {
+            		itemStack.setItemDamage(unit.maxUsages);
+            	} else {
+                    itemStack.setItemDamage(u - 1);
+            	}
             else {
                 itemStack.stackSize--;
                 if (itemStack.stackSize > 0)
                     itemStack.setItemDamage(unit.maxUsages);
             }
             if (!world.isRemote) {
-                final ChatMessage m = Composer.makeMessage(SpeechType.LOG, player, L10n.fmt("aorta.used", itemStack.getDisplayName()));
+                final ChatMessage m = Composer.makeMessage(SpeechType.LOG, player, L10n.fmt(getUseText(), itemStack.getDisplayName()));
                 m.speaker = player.getDisplayName();
                 ChatHandler.sendSystemChatMessage(player, m);
                 Logs.log(player, "log", m.text);

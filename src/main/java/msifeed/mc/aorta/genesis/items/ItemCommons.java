@@ -1,5 +1,6 @@
 package msifeed.mc.aorta.genesis.items;
 
+import msifeed.mc.aorta.genesis.GenesisTrait;
 import msifeed.mc.aorta.genesis.rename.RenameProvider;
 import msifeed.mc.aorta.sys.utils.L10n;
 import net.minecraft.item.ItemStack;
@@ -23,7 +24,7 @@ public class ItemCommons {
             if (!entry.getValue().isEmpty())
                 lines.add("\u00A7r" + entry.getKey() + "\u00A7r: " + entry.getValue());
 
-        if (unit.maxUsages > 0)
+        if (unit.maxUsages > 0 && !unit.hasTrait(GenesisTrait.hidden_uses))
             lines.add("\u00A7r" + L10n.fmt("aorta.uses_left", itemStack.getItemDamage()));
     }
 }

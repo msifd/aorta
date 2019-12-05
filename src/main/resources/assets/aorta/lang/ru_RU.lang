@@ -225,4 +225,6 @@ aorta.lock.pick_break=§7Отмычка сломалась
 aorta.lock.hacked=§7Замок взломан
 
 aorta.used=использовал %s
+aorta.shot=стреляет из %s
+aorta.attack=атакует с помощью %s
 aorta.uses_left=Осталось использований: %d
