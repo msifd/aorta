@@ -36,7 +36,7 @@ public enum GenesisTrait {
 
     // Armor
     armor, helmet, plate, legs, boots,
-    
+
     // Food
     consumable, no_saturation,
 

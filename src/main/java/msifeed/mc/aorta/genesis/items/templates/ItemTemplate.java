@@ -25,7 +25,7 @@ public class ItemTemplate extends Item implements IItemTemplate {
         this.unit = unit;
         setUnlocalizedName(unit.id);
     }
-    
+
     @Override
     public String getItemStackDisplayName(ItemStack itemStack) {
         final String name = unit.title != null
