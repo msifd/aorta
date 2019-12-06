@@ -24,6 +24,9 @@ public class ItemCommons {
             if (!entry.getValue().isEmpty())
                 lines.add("\u00A7r" + entry.getKey() + "\u00A7r: " + entry.getValue());
 
+        if (unit.specialAttackCost > 0 && !unit.hasTrait(GenesisTrait.infinite_uses))
+            lines.add("\u00A7r" + L10n.fmt("aorta.special_attack_cost", unit.specialAttackCost));
+
         if (unit.maxUsages > 0 && !unit.hasTrait(GenesisTrait.infinite_uses)) {
             String usageLine = L10n.fmt("aorta.uses_left", itemStack.getItemDamage());
 

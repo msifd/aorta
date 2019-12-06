@@ -70,7 +70,8 @@ public class ItemTemplate extends Item implements IItemTemplate {
 
     @Override
     public double getDurabilityForDisplay(ItemStack itemStack) {
-        return 1 - (double)itemStack.getItemDamage() / unit.maxUsages;
+        return itemStack.hasTagCompound() && itemStack.getTagCompound().getBoolean("needsReload") ?
+                1 : 1 - (double)itemStack.getItemDamage() / unit.maxUsages;
     }
 
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
@@ -80,15 +81,15 @@ public class ItemTemplate extends Item implements IItemTemplate {
         return itemStack;
     }
 
-    public String getUseText(EntityPlayer player, ItemStack itemStack) {
+    public String getUseText(EntityPlayer player, ItemStack itemStack, boolean special) {
         if (unit.hasTrait(GenesisTrait.reusable))
             if (unit.hasTrait(GenesisTrait.infinite_uses))
-                return player.isSneaking() ? "aorta.attack_special" : "aorta.attack";
+                return special ? "aorta.attack_special" : "aorta.attack";
             else
                 if (itemStack.getItemDamage() == unit.maxUsages)
                     return "aorta.reload";
                 else
-                    return player.isSneaking() ? "aorta.shot_special" : "aorta.shot";
+                    return special ? "aorta.shot_special" : "aorta.shot";
 
         return "aorta.used";
     }
@@ -97,8 +98,16 @@ public class ItemTemplate extends Item implements IItemTemplate {
     public ItemStack onEaten(ItemStack itemStack, World world, EntityPlayer player) {
         if (unit.maxUsages > 0) {
             final int u = itemStack.getItemDamage();
-            if (u > 1)
-                itemStack.setItemDamage(u - 1);
+            boolean special = false;
+
+            if (unit.specialAttackCost > 0 && player.isSneaking() && u >= unit.specialAttackCost)
+                special = true;
+
+            int cost = special ? unit.specialAttackCost : 1;
+
+            if (u > cost) {
+                itemStack.setItemDamage(u - cost);
+            }
             else {
                 if (!unit.hasTrait(GenesisTrait.reusable)) {
                     itemStack.stackSize--;
@@ -109,6 +118,8 @@ public class ItemTemplate extends Item implements IItemTemplate {
                     if (unit.hasTrait(GenesisTrait.infinite_uses)) {
                         itemStack.setItemDamage(unit.maxUsages);
                     } else {
+                        itemStack.setItemDamage(1);
+
                         if (!itemStack.hasTagCompound()) {
                             NBTTagCompound compound = new NBTTagCompound();
                             compound.setBoolean("needsReload", true);
@@ -124,7 +135,7 @@ public class ItemTemplate extends Item implements IItemTemplate {
                 }
             }
             if (!world.isRemote) {
-                final ChatMessage m = Composer.makeMessage(SpeechType.LOG, player, L10n.fmt(getUseText(player, itemStack), itemStack.getDisplayName()));
+                final ChatMessage m = Composer.makeMessage(SpeechType.LOG, player, L10n.fmt(getUseText(player, itemStack, special), itemStack.getDisplayName()));
                 m.speaker = player.getDisplayName();
                 ChatHandler.sendSystemChatMessage(player, m);
                 Logs.log(player, "log", m.text);

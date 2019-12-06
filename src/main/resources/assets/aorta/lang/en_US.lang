@@ -225,5 +225,6 @@ aorta.shot_special=совершает особый выстрел из %s
 aorta.reload=перезаряжает %s
 aorta.attack=атакует с помощью %s
 aorta.attack_special=совершает особую атаку с помощью %s
+aorta.special_attack_cost=Стоимость особой атаки: %d
 aorta.uses_left=Осталось использований: %d
 aorta.needs_reload=Требуется перезарядка
