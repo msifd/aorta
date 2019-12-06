@@ -14,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -60,15 +61,16 @@ public class ItemTemplate extends Item implements IItemTemplate {
         else
             return 0;
     }
-    
+
     @Override
     public boolean showDurabilityBar(ItemStack itemStack) {
-    	return unit.maxUsages > 0 && itemStack.getItemDamage() < unit.maxUsages;
+        return !unit.hasTrait(GenesisTrait.infinite_uses) && unit.hasTrait(GenesisTrait.reusable)
+                && unit.maxUsages > 0 && itemStack.getItemDamage() < unit.maxUsages;
     }
 
     @Override
     public double getDurabilityForDisplay(ItemStack itemStack) {
-    	return 1 - (double)itemStack.getItemDamage() / unit.maxUsages;
+        return 1 - (double)itemStack.getItemDamage() / unit.maxUsages;
     }
 
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
@@ -77,14 +79,18 @@ public class ItemTemplate extends Item implements IItemTemplate {
             player.setItemInUse(itemStack, duration);
         return itemStack;
     }
-    
-    public String getUseText() {
-    	if (unit.hasTrait(GenesisTrait.hidden_uses))
-    		return "aorta.attack";
-		else if (unit.hasTrait(GenesisTrait.reusable))
-			return "aorta.shot";
 
-    	return "aorta.used";
+    public String getUseText(EntityPlayer player, ItemStack itemStack) {
+        if (unit.hasTrait(GenesisTrait.reusable))
+            if (unit.hasTrait(GenesisTrait.infinite_uses))
+                return player.isSneaking() ? "aorta.attack_special" : "aorta.attack";
+            else
+                if (itemStack.getItemDamage() == unit.maxUsages)
+                    return "aorta.reload";
+                else
+                    return player.isSneaking() ? "aorta.shot_special" : "aorta.shot";
+
+        return "aorta.used";
     }
 
     @Override
@@ -92,18 +98,33 @@ public class ItemTemplate extends Item implements IItemTemplate {
         if (unit.maxUsages > 0) {
             final int u = itemStack.getItemDamage();
             if (u > 1)
-            	if (unit.hasTrait(GenesisTrait.reusable) && u - 1 == 0) {
-            		itemStack.setItemDamage(unit.maxUsages);
-            	} else {
-                    itemStack.setItemDamage(u - 1);
-            	}
+                itemStack.setItemDamage(u - 1);
             else {
-                itemStack.stackSize--;
-                if (itemStack.stackSize > 0)
-                    itemStack.setItemDamage(unit.maxUsages);
+                if (!unit.hasTrait(GenesisTrait.reusable)) {
+                    itemStack.stackSize--;
+
+                    if (itemStack.stackSize > 0)
+                        itemStack.setItemDamage(unit.maxUsages);
+                } else {
+                    if (unit.hasTrait(GenesisTrait.infinite_uses)) {
+                        itemStack.setItemDamage(unit.maxUsages);
+                    } else {
+                        if (!itemStack.hasTagCompound()) {
+                            NBTTagCompound compound = new NBTTagCompound();
+                            compound.setBoolean("needsReload", true);
+                            itemStack.setTagCompound(compound);
+                        } else {
+                            boolean needsReload = itemStack.getTagCompound().getBoolean("needsReload");
+                            itemStack.getTagCompound().setBoolean("needsReload", !needsReload);
+
+                            if (needsReload)
+                                itemStack.setItemDamage(unit.maxUsages);
+                        }
+                    }
+                }
             }
             if (!world.isRemote) {
-                final ChatMessage m = Composer.makeMessage(SpeechType.LOG, player, L10n.fmt(getUseText(), itemStack.getDisplayName()));
+                final ChatMessage m = Composer.makeMessage(SpeechType.LOG, player, L10n.fmt(getUseText(player, itemStack), itemStack.getDisplayName()));
                 m.speaker = player.getDisplayName();
                 ChatHandler.sendSystemChatMessage(player, m);
                 Logs.log(player, "log", m.text);

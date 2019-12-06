@@ -24,7 +24,13 @@ public class ItemCommons {
             if (!entry.getValue().isEmpty())
                 lines.add("\u00A7r" + entry.getKey() + "\u00A7r: " + entry.getValue());
 
-        if (unit.maxUsages > 0 && !unit.hasTrait(GenesisTrait.hidden_uses))
-            lines.add("\u00A7r" + L10n.fmt("aorta.uses_left", itemStack.getItemDamage()));
+        if (unit.maxUsages > 0 && !unit.hasTrait(GenesisTrait.infinite_uses)) {
+            String usageLine = L10n.fmt("aorta.uses_left", itemStack.getItemDamage());
+
+            if (itemStack.hasTagCompound() && itemStack.getTagCompound().getBoolean("needsReload"))
+                usageLine = L10n.fmt("aorta.needs_reload");
+
+            lines.add("\u00A7r" + usageLine);
+        }
     }
 }
