@@ -39,5 +39,13 @@ public class ItemCommons {
 
             lines.add("\u00A7r" + usageLine);
         }
+
+        if (unit.durData.maxDurability > 0) {
+            if (itemStack.getItemDamage() == 1)
+                lines.add("\u00A74" + L10n.fmt("aorta.gen.broken"));
+            else
+                lines.add("\u00A7r" + L10n.fmt("aorta.gen.durability", itemStack.getItemDamage(), unit.durData.maxDurability,
+                        Math.round(((double)itemStack.getItemDamage() / unit.durData.maxDurability) * 100)));
+        }
     }
 }

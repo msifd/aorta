@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import msifeed.mc.aorta.genesis.GenesisTrait;
 import msifeed.mc.aorta.genesis.GenesisUnit;
 import msifeed.mc.aorta.genesis.JsonUtils;
+import msifeed.mc.aorta.genesis.items.data.ItemDurabilityData;
 import msifeed.mc.aorta.genesis.items.data.ItemRenderData;
 
 import java.util.HashSet;
@@ -20,6 +21,7 @@ public class ItemGenesisUnit extends GenesisUnit {
     public String texture;
     public ItemRarity rarity;
     public ItemRenderData renderData = null;
+    public ItemDurabilityData durData = new ItemDurabilityData();
     public int maxUsages = 0;
     public int specialAttackCost = 0;
 
@@ -36,6 +38,9 @@ public class ItemGenesisUnit extends GenesisUnit {
 
         if (json.has(Props.render))
             renderData = new ItemRenderData(json);
+
+        if (json.has(Props.durability))
+            durData = new ItemDurabilityData(json);
 
         if (json.has(Props.usages))
             JsonUtils.consumeInt(json, Props.usages, i -> maxUsages = i);
@@ -81,6 +86,7 @@ public class ItemGenesisUnit extends GenesisUnit {
         static final String values = "values";
         static final String texture = "texture";
         static final String render = "render";
+        static final String durability = "durability";
         static final String usages = "usages";
         static final String specialAttackCost = "specialAttackCost";
     }
