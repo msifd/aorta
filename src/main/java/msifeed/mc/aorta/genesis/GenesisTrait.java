@@ -32,7 +32,7 @@ public enum GenesisTrait {
     // Items // // // // // // // //
     not_stackable, hold_like_tool,
     usable, action_bow, reusable,
-    infinite_uses,
+
 
     // Armor
     armor, helmet, plate, legs, boots,

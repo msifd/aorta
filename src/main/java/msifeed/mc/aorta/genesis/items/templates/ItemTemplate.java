@@ -54,7 +54,7 @@ public class ItemTemplate extends Item implements IItemTemplate {
 
     @Override
     public int getMaxItemUseDuration(ItemStack itemStack) {
-        if (unit.maxUsages > 0)
+        if (unit.maxUsages > 0 || unit.hasTrait(GenesisTrait.reusable))
             return 32;
         else if (unit.hasTrait(GenesisTrait.action_bow))
             return 72000;
@@ -81,17 +81,17 @@ public class ItemTemplate extends Item implements IItemTemplate {
         return itemStack;
     }
 
-    public String getUseText(EntityPlayer player, ItemStack itemStack, boolean special) {
+    private String getUseText(EntityPlayer player, ItemStack itemStack, boolean special) {
         if (unit.hasTrait(GenesisTrait.reusable))
-            if (unit.hasTrait(GenesisTrait.infinite_uses))
-                return special ? "aorta.attack_special" : "aorta.attack";
+            if (unit.maxUsages == 0)
+                return special ? "aorta.gen.attack_special" : "aorta.gen.attack";
             else
-                if (itemStack.getItemDamage() == unit.maxUsages)
-                    return "aorta.reload";
+                if (itemStack.getTagCompound().getInteger("usages") == unit.maxUsages)
+                    return "aorta.gen.reload";
                 else
-                    return special ? "aorta.shot_special" : "aorta.shot";
+                    return special ? "aorta.gen.shot_special" : "aorta.gen.shot";
 
-        return "aorta.used";
+        return "aorta.gen.used";
     }
 
     @Override
@@ -139,6 +139,9 @@ public class ItemTemplate extends Item implements IItemTemplate {
                 m.speaker = player.getDisplayName();
                 ChatHandler.sendSystemChatMessage(player, m);
                 Logs.log(player, "log", m.text);
+
+                if (unit.maxUsages > 0 && itemStack.getTagCompound().getInteger("usages") == 0)
+                    player.addChatMessage(new ChatComponentText("§f" + L10n.fmt("aorta.gen.needs_reload")));
             }
         }
         return itemStack;

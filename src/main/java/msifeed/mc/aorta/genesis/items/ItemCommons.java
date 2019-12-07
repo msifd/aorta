@@ -1,6 +1,5 @@
 package msifeed.mc.aorta.genesis.items;
 
-import msifeed.mc.aorta.genesis.GenesisTrait;
 import msifeed.mc.aorta.genesis.rename.RenameProvider;
 import msifeed.mc.aorta.sys.utils.L10n;
 import net.minecraft.item.ItemStack;
@@ -24,14 +23,19 @@ public class ItemCommons {
             if (!entry.getValue().isEmpty())
                 lines.add("\u00A7r" + entry.getKey() + "\u00A7r: " + entry.getValue());
 
-        if (unit.specialAttackCost > 0 && !unit.hasTrait(GenesisTrait.infinite_uses))
-            lines.add("\u00A7r" + L10n.fmt("aorta.special_attack_cost", unit.specialAttackCost));
+        if (unit.specialAttackCost > 0 && unit.maxUsages > 0)
+            lines.add("\u00A7r" + L10n.fmt("aorta.gen.special_attack_cost", unit.specialAttackCost));
 
-        if (unit.maxUsages > 0 && !unit.hasTrait(GenesisTrait.infinite_uses)) {
-            String usageLine = L10n.fmt("aorta.uses_left", itemStack.getItemDamage());
+        if (unit.maxUsages > 0) {
+            int usages = unit.maxUsages;
 
-            if (itemStack.hasTagCompound() && itemStack.getTagCompound().getBoolean("needsReload"))
-                usageLine = L10n.fmt("aorta.needs_reload");
+            if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("usages"))
+                usages = itemStack.getTagCompound().getInteger("usages");
+
+            String usageLine = L10n.fmt("aorta.gen.uses_left", usages);
+
+            if (usages == 0)
+                usageLine = L10n.fmt("aorta.gen.needs_reload");
 
             lines.add("\u00A7r" + usageLine);
         }
