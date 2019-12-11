@@ -72,7 +72,7 @@ public class ItemTemplate extends Item implements IItemTemplate {
     }
 
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-        if (itemStack.getItemDamage() <= 1) {
+        if (unit.durData.maxDurability > 0 && itemStack.getItemDamage() <= 1) {
             if (world.isRemote)
                 player.addChatMessage(new ChatComponentText("§4" + L10n.fmt("aorta.gen.broken")));
             return itemStack;
@@ -114,7 +114,7 @@ public class ItemTemplate extends Item implements IItemTemplate {
 
             int cost = special ? unit.specialAttackCost : 1;
 
-            if (u > cost || unit.hasTrait(GenesisTrait.reusable) && u != 0) {
+            if (u > cost || unit.hasTrait(GenesisTrait.reusable) && u != 0 && unit.durData.maxDurability > 0) {
                 final int durability = Math.max(1, itemStack.getItemDamage() -
                         (special ? unit.durData.getSpecialBreakage() : unit.durData.getBreakage()));
                 itemStack.setItemDamage(durability);
