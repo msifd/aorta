@@ -86,7 +86,7 @@ class ParamsView extends Widget {
             psiDesc.setSizePolicy(SizePolicy.FIXED);
 
             final TextInput psionicsInput = new TextInput();
-            psionicsInput.getSizeHint().x = 12;
+            psionicsInput.getSizeHint().x = 16;
             psionicsInput.setFilter(s -> TextInput.isUnsignedIntBetween(s, 0, character.maxPsionics));
             psionicsInput.setCallback(s -> {
                 character.psionics = (byte) psionicsInput.getInt();
