@@ -55,7 +55,7 @@ public enum DailySanityReduce {
                 c.setByte("sanity", (byte)Math.max(1, c.getByte("sanity") - sanityReduce));
                 CharRpc.updateChar(player, c, (EntityPlayerMP)player);
 
-                meta.lastLogin = curTime;
+                MetaAttribute.INSTANCE.update(player, metaInfo -> metaInfo.lastLogin = curTime);
             }
         }
     }
