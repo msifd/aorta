@@ -7,6 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 public class MetaInfo {
     public Modifiers modifiers = new Modifiers();
     public boolean receiveGlobal = true;
+    public long lastLogin;
 
     public MetaInfo() {
     }

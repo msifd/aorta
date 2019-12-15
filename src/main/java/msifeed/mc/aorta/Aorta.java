@@ -72,6 +72,7 @@ public class Aorta {
         Speechat.init();
         Nametag.INSTANCE.init();
         MakeEveryoneHealthy.apply();
+        DailySanityReduce.apply();
     }
 
     public void postInit() {
