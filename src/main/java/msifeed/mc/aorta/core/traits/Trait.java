@@ -14,6 +14,8 @@ public enum Trait {
 
     psionic,
 
+    sanity_default, sanity_sensitive,
+
     ;
 
     public int code;
