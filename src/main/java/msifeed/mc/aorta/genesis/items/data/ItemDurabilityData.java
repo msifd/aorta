@@ -11,7 +11,7 @@ public class ItemDurabilityData {
     public int minSpecialBreakage = 1;
     public int maxSpecialBreakage = 1;
 
-    private Random rand = new Random();
+    static private Random rand = new Random();
 
     public ItemDurabilityData() {
 
@@ -28,11 +28,11 @@ public class ItemDurabilityData {
         JsonUtils.consumeInt(durability, "maxSpecialBreakage", i -> maxSpecialBreakage = i);
     }
 
-    public int getBreakage() {
+    public int getNextDamage() {
         return minBreakage + rand.nextInt(maxBreakage - minBreakage + 1);
     }
 
-    public int getSpecialBreakage() {
+    public int getNextSpecialDamage() {
         return minSpecialBreakage + rand.nextInt(maxSpecialBreakage - minSpecialBreakage + 1);
     }
 }

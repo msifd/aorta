@@ -48,7 +48,8 @@ public class ItemTemplate extends Item implements IItemTemplate {
 
     @Override
     public int getDamage(ItemStack itemStack) {
-        return super.getDamage(itemStack) > 0 ? super.getDamage(itemStack) : unit.durData.maxDurability;
+        final int damage = super.getDamage(itemStack);
+        return damage > 0 ? damage : unit.durData.maxDurability;
     }
 
     @Override
@@ -106,26 +107,24 @@ public class ItemTemplate extends Item implements IItemTemplate {
                 itemStack.setTagCompound(compound);
             }
 
-            final int u = itemStack.getTagCompound().getInteger("usages");
-            boolean special = false;
+            final int usages = itemStack.getTagCompound().getInteger("usages");
+            final boolean special = player.isSneaking()
+                    && (unit.specialAttackCost > 0 && usages >= unit.specialAttackCost || unit.maxUsages == 0);
+            final int cost = special ? unit.specialAttackCost : 1;
 
-            if (player.isSneaking() && (unit.specialAttackCost > 0 && u >= unit.specialAttackCost || unit.maxUsages == 0))
-                special = true;
-
-            int cost = special ? unit.specialAttackCost : 1;
-
-            if (u > cost || unit.hasTrait(GenesisTrait.reusable) && u != 0 && unit.durData.maxDurability > 0) {
-                final int durability = Math.max(1, itemStack.getItemDamage() -
-                        (special ? unit.durData.getSpecialBreakage() : unit.durData.getBreakage()));
+            if (!world.isRemote && usages > cost
+                    || unit.hasTrait(GenesisTrait.reusable) && usages != 0 && unit.durData.maxDurability > 0) {
+                final int damage = special ? unit.durData.getNextSpecialDamage() : unit.durData.getNextDamage();
+                final int durability = Math.max(1, itemStack.getItemDamage() - damage);
                 itemStack.setItemDamage(durability);
             }
 
-            if (u > cost)
-                itemStack.getTagCompound().setInteger("usages", u - cost);
+            if (usages > cost)
+                itemStack.getTagCompound().setInteger("usages", usages - cost);
             else {
                 if (unit.hasTrait(GenesisTrait.reusable)) {
                     if (unit.maxUsages > 0)
-                        itemStack.getTagCompound().setInteger("usages", u == 0 ? unit.maxUsages : 0);
+                        itemStack.getTagCompound().setInteger("usages", usages == 0 ? unit.maxUsages : 0);
                 } else {
                     itemStack.stackSize--;
 
