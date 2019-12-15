@@ -47,7 +47,7 @@ public class NametagClient extends Nametag {
 
         final Long typingStarted = typingPlayers.get(player.getEntityId());
         boolean isTyping = false;
-        if (typingStarted != null) {
+        if (typingStarted != null && !displayOriginalUsername()) {
             final long now = System.currentTimeMillis();
             if (now - typingStarted > TYPING_PING_MS) {
                 // End typing

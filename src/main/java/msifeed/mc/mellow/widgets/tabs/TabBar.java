@@ -3,6 +3,7 @@ package msifeed.mc.mellow.widgets.tabs;
 import msifeed.mc.mellow.Mellow;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.render.RenderShapes;
+import msifeed.mc.mellow.render.RenderUtils;
 import msifeed.mc.mellow.utils.Geom;
 import msifeed.mc.mellow.widgets.Widget;
 
@@ -53,7 +54,7 @@ class TabBar extends Widget {
         if (activeTab == null)
             return;
 
-        final int thickness = 2;
+        final int thickness = RenderUtils.getScaledResolution().getScaleFactor();
         final Geom self = getGeometry();
         final Geom active = activeTab.getGeometry();
 

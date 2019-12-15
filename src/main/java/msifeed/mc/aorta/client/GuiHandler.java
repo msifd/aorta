@@ -18,4 +18,5 @@ public class GuiHandler {
     public void toggleSkeletalKey(LockObject lock) { }
     public void toggleDesignerScreen() { }
     public void toggleRenamer() { }
+    public void toggleAuctionTerminal() { }
 }

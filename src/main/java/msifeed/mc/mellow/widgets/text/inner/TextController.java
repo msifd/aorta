@@ -110,6 +110,8 @@ public class TextController {
     }
 
     public void clear() {
+        curLine = 0;
+        curColumn = 0;
         lines.clear();
         lines.add(new Line());
     }

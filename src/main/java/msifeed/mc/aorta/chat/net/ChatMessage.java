@@ -6,7 +6,6 @@ import io.netty.buffer.ByteBuf;
 import msifeed.mc.aorta.chat.Language;
 import msifeed.mc.aorta.chat.composer.SpeechType;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.Vec3;
 
 public class ChatMessage implements IMessage {
     public SpeechType type;

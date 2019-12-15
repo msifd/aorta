@@ -4,7 +4,6 @@ import msifeed.mc.mellow.layout.AnchorLayout;
 import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.widgets.Widget;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 public class Scene extends Widget {
@@ -13,28 +12,11 @@ public class Scene extends Widget {
         setLayout(new AnchorLayout());
     }
 
-    public Optional<Widget> lookupWidget(Point p) {
-        return fullLookup(p);
+    public Optional<Widget> lookupWidget(Point p, Class<?> c) {
+        return fullLookup(p, c);
     }
 
-    private Optional<Widget> fullLookup(Point p) {
-        ArrayList<Widget> active = new ArrayList<>();
-        ArrayList<Widget> pending = new ArrayList<>(getLookupChildren());
-        ArrayList<Widget> nextPending = new ArrayList<>();
-
-        while (!pending.isEmpty()) {
-            for (Widget pw : pending) {
-                for (Widget w : pw.getLookupChildren()) {
-                    if (w.isVisible())
-                        nextPending.add(w);
-                }
-            }
-            active.addAll(pending);
-            pending.clear();
-            pending.addAll(nextPending);
-            nextPending.clear();
-        }
-
+    private Optional<Widget> fullLookup(Point p, Class<?> type) {
         // Debug list
 //        GL11.glPushMatrix();
 //        GL11.glScalef(0.5f, 0.5f, 0.5f);
@@ -48,12 +30,6 @@ public class Scene extends Widget {
 //        GL11.glPopMatrix();
         //
 
-        if (active.isEmpty())
-            return Optional.empty();
-
-        return active
-                .stream()
-                .filter(widget -> widget.containsPoint(p))
-                .max(Widget::isHigherThan);
+        return getWidgetsAtPoint(p, type).max(Widget::isHigherThan);
     }
 }

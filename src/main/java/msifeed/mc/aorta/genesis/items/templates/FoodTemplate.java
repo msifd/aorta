@@ -20,24 +20,6 @@ public class FoodTemplate extends ItemFood implements IItemTemplate {
         setUnlocalizedName(unit.id);
     }
 
-    @Override
-    public String getItemStackDisplayName(ItemStack itemStack) {
-        final String name = unit.title != null
-                ? unit.title
-                : super.getItemStackDisplayName(itemStack);
-        return unit.rarity.color.toString() + name;
-    }
-
-    @Override
-    public void addInformation(ItemStack itemStack, EntityPlayer player, List lines, boolean debug) {
-        ItemCommons.addInformation(unit, itemStack, lines);
-    }
-
-    @Override
-    public ItemGenesisUnit getUnit() {
-        return unit;
-    }
-
     private static int getSaturation(ItemGenesisUnit unit) {
         if (unit.hasTrait(no_saturation))
             return 0;
@@ -56,5 +38,23 @@ public class FoodTemplate extends ItemFood implements IItemTemplate {
         if (unit.hasTrait(small) || unit.hasTrait(tiny))
             return 16;
         return 32;
+    }
+
+    @Override
+    public String getItemStackDisplayName(ItemStack itemStack) {
+        final String name = unit.title != null
+                ? unit.title
+                : super.getItemStackDisplayName(itemStack);
+        return unit.rarity.color.toString() + name;
+    }
+
+    @Override
+    public void addInformation(ItemStack itemStack, EntityPlayer player, List lines, boolean debug) {
+        ItemCommons.addInformation(unit, itemStack, lines);
+    }
+
+    @Override
+    public ItemGenesisUnit getUnit() {
+        return unit;
     }
 }

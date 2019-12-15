@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
-public enum  RenameRpc {
+public enum RenameRpc {
     INSTANCE;
 
     private static final String rename = "aorta:genesis.rename";
@@ -38,6 +38,19 @@ public enum  RenameRpc {
         }
     }
 
+    public static void clear() {
+        Rpc.sendToServer(clear);
+    }
+
+    public static void setValue(String key, String value) {
+        if (!key.isEmpty())
+            Rpc.sendToServer(setValue, key, value == null ? "[del]" : value);
+    }
+
+    public static void openRenameGui(EntityPlayerMP player) {
+        Rpc.sendTo(player, openRenameGui);
+    }
+
     @RpcMethod(rename)
     public void onRename(MessageContext ctx, byte[] nbtBytes) {
         if (ctx.side.isClient())
@@ -58,10 +71,6 @@ public enum  RenameRpc {
         }
     }
 
-    public static void clear() {
-        Rpc.sendToServer(clear);
-    }
-
     @RpcMethod(clear)
     public void onClear(MessageContext ctx) {
         if (ctx.side.isClient())
@@ -74,11 +83,6 @@ public enum  RenameRpc {
         RenameProvider.clearAll(itemStack);
     }
 
-    public static void setValue(String key, String value) {
-        if (!key.isEmpty())
-            Rpc.sendToServer(setValue, key, value == null ? "[del]" : value);
-    }
-
     @RpcMethod(setValue)
     public void onSetValue(MessageContext ctx, String key, String value) {
         if (ctx.side.isClient())
@@ -89,10 +93,6 @@ public enum  RenameRpc {
             return;
 
         RenameProvider.setValue(itemStack, key, value.equals("[del]") ? null : value);
-    }
-
-    public static void openRenameGui(EntityPlayerMP player) {
-        Rpc.sendTo(player, openRenameGui);
     }
 
     @RpcMethod(openRenameGui)

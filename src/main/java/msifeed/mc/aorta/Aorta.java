@@ -12,6 +12,7 @@ import msifeed.mc.aorta.core.Core;
 import msifeed.mc.aorta.core.commands.DumpRollsCommand;
 import msifeed.mc.aorta.defines.DefineCommand;
 import msifeed.mc.aorta.defines.Defines;
+import msifeed.mc.aorta.economy.Economy;
 import msifeed.mc.aorta.environment.EnvironmentManager;
 import msifeed.mc.aorta.genesis.Genesis;
 import msifeed.mc.aorta.genesis.rename.RenameCommand;
@@ -69,6 +70,8 @@ public class Aorta {
         ToolItems.init();
         RemoteBookManager.init();
         Locks.init();
+        Economy.init();
+
         Speechat.init();
         Nametag.INSTANCE.init();
         MakeEveryoneHealthy.apply();

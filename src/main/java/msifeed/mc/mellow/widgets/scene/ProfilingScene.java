@@ -25,10 +25,10 @@ public class ProfilingScene extends Scene {
     }
 
     @Override
-    public Optional<Widget> lookupWidget(Point p) {
+    public Optional<Widget> lookupWidget(Point p, Class<?> type) {
         final Profiler pr = Minecraft.getMinecraft().mcProfiler;
         pr.startSection("MellowLookup");
-        final Optional<Widget> lookup = super.lookupWidget(p);
+        final Optional<Widget> lookup = super.lookupWidget(p, type);
         pr.endSection();
         return lookup;
     }

@@ -47,6 +47,65 @@ public class BlockTraitCommons {
         this.unit = unit;
     }
 
+    public static String getItemStackDisplayName(Block block, ItemStack itemStack) {
+        if (!(block instanceof BlockTraitCommons.Getter))
+            return defaultItemStackDisplayName(itemStack);
+
+        final BlockTraitCommons commons = ((BlockTraitCommons.Getter) block).getCommons();
+        return commons.unit.title != null
+                ? commons.unit.title
+                : defaultItemStackDisplayName(itemStack);
+    }
+
+    public static String defaultItemStackDisplayName(ItemStack itemStack) {
+        return StatCollector.translateToLocal(itemStack.getItem().getUnlocalizedName(itemStack) + ".name");
+    }
+
+    public static int getRotatedOrt(int meta) {
+        return (meta & 7) - 1; // Minus default mode for item render
+    }
+
+    public static int getPillarOrt(int meta) {
+        final int t = meta & 12;
+        final int f = meta % 2;
+        switch (t) {
+            default:
+                return f;
+            case 8:
+                return 2 | f;
+            case 4:
+                return 4 | f;
+        }
+    }
+
+    public static int getRotatedSide(int side, int meta) {
+        int ort = getRotatedOrt(meta);
+        if (ort >= 0) {
+            side = ROTATION_MATRIX[ort * 6 + side];
+        }
+        return side;
+    }
+
+    public static int getRotatableMeta(int ort) {
+        // Zero is default side alignment used in inventory and etc. so add 1. Subtracted in getRotatableIcon.
+        return ort + 1;
+    }
+
+    public static int getPillarMeta(int side, int meta) {
+        byte b = (byte) (side % 2);
+        switch (side) {
+            case 2:
+            case 3:
+                b |= 8;
+                break;
+            case 4:
+            case 5:
+                b |= 4;
+                break;
+        }
+        return meta | b;
+    }
+
     public boolean isOpaqueCube() {
         return !half && type != Type.CROSS && !transparent;
     }
@@ -117,7 +176,7 @@ public class BlockTraitCommons {
         if (!world.isRemote && unit.trapData != null) {
             final int meta = world.getBlockMetadata(x, y, z);
             if (meta > 0) {
-                world.setBlockMetadataWithNotify(x, y, z, meta - 1,4);
+                world.setBlockMetadataWithNotify(x, y, z, meta - 1, 4);
                 world.scheduleBlockUpdate(x, y, z, block, meta);
             }
         }
@@ -136,7 +195,7 @@ public class BlockTraitCommons {
                     world.setBlockToAir(x, y, z);
                 world.scheduleBlockUpdate(x, y, z, block, 20);
             }
-            world.setBlockMetadataWithNotify(x, y, z, 4,4);
+            world.setBlockMetadataWithNotify(x, y, z, 4, 4);
         }
     }
 
@@ -211,65 +270,6 @@ public class BlockTraitCommons {
         }
     }
 
-    public static String getItemStackDisplayName(Block block, ItemStack itemStack) {
-        if (!(block instanceof BlockTraitCommons.Getter))
-            return defaultItemStackDisplayName(itemStack);
-
-        final BlockTraitCommons commons = ((BlockTraitCommons.Getter) block).getCommons();
-        return commons.unit.title != null
-                ? commons.unit.title
-                : defaultItemStackDisplayName(itemStack);
-    }
-
-    public static String defaultItemStackDisplayName(ItemStack itemStack) {
-        return StatCollector.translateToLocal(itemStack.getItem().getUnlocalizedName(itemStack) + ".name");
-    }
-
-    public static int getRotatedOrt(int meta) {
-        return (meta & 7) - 1; // Minus default mode for item render
-    }
-
-    public static int getPillarOrt(int meta) {
-        final int t = meta & 12;
-        final int f = meta % 2;
-        switch (t) {
-            default:
-                return f;
-            case 8:
-                return 2 | f;
-            case 4:
-                return 4 | f;
-        }
-    }
-
-    public static int getRotatedSide(int side, int meta) {
-        int ort = getRotatedOrt(meta);
-        if (ort >= 0) {
-            side = ROTATION_MATRIX[ort * 6 + side];
-        }
-        return side;
-    }
-
-    public static int getRotatableMeta(int ort) {
-        // Zero is default side alignment used in inventory and etc. so add 1. Subtracted in getRotatableIcon.
-        return ort + 1;
-    }
-
-    public static int getPillarMeta(int side, int meta) {
-        byte b = (byte) (side % 2);
-        switch (side) {
-            case 2:
-            case 3:
-                b |= 8;
-                break;
-            case 4:
-            case 5:
-                b |= 4;
-                break;
-        }
-        return meta | b;
-    }
-
     public enum Type {
         SIMPLE, CROSS, PILLAR, ROTATABLE
     }
@@ -277,7 +277,7 @@ public class BlockTraitCommons {
     public enum Size {
         TINY, SMALL, MEDIUM, LARGE
     }
-    
+
     public interface Getter {
         BlockTraitCommons getCommons();
     }

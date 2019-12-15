@@ -49,6 +49,10 @@ public class ItemGenesisUnit extends GenesisUnit {
             JsonUtils.consumeInt(json, Props.specialAttackCost, i -> specialAttackCost = i);
     }
 
+    private static String[] parseDescription(String raw) {
+        return raw.split("\n");
+    }
+
     private void loadDescriptionValues(JsonObject json) {
         if (!json.has(Props.values) || !json.get(Props.values).isJsonObject())
             return;
@@ -59,10 +63,6 @@ public class ItemGenesisUnit extends GenesisUnit {
                 continue;
             this.values.put(entry.getKey(), entry.getValue().getAsString());
         }
-    }
-
-    private static String[] parseDescription(String raw) {
-        return raw.split("\n");
     }
 
     private ItemRarity getRarity() {

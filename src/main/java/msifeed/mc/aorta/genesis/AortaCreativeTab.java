@@ -15,13 +15,12 @@ import java.util.List;
 public class AortaCreativeTab extends CreativeTabs {
     private static final Item iconAorta = makeIcon("tab_aorta");
     private static final Item iconBlocks = makeIcon("tab_blocks");
-    private static final Item iconItems = makeIcon("tab_items");
-    private static final Item iconTools = makeIcon("tab_tools");
-    private static final Item iconLock = makeIcon("tab_locks");
-
     public static final AortaCreativeTab BLOCKS = new AortaCreativeTab("aorta.blocks", iconBlocks);
+    private static final Item iconItems = makeIcon("tab_items");
     public static final AortaCreativeTab ITEMS = new AortaCreativeTab("aorta.items", iconItems);
+    private static final Item iconTools = makeIcon("tab_tools");
     public static final AortaCreativeTab TOOLS = new AortaCreativeTab("aorta.tools", iconTools);
+    private static final Item iconLock = makeIcon("tab_locks");
     public static final AortaCreativeTab LOCKS = new AortaCreativeTab("aorta.locks", iconLock);
 
     private final Item icon;
@@ -30,6 +29,17 @@ public class AortaCreativeTab extends CreativeTabs {
     private AortaCreativeTab(String name, Item icon) {
         super(name);
         this.icon = icon;
+    }
+
+    public static void init() {
+        // static init
+    }
+
+    private static Item makeIcon(String name) {
+        final Item item = new Item();
+        item.setTextureName("aorta:" + name);
+        GameRegistry.registerItem(item, name);
+        return item;
     }
 
     @Override
@@ -62,16 +72,5 @@ public class AortaCreativeTab extends CreativeTabs {
         if (this.func_111225_m() != null) {
             this.addEnchantmentBooksToList(list, this.func_111225_m());
         }
-    }
-
-    public static void init() {
-        // static init
-    }
-
-    private static Item makeIcon(String name) {
-        final Item item = new Item();
-        item.setTextureName("aorta:" + name);
-        GameRegistry.registerItem(item, name);
-        return item;
     }
 }

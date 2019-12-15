@@ -14,6 +14,10 @@ public class DragHandler {
         target = w;
     }
 
+    public boolean isDragging() {
+        return dragging;
+    }
+
     public void startDrag(Point p) {
         dragging = true;
         dragStart.set(p);

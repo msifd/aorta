@@ -16,17 +16,17 @@ public class EmptySignBlock extends BlockSign {
     static final Block wall_empty_sign = new EmptySignBlock(false);
     static final Item empty_sign_item = new EmptySignItem();
 
+    EmptySignBlock(boolean isStanding) {
+        super(TileEntitySign.class, isStanding);
+        setBlockName("empty_sign");
+        setBlockTextureName("aorta:empty");
+    }
+
     public static void register() {
         GameRegistry.registerBlock(standing_empty_sign, "standing_empty_sign");
         GameRegistry.registerBlock(wall_empty_sign, "wall_empty_sign");
         GameRegistry.registerItem(empty_sign_item, "empty_sign");
         GameRegistry.registerTileEntity(Tile.class, "empty_sign_te");
-    }
-
-    EmptySignBlock(boolean isStanding) {
-        super(TileEntitySign.class, isStanding);
-        setBlockName("empty_sign");
-        setBlockTextureName("aorta:empty");
     }
 
     @Override

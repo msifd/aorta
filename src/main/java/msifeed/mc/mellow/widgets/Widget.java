@@ -11,6 +11,7 @@ import msifeed.mc.mellow.utils.SizePolicy;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.stream.Stream;
 
 public class Widget {
     public static Widget hoveredWidget = null;
@@ -267,6 +268,38 @@ public class Widget {
 
     public boolean containsPoint(Point p) {
         return isVisible() && getGeometry().contains(p);
+    }
+
+    public Stream<Widget> getWidgetsAtPoint(Point p, Class<?> type) {
+        ArrayList<Widget> active = new ArrayList<>();
+        ArrayList<Widget> pending = new ArrayList<>(getLookupChildren());
+        ArrayList<Widget> nextPending = new ArrayList<>();
+
+        while (!pending.isEmpty()) {
+            for (Widget pw : pending) {
+                for (Widget w : pw.getLookupChildren()) {
+                    if (w.isVisible())
+                        nextPending.add(w);
+                }
+            }
+            active.addAll(pending);
+            pending.clear();
+            pending.addAll(nextPending);
+            nextPending.clear();
+        }
+
+        if (type != null)
+            return active.stream()
+                    .filter(type::isInstance)
+                    .filter(widget -> widget.containsPoint(p));
+        else
+            return active.stream().filter(widget -> widget.containsPoint(p));
+
+//        final Stream<Widget> stream = type != null
+//                ? active.stream().filter(w -> w.getClass().isAssignableFrom(type))
+//                : active.stream();
+//
+//        return stream.filter(widget -> widget.containsPoint(p));
     }
 
     public boolean isHovered() {

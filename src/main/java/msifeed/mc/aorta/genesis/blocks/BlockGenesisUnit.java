@@ -14,11 +14,11 @@ import java.util.stream.StreamSupport;
 
 public class BlockGenesisUnit extends GenesisUnit {
     public String textureString = null;
-    List<String> textureArray = null;
-    int[] textureLayout = null;
     public String title = null;
     public String[] description;
     public TrapData trapData = null;
+    List<String> textureArray = null;
+    int[] textureLayout = null;
 
     BlockGenesisUnit(JsonObject json, HashSet<GenesisTrait> traits) {
         super(json, traits);

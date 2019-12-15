@@ -13,8 +13,16 @@ public final class MouseHandler {
         void onRelease(int xMouse, int yMouse, int button);
     }
 
-    public interface Click {
+    public interface Click extends Press, Release {
         void onClick(int xMouse, int yMouse, int button);
+
+        @Override
+        default void onPress(int xMouse, int yMouse, int button) {
+        }
+
+        @Override
+        default void onRelease(int xMouse, int yMouse, int button) {
+        }
     }
 
     public interface AllBasic extends Press, Move, Release {

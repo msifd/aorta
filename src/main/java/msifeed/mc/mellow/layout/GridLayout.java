@@ -85,7 +85,7 @@ public class GridLayout implements Layout {
             final Geom childGeom = child.getGeometry();
             childGeom.translate(geometry);
             childGeom.y += (maxRowHeight - childGeom.h) / 2;
-            childGeom.w = isLeftWidget ? maxLeftWidth : maxRightWidth;
+            childGeom.w = LayoutUtils.getPreferredWidth(isLeftWidget ? maxLeftWidth : maxRightWidth, child);
             if (!isLeftWidget)
                 childGeom.x = geometry.x + maxLeftWidth + spacing;
             isLeftWidget = !isLeftWidget;

@@ -31,7 +31,6 @@ public class MellowGuiScreen extends GuiScreen {
 
     @Override
     public void initGui() {
-        final Minecraft mc = Minecraft.getMinecraft();
         final ScaledResolution scale = RenderUtils.getScaledResolution();
         scene.getGeometry().set(0, 0, scale.getScaledWidth(), scale.getScaledHeight());
     }
@@ -41,7 +40,7 @@ public class MellowGuiScreen extends GuiScreen {
         try {
             scene.update();
             scene.render();
-            Widget.hoveredWidget = scene.lookupWidget(new Point(xMouse, yMouse)).orElse(null);
+            Widget.hoveredWidget = scene.lookupWidget(new Point(xMouse, yMouse), null).orElse(null);
         } catch (Exception e) {
             LOGGER.throwing(e);
             closeGui();
@@ -55,7 +54,7 @@ public class MellowGuiScreen extends GuiScreen {
     @Override
     protected void mouseClicked(int xMouse, int yMouse, int button) {
         try {
-            final Widget lookup = scene.lookupWidget(new Point(xMouse, yMouse)).orElse(null);
+            final Widget lookup = scene.lookupWidget(new Point(xMouse, yMouse), MouseHandler.Press.class).orElse(null);
             if (lookup instanceof MouseHandler.Press)
                 ((MouseHandler.Press) lookup).onPress(xMouse, yMouse, button);
             Widget.setFocused(lookup);
@@ -90,7 +89,7 @@ public class MellowGuiScreen extends GuiScreen {
                     ((MouseHandler.Release) widget).onRelease(xMouse, yMouse, button);
 
                 // If move mouse away click don't counts
-                final Widget lookup = scene.lookupWidget(new Point(xMouse, yMouse)).orElse(null);
+                final Widget lookup = scene.lookupWidget(new Point(xMouse, yMouse), MouseHandler.Click.class).orElse(null);
                 if (lookup == Widget.pressedWidget) {
                     if (Widget.pressedWidget == widget && widget instanceof MouseHandler.Click)
                         ((MouseHandler.Click) widget).onClick(xMouse, yMouse, button);
