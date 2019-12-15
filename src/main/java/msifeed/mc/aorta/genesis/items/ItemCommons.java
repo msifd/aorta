@@ -23,7 +23,29 @@ public class ItemCommons {
             if (!entry.getValue().isEmpty())
                 lines.add("\u00A7r" + entry.getKey() + "\u00A7r: " + entry.getValue());
 
-        if (unit.maxUsages > 0)
-            lines.add("\u00A7r" + L10n.fmt("aorta.uses_left", itemStack.getItemDamage()));
+        if (unit.specialAttackCost > 0 && unit.maxUsages > 0)
+            lines.add("\u00A7r" + L10n.fmt("aorta.gen.special_attack_cost", unit.specialAttackCost));
+
+        if (unit.maxUsages > 0) {
+            int usages = unit.maxUsages;
+
+            if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey("usages"))
+                usages = itemStack.getTagCompound().getInteger("usages");
+
+            String usageLine = L10n.fmt("aorta.gen.uses_left", usages);
+
+            if (usages == 0)
+                usageLine = L10n.fmt("aorta.gen.needs_reload");
+
+            lines.add("\u00A7r" + usageLine);
+        }
+
+        if (unit.durData.maxDurability > 0) {
+            if (itemStack.getItemDamage() == 1)
+                lines.add("\u00A74" + L10n.fmt("aorta.gen.broken"));
+            else
+                lines.add("\u00A7r" + L10n.fmt("aorta.gen.durability", itemStack.getItemDamage(), unit.durData.maxDurability,
+                        Math.round(((double)itemStack.getItemDamage() / unit.durData.maxDurability) * 100)));
+        }
     }
 }

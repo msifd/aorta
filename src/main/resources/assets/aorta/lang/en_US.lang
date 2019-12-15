@@ -219,5 +219,14 @@ aorta.lock.blank_lock=§7Новенький
 aorta.lock.pick_break=§7Отмычка сломалась
 aorta.lock.hacked=§7Замок взломан
 
-aorta.used=использовал %s
-aorta.uses_left=Осталось использований: %d
+aorta.gen.used=использовал %s
+aorta.gen.shot=стреляет из %s
+aorta.gen.shot_special=совершает особый выстрел из %s
+aorta.gen.reload=перезаряжает %s
+aorta.gen.attack=атакует с помощью %s
+aorta.gen.attack_special=совершает особую атаку с помощью %s
+aorta.gen.special_attack_cost=Стоимость особой атаки: %d
+aorta.gen.uses_left=Осталось использований: %d
+aorta.gen.needs_reload=Требуется перезарядка
+aorta.gen.durability=Прочность: %d/%d (%s%%)
+aorta.gen.broken=Этот предмет сломан и не может быть использован
