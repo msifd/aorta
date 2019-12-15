@@ -14,7 +14,7 @@ public enum Trait {
 
     psionic,
 
-    sanity_default, sanity_sensitive,
+    sanity_light, sanity_medium, sanity_hard, sanity_hardcore, sanity_extreme,
 
     ;
 
