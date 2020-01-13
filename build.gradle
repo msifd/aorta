@@ -16,7 +16,7 @@ apply plugin: 'idea'
 apply plugin: 'net.nemerosa.versioning'
 
 
-version = "0.30.2-$versioning.info.build"
+version = "0.31.0-$versioning.info.build"
 group = "msifeed.mc.aorta"
 archivesBaseName = "aorta"
 
@@ -24,7 +24,7 @@ minecraft {
     version = "1.7.10-10.13.4.1614-1.7.10"
     runDir = "run"
 
-    replaceIn "Aorta.java"
+    replaceIn "Bootstrap.java"
     replace "@VERSION@", project.version
 
     srgExtra "PK: com/zaxxer/HikariCP com/zaxxer/HikariCP"

@@ -1,7 +1,7 @@
-import msifeed.mc.aorta.chat.composer.parser.SpeechToken;
-import msifeed.mc.aorta.chat.composer.parser.SpeechTokenParser;
-import msifeed.mc.aorta.chat.obfuscation.KsheminObfuscator;
-import msifeed.mc.aorta.chat.obfuscation.LangObfuscator;
+import msifeed.mc.extensions.chat.composer.parser.SpeechToken;
+import msifeed.mc.extensions.chat.composer.parser.SpeechTokenParser;
+import msifeed.mc.extensions.chat.obfuscation.KsheminObfuscator;
+import msifeed.mc.extensions.chat.obfuscation.LangObfuscator;
 import org.junit.Test;
 
 import java.util.List;

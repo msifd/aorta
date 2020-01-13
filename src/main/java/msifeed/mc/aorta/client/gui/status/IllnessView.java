@@ -1,7 +1,6 @@
 package msifeed.mc.aorta.client.gui.status;
 
 import msifeed.mc.aorta.core.character.Character;
-import msifeed.mc.aorta.sys.utils.L10n;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.widgets.Widget;
@@ -9,6 +8,7 @@ import msifeed.mc.mellow.widgets.basic.Separator;
 import msifeed.mc.mellow.widgets.button.Checkbox;
 import msifeed.mc.mellow.widgets.text.Label;
 import msifeed.mc.mellow.widgets.text.TextInput;
+import msifeed.mc.sys.utils.L10n;
 
 class IllnessView extends Widget {
     private final Character character;

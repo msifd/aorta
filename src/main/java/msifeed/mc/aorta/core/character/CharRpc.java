@@ -2,19 +2,20 @@ package msifeed.mc.aorta.core.character;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import msifeed.mc.aorta.chat.ChatHandler;
-import msifeed.mc.aorta.chat.Language;
-import msifeed.mc.aorta.chat.composer.Composer;
-import msifeed.mc.aorta.chat.composer.SpeechType;
-import msifeed.mc.aorta.chat.net.ChatMessage;
-import msifeed.mc.aorta.core.traits.Trait;
+import msifeed.mc.Bootstrap;
 import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import msifeed.mc.aorta.core.utils.Differ;
-import msifeed.mc.aorta.core.utils.LangAttribute;
 import msifeed.mc.aorta.core.utils.MetaAttribute;
-import msifeed.mc.aorta.logs.Logs;
-import msifeed.mc.aorta.sys.rpc.Rpc;
-import msifeed.mc.aorta.sys.rpc.RpcMethod;
+import msifeed.mc.commons.logs.ExternalLogs;
+import msifeed.mc.commons.traits.Trait;
+import msifeed.mc.extensions.chat.ChatHandler;
+import msifeed.mc.extensions.chat.ChatMessage;
+import msifeed.mc.extensions.chat.LangAttribute;
+import msifeed.mc.extensions.chat.Language;
+import msifeed.mc.extensions.chat.composer.Composer;
+import msifeed.mc.extensions.chat.composer.SpeechType;
+import msifeed.mc.sys.rpc.Rpc;
+import msifeed.mc.sys.rpc.RpcMethod;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,10 +30,10 @@ import java.io.IOException;
 public enum CharRpc {
     INSTANCE;
 
-    private static final String setLang = "aorta:core.lang";
-    private static final String updateChar = "aorta:core.char";
-    private static final String refreshName = "aorta:core.char.refreshName";
-    private static final String clearEntity = "aorta:core.char.clear";
+    private static final String setLang = Bootstrap.MODID + ":core.lang";
+    private static final String updateChar = Bootstrap.MODID + ":core.char";
+    private static final String refreshName = Bootstrap.MODID + ":core.char.refreshName";
+    private static final String clearEntity = Bootstrap.MODID + ":core.char.clear";
 
     public static void setLang(int entityId, Language lang) {
         Rpc.sendToServer(setLang, entityId, lang);
@@ -73,7 +74,7 @@ public enum CharRpc {
         final boolean targetIsPlayer = entity instanceof EntityPlayer;
 
         if (!senderIsGm && !senderIsTarget && targetIsPlayer) {
-            Logs.log(sender, "warning", String.format("%s tried to change character %s while not GM!", sender.getCommandSenderName(), entity.getCommandSenderName()));
+            ExternalLogs.log(sender, "warning", String.format("%s tried to change character %s while not GM!", sender.getCommandSenderName(), entity.getCommandSenderName()));
             ctx.getServerHandler().kickPlayerFromServer("Forbidden!");
             return;
         }
@@ -123,7 +124,7 @@ public enum CharRpc {
         m.speaker = speaker;
         ChatHandler.sendSystemChatMessage(sender, m);
 
-        Logs.log(sender, "log", logPrefix + message);
+        ExternalLogs.log(sender, "log", logPrefix + message);
     }
 
     @RpcMethod(clearEntity)

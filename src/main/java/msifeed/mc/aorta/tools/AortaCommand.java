@@ -1,9 +1,9 @@
 package msifeed.mc.aorta.tools;
 
-import msifeed.mc.aorta.core.traits.Trait;
 import msifeed.mc.aorta.core.utils.CharacterAttribute;
-import msifeed.mc.aorta.sys.cmd.ExtCommand;
-import msifeed.mc.aorta.sys.config.ConfigManager;
+import msifeed.mc.commons.traits.Trait;
+import msifeed.mc.sys.cmd.ExtCommand;
+import msifeed.mc.sys.config.ConfigManager;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;

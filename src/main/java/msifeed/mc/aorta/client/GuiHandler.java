@@ -1,6 +1,6 @@
 package msifeed.mc.aorta.client;
 
-import msifeed.mc.aorta.locks.LockObject;
+import msifeed.mc.extensions.locks.LockObject;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 

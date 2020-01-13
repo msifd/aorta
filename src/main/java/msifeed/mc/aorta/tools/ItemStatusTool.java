@@ -1,8 +1,9 @@
 package msifeed.mc.aorta.tools;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import msifeed.mc.Bootstrap;
 import msifeed.mc.aorta.Aorta;
-import msifeed.mc.aorta.genesis.AortaCreativeTab;
+import msifeed.mc.genesis.GenesisCreativeTab;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -16,8 +17,8 @@ public class ItemStatusTool extends Item {
 
     public ItemStatusTool() {
         setUnlocalizedName(ITEM_NAME);
-        setTextureName("aorta:tool_status");
-        setCreativeTab(AortaCreativeTab.TOOLS);
+        setTextureName(Bootstrap.MODID + ":" + ITEM_NAME);
+        setCreativeTab(GenesisCreativeTab.TOOLS);
         setMaxStackSize(1);
 
         MinecraftForge.EVENT_BUS.register(this);

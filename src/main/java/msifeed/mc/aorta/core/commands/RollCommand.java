@@ -1,11 +1,11 @@
 package msifeed.mc.aorta.core.commands;
 
-import msifeed.mc.aorta.chat.ChatHandler;
-import msifeed.mc.aorta.chat.composer.Composer;
-import msifeed.mc.aorta.chat.composer.SpeechType;
 import msifeed.mc.aorta.core.rolls.Dices;
-import msifeed.mc.aorta.logs.Logs;
-import msifeed.mc.aorta.sys.cmd.ExtCommand;
+import msifeed.mc.commons.logs.ExternalLogs;
+import msifeed.mc.extensions.chat.ChatHandler;
+import msifeed.mc.extensions.chat.composer.Composer;
+import msifeed.mc.extensions.chat.composer.SpeechType;
+import msifeed.mc.sys.cmd.ExtCommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
@@ -49,7 +49,7 @@ public class RollCommand extends ExtCommand {
         if (sender instanceof EntityPlayer) {
             final EntityPlayer player = (EntityPlayer) sender;
             ChatHandler.sendSystemChatMessage(player, Composer.makeMessage(SpeechType.ROLL, player, text));
-            Logs.log(player, "dice", String.format("%s d%d = %d", name, sides, roll));
+            ExternalLogs.log(player, "dice", String.format("%s d%d = %d", name, sides, roll));
         } else {
             sender.addChatMessage(new ChatComponentText(text));
         }

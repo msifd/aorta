@@ -5,11 +5,11 @@ import msifeed.mc.aorta.core.meta.MetaInfo;
 import msifeed.mc.aorta.core.meta.MetaRpc;
 import msifeed.mc.aorta.core.rolls.Modifiers;
 import msifeed.mc.aorta.core.utils.MetaAttribute;
-import msifeed.mc.aorta.sys.utils.L10n;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.text.Label;
 import msifeed.mc.mellow.widgets.text.TextInput;
+import msifeed.mc.sys.utils.L10n;
 import net.minecraft.entity.EntityLivingBase;
 
 import java.util.Optional;

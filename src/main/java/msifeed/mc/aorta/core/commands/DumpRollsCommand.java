@@ -1,24 +1,20 @@
 package msifeed.mc.aorta.core.commands;
 
 import msifeed.mc.aorta.Aorta;
-import msifeed.mc.aorta.chat.composer.RollComposer;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.meta.MetaInfo;
-import msifeed.mc.aorta.core.rolls.*;
-import msifeed.mc.aorta.core.traits.Trait;
+import msifeed.mc.aorta.core.rolls.Dices;
+import msifeed.mc.aorta.core.rolls.FightAction;
 import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import msifeed.mc.aorta.core.utils.MetaAttribute;
-import msifeed.mc.aorta.sys.cmd.ExtCommand;
-import msifeed.mc.aorta.sys.utils.ChatUtils;
+import msifeed.mc.commons.traits.Trait;
+import msifeed.mc.sys.cmd.ExtCommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class DumpRollsCommand extends ExtCommand {
     @Override

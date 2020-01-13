@@ -1,6 +1,6 @@
 package msifeed.mc.aorta.core.character;
 
-import msifeed.mc.aorta.sys.utils.L10n;
+import msifeed.mc.sys.utils.L10n;
 
 public enum Feature {
     STR, DEX, TEN, INT,

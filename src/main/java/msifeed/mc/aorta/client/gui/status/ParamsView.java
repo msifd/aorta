@@ -2,8 +2,7 @@ package msifeed.mc.aorta.client.gui.status;
 
 import msifeed.mc.aorta.core.character.BodyShield;
 import msifeed.mc.aorta.core.character.Character;
-import msifeed.mc.aorta.core.traits.Trait;
-import msifeed.mc.aorta.sys.utils.L10n;
+import msifeed.mc.commons.traits.Trait;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.utils.SizePolicy;
@@ -11,6 +10,7 @@ import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.droplist.DropList;
 import msifeed.mc.mellow.widgets.text.Label;
 import msifeed.mc.mellow.widgets.text.TextInput;
+import msifeed.mc.sys.utils.L10n;
 
 import java.util.Arrays;
 

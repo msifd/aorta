@@ -2,9 +2,10 @@ package msifeed.mc.aorta.core.meta;
 
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
+import msifeed.mc.Bootstrap;
 import msifeed.mc.aorta.core.utils.MetaAttribute;
-import msifeed.mc.aorta.sys.rpc.Rpc;
-import msifeed.mc.aorta.sys.rpc.RpcMethod;
+import msifeed.mc.sys.rpc.Rpc;
+import msifeed.mc.sys.rpc.RpcMethod;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,9 +22,9 @@ import java.util.ArrayList;
 public enum MetaRpc {
     INSTANCE;
 
-    private static final String updateMeta = "aorta:core.meta";
-    private static final String requestHand = "aorta:core.hand.req";
-    private static final String responseHand = "aorta:core.hand.res";
+    private static final String updateMeta = Bootstrap.MODID + ":core.meta";
+    private static final String requestHand = Bootstrap.MODID + ":core.hand.req";
+    private static final String responseHand = Bootstrap.MODID + ":core.hand.res";
 
     public static void updateMeta(int entityId, MetaInfo meta) {
         try {

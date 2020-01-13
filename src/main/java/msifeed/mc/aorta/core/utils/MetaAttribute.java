@@ -1,9 +1,9 @@
 package msifeed.mc.aorta.core.utils;
 
-import msifeed.mc.aorta.Aorta;
+import msifeed.mc.Bootstrap;
 import msifeed.mc.aorta.core.meta.MetaInfo;
-import msifeed.mc.aorta.sys.attributes.EntityLivingAttribute;
-import msifeed.mc.aorta.sys.attributes.MissingRequiredAttributeException;
+import msifeed.mc.sys.attributes.EntityLivingAttribute;
+import msifeed.mc.sys.attributes.MissingRequiredAttributeException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public class MetaAttribute extends EntityLivingAttribute<MetaInfo> {
     public static final MetaAttribute INSTANCE = new MetaAttribute();
-    private static final String PROP_NAME = Aorta.MODID + ".core.meta";
+    private static final String PROP_NAME = Bootstrap.MODID + ".core.meta";
 
     public static Optional<MetaInfo> get(Entity e) {
         return INSTANCE.getValue(e);

@@ -1,6 +1,7 @@
 package msifeed.mc.aorta.tools;
 
-import msifeed.mc.aorta.genesis.AortaCreativeTab;
+import msifeed.mc.Bootstrap;
+import msifeed.mc.genesis.GenesisCreativeTab;
 import net.minecraft.item.Item;
 
 public class ItemDebugTool extends Item {
@@ -8,8 +9,8 @@ public class ItemDebugTool extends Item {
 
     public ItemDebugTool() {
         setUnlocalizedName(ITEM_NAME);
-        setTextureName("aorta:tool_debug");
-        setCreativeTab(AortaCreativeTab.TOOLS);
+        setTextureName(Bootstrap.MODID + ":" + ITEM_NAME);
+        setCreativeTab(GenesisCreativeTab.TOOLS);
         setMaxStackSize(1);
     }
 }
