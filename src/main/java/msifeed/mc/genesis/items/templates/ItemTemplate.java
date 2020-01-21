@@ -1,5 +1,8 @@
 package msifeed.mc.genesis.items.templates;
 
+import msifeed.mc.aorta.core.character.Character;
+import msifeed.mc.aorta.core.utils.CharacterAttribute;
+import msifeed.mc.aorta.core.utils.Differ;
 import msifeed.mc.commons.logs.ExternalLogs;
 import msifeed.mc.extensions.chat.ChatHandler;
 import msifeed.mc.extensions.chat.ChatMessage;
@@ -11,11 +14,13 @@ import msifeed.mc.genesis.items.ItemCommons;
 import msifeed.mc.genesis.items.ItemGenesisUnit;
 import msifeed.mc.sys.utils.L10n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -98,6 +103,22 @@ public class ItemTemplate extends Item implements IItemTemplate {
         return "aorta.gen.used";
     }
 
+    private void onUse(EntityPlayer player, ItemStack itemStack, boolean special) {
+        if (unit.sanity != 0) {
+            final Character after = CharacterAttribute.require(player);
+            final Character before = new Character(after);
+            after.sanity = (byte)MathHelper.clamp_int(
+                    after.sanity + unit.sanity, 1, 125);
+            CharacterAttribute.INSTANCE.set(player, after);
+
+            Differ.printDiffs((EntityPlayerMP)player, player, before, after);
+        }
+    }
+
+    private void onReload(EntityPlayer player, ItemStack itemStack, boolean special) {
+
+    }
+
     @Override
     public ItemStack onEaten(ItemStack itemStack, World world, EntityPlayer player) {
         if (unit.maxUsages > 0 || unit.hasTrait(GenesisTrait.reusable)) {
@@ -119,13 +140,25 @@ public class ItemTemplate extends Item implements IItemTemplate {
                 itemStack.setItemDamage(durability);
             }
 
-            if (usages > cost)
+            if (usages > cost) {
                 itemStack.getTagCompound().setInteger("usages", usages - cost);
-            else {
+
+                if (!world.isRemote)
+                    onUse(player, itemStack, special);
+            } else {
                 if (unit.hasTrait(GenesisTrait.reusable)) {
-                    if (unit.maxUsages > 0)
+                    if (unit.maxUsages > 0) {
+                        if (!world.isRemote)
+                            if (usages != 0)
+                                onUse(player, itemStack, special);
+                            else
+                                onReload(player, itemStack, special);
+
                         itemStack.getTagCompound().setInteger("usages", usages == 0 ? unit.maxUsages : 0);
+                    }
                 } else {
+                    if (!world.isRemote)
+                        onUse(player, itemStack, special);
                     itemStack.stackSize--;
 
                     if (itemStack.stackSize > 0)

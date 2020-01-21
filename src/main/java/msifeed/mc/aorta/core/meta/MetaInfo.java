@@ -7,6 +7,7 @@ import net.minecraft.nbt.NBTTagCompound;
 public class MetaInfo {
     public Modifiers modifiers = new Modifiers();
     public boolean receiveGlobal = true;
+    public long lastLogin;
 
     public MetaInfo() {
     }
@@ -27,6 +28,7 @@ public class MetaInfo {
         c.setIntArray("fmod", featsArray);
 
         c.setBoolean("recglob", receiveGlobal);
+        c.setLong("lastlogin", lastLogin);
 
         return c;
     }
@@ -41,5 +43,6 @@ public class MetaInfo {
             modifiers.featureMods.put(feats[i], featsArray[i]);
 
         receiveGlobal = c.getBoolean("recglob");
+        lastLogin = c.getLong("lastlogin");
     }
 }

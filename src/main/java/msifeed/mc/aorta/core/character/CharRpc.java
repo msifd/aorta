@@ -8,12 +8,8 @@ import msifeed.mc.aorta.core.utils.Differ;
 import msifeed.mc.aorta.core.utils.MetaAttribute;
 import msifeed.mc.commons.logs.ExternalLogs;
 import msifeed.mc.commons.traits.Trait;
-import msifeed.mc.extensions.chat.ChatHandler;
-import msifeed.mc.extensions.chat.ChatMessage;
 import msifeed.mc.extensions.chat.LangAttribute;
 import msifeed.mc.extensions.chat.Language;
-import msifeed.mc.extensions.chat.composer.Composer;
-import msifeed.mc.extensions.chat.composer.SpeechType;
 import msifeed.mc.sys.rpc.Rpc;
 import msifeed.mc.sys.rpc.RpcMethod;
 import net.minecraft.entity.Entity;
@@ -87,13 +83,7 @@ public enum CharRpc {
                 final Character before = new Character(after);
                 CharacterAttribute.INSTANCE.update(entity, c -> c.fromNBT(charNbt));
 
-                final String diffChanges = Differ.diff(before, after);
-                final String diffResults = Differ.diffResults(before, after);
-
-                final String speaker = before.name.isEmpty() ? entity.getCommandSenderName() : before.name;
-                final String logPrefix = sender == entity ? "" : "(" + speaker + ") ";
-                sendLogs(sender, speaker, logPrefix, diffChanges);
-                sendLogs(sender, speaker, logPrefix, diffResults);
+                Differ.printDiffs(sender, entity, before, after);
 
                 if (entity instanceof EntityPlayer && !before.name.equals(after.name)) {
                     ((EntityPlayer) entity).refreshDisplayName();
@@ -114,17 +104,6 @@ public enum CharRpc {
         final Entity entity = FMLClientHandler.instance().getWorldClient().getEntityByID(entityId);
         if (entity instanceof EntityPlayer)
             ((EntityPlayer) entity).refreshDisplayName();
-    }
-
-    private void sendLogs(EntityPlayerMP sender, String speaker, String logPrefix, String message) {
-        if (message.isEmpty())
-            return;
-
-        final ChatMessage m = Composer.makeMessage(SpeechType.LOG, sender, message);
-        m.speaker = speaker;
-        ChatHandler.sendSystemChatMessage(sender, m);
-
-        ExternalLogs.log(sender, "log", logPrefix + message);
     }
 
     @RpcMethod(clearEntity)

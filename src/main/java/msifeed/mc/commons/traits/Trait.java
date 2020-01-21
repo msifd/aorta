@@ -14,6 +14,8 @@ public enum Trait {
 
     psionic,
 
+    sanity_light, sanity_medium, sanity_hard, sanity_hardcore, sanity_extreme,
+
     ;
 
     public int code;

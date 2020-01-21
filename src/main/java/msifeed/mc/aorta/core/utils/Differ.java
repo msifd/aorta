@@ -7,13 +7,20 @@ import msifeed.mc.aorta.core.character.BodyShield;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.rolls.Roll;
+import msifeed.mc.commons.logs.ExternalLogs;
+import msifeed.mc.extensions.chat.ChatHandler;
+import msifeed.mc.extensions.chat.ChatMessage;
+import msifeed.mc.extensions.chat.composer.Composer;
+import msifeed.mc.extensions.chat.composer.SpeechType;
 import msifeed.mc.sys.utils.L10n;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.util.ArrayList;
 import java.util.Map;
 
 public class Differ {
-    public static String diff(Character before, Character after) {
+    private static String diff(Character before, Character after) {
         final ArrayList<String> diffs = new ArrayList<>();
 
         if (!before.name.equalsIgnoreCase(after.name))
@@ -144,7 +151,7 @@ public class Differ {
         }
     }
 
-    public static String diffResults(Character before, Character after) {
+    private static String diffResults(Character before, Character after) {
         final ArrayList<String> diffs = new ArrayList<>();
 
         if (before.sanityLevel() != after.sanityLevel())
@@ -186,5 +193,23 @@ public class Differ {
             diffs.add(L10n.fmt("aorta.diff.status.illness.debuff", after.illness.debuff()));
 
         return String.join(", ", diffs);
+    }
+
+    public static void printDiffs(EntityPlayerMP sender, Entity entity, Character before, Character after) {
+        final String speaker = before.name.isEmpty() ? entity.getCommandSenderName() : before.name;
+        final String logPrefix = sender == entity ? "" : "(" + speaker + ") ";
+        sendLogs(sender, speaker, logPrefix + diff(before, after));
+        sendLogs(sender, speaker, logPrefix + diffResults(before, after));
+    }
+
+    private static void sendLogs(EntityPlayerMP sender, String speaker, String message) {
+        if (message.isEmpty())
+            return;
+
+        final ChatMessage m = Composer.makeMessage(SpeechType.LOG, sender, message);
+        m.speaker = speaker;
+        ChatHandler.sendSystemChatMessage(sender, m);
+
+        ExternalLogs.log(sender, "log", message);
     }
 }
