@@ -56,7 +56,7 @@ public class ScreenStatus extends MellowGuiScreen {
                     closeGui();
                 } else if (character != null) {
                     CharacterAttribute.INSTANCE.set(entity, character);
-                    CharRpc.sendCharacterUpdate(entity.getEntityId(), character);
+                    CharRpc.updateChar(entity.getEntityId(), character);
                     paramsView.refill();
                     bodypartsView.refill();
                     illnessView.refill();

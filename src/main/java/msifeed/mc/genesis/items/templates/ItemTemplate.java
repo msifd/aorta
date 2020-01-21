@@ -1,7 +1,8 @@
 package msifeed.mc.genesis.items.templates;
 
-import msifeed.mc.aorta.core.character.CharRpc;
+import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.utils.CharacterAttribute;
+import msifeed.mc.aorta.core.utils.Differ;
 import msifeed.mc.commons.logs.ExternalLogs;
 import msifeed.mc.extensions.chat.ChatHandler;
 import msifeed.mc.extensions.chat.ChatMessage;
@@ -104,10 +105,13 @@ public class ItemTemplate extends Item implements IItemTemplate {
 
     private void onUse(EntityPlayer player, ItemStack itemStack, boolean special) {
         if (unit.sanity != 0) {
-            NBTTagCompound c = CharacterAttribute.require(player).toNBT();
-            c.setByte("sanity", (byte) MathHelper.clamp_int(
-                    (int)c.getByte("sanity") + unit.sanity, 1, 125));
-            CharRpc.updateChar(player, c, (EntityPlayerMP)player);
+            final Character after = CharacterAttribute.require(player);
+            final Character before = new Character(after);
+            after.sanity = (byte)MathHelper.clamp_int(
+                    after.sanity + unit.sanity, 1, 125);
+            CharacterAttribute.INSTANCE.set(player, after);
+
+            Differ.printDiffs((EntityPlayerMP)player, player, before, after);
         }
     }
 

@@ -72,7 +72,7 @@ public class ScreenMorph extends MellowGuiScreen {
         final Button submitBtn = new ButtonLabel("Submit");
         submitBtn.setClickCallback(() -> {
             if (character != null && metaInfo != null) {
-                CharRpc.sendCharacterUpdate(entity.getEntityId(), character);
+                CharRpc.updateChar(entity.getEntityId(), character);
                 MetaRpc.updateMeta(entity.getEntityId(), metaInfo);
             } else {
                 CharRpc.clearEntity(entity.getEntityId());

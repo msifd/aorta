@@ -4,15 +4,16 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import msifeed.mc.aorta.Aorta;
-import msifeed.mc.aorta.core.character.CharRpc;
+import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.meta.MetaInfo;
 import msifeed.mc.aorta.core.utils.CharacterAttribute;
+import msifeed.mc.aorta.core.utils.Differ;
 import msifeed.mc.aorta.core.utils.MetaAttribute;
 import msifeed.mc.aorta.defines.SanityDefines;
 import msifeed.mc.commons.traits.Trait;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MathHelper;
 
 public enum DailySanityReduce {
     INSTANCE;
@@ -44,11 +45,14 @@ public enum DailySanityReduce {
             final long msInDay = 86400000;
             final long loginTime = meta.lastLogin;
 
-            if (curTime - loginTime > msInDay || meta.lastLogin == 0) {
-                NBTTagCompound c = CharacterAttribute.require(player).toNBT();
-                c.setByte("sanity", (byte)Math.max(1, c.getByte("sanity") - sanityReduce));
-                CharRpc.updateChar(player, c, (EntityPlayerMP)player);
+            if (curTime - loginTime > msInDay) {
+                final Character after = CharacterAttribute.require(player);
+                final Character before = new Character(after);
+                after.sanity = (byte)MathHelper.clamp_int(
+                        after.sanity - sanityReduce, 1, 125);
+                CharacterAttribute.INSTANCE.set(player, after);
 
+                Differ.printDiffs((EntityPlayerMP)player, player, before, after);
                 MetaAttribute.INSTANCE.update(player, metaInfo -> metaInfo.lastLogin = curTime);
             }
         }
