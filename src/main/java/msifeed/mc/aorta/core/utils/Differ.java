@@ -7,7 +7,7 @@ import msifeed.mc.aorta.core.character.BodyShield;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.rolls.Roll;
-import msifeed.mc.aorta.sys.utils.L10n;
+import msifeed.mc.sys.utils.L10n;
 
 import java.util.ArrayList;
 import java.util.Map;

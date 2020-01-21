@@ -1,7 +1,7 @@
 package msifeed.mc.aorta.client.gui.morph;
 
 import msifeed.mc.aorta.core.character.Character;
-import msifeed.mc.aorta.core.traits.Trait;
+import msifeed.mc.commons.traits.Trait;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.text.Label;

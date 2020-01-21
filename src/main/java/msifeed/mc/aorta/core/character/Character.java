@@ -1,7 +1,7 @@
 package msifeed.mc.aorta.core.character;
 
-import msifeed.mc.aorta.core.traits.Trait;
-import msifeed.mc.aorta.core.traits.TraitDecoder;
+import msifeed.mc.commons.traits.Trait;
+import msifeed.mc.commons.traits.TraitDecoder;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.MathHelper;

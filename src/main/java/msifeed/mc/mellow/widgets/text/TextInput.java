@@ -1,7 +1,6 @@
 package msifeed.mc.mellow.widgets.text;
 
 import msifeed.mc.mellow.render.RenderWidgets;
-import msifeed.mc.mellow.utils.Geom;
 import msifeed.mc.mellow.utils.SizePolicy;
 
 import java.util.Collections;

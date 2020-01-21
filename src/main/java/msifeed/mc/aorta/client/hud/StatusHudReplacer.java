@@ -2,7 +2,7 @@ package msifeed.mc.aorta.client.hud;
 
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import msifeed.mc.aorta.Aorta;
+import msifeed.mc.Bootstrap;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import msifeed.mc.mellow.render.RenderParts;
@@ -30,7 +30,7 @@ public enum StatusHudReplacer {
     }
 
     private static Part[] makeStatusSpriteParts(int row, int count) {
-        final ResourceLocation statusSpriteMap = new ResourceLocation(Aorta.MODID, "textures/gui/status_hud.png");
+        final ResourceLocation statusSpriteMap = new ResourceLocation(Bootstrap.MODID, "textures/gui/status_hud.png");
         final Point spriteSize = new Point(32, 32);
 
         final Part[] parts = new Part[count];

@@ -2,12 +2,12 @@ package msifeed.mc.aorta.client.gui.status;
 
 import msifeed.mc.aorta.core.character.BodyPart;
 import msifeed.mc.aorta.core.character.Character;
-import msifeed.mc.aorta.sys.utils.L10n;
 import msifeed.mc.mellow.layout.AnchorLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.button.FlatButtonLabel;
 import msifeed.mc.mellow.widgets.text.Label;
+import msifeed.mc.sys.utils.L10n;
 
 class BodypartsView extends Widget {
     private final Character character;

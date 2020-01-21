@@ -4,12 +4,12 @@ import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.meta.MetaInfo;
 import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import msifeed.mc.aorta.core.utils.MetaAttribute;
-import msifeed.mc.aorta.sys.utils.L10n;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.tabs.TabArea;
 import msifeed.mc.mellow.widgets.window.Window;
+import msifeed.mc.sys.utils.L10n;
 import net.minecraft.entity.EntityLivingBase;
 
 import java.util.Optional;

@@ -1,7 +1,7 @@
 package msifeed.mc.aorta.client.gui;
 
-import msifeed.mc.aorta.genesis.items.IItemTemplate;
-import msifeed.mc.aorta.genesis.items.data.ItemRenderData;
+import msifeed.mc.genesis.items.IItemTemplate;
+import msifeed.mc.genesis.items.data.ItemRenderData;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;

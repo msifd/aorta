@@ -3,12 +3,13 @@ package msifeed.mc.aorta;
 import com.google.common.io.CharStreams;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import msifeed.mc.Bootstrap;
 import msifeed.mc.aorta.client.Keybinds;
 import msifeed.mc.aorta.client.ResponsiveEntityStatus;
-import msifeed.mc.aorta.genesis.AortaCreativeTab;
-import msifeed.mc.aorta.logs.LogsClient;
-import msifeed.mc.aorta.sys.utils.DRM;
-import msifeed.mc.aorta.tweaks.GameWindowOptions;
+import msifeed.mc.extensions.chat.Speechat;
+import msifeed.mc.extensions.itemmeta.ItemMetaClient;
+import msifeed.mc.extensions.tweaks.GameWindowOptions;
+import msifeed.mc.genesis.GenesisCreativeTab;
 import msifeed.mc.mellow.Mellow;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.util.ResourceLocation;
@@ -19,9 +20,12 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 public class AortaClient extends Aorta {
+    private GameWindowOptions gameWindowOptions = new GameWindowOptions();
+    private ItemMetaClient itemMeta = new ItemMetaClient();
+
     @Override
     public void preInit(FMLPreInitializationEvent event) {
-        GameWindowOptions.preInit();
+        gameWindowOptions.preInit();
         super.preInit(event);
         initMellow();
     }
@@ -29,18 +33,19 @@ public class AortaClient extends Aorta {
     @Override
     public void init() {
         super.init();
-        AortaCreativeTab.init();
+        GenesisCreativeTab.init();
         DRM.apply();
         GUI_HANDLER.init();
         Keybinds.INSTANCE.init();
         ResponsiveEntityStatus.init();
-        LogsClient.init();
+        Speechat.initClient();
+        itemMeta.init();
     }
 
     private void initMellow() {
-        final IResourcePack resourcePack = FMLClientHandler.instance().getResourcePackFor(Aorta.MODID);
-        final ResourceLocation themeSprite = new ResourceLocation(Aorta.MODID + ":theme/theme.png");
-        final ResourceLocation themeMeta = new ResourceLocation(Aorta.MODID + ":theme/theme.json");
+        final IResourcePack resourcePack = FMLClientHandler.instance().getResourcePackFor(Bootstrap.MODID);
+        final ResourceLocation themeSprite = new ResourceLocation(Bootstrap.MODID + ":theme/theme.png");
+        final ResourceLocation themeMeta = new ResourceLocation(Bootstrap.MODID + ":theme/theme.json");
 
         try {
             final InputStream metaInput = resourcePack.getInputStream(themeMeta);

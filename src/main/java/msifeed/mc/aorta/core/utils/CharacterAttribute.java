@@ -1,11 +1,11 @@
 package msifeed.mc.aorta.core.utils;
 
-import msifeed.mc.aorta.Aorta;
+import msifeed.mc.Bootstrap;
 import msifeed.mc.aorta.core.character.Character;
-import msifeed.mc.aorta.core.traits.Trait;
-import msifeed.mc.aorta.core.traits.TraitType;
-import msifeed.mc.aorta.sys.attributes.EntityLivingAttribute;
-import msifeed.mc.aorta.sys.attributes.MissingRequiredAttributeException;
+import msifeed.mc.commons.traits.Trait;
+import msifeed.mc.commons.traits.TraitType;
+import msifeed.mc.sys.attributes.EntityLivingAttribute;
+import msifeed.mc.sys.attributes.MissingRequiredAttributeException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +17,7 @@ import java.util.Set;
 
 public class CharacterAttribute extends EntityLivingAttribute<Character> {
     public static final CharacterAttribute INSTANCE = new CharacterAttribute();
-    private static final String PROP_NAME = Aorta.MODID + ".core.char";
+    private static final String PROP_NAME = Bootstrap.MODID + ".core.char";
 
     public static Optional<Character> get(Entity e) {
         return INSTANCE.getValue(e);

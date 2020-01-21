@@ -1,20 +1,21 @@
 package msifeed.mc.aorta.core.rolls;
 
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import msifeed.mc.aorta.chat.ChatHandler;
-import msifeed.mc.aorta.chat.composer.Composer;
-import msifeed.mc.aorta.chat.composer.RollComposer;
-import msifeed.mc.aorta.chat.composer.SpeechType;
-import msifeed.mc.aorta.chat.net.ChatMessage;
+import msifeed.mc.Bootstrap;
 import msifeed.mc.aorta.core.character.Character;
 import msifeed.mc.aorta.core.character.Feature;
 import msifeed.mc.aorta.core.meta.MetaInfo;
 import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import msifeed.mc.aorta.core.utils.MetaAttribute;
-import msifeed.mc.aorta.logs.Logs;
-import msifeed.mc.aorta.sys.rpc.Rpc;
-import msifeed.mc.aorta.sys.rpc.RpcMethod;
-import msifeed.mc.aorta.sys.utils.ChatUtils;
+import msifeed.mc.commons.logs.ExternalLogs;
+import msifeed.mc.extensions.chat.ChatHandler;
+import msifeed.mc.extensions.chat.ChatMessage;
+import msifeed.mc.extensions.chat.composer.Composer;
+import msifeed.mc.extensions.chat.composer.RollComposer;
+import msifeed.mc.extensions.chat.composer.SpeechType;
+import msifeed.mc.sys.rpc.Rpc;
+import msifeed.mc.sys.rpc.RpcMethod;
+import msifeed.mc.sys.utils.ChatUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -25,8 +26,8 @@ import java.util.Optional;
 public enum RollRpc {
     INSTANCE;
 
-    private static final String rollFeature = "aorta:core.roll.feature";
-    private static final String rollAction = "aorta:core.roll.action";
+    private static final String rollFeature = Bootstrap.MODID + ":core.roll.feature";
+    private static final String rollAction = Bootstrap.MODID + ":core.roll.action";
 
     public static void rollFeature(int entityId, Feature feature, String target) {
         Rpc.sendToServer(rollFeature, entityId, feature, target);
@@ -53,7 +54,7 @@ public enum RollRpc {
             ChatHandler.sendSystemChatMessage(player, m);
 
             final String prefix = player != entity ? ">> " : "";
-            Logs.log(player, "feature", prefix + ChatUtils.stripFormatting(text));
+            ExternalLogs.log(player, "feature", prefix + ChatUtils.stripFormatting(text));
         }
     }
 
@@ -74,7 +75,7 @@ public enum RollRpc {
             ChatHandler.sendSystemChatMessage(player, m);
 
             final String prefix = player != entity ? ">> " : "";
-            Logs.log(player, "action", prefix + ChatUtils.stripFormatting(text));
+            ExternalLogs.log(player, "action", prefix + ChatUtils.stripFormatting(text));
         }
     }
 }
