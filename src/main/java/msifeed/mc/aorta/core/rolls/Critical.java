@@ -4,10 +4,10 @@ public enum Critical {
     NONE, LUCK, FAIL;
 
     public static Critical roll() {
-        switch (Dices.dice(20)) {
+        switch (Dices.dice(40)) {
             case 1:
                 return FAIL;
-            case 20:
+            case 2:
                 return LUCK;
             default:
                 return NONE;
