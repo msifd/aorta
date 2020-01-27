@@ -44,7 +44,7 @@ public enum DailySanityReduce {
 
         MetaInfo meta = MetaAttribute.require(player);
         final long curTime = System.currentTimeMillis();
-        final long msInDay = 1000; //86400000
+        final long msInDay = 86400000;
         final long loginTime = meta.lastLogin;
 
         if (curTime - loginTime > msInDay) {
