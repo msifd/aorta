@@ -115,6 +115,22 @@ public class Differ {
             }
         }
 
+        for (Map.Entry<String, Integer> e : after.addictions.entrySet()) {
+            final String drugType = e.getKey();
+            final Object value = before.addictions.get(drugType);
+            final int a = e.getValue();
+
+            if (value != null) {
+                final int b = (int)value;
+                final int d = a - b;
+
+                if (d == 2)
+                    diffs.add(L10n.fmt("aorta.diff.status.drug.fulfilled", drugType));
+                else if (d == -2)
+                    diffs.add(L10n.fmt("aorta.diff.status.drug.needed", drugType));
+            }
+        }
+
         // Illness
         if (before.illness.illness < after.illness.illness)
             diffs.add(L10n.fmt("aorta.diff.status.illness.add_illness", after.illness.illness - before.illness.illness));
@@ -180,6 +196,38 @@ public class Differ {
                 diffs.add(L10n.tr("aorta.diff.status.psionics_critical"));
             else
                 diffs.add(L10n.fmt("aorta.diff.status.psionics_level", psionicsAfter));
+        }
+
+        final MapDifference<String, Integer> addDiff = Maps.difference(before.addictions, after.addictions);
+
+        for (Map.Entry<String, Integer> e : addDiff.entriesOnlyOnRight().entrySet()) {
+            final String drugType = e.getKey();
+            final Object value = before.addictions.get(drugType);
+            final int a = e.getValue();
+
+            if (value == null) {
+                diffs.add(L10n.fmt("aorta.diff.status.drug.become_addicted", drugType));
+            }
+        }
+
+        for (Map.Entry<String, Integer> e : addDiff.entriesOnlyOnLeft().entrySet()) {
+            final String drugType = e.getKey();
+            final Object value = after.addictions.get(drugType);
+
+            if (value == null)
+                diffs.add(L10n.fmt("aorta.diff.status.drug.not_addicted", drugType));
+        }
+
+        for (Map.Entry<String, MapDifference.ValueDifference<Integer>> e : addDiff.entriesDiffering().entrySet()) {
+            final String drugType = e.getKey();
+            final int a = e.getValue().rightValue();
+            final int b = e.getValue().leftValue();
+            final int d = a - b;
+
+            if (d == -1)
+                diffs.add(L10n.fmt("aorta.diff.status.drug.less_addicted", drugType));
+            else if (d % 2 == 1)
+                diffs.add(L10n.fmt("aorta.diff.status.drug.more_addicted", drugType));
         }
 
         // Illness

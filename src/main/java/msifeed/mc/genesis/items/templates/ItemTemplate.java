@@ -1,8 +1,11 @@
 package msifeed.mc.genesis.items.templates;
 
+import msifeed.mc.aorta.Aorta;
 import msifeed.mc.aorta.core.character.Character;
+import msifeed.mc.aorta.core.rolls.Dices;
 import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import msifeed.mc.aorta.core.utils.Differ;
+import msifeed.mc.aorta.defines.DrugDefines;
 import msifeed.mc.commons.logs.ExternalLogs;
 import msifeed.mc.extensions.chat.ChatHandler;
 import msifeed.mc.extensions.chat.ChatMessage;
@@ -104,15 +107,45 @@ public class ItemTemplate extends Item implements IItemTemplate {
     }
 
     private void onUse(EntityPlayer player, ItemStack itemStack, boolean special) {
-        if (unit.sanity != 0) {
-            final Character after = CharacterAttribute.require(player);
-            final Character before = new Character(after);
-            after.sanity = (byte)MathHelper.clamp_int(
-                    after.sanity + unit.sanity, 1, 125);
-            CharacterAttribute.INSTANCE.set(player, after);
+        final Character after = CharacterAttribute.require(player);
+        final Character before = new Character(after);
+        final DrugDefines drug = Aorta.DEFINES.get().drug;
+        int sanity = unit.sanity;
 
-            Differ.printDiffs((EntityPlayerMP)player, player, before, after);
+        if (unit.drugType != null) {
+            final Object value = after.addictions.get(unit.drugType);
+            boolean newAddiction = false;
+            int currentAddiction = 0;
+
+            if (value != null)
+                currentAddiction = (int)value;
+
+            if (unit.drug && Dices.dice(100) <= drug.addictionChance) {
+                newAddiction = true;
+
+                if (value != null && currentAddiction % 2 == 0)
+                    currentAddiction++;
+            }
+
+            if (value != null || newAddiction) {
+                if (currentAddiction < 2) {
+                    currentAddiction += 2;
+
+                    if (!newAddiction)
+                        sanity = currentAddiction % 2 == 1 ? drug.strongSanityReduce : drug.baseSanityReduce;
+                }
+
+                after.addictions.put(unit.drugType, currentAddiction);
+            }
         }
+
+        if (sanity != 0) {
+            after.sanity = (byte)MathHelper.clamp_int(
+                    after.sanity + sanity, 1, 125);
+        }
+
+        CharacterAttribute.INSTANCE.set(player, after);
+        Differ.printDiffs((EntityPlayerMP)player, player, before, after);
     }
 
     private void onReload(EntityPlayer player, ItemStack itemStack, boolean special) {

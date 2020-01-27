@@ -14,6 +14,7 @@ public class Character {
 
     public Map<Feature, Integer> features = new EnumMap<>(Feature.class);
     public Map<String, BodyPart> bodyParts = new LinkedHashMap<>();
+    public Map<String, Integer> addictions = new HashMap<>();
     public Set<Trait> traits = new HashSet<>();
     public byte vitalityRate = 40;
     public byte maxPsionics = 0;
@@ -37,6 +38,8 @@ public class Character {
             features.put(e.getKey(), e.getValue());
         for (BodyPart bp : c.bodyParts.values())
             bodyParts.put(bp.name, new BodyPart(bp));
+        for (Map.Entry<String, Integer> e : c.addictions.entrySet())
+            addictions.put(e.getKey(), e.getValue());
         traits.addAll(c.traits);
         vitalityRate = c.vitalityRate;
         maxPsionics = c.maxPsionics;
@@ -114,6 +117,15 @@ public class Character {
             bodyParts.appendTag(p.toNBT());
         c.setTag(Tags.bodyParts, bodyParts);
 
+        final NBTTagList addictions = new NBTTagList();
+        for (Map.Entry<String, Integer> e : this.addictions.entrySet()) {
+            NBTTagCompound tag = new NBTTagCompound();
+            tag.setString("drugType", e.getKey());
+            tag.setInteger("addictionValue", e.getValue());
+            addictions.appendTag(tag);
+        }
+        c.setTag(Tags.addictions, addictions);
+
         c.setIntArray(Tags.traits, traits.stream().mapToInt(t -> t.code).toArray());
 
         c.setByte(Tags.vitality, vitalityRate);
@@ -145,6 +157,13 @@ public class Character {
             this.bodyParts.put(bp.name, bp);
         }
 
+        final NBTTagList addictions = c.getTagList(Tags.addictions, 10); // 10 - NBTTagCompound
+        this.addictions.clear();
+        for (int i = 0; i < addictions.tagCount(); i++) {
+            final NBTTagCompound tag = addictions.getCompoundTagAt(i);
+            this.addictions.put(tag.getString("drugType"), tag.getInteger("addictionValue"));
+        }
+
         this.traits = TraitDecoder.decode(c.getIntArray(Tags.traits));
 
         this.vitalityRate = (byte) MathHelper.clamp_int(c.getByte(Tags.vitality), 0, 100);
@@ -163,6 +182,7 @@ public class Character {
         static final String wiki = "wiki";
         static final String features = "feats";
         static final String bodyParts = "parts";
+        static final String addictions = "addictions";
         static final String traits = "traits";
         static final String vitality = "vitality";
         static final String maxPsionics = "maxPsi";
