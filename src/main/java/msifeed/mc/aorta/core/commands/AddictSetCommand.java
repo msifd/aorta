@@ -64,6 +64,8 @@ public class AddictSetCommand extends ExtCommand {
         else
             c.addictions.put(drugType, value - 1);
 
+        CharacterAttribute.INSTANCE.set(entity, c);
+
         info(sender, "Addiction to '%s' was set to %d", drugType, value);
     }
 
