@@ -3,6 +3,7 @@ package msifeed.mc.aorta.client;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
+import msifeed.mc.Bootstrap;
 import msifeed.mc.aorta.Aorta;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
@@ -15,9 +16,9 @@ import java.util.HashMap;
 public enum Keybinds {
     INSTANCE;
 
-    private final KeyBinding statusScreen = new KeyBinding("aorta.gui.status", Keyboard.KEY_C, "aorta");
-    private final KeyBinding rollerScreen = new KeyBinding("aorta.gui.roller", Keyboard.KEY_V, "aorta");
-    private final KeyBinding langScreen = new KeyBinding("aorta.gui.lang_selector", Keyboard.KEY_Y, "aorta");
+    private final KeyBinding statusScreen = new KeyBinding("aorta.gui.status", Keyboard.KEY_C, Bootstrap.MODID);
+    private final KeyBinding rollerScreen = new KeyBinding("aorta.gui.roller", Keyboard.KEY_V, Bootstrap.MODID);
+    private final KeyBinding langScreen = new KeyBinding("aorta.gui.lang_selector", Keyboard.KEY_Y, Bootstrap.MODID);
     private final HashMap<KeyBinding, Runnable> callbacks = new HashMap<>();
 
     public void init() {

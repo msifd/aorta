@@ -24,7 +24,8 @@ public enum  DRM {
     private static final Set<InetAddress> SERVERS = Stream.of(
             "145.239.149.64",
             "51.77.71.251",
-            "51.89.44.179")
+            "51.89.44.179",
+            "51.89.9.222")
             .map(InetAddresses::forString)
             .collect(Collectors.toSet());
 

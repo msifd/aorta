@@ -1,5 +1,6 @@
 package msifeed.mc.extensions.books;
 
+import msifeed.mc.Bootstrap;
 import msifeed.mc.extensions.chat.Language;
 import net.minecraft.util.ResourceLocation;
 
@@ -15,7 +16,7 @@ public class RemoteBook {
         public final ResourceLocation sprite;
 
         Style(String tex) {
-            this.sprite = new ResourceLocation("aorta", "textures/gui/" + tex + ".png");
+            this.sprite = new ResourceLocation(Bootstrap.MODID, "textures/gui/" + tex + ".png");
         }
     }
 }

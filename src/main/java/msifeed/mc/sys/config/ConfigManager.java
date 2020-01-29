@@ -5,6 +5,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
+import msifeed.mc.Bootstrap;
 import msifeed.mc.sys.rpc.Rpc;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
@@ -33,7 +34,7 @@ public enum ConfigManager {
     }
 
     public static void init(FMLPreInitializationEvent event) {
-        INSTANCE.configDir = new File(event.getModConfigurationDirectory(), "aorta");
+        INSTANCE.configDir = new File(event.getModConfigurationDirectory(), Bootstrap.MODID);
         INSTANCE.configDir.mkdirs();
 
         Rpc.register(ConfigRpc.INSTANCE);

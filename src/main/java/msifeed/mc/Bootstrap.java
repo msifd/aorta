@@ -10,8 +10,8 @@ import msifeed.mc.sys.rpc.Rpc;
 
 @Mod(modid = Bootstrap.MODID, name = Bootstrap.NAME, version = Bootstrap.VERSION)
 public class Bootstrap {
-    public static final String MODID = "aorta";
-    public static final String NAME = "Aorta";
+    public static final String MODID = "more";
+    public static final String NAME = "More";
     public static final String VERSION = "@VERSION@";
 
     @Mod.Instance

@@ -1,6 +1,7 @@
 package msifeed.mc.genesis.blocks.templates;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import msifeed.mc.Bootstrap;
 import msifeed.mc.aorta.Aorta;
 import msifeed.mc.extensions.locks.LockObject;
 import msifeed.mc.extensions.locks.LockType;
@@ -91,7 +92,7 @@ public class ChestTemplate extends BlockChest implements SpecialBlockRegisterer,
     }
 
     public static class ChestEntity extends TileEntityChest implements Lockable {
-        public static final String ID = "aorta.genesis.chest_tile";
+        public static final String ID = Bootstrap.MODID + ".genesis.chest_tile";
         private final LockObject lock = new LockObject(this);
 
         @Override

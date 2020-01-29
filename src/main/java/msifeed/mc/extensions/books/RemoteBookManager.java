@@ -2,6 +2,7 @@ package msifeed.mc.extensions.books;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
+import msifeed.mc.Bootstrap;
 import msifeed.mc.extensions.chat.Language;
 import msifeed.mc.sys.rpc.Rpc;
 import net.minecraft.client.Minecraft;
@@ -148,7 +149,7 @@ public enum RemoteBookManager {
     }
 
     private static ItemStack makeBook(String index, String title, RemoteBook.Style style, Language lang) {
-        final ItemStack book = GameRegistry.findItemStack("aorta", ItemRemoteBook.ID, 1);
+        final ItemStack book = GameRegistry.findItemStack(Bootstrap.MODID, ItemRemoteBook.ID, 1);
         book.setItemDamage(style.ordinal());
 
         final NBTTagCompound tag = new NBTTagCompound();

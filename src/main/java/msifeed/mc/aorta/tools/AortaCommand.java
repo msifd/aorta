@@ -11,12 +11,12 @@ import net.minecraft.util.ChatComponentText;
 public class AortaCommand extends ExtCommand {
     @Override
     public String getCommandName() {
-        return "aorta";
+        return "morgana";
     }
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "/aorta [reload]";
+        return "/morgana [reload]";
     }
 
     @Override
