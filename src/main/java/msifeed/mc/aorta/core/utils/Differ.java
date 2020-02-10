@@ -48,6 +48,14 @@ public class Differ {
             diffs.add(L10n.fmt("aorta.diff.char.vitality", before.vitalityRate, after.vitalityRate));
         }
 
+        if (before.estitence != after.estitence) {
+            final int n = Math.abs(before.estitence - after.estitence);
+            diffs.add(L10n.fmt(
+                    before.estitence < after.estitence ? "aorta.diff.status.add_estitence" : "aorta.diff.status.rem_estitence",
+                    n, trPoints(n)
+            ));
+        }
+
         if (before.maxPsionics != after.maxPsionics) {
             diffs.add(L10n.fmt("aorta.diff.char.psionics", before.maxPsionics, after.maxPsionics));
         }
@@ -161,6 +169,16 @@ public class Differ {
         final int vitalityAfter = after.vitalityLevel();
         if (vitalityAfter != vitalityBefore)
             diffs.add(L10n.fmt("aorta.diff.status.vitality_level", L10n.tr("aorta.diff.status.vitality." + vitalityAfter)));
+
+        final int hpBefore = before.countMaxHP();
+        final int hpAfter = after.countMaxHP();
+        if (hpBefore != hpAfter) {
+            final int n = Math.abs(hpBefore - hpAfter);
+            diffs.add(L10n.fmt(
+                    hpBefore < hpAfter ? "aorta.diff.status.add_max_health" : "aorta.diff.status.rem_max_health",
+                    n
+            ));
+        }
 
         for (BodyPart abp : after.bodyParts.values()) {
             final BodyPart bbp = before.bodyParts.get(abp.name);

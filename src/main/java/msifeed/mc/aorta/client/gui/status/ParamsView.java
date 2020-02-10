@@ -44,6 +44,9 @@ class ParamsView extends Widget {
         addChild(new Label(L10n.tr("aorta.gui.status.vitality")));
         addChild(new Label(String.format("%d/%d (%s)", vitality, maxVitality, vitalityLevelStr)));
 
+        addChild(new Label(L10n.tr("aorta.gui.status.estitence")));
+        addChild(new Label(Integer.toString(character.estitence)));
+
         addChild(new Label(L10n.tr("aorta.gui.status.load")));
         final TextInput loadInput = new TextInput();
         loadInput.getSizeHint().x = 25;

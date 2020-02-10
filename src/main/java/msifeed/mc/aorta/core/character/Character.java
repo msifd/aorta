@@ -16,6 +16,7 @@ public class Character {
     public Map<String, BodyPart> bodyParts = new LinkedHashMap<>();
     public Set<Trait> traits = new HashSet<>();
     public byte vitalityRate = 40;
+    public byte estitence = 50;
     public byte maxPsionics = 0;
 
     public BodyShield shield = new BodyShield();
@@ -39,6 +40,7 @@ public class Character {
             bodyParts.put(bp.name, new BodyPart(bp));
         traits.addAll(c.traits);
         vitalityRate = c.vitalityRate;
+        estitence = c.estitence;
         maxPsionics = c.maxPsionics;
         shield.unpack(c.shield.pack());
         illness.unpack(c.illness.pack());
@@ -57,6 +59,10 @@ public class Character {
 
     public int countMaxHealth() {
         return bodyParts.values().stream().mapToInt(BodyPart::getMaxHealth).sum();
+    }
+
+    public int countMaxHP() {
+        return Math.max((estitence - 10) / 2, 1);
     }
 
     public int countVitality() {
@@ -117,6 +123,7 @@ public class Character {
         c.setIntArray(Tags.traits, traits.stream().mapToInt(t -> t.code).toArray());
 
         c.setByte(Tags.vitality, vitalityRate);
+        c.setByte(Tags.estitence, estitence);
         c.setByte(Tags.maxPsionics, maxPsionics);
 
         c.setInteger(Tags.shield, shield.pack());
@@ -148,6 +155,7 @@ public class Character {
         this.traits = TraitDecoder.decode(c.getIntArray(Tags.traits));
 
         this.vitalityRate = (byte) MathHelper.clamp_int(c.getByte(Tags.vitality), 0, 100);
+        this.estitence = (byte) MathHelper.clamp_int(c.getByte(Tags.estitence), 10, 90);
         this.maxPsionics = c.getByte(Tags.maxPsionics);
 
         shield.unpack(c.getInteger(Tags.shield));
@@ -165,6 +173,7 @@ public class Character {
         static final String bodyParts = "parts";
         static final String traits = "traits";
         static final String vitality = "vitality";
+        static final String estitence = "estitence";
         static final String maxPsionics = "maxPsi";
         static final String shield = "shield";
         static final String illness = "illness";

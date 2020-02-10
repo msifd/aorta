@@ -14,6 +14,7 @@ import msifeed.mc.sys.rpc.Rpc;
 import msifeed.mc.sys.rpc.RpcMethod;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -85,9 +86,15 @@ public enum CharRpc {
 
                 Differ.printDiffs(sender, entity, before, after);
 
-                if (entity instanceof EntityPlayer && !before.name.equals(after.name)) {
-                    ((EntityPlayer) entity).refreshDisplayName();
-                    Rpc.sendToAll(refreshName, entityId);
+                if (entity instanceof EntityPlayer) {
+                    if (!before.name.equals(after.name)) {
+                        ((EntityPlayer) entity).refreshDisplayName();
+                        Rpc.sendToAll(refreshName, entityId);
+                    }
+
+                    if (before.estitence != after.estitence) {
+                        ((EntityPlayer)entity).getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(after.countMaxHP());
+                    }
                 }
             } else {
                 final Character c = new Character();
