@@ -1,8 +1,8 @@
 package msifeed.mc.extensions.chat;
 
 import msifeed.mc.Bootstrap;
-import msifeed.mc.aorta.core.character.Character;
-import msifeed.mc.aorta.core.utils.CharacterAttribute;
+import msifeed.mc.more.crabs.character.Character;
+import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.sys.attributes.MissingRequiredAttributeException;
 import msifeed.mc.sys.attributes.PlayerAttribute;
 import net.minecraft.entity.Entity;

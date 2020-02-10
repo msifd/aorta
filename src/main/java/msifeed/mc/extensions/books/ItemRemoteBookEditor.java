@@ -1,6 +1,6 @@
 package msifeed.mc.extensions.books;
 
-import msifeed.mc.aorta.Aorta;
+import msifeed.mc.more.More;
 import msifeed.mc.genesis.GenesisCreativeTab;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -16,7 +16,7 @@ public class ItemRemoteBookEditor extends Item {
 
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-        Aorta.GUI_HANDLER.toggleBookEditor(player);
+        More.GUI_HANDLER.toggleBookEditor(player);
         return itemStack;
     }
 }

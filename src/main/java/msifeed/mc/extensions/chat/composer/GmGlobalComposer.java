@@ -1,9 +1,9 @@
 package msifeed.mc.extensions.chat.composer;
 
-import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import msifeed.mc.commons.traits.Trait;
 import msifeed.mc.extensions.chat.ChatMessage;
 import msifeed.mc.extensions.chat.Language;
+import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;

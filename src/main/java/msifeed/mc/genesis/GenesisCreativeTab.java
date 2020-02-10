@@ -14,7 +14,6 @@ import java.util.Comparator;
 import java.util.List;
 
 public class GenesisCreativeTab extends CreativeTabs {
-    private static final Item iconAorta = makeIcon("tab_aorta");
     private static final Item iconBlocks = makeIcon("tab_blocks");
     private static final Item iconItems = makeIcon("tab_items");
     private static final Item iconTools = makeIcon("tab_tools");

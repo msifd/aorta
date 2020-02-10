@@ -5,6 +5,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import msifeed.mc.sys.config.ConfigBuilder;
 import msifeed.mc.sys.config.ConfigEvent;
 import msifeed.mc.sys.config.ConfigManager;
 import msifeed.mc.sys.config.JsonConfig;
@@ -21,7 +22,9 @@ public enum EnvironmentManager {
     INSTANCE;
 
     private final TypeToken<HashMap<Integer, WorldEnv>> configContentType = new TypeToken<HashMap<Integer, WorldEnv>>() {};
-    private final JsonConfig<HashMap<Integer, WorldEnv>> config = ConfigManager.getSyncConfig(configContentType, "world_env.json");
+    private final JsonConfig<HashMap<Integer, WorldEnv>> config = ConfigBuilder.of(configContentType, "world_env.json")
+            .sync()
+            .create();
 
     @SidedProxy(
             serverSide = "msifeed.mc.extensions.environment.EnvHandler",

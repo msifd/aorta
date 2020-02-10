@@ -1,10 +1,10 @@
 package msifeed.mc.extensions.chat.commands;
 
-import msifeed.mc.aorta.core.meta.MetaInfo;
-import msifeed.mc.aorta.core.utils.MetaAttribute;
 import msifeed.mc.extensions.chat.ChatHandler;
 import msifeed.mc.extensions.chat.composer.Composer;
 import msifeed.mc.extensions.chat.composer.SpeechType;
+import msifeed.mc.more.crabs.meta.MetaInfo;
+import msifeed.mc.more.crabs.utils.MetaAttribute;
 import msifeed.mc.sys.cmd.ExtCommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;

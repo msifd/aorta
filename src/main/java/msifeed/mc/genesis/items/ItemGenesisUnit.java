@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import msifeed.mc.genesis.GenesisTrait;
 import msifeed.mc.genesis.GenesisUnit;
-import msifeed.mc.genesis.JsonUtils;
+import msifeed.mc.sys.utils.JsonUtils;
 import msifeed.mc.genesis.items.data.ItemDurabilityData;
 import msifeed.mc.genesis.items.data.ItemRenderData;
 
@@ -24,7 +24,6 @@ public class ItemGenesisUnit extends GenesisUnit {
     public ItemDurabilityData durData = new ItemDurabilityData();
     public int maxUsages = 0;
     public int specialAttackCost = 0;
-    public int sanity = 0;
 
     public ItemGenesisUnit(JsonObject json, HashSet<GenesisTrait> traits) {
         super(json, traits);
@@ -45,12 +44,6 @@ public class ItemGenesisUnit extends GenesisUnit {
 
         if (json.has(Props.usages))
             JsonUtils.consumeInt(json, Props.usages, i -> maxUsages = i);
-
-        if (json.has(Props.specialAttackCost))
-            JsonUtils.consumeInt(json, Props.specialAttackCost, i -> specialAttackCost = i);
-
-        if (json.has(Props.sanity))
-            JsonUtils.consumeInt(json, Props.sanity, i -> sanity = i);
     }
 
     private void loadDescriptionValues(JsonObject json) {

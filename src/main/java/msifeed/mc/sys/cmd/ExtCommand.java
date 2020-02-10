@@ -1,9 +1,12 @@
 package msifeed.mc.sys.cmd;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import msifeed.mc.commons.traits.Trait;
+import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
@@ -20,6 +23,21 @@ public abstract class ExtCommand extends CommandBase {
         if (getRequiredPermissionLevel() <= 0)
             return true;
         return super.canCommandSenderUseCommand(sender);
+    }
+
+    protected boolean isAdmin(ICommandSender sender) {
+        return FMLCommonHandler.instance().getSide().isClient()
+            || sender instanceof MinecraftServer
+            || sender instanceof EntityPlayer && CharacterAttribute.has((EntityPlayer)sender, Trait.__admin);
+    }
+
+    protected boolean isGm(ICommandSender sender) {
+        return FMLCommonHandler.instance().getSide().isClient()
+            || sender instanceof MinecraftServer
+            || sender instanceof EntityPlayer && (
+                CharacterAttribute.has((EntityPlayer) sender, Trait.__admin)
+                || CharacterAttribute.has((EntityPlayer) sender, Trait.gm)
+            );
     }
 
     protected void title(ICommandSender sender, String format, Object... args) {

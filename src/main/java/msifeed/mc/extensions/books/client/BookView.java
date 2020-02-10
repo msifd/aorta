@@ -1,6 +1,5 @@
 package msifeed.mc.extensions.books.client;
 
-import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import msifeed.mc.extensions.books.RemoteBook;
 import msifeed.mc.extensions.chat.Language;
 import msifeed.mc.extensions.chat.composer.SpeechComposer;
@@ -14,6 +13,7 @@ import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.button.Button;
 import msifeed.mc.mellow.widgets.text.Label;
 import msifeed.mc.mellow.widgets.text.TextWall;
+import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 

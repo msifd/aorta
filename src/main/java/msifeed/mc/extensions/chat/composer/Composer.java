@@ -16,7 +16,6 @@ public class Composer {
         COMPOSERS.put(SpeechType.GLOBAL, new GlobalComposer());
         COMPOSERS.put(SpeechType.GM, new GmsayComposer());
         COMPOSERS.put(SpeechType.GM_GLOBAL, new GmGlobalComposer());
-        COMPOSERS.put(SpeechType.ROLL, new RollComposer());
         COMPOSERS.put(SpeechType.LOG, new LogComposer());
         COMPOSERS.put(SpeechType.ENV, new EnvComposer());
     }

@@ -1,7 +1,5 @@
 package msifeed.mc.extensions.chat.commands;
 
-import msifeed.mc.aorta.core.utils.CharacterAttribute;
-import msifeed.mc.commons.traits.Trait;
 import msifeed.mc.extensions.chat.ChatHandler;
 import msifeed.mc.extensions.chat.ChatMessage;
 import msifeed.mc.extensions.chat.LangAttribute;
@@ -32,7 +30,7 @@ public class SusayCommand extends ExtCommand {
             error(sender, "You should be at least player!");
             return;
         }
-        if (!CharacterAttribute.has((EntityPlayer) sender, Trait.gm)) {
+        if (!isGm(sender)) {
             error(sender, "You are not GM!");
             return;
         }

@@ -1,6 +1,6 @@
 package msifeed.mc.genesis.items.templates;
 
-import msifeed.mc.aorta.Aorta;
+import msifeed.mc.more.More;
 import msifeed.mc.genesis.items.ItemGenesisUnit;
 import msifeed.mc.genesis.items.data.BookData;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,7 +23,7 @@ public class BookTemplate extends ItemTemplate {
 
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-        Aorta.GUI_HANDLER.toggleBookViewer(player);
+        More.GUI_HANDLER.toggleBookViewer(player);
         return itemStack;
     }
 

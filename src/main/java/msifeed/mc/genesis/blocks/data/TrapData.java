@@ -1,7 +1,7 @@
 package msifeed.mc.genesis.blocks.data;
 
 import com.google.gson.JsonObject;
-import msifeed.mc.genesis.JsonUtils;
+import msifeed.mc.sys.utils.JsonUtils;
 
 public class TrapData {
     public String closeMessage = "";

@@ -1,7 +1,7 @@
 package msifeed.mc.genesis.blocks.templates;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import msifeed.mc.aorta.Aorta;
+import msifeed.mc.more.More;
 import msifeed.mc.extensions.locks.*;
 import msifeed.mc.genesis.GenesisCreativeTab;
 import msifeed.mc.genesis.blocks.BlockGenesisUnit;
@@ -47,7 +47,7 @@ public class DoorTemplate extends BlockDoor implements ITileEntityProvider, Spec
             return false;
 
         if (player.isSneaking() && lock.getLockType() == LockType.DIGITAL) {
-            Aorta.GUI_HANDLER.toggleDigitalLock(lock);
+            More.GUI_HANDLER.toggleDigitalLock(lock);
             return true;
         } else if (lock.isLocked()) {
             return true;

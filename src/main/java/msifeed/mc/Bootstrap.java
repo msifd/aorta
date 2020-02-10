@@ -3,7 +3,7 @@ package msifeed.mc;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.*;
-import msifeed.mc.aorta.Aorta;
+import msifeed.mc.more.More;
 import msifeed.mc.sys.attributes.AttributeHandler;
 import msifeed.mc.sys.config.ConfigManager;
 import msifeed.mc.sys.rpc.Rpc;
@@ -18,38 +18,36 @@ public class Bootstrap {
     public static Bootstrap INSTANCE;
 
     @SidedProxy(
-            serverSide = "msifeed.mc.aorta.Aorta",
-            clientSide = "msifeed.mc.aorta.AortaClient"
+            serverSide = "msifeed.mc.more.More",
+            clientSide = "msifeed.mc.more.MoreClient"
     )
-    public static Aorta AORTA;
+    public static More MORE;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         AttributeHandler.init();
         Rpc.init();
-
-        AORTA.preInit(event);
-
+        MORE.preInit(event);
         ConfigManager.init(event);
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        AORTA.init();
+        MORE.init();
     }
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        AORTA.postInit();
+        MORE.postInit();
     }
 
     @Mod.EventHandler
     public void serverStarting(FMLServerStartingEvent event) {
-        AORTA.serverStarting(event);
+        MORE.serverStarting(event);
     }
 
     @Mod.EventHandler
     public void serverStopping(FMLServerStoppingEvent event) {
-        AORTA.serverStopping(event);
+        ConfigManager.save();
     }
 }

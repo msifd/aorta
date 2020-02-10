@@ -1,30 +1,27 @@
 package msifeed.mc.sys.config;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import msifeed.mc.sys.config.adapters.ZoneIdAdapter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.lang.reflect.Constructor;
-import java.time.ZoneId;
 
 public class JsonConfig<T> {
     private static final Logger LOGGER = LogManager.getLogger("Aorta.Config");
-    private static final Gson GSON = new GsonBuilder()
-            .setPrettyPrinting()
-            .registerTypeAdapter(ZoneId.class, new ZoneIdAdapter())
-            .create();
-    private boolean sync;
+
     private TypeToken<T> type;
     private String filename;
+    private final Gson gson;
+    private boolean sync;
+
     private T value;
 
-    JsonConfig(TypeToken<T> type, String filename, boolean sync) {
+    JsonConfig(TypeToken<T> type, String filename, Gson gson, boolean sync) {
         this.type = type;
         this.filename = filename;
+        this.gson = gson;
         this.sync = sync;
         this.value = getDefaultConfig();
     }
@@ -50,12 +47,12 @@ public class JsonConfig<T> {
     }
 
     String toJson() {
-        return GSON.toJson(value);
+        return gson.toJson(value);
     }
 
     void fromJson(String json) {
         try {
-            value = GSON.fromJson(json, type.getType());
+            value = gson.fromJson(json, type.getType());
         } catch (Exception e) {
             LOGGER.error("Error while parsing JSON of config '{}': '{}'", filename, e.getMessage());
             throw e;
@@ -81,7 +78,7 @@ public class JsonConfig<T> {
             return;
 
         try {
-            value = GSON.fromJson(new FileReader(filepath), type.getType());
+            value = gson.fromJson(new FileReader(filepath), type.getType());
         } catch (IOException e) {
             LOGGER.error("Error while reading '{}' config: {}", filename, e.getMessage());
             throw new RuntimeException("Failed to read config file: '" + filename  + "'");
@@ -90,7 +87,7 @@ public class JsonConfig<T> {
 
     private void write() {
         try (Writer writer = new FileWriter(ConfigManager.getConfigFile(filename))) {
-            GSON.toJson(value, writer);
+            gson.toJson(value, writer);
         } catch (IOException e) {
             LOGGER.error("Error while writing '{}' config: {}", filename, e.getMessage());
             throw new RuntimeException("Failed to write config file: '" + filename  + "'");

@@ -4,8 +4,8 @@ import com.google.gson.reflect.TypeToken;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import msifeed.mc.sys.config.ConfigBuilder;
 import msifeed.mc.sys.config.ConfigEvent;
-import msifeed.mc.sys.config.ConfigManager;
 import msifeed.mc.sys.config.JsonConfig;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -25,7 +25,7 @@ import java.util.Set;
 public class EntityControl {
     private static Logger logger = LogManager.getLogger("Aorta.EntityControl");
     private final TypeToken<ArrayList<ConfigContent>> configContentType = new TypeToken<ArrayList<ConfigContent>>() {};
-    private JsonConfig<ArrayList<ConfigContent>> config = ConfigManager.getLocalConfig(configContentType, "entity_control.json");
+    private JsonConfig<ArrayList<ConfigContent>> config = ConfigBuilder.of(configContentType, "entity_control.json").create();
 
     public void init() {
         MinecraftForge.EVENT_BUS.register(this);

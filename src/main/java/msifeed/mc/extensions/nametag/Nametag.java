@@ -1,13 +1,14 @@
 package msifeed.mc.extensions.nametag;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.Bootstrap;
-import msifeed.mc.aorta.Aorta;
-import msifeed.mc.aorta.core.character.Character;
-import msifeed.mc.aorta.core.utils.CharacterAttribute;
+import msifeed.mc.more.More;
+import msifeed.mc.more.crabs.character.Character;
+import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.sys.rpc.Rpc;
 import msifeed.mc.sys.rpc.RpcMethod;
 import net.minecraft.client.Minecraft;
@@ -27,9 +28,10 @@ public class Nametag {
     static final String broadcastTyping = Bootstrap.MODID + ":nametags.broadcast";
     private static final String notifyTyping = Bootstrap.MODID + ":nametags.notify";
 
-    public void init() {
-        Rpc.register(this);
-        MinecraftForge.EVENT_BUS.register(this);
+    public static void init() {
+        Rpc.register(INSTANCE);
+        MinecraftForge.EVENT_BUS.register(INSTANCE);
+        FMLCommonHandler.instance().bus().register(INSTANCE);
     }
 
     public static void notifyTyping() {
@@ -59,7 +61,7 @@ public class Nametag {
     }
 
     static int getSpeechRadius() {
-        final int[] speechRadius = Aorta.DEFINES.get().chat.speechRadius;
+        final int[] speechRadius = More.DEFINES.get().chat.speechRadius;
         final int mid = (speechRadius.length - 1) / 2;
         return speechRadius[mid];
     }

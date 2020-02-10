@@ -1,11 +1,9 @@
 package msifeed.mc.commons.traits;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import msifeed.mc.aorta.core.utils.CharacterAttribute;
+import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.sys.cmd.ExtCommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.server.MinecraftServer;
 
 public class TraitSetCommand extends ExtCommand {
     @Override
@@ -67,12 +65,9 @@ public class TraitSetCommand extends ExtCommand {
     }
 
     private boolean isAllowedToSet(ICommandSender sender, Trait trait) {
-        if (FMLCommonHandler.instance().getSide().isClient() || sender instanceof MinecraftServer)
-            return true;
-        final EntityLivingBase e = (EntityLivingBase) sender;
         if (trait.type == TraitType.SYSTEM)
-            return CharacterAttribute.has(e, Trait.__admin);
-        return CharacterAttribute.has(e, Trait.gm) || CharacterAttribute.has(e, Trait.__admin);
+            return isAdmin(sender);
+        return isGm(sender);
     }
 
     @Override

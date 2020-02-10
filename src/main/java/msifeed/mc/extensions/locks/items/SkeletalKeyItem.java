@@ -1,7 +1,7 @@
 package msifeed.mc.extensions.locks.items;
 
 import msifeed.mc.Bootstrap;
-import msifeed.mc.aorta.Aorta;
+import msifeed.mc.more.More;
 import msifeed.mc.extensions.locks.LockObject;
 import msifeed.mc.extensions.locks.Locks;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,7 +29,7 @@ public class SkeletalKeyItem extends Item {
         if (lock == null || !lock.hasLock())
             return false;
 
-        Aorta.GUI_HANDLER.toggleSkeletalKey(lock);
+        More.GUI_HANDLER.toggleSkeletalKey(lock);
         return true;
     }
 }

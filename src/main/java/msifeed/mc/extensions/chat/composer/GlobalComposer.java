@@ -1,9 +1,9 @@
 package msifeed.mc.extensions.chat.composer;
 
-import msifeed.mc.aorta.Aorta;
-import msifeed.mc.aorta.core.utils.MetaAttribute;
 import msifeed.mc.extensions.chat.ChatMessage;
 import msifeed.mc.extensions.chat.Language;
+import msifeed.mc.more.More;
+import msifeed.mc.more.crabs.utils.MetaAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
@@ -15,7 +15,7 @@ class GlobalComposer implements ChatComposer {
         final ChatMessage message = new ChatMessage();
         message.type = SpeechType.GLOBAL;
         message.language = Language.VANILLA;
-        message.radius = Aorta.DEFINES.get().chat.offtopRadius;
+        message.radius = More.DEFINES.get().chat.offtopRadius;
         message.senderId = player.getEntityId();
         message.speaker = player.getDisplayName();
         message.text = text;

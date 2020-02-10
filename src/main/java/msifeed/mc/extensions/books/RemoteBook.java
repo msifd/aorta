@@ -8,7 +8,7 @@ public class RemoteBook {
     public Style style = Style.REGULAR;
     public String title = "";
     public String text = "";
-    public Language lang = Language.COMMON;
+    public Language lang = Language.VANILLA;
 
     public enum Style {
         REGULAR("book_regular"), RICH("book_rich"), PAD("book_pad"), NOTE("book_note");

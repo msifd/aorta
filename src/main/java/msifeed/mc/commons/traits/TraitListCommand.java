@@ -1,7 +1,7 @@
 package msifeed.mc.commons.traits;
 
-import msifeed.mc.aorta.core.character.Character;
-import msifeed.mc.aorta.core.utils.CharacterAttribute;
+import msifeed.mc.more.crabs.character.Character;
+import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.sys.cmd.ExtCommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.EntityLivingBase;

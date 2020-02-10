@@ -2,7 +2,7 @@ package msifeed.mc.extensions.rename;
 
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.Bootstrap;
-import msifeed.mc.aorta.Aorta;
+import msifeed.mc.more.More;
 import msifeed.mc.sys.rpc.Rpc;
 import msifeed.mc.sys.rpc.RpcMethod;
 import net.minecraft.entity.player.EntityPlayer;
@@ -102,6 +102,6 @@ public enum RenameRpc {
 
     @RpcMethod(openRenameGui)
     public void onOpenRenameGui(MessageContext ctx) {
-        Aorta.GUI_HANDLER.toggleRenamer();
+        More.GUI_HANDLER.toggleRenamer();
     }
 }

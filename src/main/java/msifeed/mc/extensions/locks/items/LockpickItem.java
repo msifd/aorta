@@ -1,23 +1,15 @@
 package msifeed.mc.extensions.locks.items;
 
 import msifeed.mc.Bootstrap;
-import msifeed.mc.aorta.Aorta;
-import msifeed.mc.aorta.core.character.Character;
-import msifeed.mc.aorta.core.character.Feature;
-import msifeed.mc.aorta.core.meta.MetaInfo;
-import msifeed.mc.aorta.core.rolls.FeatureRoll;
-import msifeed.mc.aorta.core.utils.CharacterAttribute;
-import msifeed.mc.aorta.core.utils.MetaAttribute;
 import msifeed.mc.commons.logs.ExternalLogs;
-import msifeed.mc.extensions.chat.ChatHandler;
-import msifeed.mc.extensions.chat.ChatMessage;
-import msifeed.mc.extensions.chat.composer.Composer;
-import msifeed.mc.extensions.chat.composer.RollComposer;
-import msifeed.mc.extensions.chat.composer.SpeechType;
 import msifeed.mc.extensions.locks.LockObject;
 import msifeed.mc.extensions.locks.LockType;
 import msifeed.mc.extensions.locks.Locks;
-import msifeed.mc.sys.utils.ChatUtils;
+import msifeed.mc.more.More;
+import msifeed.mc.more.crabs.character.Character;
+import msifeed.mc.more.crabs.meta.MetaInfo;
+import msifeed.mc.more.crabs.utils.CharacterAttribute;
+import msifeed.mc.more.crabs.utils.MetaAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -45,20 +37,22 @@ public class LockpickItem extends Item {
         final Character character = CharacterAttribute.require(player);
         final MetaInfo meta = MetaAttribute.require(player);
 
-        final FeatureRoll roll = new FeatureRoll(character, meta, "", Feature.HND);
-
-        final String text = RollComposer.makeText(player, character, roll);
-        final ChatMessage m = Composer.makeMessage(SpeechType.ROLL, player, text);
-        ChatHandler.sendSystemChatMessage(player, m);
-        ExternalLogs.log(player, "feature", ChatUtils.stripFormatting(text));
-
-        consumePick(lock, pick, player, roll);
-
-        return roll.check(lock.getDifficulty());
+        // FIXME: roll something
+        return false;
+//        final FeatureRoll roll = new FeatureRoll(character, meta, "", Feature.HND);
+//
+//        final String text = RollComposer.makeText(player, character, roll);
+//        final ChatMessage m = Composer.makeMessage(SpeechType.ROLL, player, text);
+//        ChatHandler.sendSystemChatMessage(player, m);
+//        ExternalLogs.log(player, "feature", ChatUtils.stripFormatting(text));
+//
+//        consumePick(lock, pick, player, roll);
+//
+//        return roll.check(lock.getDifficulty());
     }
 
-    protected void consumePick(LockObject lock, ItemStack pick, EntityPlayer player, FeatureRoll roll) {
-        if (roll != null && roll.result <= lock.getDifficulty() - Aorta.DEFINES.get().locks.pickBreakOffset) {
+    protected void consumePick(LockObject lock, ItemStack pick, EntityPlayer player, int roll) {
+        if (roll <= lock.getDifficulty() - More.DEFINES.get().locks.pickBreakOffset) {
             pick.stackSize--;
             makeBreakSound(lock);
             player.addChatMessage(new ChatComponentTranslation("aorta.lock.pick_break"));

@@ -3,9 +3,9 @@ package msifeed.mc.extensions.books;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import msifeed.mc.Bootstrap;
-import msifeed.mc.aorta.Aorta;
-import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import msifeed.mc.commons.traits.Trait;
+import msifeed.mc.more.More;
+import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -27,7 +27,7 @@ public class ItemRemoteBook extends Item {
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
         if (itemStack.hasTagCompound())
-            Aorta.GUI_HANDLER.toggleBookViewer(player);
+            More.GUI_HANDLER.toggleBookViewer(player);
         return itemStack;
     }
 

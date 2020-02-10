@@ -49,5 +49,4 @@ public class SpeechTokenParser {
                 .map(part -> part.text)
                 .collect(Collectors.joining());
     }
-
 }

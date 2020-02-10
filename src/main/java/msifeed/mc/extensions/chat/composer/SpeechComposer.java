@@ -1,13 +1,13 @@
 package msifeed.mc.extensions.chat.composer;
 
-import msifeed.mc.aorta.Aorta;
-import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import msifeed.mc.extensions.chat.ChatMessage;
 import msifeed.mc.extensions.chat.LangAttribute;
 import msifeed.mc.extensions.chat.Language;
 import msifeed.mc.extensions.chat.composer.parser.SpeechToken;
 import msifeed.mc.extensions.chat.composer.parser.SpeechTokenParser;
 import msifeed.mc.extensions.chat.obfuscation.LangObfuscator;
+import msifeed.mc.more.More;
+import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.*;
 
@@ -84,7 +84,7 @@ public class SpeechComposer implements ChatComposer {
     }
 
     private static int getSpeechRadius(String text) {
-        final int[] speechRadius = Aorta.DEFINES.get().chat.speechRadius;
+        final int[] speechRadius = More.DEFINES.get().chat.speechRadius;
         int loudness = (speechRadius.length - 1) / 2;
 
         int exclamations = 0;

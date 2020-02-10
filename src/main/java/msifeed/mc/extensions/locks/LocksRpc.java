@@ -2,8 +2,8 @@ package msifeed.mc.extensions.locks;
 
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.Bootstrap;
-import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import msifeed.mc.commons.traits.Trait;
+import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.sys.rpc.RpcMethod;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;

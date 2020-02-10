@@ -1,13 +1,10 @@
 package msifeed.mc.commons.defines;
 
 import com.google.gson.Gson;
-import msifeed.mc.aorta.Aorta;
-import msifeed.mc.aorta.core.utils.CharacterAttribute;
-import msifeed.mc.commons.traits.Trait;
+import msifeed.mc.more.More;
 import msifeed.mc.sys.cmd.ExtCommand;
 import msifeed.mc.sys.config.ConfigManager;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.lang.reflect.Field;
@@ -33,7 +30,7 @@ public class DefineCommand extends ExtCommand {
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
-        if (sender instanceof EntityPlayer && !CharacterAttribute.has((EntityPlayer) sender, Trait.__admin)) {
+        if (!isAdmin(sender)) {
             error(sender, "Not enough permissions!");
             return;
         }
@@ -95,7 +92,7 @@ public class DefineCommand extends ExtCommand {
         final String[] parts = path.split("\\.");
 
         try {
-            Object currentObject = Aorta.DEFINES.get();
+            Object currentObject = More.DEFINES.get();
             Field currentField = null;
             for (String p : parts) {
                 if (currentField != null)

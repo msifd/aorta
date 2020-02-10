@@ -27,12 +27,6 @@ public class NametagClient extends Nametag {
     private char lastCharPressed = 0;
     private boolean chatIsOpened = false;
 
-    @Override
-    public void init() {
-        super.init();
-        FMLCommonHandler.instance().bus().register(this);
-    }
-
     @RpcMethod(Nametag.broadcastTyping)
     public void onBroadcastTyping(MessageContext ctx, int id) {
         typingPlayers.put(id, System.currentTimeMillis());

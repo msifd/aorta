@@ -1,8 +1,8 @@
 package msifeed.mc.extensions.chat.commands;
 
-import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import msifeed.mc.extensions.chat.LangAttribute;
 import msifeed.mc.extensions.chat.Language;
+import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.sys.cmd.ExtCommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.EntityLivingBase;
