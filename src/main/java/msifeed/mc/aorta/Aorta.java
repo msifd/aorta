@@ -20,6 +20,7 @@ import msifeed.mc.extensions.books.RemoteBookManager;
 import msifeed.mc.extensions.chat.Speechat;
 import msifeed.mc.extensions.environment.EnvironmentManager;
 import msifeed.mc.extensions.itemmeta.ItemMetaCommand;
+import msifeed.mc.extensions.items.Items;
 import msifeed.mc.extensions.locks.Locks;
 import msifeed.mc.extensions.nametag.Nametag;
 import msifeed.mc.extensions.rename.RenameCommand;
@@ -65,6 +66,7 @@ public class Aorta {
         Nametag.INSTANCE.init();
         MakeEveryoneHealthy.apply();
         DailySanityReduce.apply();
+        Items.init();
     }
 
     public void postInit() {

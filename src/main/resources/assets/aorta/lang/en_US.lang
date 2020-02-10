@@ -27,6 +27,14 @@ item.lock_access_tuner.name=Настройщик доступа
 item.lock_advanced_tuner.name=Рекомбинатор схем
 item.lock_skeletal_key.name=Скелетный ключ
 
+item.old_eye.name=Старый Глаз
+item.fragile_old_eye.name=Хрупкий Старый Глаз
+item.conviction_indict.name=Указание Осуждения
+item.forgivness_stone.name=Камень Прощения
+item.convicts_list.name=Список Осужденных
+item.gifter_offering.name=Жертва Дарителя
+item.soul_grab.name=Хват Души
+
 aorta.gui.apply=Применить
 aorta.gui.cancel=Отменить
 
@@ -53,6 +61,7 @@ aorta.gui.status.status=Статус
 aorta.gui.status.overall=В целом
 aorta.gui.status.vitality=Живучесть
 aorta.gui.status.estitence=Эститенция
+aorta.gui.status.sinfulness=Планопорядочность
 aorta.gui.status.sanity=Мент. состояние
 aorta.gui.status.load=Загруженность
 aorta.gui.status.shield_type=Тип щита
@@ -90,6 +99,10 @@ aorta.status.psionics.1=Головная боль
 aorta.status.psionics.2=Синяки
 aorta.status.psionics.3=Кровотечение
 aorta.status.psionics.4=Детонация
+
+aorta.status.sinfulness.-1=Праведник
+aorta.status.sinfulness.0=Порядочная Душа
+aorta.status.sinfulness.1=Грешник
 
 aorta.feature.str=Тренированность
 aorta.feature.short.str=ТРЕН
@@ -164,6 +177,8 @@ aorta.diff.status.add_estitence=получает %d %s эститенции
 aorta.diff.status.rem_estitence=теряет %d %s эститенции
 aorta.diff.status.add_max_health=получает %d ед. максимального здоровья
 aorta.diff.status.rem_max_health=теряет %d ед. максимального здоровья
+aorta.diff.status.add_sin=повышает грешность на %d %s
+aorta.diff.status.rem_sin=снижает грешность на %d %s
 aorta.diff.status.add_sanity=получил %d %s ментального состояния
 aorta.diff.status.rem_sanity=потерял %d %s ментального состояния
 aorta.diff.status.add_psionics=использовал %d ПО
@@ -198,6 +213,7 @@ aorta.diff.status.vitality.4=убит
 aorta.diff.status.injure=%s - получена травма
 aorta.diff.status.psionics_level=теперь на %d уровне псионической усталости
 aorta.diff.status.psionics_critical=теперь истощен и сейчас взорвется!
+aorta.diff.status.sinfulness_level=теперь %s
 
 aorta.diff.status.illness.add_illness=болезнь прогрессирует на %d пунктов
 aorta.diff.status.illness.rem_illness=болезнь отступает на %d пунктов
@@ -223,6 +239,21 @@ aorta.lock.reset=§7Новый пароль установлен
 aorta.lock.blank_lock=§7Новенький
 aorta.lock.pick_break=§7Отмычка сломалась
 aorta.lock.hacked=§7Замок взломан
+
+aorta.sin.scan=По ауре %s Вы определяете, что это %s и за ним %s грех(ов).
+aorta.sin.none=нет
+aorta.sin.indict=§4Вы накладываете грех на %s.
+aorta.sin.forgive=§bВы прощаете грех %s.
+aorta.sin.not_sinner=§4%s не является грешником!
+
+aorta.est.gift_not_enough=§4У Вас недостаточно эститенции.
+aorta.est.gift_too_much=§7%s - слишком могущественная душа для получения дополнительной эститенции.
+aorta.est.gift_to=§bВы преподносите Вашу эститецию %s.
+aorta.est.gift_from=§b%s преподносит Вам свою эститенцию.
+aorta.est.grab_not_enough=§4У %s недостаточно эститенции.
+aorta.est.grab_too_much=§7Вы слишком могущественная душа для получения дополнительной эститенции.
+aorta.est.grab_to=§4%s выхватывает Вашу эститецию!
+aorta.est.grab_from=§bВы выхватываете эститенцию %s.
 
 aorta.gen.used=использовал %s
 aorta.gen.shot=стреляет из %s

@@ -27,6 +27,14 @@ class EditParamsView extends Widget {
         estitenceInput.setCallback(s -> character.estitence = (byte) Math.max(estitenceInput.getInt(), 10));
         addChild(estitenceInput);
 
+        addChild(new Label("Sinfulness"));
+        final TextInput sinfulnessInput = new TextInput();
+        sinfulnessInput.getSizeHint().x = 30;
+        sinfulnessInput.setText(String.valueOf(character.sinfulness));
+        sinfulnessInput.setFilter(s -> TextInput.isUnsignedIntBetween(s, -1, 100));
+        sinfulnessInput.setCallback(s -> character.sinfulness = (byte) sinfulnessInput.getInt());
+        addChild(sinfulnessInput);
+
         if (character.has(Trait.psionic)) {
             addChild(new Label("Psionics"));
             final TextInput psionicsInput = new TextInput();

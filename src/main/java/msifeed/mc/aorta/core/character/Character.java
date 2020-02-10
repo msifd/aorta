@@ -17,6 +17,7 @@ public class Character {
     public Set<Trait> traits = new HashSet<>();
     public byte vitalityRate = 40;
     public byte estitence = 50;
+    public byte sinfulness = 0;
     public byte maxPsionics = 0;
 
     public BodyShield shield = new BodyShield();
@@ -41,6 +42,7 @@ public class Character {
         traits.addAll(c.traits);
         vitalityRate = c.vitalityRate;
         estitence = c.estitence;
+        sinfulness = c.sinfulness;
         maxPsionics = c.maxPsionics;
         shield.unpack(c.shield.pack());
         illness.unpack(c.illness.pack());
@@ -101,6 +103,10 @@ public class Character {
         return MathHelper.clamp_int(percent / 25, 0, 4);
     }
 
+    public int sinfulnessLevel() {
+        return sinfulness > 0 ? 1 : sinfulness;
+    }
+
     public boolean isDeadByVitalPart() {
         return bodyParts.values().stream().anyMatch(BodyPart::isVitalGone);
     }
@@ -124,6 +130,7 @@ public class Character {
 
         c.setByte(Tags.vitality, vitalityRate);
         c.setByte(Tags.estitence, estitence);
+        c.setByte(Tags.sinfulness, sinfulness);
         c.setByte(Tags.maxPsionics, maxPsionics);
 
         c.setInteger(Tags.shield, shield.pack());
@@ -155,7 +162,8 @@ public class Character {
         this.traits = TraitDecoder.decode(c.getIntArray(Tags.traits));
 
         this.vitalityRate = (byte) MathHelper.clamp_int(c.getByte(Tags.vitality), 0, 100);
-        this.estitence = (byte) MathHelper.clamp_int(c.getByte(Tags.estitence), 10, 90);
+        this.estitence = c.getByte(Tags.estitence);
+        this.sinfulness = c.getByte(Tags.sinfulness);
         this.maxPsionics = c.getByte(Tags.maxPsionics);
 
         shield.unpack(c.getInteger(Tags.shield));
@@ -174,6 +182,7 @@ public class Character {
         static final String traits = "traits";
         static final String vitality = "vitality";
         static final String estitence = "estitence";
+        static final String sinfulness = "sinfulness";
         static final String maxPsionics = "maxPsi";
         static final String shield = "shield";
         static final String illness = "illness";

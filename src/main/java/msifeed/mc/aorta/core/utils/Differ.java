@@ -56,6 +56,14 @@ public class Differ {
             ));
         }
 
+        if (before.sinfulness != after.sinfulness) {
+            final int n = Math.abs(before.sinfulness - after.sinfulness);
+            diffs.add(L10n.fmt(
+                    before.sinfulness < after.sinfulness ? "aorta.diff.status.add_sin" : "aorta.diff.status.rem_sin",
+                    n, trPoints(n)
+            ));
+        }
+
         if (before.maxPsionics != after.maxPsionics) {
             diffs.add(L10n.fmt("aorta.diff.char.psionics", before.maxPsionics, after.maxPsionics));
         }
@@ -180,6 +188,11 @@ public class Differ {
             ));
         }
 
+        final int sinfulnessAfter = after.sinfulnessLevel();
+        if (before.sinfulnessLevel() != sinfulnessAfter) {
+            diffs.add(L10n.fmt("aorta.diff.status.sinfulness_level", L10n.tr("aorta.status.sinfulness." + sinfulnessAfter)));
+        }
+
         for (BodyPart abp : after.bodyParts.values()) {
             final BodyPart bbp = before.bodyParts.get(abp.name);
             if (bbp != null && abp.isInjured() && !bbp.isInjured())
@@ -215,16 +228,16 @@ public class Differ {
 
     public static void printDiffs(EntityPlayerMP sender, Entity entity, Character before, Character after) {
         final String speaker = before.name.isEmpty() ? entity.getCommandSenderName() : before.name;
-        final String logPrefix = sender == entity ? "" : "(" + speaker + ") ";
-        sendLogs(sender, speaker, logPrefix + diff(before, after));
-        sendLogs(sender, speaker, logPrefix + diffResults(before, after));
+        final String logPrefix = sender == entity ? "" : "(" + sender.getDisplayName() + ") ";
+        sendLogs(sender, speaker, logPrefix, diff(before, after));
+        sendLogs(sender, speaker, logPrefix, diffResults(before, after));
     }
 
-    private static void sendLogs(EntityPlayerMP sender, String speaker, String message) {
+    private static void sendLogs(EntityPlayerMP sender, String speaker, String prefix, String message) {
         if (message.isEmpty())
             return;
 
-        final ChatMessage m = Composer.makeMessage(SpeechType.LOG, sender, message);
+        final ChatMessage m = Composer.makeMessage(SpeechType.LOG, sender, prefix + message);
         m.speaker = speaker;
         ChatHandler.sendSystemChatMessage(sender, m);
 

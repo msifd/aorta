@@ -47,6 +47,13 @@ class ParamsView extends Widget {
         addChild(new Label(L10n.tr("aorta.gui.status.estitence")));
         addChild(new Label(Integer.toString(character.estitence)));
 
+        final int sinfulness = character.sinfulness;
+        final String sinfulnessLevel = L10n.tr("aorta.status.sinfulness." +
+                (sinfulness < 0 ? "-1" : sinfulness > 0 ? "1" : "0"));
+
+        addChild(new Label(L10n.tr("aorta.gui.status.sinfulness")));
+        addChild(new Label(sinfulnessLevel + (sinfulness > 0 ? " (" + sinfulness + ")" : "")));
+
         addChild(new Label(L10n.tr("aorta.gui.status.load")));
         final TextInput loadInput = new TextInput();
         loadInput.getSizeHint().x = 25;
