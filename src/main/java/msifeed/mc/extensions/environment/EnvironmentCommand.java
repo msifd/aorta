@@ -1,7 +1,5 @@
 package msifeed.mc.extensions.environment;
 
-import msifeed.mc.aorta.core.utils.CharacterAttribute;
-import msifeed.mc.commons.traits.Trait;
 import msifeed.mc.sys.cmd.ExtCommand;
 import msifeed.mc.sys.config.ConfigManager;
 import net.minecraft.command.ICommandSender;
@@ -22,7 +20,7 @@ public class EnvironmentCommand extends ExtCommand {
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
         final EntityPlayer player = (EntityPlayer) sender;
-        if (!CharacterAttribute.has(player, Trait.__admin)) {
+        if (!isAdmin(sender)) {
             error(sender, "You are not admin!");
             return;
         }

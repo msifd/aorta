@@ -10,12 +10,10 @@ import msifeed.mc.sys.attributes.AttributeHandler;
 import net.minecraft.command.CommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 
-public enum Speechat {
-    INSTANCE;
-
+public class Speechat {
     static final SimpleNetworkWrapper CHANNEL = NetworkRegistry.INSTANCE.newSimpleChannel(Bootstrap.MODID + ".chat");
 
-    public static void init() {
+    public void init() {
         CHANNEL.registerMessage(SpeechMessageHandler.class, ChatMessage.class, 0x01, Side.CLIENT);
         MinecraftForge.EVENT_BUS.register(new ChatHandler());
         AttributeHandler.INSTANCE.registerAttribute(LangAttribute.INSTANCE);

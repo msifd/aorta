@@ -1,7 +1,7 @@
 package msifeed.mc.genesis.items.data;
 
 import com.google.gson.JsonObject;
-import msifeed.mc.genesis.JsonUtils;
+import msifeed.mc.sys.utils.JsonUtils;
 
 public class BookData {
     public String index;

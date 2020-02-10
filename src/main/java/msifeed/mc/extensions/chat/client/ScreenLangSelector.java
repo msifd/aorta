@@ -1,8 +1,5 @@
 package msifeed.mc.extensions.chat.client;
 
-import msifeed.mc.aorta.core.character.CharRpc;
-import msifeed.mc.aorta.core.character.Character;
-import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import msifeed.mc.extensions.chat.LangAttribute;
 import msifeed.mc.extensions.chat.Language;
 import msifeed.mc.mellow.layout.ListLayout;
@@ -11,6 +8,9 @@ import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.droplist.DropList;
 import msifeed.mc.mellow.widgets.text.Label;
 import msifeed.mc.mellow.widgets.window.Window;
+import msifeed.mc.more.crabs.character.CharRpc;
+import msifeed.mc.more.crabs.character.Character;
+import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.sys.utils.L10n;
 import net.minecraft.entity.EntityLivingBase;
 

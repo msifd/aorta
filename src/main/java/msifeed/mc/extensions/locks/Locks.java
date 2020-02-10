@@ -13,16 +13,14 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.oredict.RecipeSorter;
 
-public enum Locks {
-    INSTANCE;
-
+public class Locks {
     private static final HashFunction hasher = Hashing.murmur3_128(3364);
     private static final LocksRpc rpcHandler = new LocksRpc();
 
     private static final Item iconLock = GenesisCreativeTab.makeIcon("tab_locks");
     public static final GenesisCreativeTab LOCKS = new GenesisCreativeTab(Bootstrap.MODID + ".locks", iconLock);
 
-    public static void init() {
+    public void init() {
         LockType.locks().forEach(t -> GameRegistry.registerItem(new LockItem(t), LockItem.getItemId(t)));
         GameRegistry.registerItem(new BlankKeyItem(), BlankKeyItem.ID);
         GameRegistry.registerItem(new KeyItem(), KeyItem.ID);
@@ -37,7 +35,7 @@ public enum Locks {
         RecipeSorter.register(Bootstrap.MODID + ":copy_key", CopyKeyRecipe.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
 
         Rpc.register(rpcHandler);
-        MinecraftForge.EVENT_BUS.register(INSTANCE);
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     @SubscribeEvent

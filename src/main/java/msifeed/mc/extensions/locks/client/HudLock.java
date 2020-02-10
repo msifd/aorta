@@ -1,6 +1,7 @@
 package msifeed.mc.extensions.locks.client;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import msifeed.mc.Bootstrap;
 import msifeed.mc.extensions.locks.LockObject;
 import msifeed.mc.extensions.locks.LockType;
 import msifeed.mc.extensions.locks.items.LockItem;
@@ -23,7 +24,7 @@ public class HudLock extends Gui {
     private HudLock() {
         LockType.locks().forEach(t -> {
             final String s = "textures/items/" + LockItem.getItemId(t) + ".png";
-            lockIcons.put(t, new ResourceLocation("aorta", s));
+            lockIcons.put(t, new ResourceLocation(Bootstrap.MODID, s));
         });
     }
 

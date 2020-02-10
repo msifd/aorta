@@ -5,9 +5,11 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import msifeed.mc.sys.config.ConfigBuilder;
 import msifeed.mc.sys.config.ConfigEvent;
 import msifeed.mc.sys.config.ConfigManager;
 import msifeed.mc.sys.config.JsonConfig;
+import msifeed.mc.sys.config.adapters.ZoneIdAdapter;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChunkCoordinates;
@@ -25,7 +27,9 @@ import java.util.concurrent.Executors;
 
 public class DBHandler {
     private final Logger LOGGER = LogManager.getLogger("Aorta.Logs");
-    private JsonConfig<ConfigSection> config = ConfigManager.getLocalConfig(TypeToken.get(ConfigSection.class), "database.json");
+    private JsonConfig<ConfigSection> config = ConfigBuilder.of(ConfigSection.class, "database.json")
+            .addAdapter(ZoneId.class, new ZoneIdAdapter())
+            .create();
 
     private final ExecutorService threadPool = Executors.newCachedThreadPool();
     private HikariDataSource dataSource;

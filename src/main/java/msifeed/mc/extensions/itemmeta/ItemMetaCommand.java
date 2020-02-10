@@ -1,7 +1,5 @@
 package msifeed.mc.extensions.itemmeta;
 
-import msifeed.mc.aorta.core.utils.CharacterAttribute;
-import msifeed.mc.commons.traits.Trait;
 import msifeed.mc.sys.cmd.ExtCommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,7 +31,7 @@ public class ItemMetaCommand extends ExtCommand {
         final EntityPlayer player = (EntityPlayer) sender;
         final ItemStack itemStack = player.getHeldItem();
 
-        if (!CharacterAttribute.has(player, Trait.gm)) {
+        if (!isGm(sender)) {
             error(sender, "You are not GM!");
             return;
         }

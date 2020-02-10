@@ -3,7 +3,8 @@ package msifeed.mc.genesis.blocks.templates;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import msifeed.mc.aorta.Aorta;
+import msifeed.mc.Bootstrap;
+import msifeed.mc.more.More;
 import msifeed.mc.extensions.locks.LockObject;
 import msifeed.mc.extensions.locks.LockType;
 import msifeed.mc.extensions.locks.Lockable;
@@ -126,7 +127,7 @@ public class ContainerTemplate extends BlockContainer implements BlockTraitCommo
             return false;
 
         if (player.isSneaking() && lock.getLockType() == LockType.DIGITAL) {
-            Aorta.GUI_HANDLER.toggleDigitalLock(lock);
+            More.GUI_HANDLER.toggleDigitalLock(lock);
             return true;
         } else if (lock.isLocked()) {
             return true;
@@ -196,6 +197,8 @@ public class ContainerTemplate extends BlockContainer implements BlockTraitCommo
     }
 
     public static class TileEntityContainer extends TileEntity implements IInventory, Lockable {
+        public static final String ID = Bootstrap.MODID + ".container";
+
         private ItemStack[] items;
         private String name;
         private final LockObject lock = new LockObject(this);

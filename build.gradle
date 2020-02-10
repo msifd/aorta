@@ -16,9 +16,9 @@ apply plugin: 'idea'
 apply plugin: 'net.nemerosa.versioning'
 
 
-version = "0.31.1-$versioning.info.build"
-group = "msifeed.mc.aorta"
-archivesBaseName = "aorta"
+version = "0.50.0-$versioning.info.build"
+group = "msifeed.mc.more"
+archivesBaseName = "more"
 
 minecraft {
     version = "1.7.10-10.13.4.1614-1.7.10"

@@ -2,7 +2,7 @@ package msifeed.mc.extensions.locks;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import msifeed.mc.Bootstrap;
-import msifeed.mc.aorta.Aorta;
+import msifeed.mc.more.More;
 import msifeed.mc.extensions.locks.items.LockItem;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
@@ -16,7 +16,7 @@ public class LockObject {
     private LockType type = LockType.NONE;
     private int key;
     private boolean locked;
-    private int difficulty = Aorta.DEFINES.get().locks.defaultDifficulty;
+    private int difficulty = More.DEFINES.get().locks.defaultDifficulty;
 
     public LockObject(TileEntity tile) {
         this.tile = tile;
@@ -41,7 +41,7 @@ public class LockObject {
 
     public void setLockType(LockType type) {
         this.type = type;
-        this.difficulty = type == LockType.NONE ? 0 : Aorta.DEFINES.get().locks.defaultDifficulty;
+        this.difficulty = type == LockType.NONE ? 0 : More.DEFINES.get().locks.defaultDifficulty;
         this.locked = false;
         updateTileEntity();
     }

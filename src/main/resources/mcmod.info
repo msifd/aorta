@@ -1,7 +1,7 @@
 [
 {
-  "modid": "aorta",
-  "name": "Aorta",
+  "modid": "more",
+  "name": "More",
   "description": "Awesome Ortega Additions",
   "version": "${version}",
   "mcversion": "${mcversion}",

@@ -1,6 +1,6 @@
 package msifeed.mc.extensions.chat.composer;
 
-import msifeed.mc.aorta.Aorta;
+import msifeed.mc.more.More;
 import msifeed.mc.extensions.chat.ChatMessage;
 import msifeed.mc.extensions.chat.Language;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,7 +14,7 @@ public class LogComposer implements ChatComposer {
         final ChatMessage message = new ChatMessage();
         message.type = SpeechType.LOG;
         message.language = Language.VANILLA;
-        message.radius = Aorta.DEFINES.get().chat.logRadius;
+        message.radius = More.DEFINES.get().chat.logRadius;
         message.speaker = "";
         message.text = text;
         return message;

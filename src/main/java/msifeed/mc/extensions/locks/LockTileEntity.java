@@ -1,5 +1,6 @@
 package msifeed.mc.extensions.locks;
 
+import msifeed.mc.Bootstrap;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -7,7 +8,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
 public class LockTileEntity extends TileEntity implements Lockable {
-    static final String ID = "aorta.lock";
+    static final String ID = Bootstrap.MODID + ".lock";
     private LockObject lock = new LockObject(this);
 
     @Override

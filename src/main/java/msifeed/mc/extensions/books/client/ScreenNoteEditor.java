@@ -1,7 +1,5 @@
 package msifeed.mc.extensions.books.client;
 
-import msifeed.mc.aorta.core.character.Character;
-import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import msifeed.mc.extensions.books.RemoteBook;
 import msifeed.mc.extensions.books.RemoteBookRpc;
 import msifeed.mc.extensions.chat.LangAttribute;
@@ -16,6 +14,8 @@ import msifeed.mc.mellow.widgets.tabs.TabArea;
 import msifeed.mc.mellow.widgets.text.TextInput;
 import msifeed.mc.mellow.widgets.text.TextInputArea;
 import msifeed.mc.mellow.widgets.window.Window;
+import msifeed.mc.more.crabs.character.Character;
+import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.Arrays;

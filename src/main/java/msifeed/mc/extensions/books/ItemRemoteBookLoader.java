@@ -1,7 +1,7 @@
 package msifeed.mc.extensions.books;
 
 import msifeed.mc.Bootstrap;
-import msifeed.mc.aorta.Aorta;
+import msifeed.mc.more.More;
 import msifeed.mc.genesis.GenesisCreativeTab;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -17,7 +17,7 @@ public class ItemRemoteBookLoader extends Item {
 
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-        Aorta.GUI_HANDLER.toggleBookLoader(player);
+        More.GUI_HANDLER.toggleBookLoader(player);
         return itemStack;
     }
 }

@@ -2,8 +2,8 @@ package msifeed.mc.extensions.itemmeta;
 
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import msifeed.mc.commons.traits.Trait;
+import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;

@@ -22,7 +22,7 @@ public class BlockGenerator implements Generator {
     @Override
     public void init() {
         GameRegistry.registerTileEntity(ChestTemplate.ChestEntity.class, ChestTemplate.ChestEntity.ID);
-        GameRegistry.registerTileEntity(ContainerTemplate.TileEntityContainer.class, "aorta.container");
+        GameRegistry.registerTileEntity(ContainerTemplate.TileEntityContainer.class, ContainerTemplate.TileEntityContainer.ID);
     }
 
     @Override

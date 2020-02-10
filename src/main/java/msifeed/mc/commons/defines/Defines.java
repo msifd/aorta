@@ -1,31 +1,28 @@
 package msifeed.mc.commons.defines;
 
-import com.google.gson.reflect.TypeToken;
-import msifeed.mc.aorta.core.rolls.FightAction;
-import msifeed.mc.aorta.defines.AortaDefines;
-import msifeed.mc.aorta.defines.FightRules;
-import msifeed.mc.sys.config.ConfigManager;
+import msifeed.mc.extensions.chat.ChatDefines;
+import msifeed.mc.extensions.locks.LocksDefines;
+import msifeed.mc.more.crabs.combat.CombatDefines;
+import msifeed.mc.sys.config.ConfigBuilder;
 import msifeed.mc.sys.config.JsonConfig;
 
-import java.util.Arrays;
-
 public class Defines {
-    private JsonConfig<AortaDefines> config = ConfigManager.getLocalConfig(TypeToken.get(AortaDefines.class), "defines.json");
-    private JsonConfig<FightRules> rules = ConfigManager.getLocalConfig(TypeToken.get(FightRules.class), "rules.json");
+    private JsonConfig<DefinesContent> config = ConfigBuilder.of(DefinesContent.class, "defines.json").create();
+    private JsonConfig<CombatDefines> combat = ConfigBuilder.of(CombatDefines.class, "combat.json").create();
 
     public Defines() {
-        // Default rules for client
-        final FightRules fr = new FightRules();
-        for (FightAction fa : FightAction.values())
-            fr.modifiers.put(fa, Arrays.asList(0.25, 0.25, 0.25, 0.25));
-        rules.set(fr);
     }
 
-    public AortaDefines get() {
+    public DefinesContent get() {
         return config.get();
     }
 
-    public FightRules rules() {
-        return rules.get();
+    public CombatDefines combat() {
+        return combat.get();
+    }
+
+    public static final class DefinesContent {
+        public ChatDefines chat = new ChatDefines();
+        public LocksDefines locks = new LocksDefines();
     }
 }

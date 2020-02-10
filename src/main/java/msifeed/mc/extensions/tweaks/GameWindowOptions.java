@@ -4,13 +4,14 @@ import com.google.gson.reflect.TypeToken;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import msifeed.mc.sys.config.ConfigBuilder;
 import msifeed.mc.sys.config.ConfigManager;
 import msifeed.mc.sys.config.JsonConfig;
 import org.lwjgl.opengl.Display;
 
 public class GameWindowOptions {
     private final TypeToken<Content> configContentType = new TypeToken<Content>() {};
-    private JsonConfig<Content> config = ConfigManager.getLocalConfig(configContentType, "window.json");
+    private JsonConfig<Content> config = ConfigBuilder.of(configContentType, "window.json").create();
 
     public void preInit() {
         FMLCommonHandler.instance().bus().register(this);
@@ -31,6 +32,6 @@ public class GameWindowOptions {
     }
 
     public static class Content {
-        public String title = "Ortega";
+        public String title = "Morgana";
     }
 }

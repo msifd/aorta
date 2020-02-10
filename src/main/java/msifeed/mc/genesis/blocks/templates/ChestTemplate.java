@@ -1,7 +1,8 @@
 package msifeed.mc.genesis.blocks.templates;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import msifeed.mc.aorta.Aorta;
+import msifeed.mc.Bootstrap;
+import msifeed.mc.more.More;
 import msifeed.mc.extensions.locks.LockObject;
 import msifeed.mc.extensions.locks.LockType;
 import msifeed.mc.extensions.locks.Lockable;
@@ -53,7 +54,7 @@ public class ChestTemplate extends BlockChest implements SpecialBlockRegisterer,
             return false;
 
         if (player.isSneaking() && lock.getLockType() == LockType.DIGITAL) {
-            Aorta.GUI_HANDLER.toggleDigitalLock(lock);
+            More.GUI_HANDLER.toggleDigitalLock(lock);
             return true;
         } else if (lock.isLocked()) {
             return true;
@@ -91,7 +92,7 @@ public class ChestTemplate extends BlockChest implements SpecialBlockRegisterer,
     }
 
     public static class ChestEntity extends TileEntityChest implements Lockable {
-        public static final String ID = "aorta.genesis.chest_tile";
+        public static final String ID = Bootstrap.MODID + ".genesis.chest_tile";
         private final LockObject lock = new LockObject(this);
 
         @Override

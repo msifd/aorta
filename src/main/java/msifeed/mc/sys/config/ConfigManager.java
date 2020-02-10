@@ -1,10 +1,10 @@
 package msifeed.mc.sys.config;
 
-import com.google.gson.reflect.TypeToken;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
+import msifeed.mc.Bootstrap;
 import msifeed.mc.sys.rpc.Rpc;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
@@ -20,20 +20,8 @@ public enum ConfigManager {
     private File configDir;
     private ArrayList<JsonConfig> handlers = new ArrayList<>();
 
-    public static <T> JsonConfig<T> getLocalConfig(TypeToken<T> t, String filename) {
-        JsonConfig<T> handler = new JsonConfig<>(t, filename, false);
-        INSTANCE.handlers.add(handler);
-        return handler;
-    }
-
-    public static <T> JsonConfig<T> getSyncConfig(TypeToken<T> t, String filename) {
-        JsonConfig<T> handler = new JsonConfig<>(t, filename, true);
-        INSTANCE.handlers.add(handler);
-        return handler;
-    }
-
     public static void init(FMLPreInitializationEvent event) {
-        INSTANCE.configDir = new File(event.getModConfigurationDirectory(), "aorta");
+        INSTANCE.configDir = new File(event.getModConfigurationDirectory(), Bootstrap.MODID);
         INSTANCE.configDir.mkdirs();
 
         Rpc.register(ConfigRpc.INSTANCE);
@@ -66,6 +54,10 @@ public enum ConfigManager {
 
     static File getConfigFile(String filename) {
         return new File(INSTANCE.configDir, filename);
+    }
+
+    static void register(JsonConfig jsonConfig) {
+        INSTANCE.handlers.add(jsonConfig);
     }
 
     @SubscribeEvent

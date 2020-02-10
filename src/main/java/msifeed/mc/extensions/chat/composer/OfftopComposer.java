@@ -1,6 +1,6 @@
 package msifeed.mc.extensions.chat.composer;
 
-import msifeed.mc.aorta.Aorta;
+import msifeed.mc.more.More;
 import msifeed.mc.extensions.chat.ChatMessage;
 import msifeed.mc.extensions.chat.Language;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,7 +14,7 @@ class OfftopComposer implements ChatComposer {
         final ChatMessage message = new ChatMessage();
         message.type = SpeechType.OFFTOP;
         message.language = Language.VANILLA;
-        message.radius = Aorta.DEFINES.get().chat.offtopRadius;
+        message.radius = More.DEFINES.get().chat.offtopRadius;
         message.senderId = player.getEntityId();
         message.speaker = player.getDisplayName();
         message.text = text;

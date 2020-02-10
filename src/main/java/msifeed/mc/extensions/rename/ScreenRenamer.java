@@ -1,6 +1,5 @@
 package msifeed.mc.extensions.rename;
 
-import msifeed.mc.aorta.core.utils.CharacterAttribute;
 import msifeed.mc.commons.traits.Trait;
 import msifeed.mc.genesis.items.IItemTemplate;
 import msifeed.mc.mellow.layout.GridLayout;
@@ -15,6 +14,7 @@ import msifeed.mc.mellow.widgets.text.Label;
 import msifeed.mc.mellow.widgets.text.TextInput;
 import msifeed.mc.mellow.widgets.text.TextInputArea;
 import msifeed.mc.mellow.widgets.window.Window;
+import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.sys.utils.L10n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

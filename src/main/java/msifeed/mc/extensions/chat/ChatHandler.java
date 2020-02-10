@@ -28,8 +28,9 @@ public class ChatHandler {
     public static void sendChatMessage(EntityPlayer sender, ChatMessage message) {
         final NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(sender.dimension, sender.posX, sender.posY, sender.posZ, message.radius);
         Speechat.CHANNEL.sendToAllAround(message, point);
-        final String langPrefix = message.language == Language.VANILLA || message.language == Language.COMMON
-                ? "" : String.format("[%s] ", message.language.shortTr());
+        final String langPrefix = "";
+//        final String langPrefix = message.language == Language.VANILLA || message.language == Language.COMMON
+//                ? "" : String.format("[%s] ", message.language.shortTr());
         ExternalLogs.log(sender, message.type.toString().toLowerCase(), langPrefix + message.text);
     }
 
