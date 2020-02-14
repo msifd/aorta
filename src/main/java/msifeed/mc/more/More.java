@@ -4,7 +4,6 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
 import msifeed.mc.commons.defines.DefineCommand;
 import msifeed.mc.commons.defines.Defines;
 import msifeed.mc.commons.logs.ExternalLogs;
@@ -20,13 +19,15 @@ import msifeed.mc.extensions.rename.RenameCommand;
 import msifeed.mc.extensions.rename.RenameRpc;
 import msifeed.mc.extensions.tweaks.EntityControl;
 import msifeed.mc.extensions.tweaks.MakeFoodEdible;
+import msifeed.mc.extensions.tweaks.SetMaxHealth;
 import msifeed.mc.extensions.tweaks.UnstuckCommand;
 import msifeed.mc.genesis.Genesis;
 import msifeed.mc.more.client.GuiHandler;
 import msifeed.mc.more.commands.MoreCommand;
 import msifeed.mc.more.commands.RollCommand;
+import msifeed.mc.more.content.Items;
 import msifeed.mc.more.crabs.Crabs;
-import msifeed.mc.more.tools.*;
+import msifeed.mc.more.tools.ToolItems;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.server.MinecraftServer;
 
@@ -65,8 +66,10 @@ public class More {
         RemoteBookManager.init();
         Nametag.init();
         RenameRpc.init();
+        SetMaxHealth.init();
 
         ToolItems.init();
+        Items.init();
 //        GameRegistry.registerItem(new ItemDebugTool(), ItemDebugTool.ITEM_NAME);
 //        GameRegistry.registerItem(new ItemCharSheet(), ItemCharSheet.ITEM_NAME);
 //        GameRegistry.registerItem(new ItemStatusTool(), ItemStatusTool.ITEM_NAME);

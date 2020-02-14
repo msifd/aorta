@@ -1,4 +1,4 @@
-package msifeed.mc.extensions.items;
+package msifeed.mc.more.content;
 
 import msifeed.mc.Bootstrap;
 import msifeed.mc.genesis.GenesisCreativeTab;
@@ -20,10 +20,5 @@ public class ItemConvictsList extends Item {
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
         return itemStack;
-    }
-
-    @Override
-    public int getEntityLifespan(ItemStack itemStack, World world) {
-        return 0;
     }
 }

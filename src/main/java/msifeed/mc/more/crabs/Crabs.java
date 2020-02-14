@@ -6,9 +6,12 @@ import msifeed.mc.more.crabs.character.CharRpc;
 import msifeed.mc.more.crabs.combat.CombatManager;
 import msifeed.mc.more.crabs.combat.CombatRpc;
 import msifeed.mc.more.crabs.meta.MetaRpc;
+import msifeed.mc.more.crabs.utils.CharacterAttribute;
+import msifeed.mc.more.crabs.utils.MetaAttribute;
 import msifeed.mc.more.tools.ItemBattleStick;
 import msifeed.mc.more.tools.ItemCharSheet;
 import msifeed.mc.more.tools.ItemHealthController;
+import msifeed.mc.sys.attributes.AttributeHandler;
 import msifeed.mc.sys.rpc.Rpc;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -20,8 +23,8 @@ public class Crabs {
     }
 
     public void init() {
-//        AttributeHandler.INSTANCE.registerAttribute(CharacterAttribute.INSTANCE);
-//        AttributeHandler.INSTANCE.registerAttribute(MetaAttribute.INSTANCE);
+        AttributeHandler.INSTANCE.registerAttribute(CharacterAttribute.INSTANCE);
+        AttributeHandler.INSTANCE.registerAttribute(MetaAttribute.INSTANCE);
 
         MinecraftForge.EVENT_BUS.register(combatManager);
 

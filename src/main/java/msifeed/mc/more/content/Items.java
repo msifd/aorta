@@ -1,4 +1,4 @@
-package msifeed.mc.extensions.items;
+package msifeed.mc.more.content;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 
