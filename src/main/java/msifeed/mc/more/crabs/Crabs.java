@@ -14,11 +14,9 @@ import msifeed.mc.sys.attributes.AttributeHandler;
 import msifeed.mc.sys.rpc.Rpc;
 
 public class Crabs {
-    private CombatManager combatManager = new CombatManager();
-
     public Crabs() {
         ActionRegistry.INSTANCE.init();
-        combatManager.init();
+        CombatManager.INSTANCE.init();
     }
 
     public void init() {

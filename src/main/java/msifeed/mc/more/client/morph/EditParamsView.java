@@ -1,4 +1,4 @@
-package msifeed.mc.more.client.gui.morph;
+package msifeed.mc.more.client.morph;
 
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.widgets.Widget;

@@ -1,4 +1,4 @@
-package msifeed.mc.more.client.gui.morph;
+package msifeed.mc.more.client.morph;
 
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
@@ -15,14 +15,14 @@ import msifeed.mc.more.crabs.utils.MetaAttribute;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
-public class ScreenMorph extends MellowGuiScreen {
+public class MorphScreen extends MellowGuiScreen {
     private final EntityLivingBase entity;
     private Character character;
     private MetaInfo metaInfo;
 
     private final Widget content;
 
-    public ScreenMorph(EntityLivingBase entity) {
+    public MorphScreen(EntityLivingBase entity) {
         this.entity = entity;
         this.character = CharacterAttribute.get(entity).map(Character::new).orElse(null);
         this.metaInfo = MetaAttribute.get(entity).map(MetaInfo::new).orElse(null);

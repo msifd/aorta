@@ -1,4 +1,4 @@
-package msifeed.mc.more.client.gui.status;
+package msifeed.mc.more.client.status;
 
 import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.mellow.widgets.Widget;
@@ -12,10 +12,10 @@ import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.sys.utils.L10n;
 import net.minecraft.entity.EntityLivingBase;
 
-public class ScreenStatus extends MellowGuiScreen {
+public class StatusScreen extends MellowGuiScreen {
     private Character character;
 
-    public ScreenStatus(EntityLivingBase entity, boolean editable, boolean isGm) {
+    public StatusScreen(EntityLivingBase entity, boolean editable, boolean isGm) {
         CharacterAttribute.get(entity).ifPresent(c -> character = new Character(c));
         if (character == null) {
             closeGui();

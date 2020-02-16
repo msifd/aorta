@@ -11,11 +11,12 @@ import msifeed.mc.extensions.locks.client.ScreenDigitalLock;
 import msifeed.mc.extensions.locks.client.ScreenSkeletalKey;
 import msifeed.mc.extensions.rename.ScreenRenamer;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
+import msifeed.mc.more.client.combat.CombatEntityMarks;
 import msifeed.mc.more.client.combat.CombatOverlay;
 import msifeed.mc.more.client.combat.CombatScreen;
+import msifeed.mc.more.client.morph.MorphScreen;
 import msifeed.mc.more.client.status.StatusScreen;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
-import msifeed.mc.more.client.gui.morph.ScreenMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityLivingBase;
@@ -28,6 +29,7 @@ public class GuiHandlerClient extends GuiHandler {
     public void init() {
         MinecraftForge.EVENT_BUS.register(HudLock.INSTANCE);
         MinecraftForge.EVENT_BUS.register(CombatOverlay.INSTANCE);
+        MinecraftForge.EVENT_BUS.register(CombatEntityMarks.INSTANCE);
     }
 
     @Override
@@ -39,7 +41,7 @@ public class GuiHandlerClient extends GuiHandler {
     @Override
     public void openCharEditor(EntityLivingBase entity) {
         if (entity.worldObj.isRemote)
-            FMLClientHandler.instance().displayGuiScreen(Minecraft.getMinecraft().thePlayer, new ScreenMorph(entity));
+            FMLClientHandler.instance().displayGuiScreen(Minecraft.getMinecraft().thePlayer, new MorphScreen(entity));
     }
 
     @Override

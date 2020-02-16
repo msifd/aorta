@@ -14,7 +14,9 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
 import java.util.Collection;
 
-public class CombatManager {
+public enum CombatManager {
+    INSTANCE;
+
     public void init() {
         MinecraftForge.EVENT_BUS.register(this);
         Rpc.register(CombatRpc.INSTANCE);

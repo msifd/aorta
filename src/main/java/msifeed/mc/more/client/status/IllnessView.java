@@ -1,4 +1,4 @@
-package msifeed.mc.more.client.gui.status;
+package msifeed.mc.more.client.status;
 
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.layout.ListLayout;
