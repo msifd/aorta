@@ -4,7 +4,6 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
 import msifeed.mc.commons.defines.DefineCommand;
 import msifeed.mc.commons.defines.Defines;
 import msifeed.mc.commons.logs.ExternalLogs;
@@ -16,6 +15,8 @@ import msifeed.mc.extensions.environment.EnvironmentManager;
 import msifeed.mc.extensions.itemmeta.ItemMetaCommand;
 import msifeed.mc.extensions.locks.Locks;
 import msifeed.mc.extensions.nametag.Nametag;
+import msifeed.mc.extensions.noclip.NoclipCommand;
+import msifeed.mc.extensions.noclip.NoclipRpc;
 import msifeed.mc.extensions.rename.RenameCommand;
 import msifeed.mc.extensions.rename.RenameRpc;
 import msifeed.mc.extensions.tweaks.EntityControl;
@@ -26,7 +27,7 @@ import msifeed.mc.more.client.GuiHandler;
 import msifeed.mc.more.commands.MoreCommand;
 import msifeed.mc.more.commands.RollCommand;
 import msifeed.mc.more.crabs.Crabs;
-import msifeed.mc.more.tools.*;
+import msifeed.mc.more.tools.ToolItems;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.server.MinecraftServer;
 
@@ -65,6 +66,7 @@ public class More {
         RemoteBookManager.init();
         Nametag.init();
         RenameRpc.init();
+        NoclipRpc.init();
 
         ToolItems.init();
 //        GameRegistry.registerItem(new ItemDebugTool(), ItemDebugTool.ITEM_NAME);
@@ -90,6 +92,7 @@ public class More {
         handler.registerCommand(new UnstuckCommand());
         handler.registerCommand(new ItemMetaCommand());
         handler.registerCommand(new RollCommand());
+        handler.registerCommand(new NoclipCommand());
 
         Speechat.registerCommands(handler);
         EnvironmentManager.registerCommands(handler);
