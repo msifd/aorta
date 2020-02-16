@@ -13,6 +13,12 @@ public class ZoneIdAdapter implements JsonSerializer<ZoneId>, JsonDeserializer<Z
 
     @Override
     public ZoneId deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+//        if (json.isJsonNull())
+//            return ZoneOffset.UTC;
+//        final String arg = json.getAsJsonPrimitive().getAsString();
+//        if (arg.isEmpty())
+//            return ZoneOffset.UTC;
+//        return ZoneId.of(arg);
         return ZoneId.of(json.getAsJsonPrimitive().getAsString());
     }
 }

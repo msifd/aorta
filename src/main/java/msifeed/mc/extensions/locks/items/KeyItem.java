@@ -43,7 +43,7 @@ public class KeyItem extends Item {
             lock.toggleLocked();
 
             if (!world.isRemote) {
-                final String msg = lock.isLocked() ? "aorta.lock.locked" : "aorta.lock.unlocked";
+                final String msg = lock.isLocked() ? "more.lock.locked" : "more.lock.unlocked";
                 player.addChatMessage(new ChatComponentTranslation(msg));
             }
         }

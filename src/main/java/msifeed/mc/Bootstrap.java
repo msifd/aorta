@@ -25,10 +25,11 @@ public class Bootstrap {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        AttributeHandler.init();
         Rpc.init();
-        MORE.preInit(event);
+        AttributeHandler.init();
         ConfigManager.init(event);
+        MORE.preInit();
+        ConfigManager.reload();
     }
 
     @Mod.EventHandler

@@ -1,16 +1,21 @@
-package msifeed.mc.more.client;
+package msifeed.mc.more.client.common;
 
 import cpw.mods.fml.client.FMLClientHandler;
+import msifeed.mc.commons.traits.Trait;
 import msifeed.mc.extensions.books.client.ScreenBookLoader;
 import msifeed.mc.extensions.books.client.ScreenBookViewer;
 import msifeed.mc.extensions.books.client.ScreenNoteEditor;
-import msifeed.mc.extensions.chat.client.ScreenLangSelector;
 import msifeed.mc.extensions.locks.LockObject;
 import msifeed.mc.extensions.locks.client.HudLock;
 import msifeed.mc.extensions.locks.client.ScreenDigitalLock;
 import msifeed.mc.extensions.locks.client.ScreenSkeletalKey;
 import msifeed.mc.extensions.rename.ScreenRenamer;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
+import msifeed.mc.more.client.combat.CombatOverlay;
+import msifeed.mc.more.client.combat.CombatScreen;
+import msifeed.mc.more.client.status.StatusScreen;
+import msifeed.mc.more.crabs.utils.CharacterAttribute;
+import msifeed.mc.more.client.gui.morph.ScreenMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityLivingBase;
@@ -31,38 +36,26 @@ public class GuiHandlerClient extends GuiHandler {
             toggleGui(CombatScreen.class, () -> new CombatScreen(entity));
     }
 
-//    @Override
-//    public void toggleRoller(EntityLivingBase entity) {
-//        if (entity.worldObj.isRemote)
-//            toggleGui(ScreenRoller.class, () -> new ScreenRoller(entity));
-//    }
-
-//    @Override
-//    public void openCharEditor(EntityLivingBase entity) {
-//        if (entity.worldObj.isRemote)
-//            FMLClientHandler.instance().displayGuiScreen(Minecraft.getMinecraft().thePlayer, new ScreenMorph(entity));
-//    }
-
-//    @Override
-//    public void toggleStatusEditor(EntityLivingBase entity) {
-//        if (entity.worldObj.isRemote) {
-//            final boolean isGm = CharacterAttribute.has(Minecraft.getMinecraft().thePlayer, Trait.gm);
-//            toggleGui(ScreenStatus.class, () -> new ScreenStatus(entity, true, isGm));
-//        }
-//    }
-//
-//    @Override
-//    public void toggleStatus(EntityLivingBase entity) {
-//        if (entity.worldObj.isRemote) {
-//            final boolean isGm = CharacterAttribute.has(Minecraft.getMinecraft().thePlayer, Trait.gm);
-//            toggleGui(ScreenStatus.class, () -> new ScreenStatus(entity, false, isGm));
-//        }
-//    }
+    @Override
+    public void openCharEditor(EntityLivingBase entity) {
+        if (entity.worldObj.isRemote)
+            FMLClientHandler.instance().displayGuiScreen(Minecraft.getMinecraft().thePlayer, new ScreenMorph(entity));
+    }
 
     @Override
-    public void toggleLangSelector(EntityLivingBase entity) {
-        if (entity.worldObj.isRemote)
-            toggleGui(ScreenLangSelector.class, () -> new ScreenLangSelector(entity));
+    public void toggleStatusEditor(EntityLivingBase entity) {
+        if (entity.worldObj.isRemote) {
+            final boolean isGm = CharacterAttribute.has(Minecraft.getMinecraft().thePlayer, Trait.gm);
+            toggleGui(StatusScreen.class, () -> new StatusScreen(entity, true, isGm));
+        }
+    }
+
+    @Override
+    public void toggleStatus(EntityLivingBase entity) {
+        if (entity.worldObj.isRemote) {
+            final boolean isGm = CharacterAttribute.has(Minecraft.getMinecraft().thePlayer, Trait.gm);
+            toggleGui(StatusScreen.class, () -> new StatusScreen(entity, false, isGm));
+        }
     }
 
     @Override

@@ -5,7 +5,6 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import msifeed.mc.sys.config.ConfigBuilder;
-import msifeed.mc.sys.config.ConfigManager;
 import msifeed.mc.sys.config.JsonConfig;
 import org.lwjgl.opengl.Display;
 

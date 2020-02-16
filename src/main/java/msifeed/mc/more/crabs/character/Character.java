@@ -11,10 +11,13 @@ import java.util.Set;
 public class Character {
     public String name = "";
     public String wikiPage = "";
+    public Set<Trait> traits = new HashSet<>();
 
     public EnumMap<Ability, Integer> abilities = new EnumMap<>(Ability.class);
-    public Set<Trait> traits = new HashSet<>();
     public Illness illness = new Illness();
+
+    public int estitence = 50;
+    public int sin = 0;
 
     public Character() {
         for (Ability f : Ability.values())
@@ -24,10 +27,12 @@ public class Character {
     public Character(Character c) {
         name = c.name;
         wikiPage = c.wikiPage;
+        traits.addAll(c.traits);
         for (EnumMap.Entry<Ability, Integer> e : c.abilities.entrySet())
             abilities.put(e.getKey(), e.getValue());
-        traits.addAll(c.traits);
         illness.unpack(c.illness.pack());
+        estitence = c.estitence;
+        sin = c.sin;
     }
 
     public Set<Trait> traits() {
@@ -38,19 +43,30 @@ public class Character {
         return traits.contains(trait);
     }
 
+    public int countMaxHealth() {
+        return Math.max((estitence - 10) / 2, 1);
+    }
+
+    public int sinLevel() {
+        return sin > 0 ? 1 : sin;
+    }
+
     public NBTTagCompound toNBT() {
         final NBTTagCompound c = new NBTTagCompound();
 
         c.setString(Tags.name, name);
         c.setString(Tags.wiki, wikiPage);
+        c.setIntArray(Tags.traits, traits.stream().mapToInt(t -> t.code).toArray());
 
         final int[] abilitiesArr = new int[Ability.values().length];
         for (Ability f : Ability.values())
             abilitiesArr[f.ordinal()] = abilities.getOrDefault(f, 0);
         c.setIntArray(Tags.abilities, abilitiesArr);
 
-        c.setIntArray(Tags.traits, traits.stream().mapToInt(t -> t.code).toArray());
         c.setInteger(Tags.illness, illness.pack());
+
+        c.setInteger(Tags.estitence, estitence);
+        c.setInteger(Tags.sin, sin);
 
         return c;
     }
@@ -58,20 +74,25 @@ public class Character {
     public void fromNBT(NBTTagCompound c) {
         name = c.getString(Tags.name);
         wikiPage = c.getString(Tags.wiki);
+        traits = TraitRegistry.decode(c.getIntArray(Tags.traits));
 
         final int[] abilitiesArr = c.getIntArray(Tags.abilities);
         for (Ability f : Ability.values())
             abilities.put(f, abilitiesArr[f.ordinal()]);
 
-        traits = TraitRegistry.decode(c.getIntArray(Tags.traits));
         illness.unpack(c.getInteger(Tags.illness));
+
+        estitence = c.getInteger(Tags.estitence);
+        sin = c.getInteger(Tags.sin);
     }
 
     private static class Tags {
         static final String name = "name";
         static final String wiki = "wiki";
-        static final String abilities = "abs";
         static final String traits = "traits";
+        static final String abilities = "abs";
         static final String illness = "illness";
+        static final String estitence = "estitence";
+        static final String sin = "sin";
     }
 }

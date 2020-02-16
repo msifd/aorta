@@ -43,7 +43,7 @@ public class LocksRpc {
 
         if (lock.canUnlockWith(secret)) {
             lock.toggleLocked();
-            final String msg = lock.isLocked() ? "aorta.lock.locked" : "aorta.lock.unlocked";
+            final String msg = lock.isLocked() ? "more.lock.locked" : "more.lock.unlocked";
             player.addChatMessage(new ChatComponentTranslation(msg));
         }
     }
@@ -59,7 +59,7 @@ public class LocksRpc {
         if (!lock.isLocked()) {
             lock.setSecret(secret);
             lock.makeToggleSound();
-            player.addChatMessage(new ChatComponentTranslation("aorta.lock.reset"));
+            player.addChatMessage(new ChatComponentTranslation("more.lock.reset"));
         }
     }
 }

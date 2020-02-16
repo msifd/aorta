@@ -1,12 +1,12 @@
-package msifeed.mc.more.crabs.effects;
+package msifeed.mc.more.crabs.action.effects;
 
 import msifeed.mc.more.crabs.combat.ActionContext;
 
-import static msifeed.mc.more.crabs.effects.DynamicEffect.EffectArgs.EFFECT;
-import static msifeed.mc.more.crabs.effects.DynamicEffect.EffectArgs.INT;
+import static msifeed.mc.more.crabs.action.effects.DynamicEffect.EffectArgs.EFFECT;
+import static msifeed.mc.more.crabs.action.effects.DynamicEffect.EffectArgs.INT;
 
 public final class Buff extends DynamicEffect {
-    public Effect effect;
+    private Effect effect;
     private int counter;
     private int stopAt;
 
@@ -17,8 +17,7 @@ public final class Buff extends DynamicEffect {
 
     @Override
     public String toString() {
-        return "(" + (counter - stopAt) + ")"
-                + effect.toString();
+        return name() + ':' + counter + ':' + stopAt + ':' + effect.toString();
     }
 
     @Override

@@ -1,4 +1,4 @@
-package msifeed.mc.more.client;
+package msifeed.mc.more.client.common;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -16,15 +16,13 @@ import java.util.HashMap;
 public enum Keybinds {
     INSTANCE;
 
-    private final KeyBinding statusScreen = new KeyBinding("aorta.gui.status", Keyboard.KEY_C, Bootstrap.MODID);
-    private final KeyBinding rollerScreen = new KeyBinding("aorta.gui.roller", Keyboard.KEY_V, Bootstrap.MODID);
-    private final KeyBinding langScreen = new KeyBinding("aorta.gui.lang_selector", Keyboard.KEY_Y, Bootstrap.MODID);
+    private final KeyBinding statusScreen = new KeyBinding("more.gui.status", Keyboard.KEY_I, Bootstrap.MODID);
+    private final KeyBinding combatScreen = new KeyBinding("more.gui.combat", Keyboard.KEY_O, Bootstrap.MODID);
     private final HashMap<KeyBinding, Runnable> callbacks = new HashMap<>();
 
     public void init() {
         callbacks.put(statusScreen, () -> More.GUI_HANDLER.toggleStatusEditor(Minecraft.getMinecraft().thePlayer));
-        callbacks.put(rollerScreen, () -> More.GUI_HANDLER.toggleRoller(Minecraft.getMinecraft().thePlayer));
-        callbacks.put(langScreen, () -> More.GUI_HANDLER.toggleLangSelector(Minecraft.getMinecraft().thePlayer));
+        callbacks.put(combatScreen, () -> More.GUI_HANDLER.toggleCombat(Minecraft.getMinecraft().thePlayer));
 
         KeyBinding[] keyBindings = new KeyBinding[callbacks.size()];
         callbacks.keySet().toArray(keyBindings);

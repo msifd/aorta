@@ -119,8 +119,8 @@ public class RenameProvider {
 
     static class Tags {
         static final String title = "Name";
-        static final String description = "aorta.desc";
+        static final String description = "more.desc";
         static final String vanillaDescription = "Lore";
-        static final String values = "aorta.values";
+        static final String values = "more.values";
     }
 }

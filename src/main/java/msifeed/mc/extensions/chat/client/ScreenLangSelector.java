@@ -23,7 +23,7 @@ public class ScreenLangSelector extends MellowGuiScreen {
 
     public ScreenLangSelector(EntityLivingBase entity) {
         final Window window = new Window();
-        window.setTitle(L10n.tr("aorta.gui.lang_selector"));
+        window.setTitle(L10n.tr("more.gui.lang_selector"));
         scene.addChild(window);
 
         final Widget windowContent = window.getContent();

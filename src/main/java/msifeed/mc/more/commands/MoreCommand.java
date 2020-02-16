@@ -36,7 +36,7 @@ public class MoreCommand extends ExtCommand {
             case "reload":
                 ConfigManager.reload();
                 ConfigManager.broadcast();
-                sender.addChatMessage(new ChatComponentText("Aorta reloaded"));
+                sender.addChatMessage(new ChatComponentText("More reloaded"));
                 break;
         }
     }

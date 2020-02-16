@@ -5,8 +5,8 @@ import com.google.gson.JsonObject;
 import msifeed.mc.Bootstrap;
 import msifeed.mc.genesis.GenesisTrait;
 import msifeed.mc.genesis.GenesisUnit;
-import msifeed.mc.sys.utils.JsonUtils;
 import msifeed.mc.genesis.blocks.data.TrapData;
+import msifeed.mc.sys.utils.JsonUtils;
 
 import java.util.HashSet;
 import java.util.List;

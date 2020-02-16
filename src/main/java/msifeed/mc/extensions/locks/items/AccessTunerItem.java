@@ -34,7 +34,7 @@ public class AccessTunerItem extends LockpickItem {
     @Override
     protected void successMessage(LockObject lock, EntityPlayer player) {
         final TileEntity te = lock.getTileEntity();
-        player.addChatMessage(new ChatComponentTranslation("aorta.lock.hacked"));
+        player.addChatMessage(new ChatComponentTranslation("more.lock.hacked"));
         te.getWorldObj().playSoundEffect(te.xCoord, te.yCoord, te.zCoord, "random.orb", 0.3f, 99999f);
     }
 }

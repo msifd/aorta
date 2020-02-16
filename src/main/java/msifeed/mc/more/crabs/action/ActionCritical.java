@@ -1,4 +1,4 @@
-package msifeed.mc.more.crabs.combat.action;
+package msifeed.mc.more.crabs.action;
 
 public enum ActionCritical {
     NONE, FAIL, LUCK

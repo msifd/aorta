@@ -36,7 +36,7 @@ public class ScreenRenamer extends MellowGuiScreen {
             return;
 
         final Window window = new Window();
-        window.setTitle(L10n.tr("aorta.gui.renamer"));
+        window.setTitle(L10n.tr("more.gui.renamer"));
         scene.addChild(window);
 
         final Widget content = window.getContent();
@@ -51,13 +51,13 @@ public class ScreenRenamer extends MellowGuiScreen {
         renameTab.setLayout(ListLayout.VERTICAL);
         tabs.addTab("Rename", renameTab);
 
-        renameTab.addChild(new Label(L10n.tr("aorta.gui.renamer.title")));
+        renameTab.addChild(new Label(L10n.tr("more.gui.renamer.title")));
         renameTab.addChild(titleInput);
         titleInput.setMaxLineWidth(400);
         titleInput.setText(RenameProvider.intoAmpersandFormatting(heldItem.getDisplayName()));
         titleInput.setFilter(s -> !s.startsWith(" "));
 
-        renameTab.addChild(new Label(L10n.tr("aorta.gui.renamer.desc")));
+        renameTab.addChild(new Label(L10n.tr("more.gui.renamer.desc")));
         renameTab.addChild(descInput);
         descInput.setLines(getItemDesc(heldItem)); // first line has title
         descInput.setSizeHint(400, 60);
@@ -71,7 +71,7 @@ public class ScreenRenamer extends MellowGuiScreen {
         footer.setLayout(ListLayout.HORIZONTAL);
         renameTab.addChild(footer);
 
-        final ButtonLabel applyBtn = new ButtonLabel(L10n.tr("aorta.gui.apply"));
+        final ButtonLabel applyBtn = new ButtonLabel(L10n.tr("more.gui.apply"));
         applyBtn.getSizeHint().x = 200;
         applyBtn.setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.PREFERRED);
         applyBtn.setClickCallback(() -> RenameRpc.rename(titleInput.getText(), descInput.getLines().collect(Collectors.toList())));

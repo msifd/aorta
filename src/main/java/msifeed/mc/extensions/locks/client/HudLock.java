@@ -56,7 +56,7 @@ public class HudLock extends Gui {
         drawString(fr, diffStr, x + (size - diffStrWidth) / 2 + 1, y + size, 0xaaaaaaaa);
 
         if (lock.getLockType() == LockType.PADLOCK) {
-            String statusText = L10n.tr(lock.isLocked() ? "aorta.lock.locked" : "aorta.lock.unlocked");
+            String statusText = L10n.tr(lock.isLocked() ? "more.lock.locked" : "more.lock.unlocked");
             drawString(fr, statusText, x + size + 2, y + (size - fr.FONT_HEIGHT) / 2, 0xaaaaaaaa);
         }
     }

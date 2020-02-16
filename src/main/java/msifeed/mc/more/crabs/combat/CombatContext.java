@@ -1,9 +1,11 @@
 package msifeed.mc.more.crabs.combat;
 
-import msifeed.mc.more.crabs.effects.Buff;
+import msifeed.mc.more.crabs.action.effects.Buff;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class CombatContext {
     public Stage stage;
@@ -12,6 +14,10 @@ public class CombatContext {
     public boolean knockedOut;
     public ArrayList<Buff> buffs = new ArrayList<>();
 //    public ArrayList<String> buffNames = new ArrayList<>(); // Для вывода клиентом. Сами баффы живут на сервере.
+
+    public int prevTarget = 0;
+    public HashSet<String> prevActions = new HashSet<>();
+    public ItemStack weapon = null;
 
     public ActionContext actionContext = null;
 
@@ -45,6 +51,10 @@ public class CombatContext {
 
         knockedOut = false;
         buffs.clear();
+
+        prevTarget = 0;
+        prevActions.clear();
+        weapon = null;
 //        buffNames.clear();
     }
 

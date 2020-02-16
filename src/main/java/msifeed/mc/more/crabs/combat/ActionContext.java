@@ -1,31 +1,34 @@
 package msifeed.mc.more.crabs.combat;
 
-import msifeed.mc.more.crabs.combat.action.ActionCritical;
-import net.minecraft.item.ItemStack;
+import msifeed.mc.more.crabs.action.Action;
+import msifeed.mc.more.crabs.action.ActionCritical;
 
 public class ActionContext {
-    public final ItemStack weapon;
+    public final CombatContext context;
 
     public int puppet;
     public int target;
 
+    public Action action;
+
     public int damageToDeal = 0;
     public int damageToReceive = 0;
 
-    public int playerScoreMod = 0;
-    public int effectsScore = 0;
-    public int dicesScore = 0;
-    public int statsScore = 0;
-    public int modifiersScore = 0;
+    public int scorePlayerMod = 0;
+    public int scoreEffects = 0;
+    public int scoreDices = 0;
+    public int scoreStats = 0;
+    public int scoreModifiers = 0;
+    public int scoreMultipliers = 0;
     public ActionCritical critical = ActionCritical.NONE;
 
     public boolean successful = true;
 
-    public ActionContext(ItemStack weapon) {
-        this.weapon = weapon;
+    public ActionContext(CombatContext context) {
+        this.context = context;
     }
 
     public int score() {
-        return playerScoreMod + effectsScore + dicesScore + statsScore + modifiersScore;
+        return (scorePlayerMod + scoreEffects + scoreDices + scoreStats + scoreModifiers) * scoreMultipliers;
     }
 }

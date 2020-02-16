@@ -2,7 +2,6 @@ package msifeed.mc.genesis.blocks.templates;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import msifeed.mc.Bootstrap;
-import msifeed.mc.more.More;
 import msifeed.mc.extensions.locks.LockObject;
 import msifeed.mc.extensions.locks.LockType;
 import msifeed.mc.extensions.locks.Lockable;
@@ -12,6 +11,7 @@ import msifeed.mc.genesis.blocks.BlockGenesisUnit;
 import msifeed.mc.genesis.blocks.BlockTraitCommons;
 import msifeed.mc.genesis.blocks.SpecialBlockRegisterer;
 import msifeed.mc.genesis.blocks.client.GenesisChestRenderer;
+import msifeed.mc.more.More;
 import net.minecraft.block.BlockChest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
