@@ -1,10 +1,10 @@
 aorta=Аорта
 
-itemGroup.more.blocks=Море - блоки
-itemGroup.more.items=Море - предметы
-itemGroup.more.tools=Море - инструменты
+itemGroup.more.blocks=Аорта Блоки
+itemGroup.more.items=Аорта Предметы
+itemGroup.more.tools=Аорта Тулсы
 
-item.empty_sign.name=Прозрачный знак
+item.empty_sign.name=Transparent sign
 
 item.tool_debug.name=Дэбаг-тул
 item.tool_char.name=Чар-тул
@@ -32,12 +32,12 @@ more.gui.cancel=Отменить
 
 more.gui.roller=Роллер
 more.gui.roller.title=Роллер: %s
-more.gui.roller.feat=Характеристики
+more.gui.roller.feat=Хар-ки
 more.gui.roller.fight=Бой
 more.gui.roller.target=Цель
-more.gui.roller.mods=Модификаторы
+more.gui.roller.mods=Моды
 more.gui.roller.mods.roll=Мод. броска:
-more.gui.roller.mods.feat=Мод. характеристик:
+more.gui.roller.mods.feat=Мод. характеристик
 more.gui.roller.luck=КРИТЛАК
 more.gui.roller.fail=КРИТФЭЙЛ
 
@@ -51,62 +51,53 @@ more.gui.status=Статус
 more.gui.status.title=Статус: %s
 more.gui.status.status=Статус
 more.gui.status.overall=В целом
+more.gui.status.illness=Болезнь
 more.gui.status.illness.cured=Болезнь излечена!
 more.gui.status.illness.lost=Болезнь победила!
 more.gui.status.illness.limit=Предел болезни
 more.gui.status.illness.limit_visible=Показывать предел болезни
 more.gui.status.illness.debuff=Штраф болезни: %d
-more.gui.status.illness=Болезнь
 more.gui.status.treatment=Лечение
 more.gui.status.other=Прочее
 more.gui.status.other.name=Имя
-more.gui.status.other.wiki=Вики:
+more.gui.status.other.wiki=Вики
+
+more.feature.str=Тренированность
+more.feature.short.str=ТРЕН
+more.feature.dex=Выучка
+more.feature.short.dex=ВЫУЧ
+more.feature.ten=Упорство
+more.feature.short.ten=УПОР
+more.feature.int=Интеллект
+more.feature.short.int=ИНТ
+more.feature.ath=Атлетика
+more.feature.short.ath=АТЛ
+more.feature.end=Выносливость
+more.feature.short.end=ВЫН
+more.feature.hnd=Ремесло
+more.feature.short.hnd=РЕМ
+more.feature.psi=Псионика
+more.feature.short.psi=ПСИ
+
+more.action.hit=Удар
+more.action.special_hit=Особый удар
+more.action.shot=Выстрел
+more.action.special_shot=Особый выстрел
+more.action.self_use=Применение
+more.action.enemy_use=Использование
+more.action.block=Блокирование
+more.action.dodge=Уклонение
+more.action.psionic=Псионика
+
+more.lang.vanilla=Ванильный
 
 more.diff.s=очко
 more.diff.g=очка
 more.diff.m=очков
 
 more.diff.char.feature=изменил стату %s с %d на %d
-more.diff.char.add_bodypart=добавил %s
-more.diff.char.remove_bodypart=убрал %s
-more.diff.char.update_bodypart=изменил %s
-more.diff.char.vitality=изменил порог выносливости %d на %d
-more.diff.char.psionics=изменил уровень ПО с %d на %d
 
-more.diff.status.add_sanity=получил %d %s ментального состояния
-more.diff.status.rem_sanity=потерял %d %s ментального состояния
-more.diff.status.add_psionics=использовал %d ПО
-more.diff.status.rem_psionics=восстановил %d ПО
-more.diff.status.enable_shield=включает %s щит с мощностью %d
-more.diff.status.cast_psionic_shield=накладывает псионический щит с мощностью %d
-more.diff.status.disable_shield=отключает %s щит
-more.diff.status.dispell_psionic_shield=развеивает псионический щит
-more.diff.status.change_shield=сменил %s щит с мощностью %d на %s с мощностью %d
-more.diff.status.add_shield=восстановил %d %s щита
-more.diff.status.rem_shield=потерял %d %s щита
-more.diff.status.add_health=%s восполняет %d %s здоровья
-more.diff.status.rem_health=%s теряет %d %s здоровья
-more.diff.status.rem_health_wound=%s теряет %d %s здоровья (рана)
-more.diff.status.add_armor=%s получает %d %s брони
-more.diff.status.rem_armor=%s теряет %d %s брони
 more.diff.status.name=сменил имя на '%s'
-
-more.diff.status.sanity_level=теперь в %s
-more.diff.status.sanity.0=предельном стрессе
-more.diff.status.sanity.1=сильном стрессе
-more.diff.status.sanity.2=стрессе
-more.diff.status.sanity.3=нормальном настроении
-more.diff.status.sanity.4=приподнятом настроении
-more.diff.status.sanity_mod=метальный мод. теперь равен %d
-more.diff.status.vitality_level=теперь %s
-more.diff.status.vitality.0=здоров
-more.diff.status.vitality.1=ранен
-more.diff.status.vitality.2=травмирован
-more.diff.status.vitality.3=при смерти
-more.diff.status.vitality.4=убит
-more.diff.status.injure=%s - получена травма
-more.diff.status.psionics_level=теперь на %d уровне псионической усталости
-more.diff.status.psionics_critical=теперь истощен и сейчас взорвется!
 
 more.diff.status.illness.add_illness=болезнь прогрессирует на %d пунктов
 more.diff.status.illness.rem_illness=болезнь отступает на %d пунктов

@@ -16,6 +16,9 @@ public class Character {
     public EnumMap<Ability, Integer> abilities = new EnumMap<>(Ability.class);
     public Illness illness = new Illness();
 
+    public int estitence = 50;
+    public int sin = 0;
+
     public Character() {
         for (Ability f : Ability.values())
             abilities.put(f, 7);
@@ -28,6 +31,8 @@ public class Character {
         for (EnumMap.Entry<Ability, Integer> e : c.abilities.entrySet())
             abilities.put(e.getKey(), e.getValue());
         illness.unpack(c.illness.pack());
+        estitence = c.estitence;
+        sin = c.sin;
     }
 
     public Set<Trait> traits() {
@@ -36,6 +41,14 @@ public class Character {
 
     public boolean has(Trait trait) {
         return traits.contains(trait);
+    }
+
+    public int countMaxHealth() {
+        return Math.max((estitence - 10) / 2, 1);
+    }
+
+    public int sinLevel() {
+        return sin > 0 ? 1 : sin;
     }
 
     public NBTTagCompound toNBT() {
@@ -52,6 +65,9 @@ public class Character {
 
         c.setInteger(Tags.illness, illness.pack());
 
+        c.setInteger(Tags.estitence, estitence);
+        c.setInteger(Tags.sin, sin);
+
         return c;
     }
 
@@ -65,6 +81,9 @@ public class Character {
             abilities.put(f, abilitiesArr[f.ordinal()]);
 
         illness.unpack(c.getInteger(Tags.illness));
+
+        estitence = c.getInteger(Tags.estitence);
+        sin = c.getInteger(Tags.sin);
     }
 
     private static class Tags {
@@ -73,5 +92,7 @@ public class Character {
         static final String traits = "traits";
         static final String abilities = "abs";
         static final String illness = "illness";
+        static final String estitence = "estitence";
+        static final String sin = "sin";
     }
 }

@@ -15,6 +15,7 @@ import msifeed.mc.more.client.combat.CombatOverlay;
 import msifeed.mc.more.client.combat.CombatScreen;
 import msifeed.mc.more.client.status.StatusScreen;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
+import msifeed.mc.more.client.gui.morph.ScreenMorph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityLivingBase;
@@ -35,11 +36,11 @@ public class GuiHandlerClient extends GuiHandler {
             toggleGui(CombatScreen.class, () -> new CombatScreen(entity));
     }
 
-//    @Override
-//    public void openCharEditor(EntityLivingBase entity) {
-//        if (entity.worldObj.isRemote)
-//            FMLClientHandler.instance().displayGuiScreen(Minecraft.getMinecraft().thePlayer, new ScreenMorph(entity));
-//    }
+    @Override
+    public void openCharEditor(EntityLivingBase entity) {
+        if (entity.worldObj.isRemote)
+            FMLClientHandler.instance().displayGuiScreen(Minecraft.getMinecraft().thePlayer, new ScreenMorph(entity));
+    }
 
     @Override
     public void toggleStatusEditor(EntityLivingBase entity) {
