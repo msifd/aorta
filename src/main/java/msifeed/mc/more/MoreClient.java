@@ -5,6 +5,7 @@ import cpw.mods.fml.client.FMLClientHandler;
 import msifeed.mc.Bootstrap;
 import msifeed.mc.extensions.chat.Speechat;
 import msifeed.mc.extensions.itemmeta.ItemMetaClient;
+import msifeed.mc.extensions.noclip.NoclipRenderHandler;
 import msifeed.mc.extensions.tweaks.GameWindowOptions;
 import msifeed.mc.mellow.Mellow;
 import msifeed.mc.more.client.ResponsiveEntityStatus;
@@ -39,6 +40,7 @@ public class MoreClient extends More {
 //        BattleMarkRender.init();
         Speechat.initClient();
         itemMeta.init();
+        NoclipRenderHandler.init();
     }
 
     private void initMellow() {

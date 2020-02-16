@@ -14,6 +14,8 @@ import msifeed.mc.extensions.environment.EnvironmentManager;
 import msifeed.mc.extensions.itemmeta.ItemMetaCommand;
 import msifeed.mc.extensions.locks.Locks;
 import msifeed.mc.extensions.nametag.Nametag;
+import msifeed.mc.extensions.noclip.NoclipCommand;
+import msifeed.mc.extensions.noclip.NoclipRpc;
 import msifeed.mc.extensions.rename.RenameCommand;
 import msifeed.mc.extensions.rename.RenameRpc;
 import msifeed.mc.extensions.tweaks.EntityControl;
@@ -67,6 +69,7 @@ public class More {
         Nametag.init();
         RenameRpc.init();
         SetMaxHealth.init();
+        NoclipRpc.init();
 
         ToolItems.init();
         Items.init();
@@ -93,6 +96,7 @@ public class More {
         handler.registerCommand(new UnstuckCommand());
         handler.registerCommand(new ItemMetaCommand());
         handler.registerCommand(new RollCommand());
+        handler.registerCommand(new NoclipCommand());
 
         Speechat.registerCommands(handler);
         EnvironmentManager.registerCommands(handler);
