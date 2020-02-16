@@ -13,10 +13,9 @@ buildscript {
 
 apply plugin: 'forge'
 apply plugin: 'idea'
-apply plugin: 'net.nemerosa.versioning'
 
 
-version = "0.50.0-$versioning.info.build"
+version = "0.50.0"
 group = "msifeed.mc.more"
 archivesBaseName = "more"
 
@@ -67,6 +66,14 @@ processResources {
         exclude 'mcmod.info'
     }
 }
+
+task copyLatestJar(type: Copy) {
+    from jar
+    into 'build/libs'
+    rename { String fileName -> return archivesBaseName + '-latest.jar' }
+}
+
+build.dependsOn copyLatestJar
 
 sourceCompatibility = targetCompatibility = '1.8'
 compileJava { sourceCompatibility = targetCompatibility = '1.8' }
