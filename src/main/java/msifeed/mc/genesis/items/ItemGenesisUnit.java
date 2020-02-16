@@ -4,9 +4,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import msifeed.mc.genesis.GenesisTrait;
 import msifeed.mc.genesis.GenesisUnit;
-import msifeed.mc.sys.utils.JsonUtils;
 import msifeed.mc.genesis.items.data.ItemDurabilityData;
 import msifeed.mc.genesis.items.data.ItemRenderData;
+import msifeed.mc.sys.utils.JsonUtils;
 
 import java.util.HashSet;
 import java.util.LinkedHashMap;

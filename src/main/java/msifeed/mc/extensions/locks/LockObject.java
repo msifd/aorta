@@ -2,8 +2,8 @@ package msifeed.mc.extensions.locks;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import msifeed.mc.Bootstrap;
-import msifeed.mc.more.More;
 import msifeed.mc.extensions.locks.items.LockItem;
+import msifeed.mc.more.More;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
@@ -118,7 +118,7 @@ public class LockObject {
     }
 
     public void readFromNBT(NBTTagCompound compound) {
-        final NBTTagCompound lc = compound.getCompoundTag("aorta.lock");
+        final NBTTagCompound lc = compound.getCompoundTag("more.lock");
         this.type = LockType.values()[lc.getByte("type")];
         this.key = lc.getInteger("key");
         this.difficulty = lc.getByte("diff");
@@ -131,7 +131,7 @@ public class LockObject {
         lc.setInteger("key", this.key);
         lc.setByte("diff", (byte) this.difficulty);
         lc.setBoolean("locked", this.locked);
-        compound.setTag("aorta.lock", lc);
+        compound.setTag("more.lock", lc);
     }
 
     public void copyFrom(LockObject l) {

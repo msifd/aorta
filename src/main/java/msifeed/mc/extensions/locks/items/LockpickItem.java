@@ -55,7 +55,7 @@ public class LockpickItem extends Item {
         if (roll <= lock.getDifficulty() - More.DEFINES.get().locks.pickBreakOffset) {
             pick.stackSize--;
             makeBreakSound(lock);
-            player.addChatMessage(new ChatComponentTranslation("aorta.lock.pick_break"));
+            player.addChatMessage(new ChatComponentTranslation("more.lock.pick_break"));
         }
     }
 
@@ -70,9 +70,9 @@ public class LockpickItem extends Item {
 
     protected void successMessage(LockObject lock, EntityPlayer player) {
         if (lock.isLocked())
-            player.addChatMessage(new ChatComponentTranslation("aorta.lock.locked"));
+            player.addChatMessage(new ChatComponentTranslation("more.lock.locked"));
         else
-            player.addChatMessage(new ChatComponentTranslation("aorta.lock.unlocked"));
+            player.addChatMessage(new ChatComponentTranslation("more.lock.unlocked"));
     }
 
     private boolean tryToPick(LockObject lock, ItemStack pick, EntityPlayer player) {

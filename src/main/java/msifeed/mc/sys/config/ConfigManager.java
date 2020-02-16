@@ -24,9 +24,8 @@ public enum ConfigManager {
         INSTANCE.configDir = new File(event.getModConfigurationDirectory(), Bootstrap.MODID);
         INSTANCE.configDir.mkdirs();
 
-        Rpc.register(ConfigRpc.INSTANCE);
         FMLCommonHandler.instance().bus().register(INSTANCE);
-        reload();
+        Rpc.register(ConfigRpc.INSTANCE);
     }
 
     public static void reload() {
@@ -38,6 +37,7 @@ public enum ConfigManager {
             MinecraftForge.EVENT_BUS.post(new ConfigEvent.AfterUpdate());
             save();
         } catch (Exception e) {
+            e.printStackTrace();
             for (JsonConfig c : INSTANCE.handlers)
                 c.fromJson(backup.get(c.getFilename()));
         }

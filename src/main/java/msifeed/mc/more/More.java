@@ -2,9 +2,7 @@ package msifeed.mc.more;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
 import msifeed.mc.commons.defines.DefineCommand;
 import msifeed.mc.commons.defines.Defines;
 import msifeed.mc.commons.logs.ExternalLogs;
@@ -22,11 +20,11 @@ import msifeed.mc.extensions.tweaks.EntityControl;
 import msifeed.mc.extensions.tweaks.MakeFoodEdible;
 import msifeed.mc.extensions.tweaks.UnstuckCommand;
 import msifeed.mc.genesis.Genesis;
-import msifeed.mc.more.client.GuiHandler;
+import msifeed.mc.more.client.common.GuiHandler;
 import msifeed.mc.more.commands.MoreCommand;
 import msifeed.mc.more.commands.RollCommand;
 import msifeed.mc.more.crabs.Crabs;
-import msifeed.mc.more.tools.*;
+import msifeed.mc.more.tools.ToolItems;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.server.MinecraftServer;
 
@@ -37,8 +35,8 @@ public class More {
     )
     private static Genesis genesis;
     @SidedProxy(
-            serverSide = "msifeed.mc.more.client.GuiHandler",
-            clientSide = "msifeed.mc.more.client.GuiHandlerClient"
+            serverSide = "msifeed.mc.more.client.common.GuiHandler",
+            clientSide = "msifeed.mc.more.client.common.GuiHandlerClient"
     )
     public static GuiHandler GUI_HANDLER;
     public static Defines DEFINES = new Defines();
@@ -49,11 +47,12 @@ public class More {
     private Speechat speechat = new Speechat();
     private Locks locks = new Locks();
 
-    public void preInit(FMLPreInitializationEvent event) {
-        genesis.init();
+    public void preInit() {
     }
 
     public void init() {
+        genesis.init();
+
         crabs.init();
         externalLogs.init();
 

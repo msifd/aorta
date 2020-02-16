@@ -7,8 +7,8 @@ import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.sys.config.ConfigBuilder;
 import msifeed.mc.sys.config.ConfigEvent;
-import msifeed.mc.sys.config.ConfigManager;
 import msifeed.mc.sys.config.JsonConfig;
+import msifeed.mc.sys.config.adapters.ZoneIdAdapter;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
@@ -16,6 +16,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
 
+import java.time.ZoneId;
 import java.util.HashMap;
 
 public enum EnvironmentManager {
@@ -23,6 +24,7 @@ public enum EnvironmentManager {
 
     private final TypeToken<HashMap<Integer, WorldEnv>> configContentType = new TypeToken<HashMap<Integer, WorldEnv>>() {};
     private final JsonConfig<HashMap<Integer, WorldEnv>> config = ConfigBuilder.of(configContentType, "world_env.json")
+            .addAdapter(ZoneId.class, new ZoneIdAdapter())
             .sync()
             .create();
 

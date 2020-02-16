@@ -1,9 +1,9 @@
 package msifeed.mc.extensions.locks.items;
 
 import msifeed.mc.Bootstrap;
-import msifeed.mc.more.More;
 import msifeed.mc.extensions.locks.LockObject;
 import msifeed.mc.extensions.locks.Locks;
+import msifeed.mc.more.More;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

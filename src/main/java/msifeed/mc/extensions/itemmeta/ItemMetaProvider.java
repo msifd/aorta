@@ -6,8 +6,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import java.util.Arrays;
 
 public class ItemMetaProvider {
-    private static final String OWNER_TAG = "aorta.meta.owner";
-    private static final String LINES_TAG = "aorta.meta.lines";
+    private static final String OWNER_TAG = "more.meta.owner";
+    private static final String LINES_TAG = "more.meta.lines";
 
     public static String getOwner(ItemStack itemStack) {
         if (!itemStack.hasTagCompound())

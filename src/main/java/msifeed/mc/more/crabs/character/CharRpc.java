@@ -30,10 +30,10 @@ import java.io.IOException;
 public enum CharRpc {
     INSTANCE;
 
-    private static final String setLang = Bootstrap.MODID + ":core.lang";
-    private static final String updateChar = Bootstrap.MODID + ":core.char";
-    private static final String refreshName = Bootstrap.MODID + ":core.char.refreshName";
-    private static final String clearEntity = Bootstrap.MODID + ":core.char.clear";
+    private static final String setLang = Bootstrap.MODID + ":lang";
+    private static final String updateChar = Bootstrap.MODID + ":char.update";
+    private static final String refreshName = Bootstrap.MODID + ":char.refreshName";
+    private static final String clearEntity = Bootstrap.MODID + ":char.clear";
 
     public static void setLang(int entityId, Language lang) {
         Rpc.sendToServer(setLang, entityId, lang);

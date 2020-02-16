@@ -1,12 +1,12 @@
 package msifeed.mc.genesis.blocks.templates;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import msifeed.mc.more.More;
 import msifeed.mc.extensions.locks.*;
 import msifeed.mc.genesis.GenesisCreativeTab;
 import msifeed.mc.genesis.blocks.BlockGenesisUnit;
 import msifeed.mc.genesis.blocks.BlockTraitCommons;
 import msifeed.mc.genesis.blocks.SpecialBlockRegisterer;
+import msifeed.mc.more.More;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.ITileEntityProvider;

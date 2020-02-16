@@ -1,7 +1,7 @@
 package msifeed.mc.extensions.books;
 
-import msifeed.mc.more.More;
 import msifeed.mc.genesis.GenesisCreativeTab;
+import msifeed.mc.more.More;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

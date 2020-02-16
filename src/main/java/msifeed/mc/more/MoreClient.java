@@ -2,14 +2,13 @@ package msifeed.mc.more;
 
 import com.google.common.io.CharStreams;
 import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import msifeed.mc.Bootstrap;
-import msifeed.mc.more.client.Keybinds;
-import msifeed.mc.more.client.ResponsiveEntityStatus;
 import msifeed.mc.extensions.chat.Speechat;
 import msifeed.mc.extensions.itemmeta.ItemMetaClient;
 import msifeed.mc.extensions.tweaks.GameWindowOptions;
 import msifeed.mc.mellow.Mellow;
+import msifeed.mc.more.client.ResponsiveEntityStatus;
+import msifeed.mc.more.client.common.Keybinds;
 import net.minecraft.client.resources.IResourcePack;
 import net.minecraft.util.ResourceLocation;
 
@@ -23,9 +22,9 @@ public class MoreClient extends More {
     private ItemMetaClient itemMeta = new ItemMetaClient();
 
     @Override
-    public void preInit(FMLPreInitializationEvent event) {
+    public void preInit() {
         gameWindowOptions.preInit();
-        super.preInit(event);
+        super.preInit();
         initMellow();
     }
 

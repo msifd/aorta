@@ -1,8 +1,8 @@
 package msifeed.mc.extensions.chat.composer;
 
-import msifeed.mc.more.More;
 import msifeed.mc.extensions.chat.ChatMessage;
 import msifeed.mc.extensions.chat.Language;
+import msifeed.mc.more.More;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;

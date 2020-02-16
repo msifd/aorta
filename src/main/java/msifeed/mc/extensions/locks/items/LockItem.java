@@ -34,7 +34,7 @@ public class LockItem extends Item {
     @Override
     public void addInformation(ItemStack itemStack, EntityPlayer player, List lines, boolean advanced) {
         if (isBlank(itemStack))
-            lines.add(L10n.tr("aorta.lock.blank_lock"));
+            lines.add(L10n.tr("more.lock.blank_lock"));
     }
 
     @Override
@@ -53,7 +53,7 @@ public class LockItem extends Item {
         if (lock.hasLock() && lock.isLocked())
             return;
 
-        final String messageId = lock.hasLock() ? "aorta.lock.replaced" : "aorta.lock.installed";
+        final String messageId = lock.hasLock() ? "more.lock.replaced" : "more.lock.installed";
         itemStack.stackSize -= 1;
 
         if (lock.hasLock()) {

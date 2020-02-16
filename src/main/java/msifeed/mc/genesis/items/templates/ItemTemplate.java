@@ -75,7 +75,7 @@ public class ItemTemplate extends Item implements IItemTemplate {
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
         if (unit.durData.maxDurability > 0 && itemStack.getItemDamage() <= 1) {
             if (world.isRemote)
-                player.addChatMessage(new ChatComponentText("§4" + L10n.fmt("aorta.gen.broken")));
+                player.addChatMessage(new ChatComponentText("§4" + L10n.fmt("more.gen.broken")));
             return itemStack;
         }
 
@@ -88,14 +88,14 @@ public class ItemTemplate extends Item implements IItemTemplate {
     private String getUseText(EntityPlayer player, ItemStack itemStack, boolean special) {
         if (unit.hasTrait(GenesisTrait.reusable))
             if (unit.maxUsages == 0)
-                return special ? "aorta.gen.attack_special" : "aorta.gen.attack";
+                return special ? "more.gen.attack_special" : "more.gen.attack";
             else
                 if (itemStack.getTagCompound().getInteger("usages") == unit.maxUsages)
-                    return "aorta.gen.reload";
+                    return "more.gen.reload";
                 else
-                    return special ? "aorta.gen.shot_special" : "aorta.gen.shot";
+                    return special ? "more.gen.shot_special" : "more.gen.shot";
 
-        return "aorta.gen.used";
+        return "more.gen.used";
     }
 
     private void onUse(EntityPlayer player, ItemStack itemStack, boolean special) {
@@ -159,7 +159,7 @@ public class ItemTemplate extends Item implements IItemTemplate {
                 ExternalLogs.log(player, "log", m.text);
 
                 if (unit.maxUsages > 0 && itemStack.getTagCompound().getInteger("usages") == 0)
-                    player.addChatMessage(new ChatComponentText("§f" + L10n.fmt("aorta.gen.needs_reload")));
+                    player.addChatMessage(new ChatComponentText("§f" + L10n.fmt("more.gen.needs_reload")));
             }
         }
         return itemStack;

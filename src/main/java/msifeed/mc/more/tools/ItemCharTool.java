@@ -2,8 +2,8 @@ package msifeed.mc.more.tools;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.Bootstrap;
-import msifeed.mc.more.More;
 import msifeed.mc.genesis.GenesisCreativeTab;
+import msifeed.mc.more.More;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
