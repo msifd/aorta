@@ -39,7 +39,7 @@ public class ItemConvictionIndict extends Item {
             final Character before = new Character(after);
             after.sin = (byte)Math.min(after.sin + 1, 100);
 
-            player.addChatMessage(new ChatComponentText(L10n.fmt("aorta.sin.indict", target.getDisplayName())));
+            player.addChatMessage(new ChatComponentText(L10n.fmt("more.sin.indict", target.getDisplayName())));
             heldItem.stackSize--;
 
             CharacterAttribute.INSTANCE.set(player, after);

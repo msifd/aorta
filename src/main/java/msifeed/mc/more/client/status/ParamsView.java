@@ -28,15 +28,15 @@ class ParamsView extends Widget {
     private void fillEditable() {
         setLayout(new GridLayout());
 
-        addChild(new Label(L10n.tr("aorta.gui.status.estitence")));
+        addChild(new Label(L10n.tr("more.gui.status.estitence")));
         addChild(new Label(Integer.toString(character.estitence)));
 
-        final int sinfulness = character.sin;
-        final String sinfulnessLevel = L10n.tr("aorta.status.sinfulness." +
-                (sinfulness < 0 ? "-1" : sinfulness > 0 ? "1" : "0"));
+        final int sin = character.sin;
+        final String sinLevel = L10n.tr("more.status.sin." +
+                (sin < 0 ? "-1" : sin > 0 ? "1" : "0"));
 
-        addChild(new Label(L10n.tr("aorta.gui.status.sinfulness")));
-        addChild(new Label(sinfulnessLevel + (sinfulness > 0 ? " (" + sinfulness + ")" : "")));
+        addChild(new Label(L10n.tr("more.gui.status.sin")));
+        addChild(new Label(sinLevel + (sin > 0 ? " (" + sin + ")" : "")));
     }
 
     private void fillNonEditable() {

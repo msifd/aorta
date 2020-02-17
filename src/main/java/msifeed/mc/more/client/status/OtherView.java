@@ -31,7 +31,7 @@ class OtherView extends Widget {
     private void fillEditable() {
         clearChildren();
 
-        addChild(new Label(L10n.tr("aorta.gui.status.other.name")));
+        addChild(new Label(L10n.tr("more.gui.status.other.name")));
         final TextInput nameInput = new TextInput();
         nameInput.getSizeHint().x = 300;
         nameInput.setText(String.valueOf(character.name));
@@ -39,7 +39,7 @@ class OtherView extends Widget {
         nameInput.setCallback(s -> character.name = s);
         addChild(nameInput);
 
-        addChild(new Label(L10n.tr("aorta.gui.status.other.wiki")));
+        addChild(new Label(L10n.tr("more.gui.status.other.wiki")));
         final TextInput wikiInput = new TextInput();
         wikiInput.getSizeHint().x = 300;
         wikiInput.setText(String.valueOf(character.wikiPage));
@@ -51,7 +51,7 @@ class OtherView extends Widget {
         clearChildren();
 
         if (!character.wikiPage.isEmpty()) {
-            addChild(new Label(L10n.tr("aorta.gui.status.other.wiki")));
+            addChild(new Label(L10n.tr("more.gui.status.other.wiki")));
             addChild(new WikiUrlLabel(character.wikiPage));
         }
     }

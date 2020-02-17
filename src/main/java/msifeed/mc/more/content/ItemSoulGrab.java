@@ -40,7 +40,7 @@ public class ItemSoulGrab extends Item {
             final Character playerBefore = new Character(playerAfter);
 
             if (playerAfter.estitence >= 90) {
-                player.addChatMessage(new ChatComponentText(L10n.fmt("aorta.est.grab_not_enough", target.getDisplayName())));
+                player.addChatMessage(new ChatComponentText(L10n.fmt("more.est.grab_not_enough", target.getDisplayName())));
                 return;
             }
 
@@ -48,7 +48,7 @@ public class ItemSoulGrab extends Item {
             final Character targetBefore = new Character(targetAfter);
 
             if (targetAfter.estitence <= 10) {
-                player.addChatMessage(new ChatComponentText(L10n.fmt("aorta.est.grab_too_much")));
+                player.addChatMessage(new ChatComponentText(L10n.fmt("more.est.grab_too_much")));
                 return;
             }
 
@@ -56,8 +56,8 @@ public class ItemSoulGrab extends Item {
             playerAfter.sin = (byte)Math.min(playerAfter.sin + 1, 100);
             targetAfter.estitence--;
 
-            player.addChatMessage(new ChatComponentText(L10n.fmt("aorta.est.grab_from", target.getDisplayName())));
-            target.addChatMessage(new ChatComponentText(L10n.fmt("aorta.est.grab_to", player.getDisplayName())));
+            player.addChatMessage(new ChatComponentText(L10n.fmt("more.est.grab_from", target.getDisplayName())));
+            target.addChatMessage(new ChatComponentText(L10n.fmt("more.est.grab_to", player.getDisplayName())));
             heldItem.stackSize--;
 
             CharacterAttribute.INSTANCE.set(player, playerAfter);

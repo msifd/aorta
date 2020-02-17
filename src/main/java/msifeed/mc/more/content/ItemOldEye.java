@@ -35,10 +35,10 @@ public class ItemOldEye extends Item {
             final EntityPlayer target = (EntityPlayer) event.target;
             final Character c = CharacterAttribute.require(target);
             final int sinLevel = c.sinLevel();
-            final String sinStr = sinLevel > 0 ? Integer.toString(c.sin) : L10n.fmt("aorta.sin.none");
-            final String sinLevelStr = L10n.fmt("aorta.status.sinfulness." + sinLevel);
+            final String sinStr = sinLevel > 0 ? Integer.toString(c.sin) : L10n.fmt("more.sin.none");
+            final String sinLevelStr = L10n.fmt("more.status.sin." + sinLevel);
             player.addChatMessage(new ChatComponentText((sinLevel > 0 ? "§4" : sinLevel < 0 ? "§b" : "§f") +
-                    L10n.fmt("aorta.sin.scan", target.getDisplayName(), sinLevelStr, sinStr)));
+                    L10n.fmt("more.sin.scan", target.getDisplayName(), sinLevelStr, sinStr)));
 
             if (heldItem.getItem() instanceof ItemFragileOldEye)
                 heldItem.stackSize--;

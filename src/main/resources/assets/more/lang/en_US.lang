@@ -1,10 +1,10 @@
 aorta=Аорта
 
-itemGroup.more.blocks=Аорта Блоки
-itemGroup.more.items=Аорта Предметы
-itemGroup.more.tools=Аорта Тулсы
+itemGroup.more.blocks=Море - Блоки
+itemGroup.more.items=Море - Предметы
+itemGroup.more.tools=Море - Тулсы
 
-item.empty_sign.name=Transparent sign
+item.empty_sign.name=Прозрачный знак
 
 item.tool_debug.name=Дэбаг-тул
 item.tool_char.name=Чар-тул
@@ -26,6 +26,14 @@ item.lock_advanced_lockpick.name=Авто-отмычка
 item.lock_access_tuner.name=Настройщик доступа
 item.lock_advanced_tuner.name=Рекомбинатор схем
 item.lock_skeletal_key.name=Скелетный ключ
+
+item.old_eye.name=Старый Глаз
+item.fragile_old_eye.name=Хрупкий Старый Глаз
+item.conviction_indict.name=Указание Осуждения
+item.forgivness_stone.name=Камень Прощения
+item.convicts_list.name=Список Осужденных
+item.gifter_offering.name=Жертва Дарителя
+item.soul_grab.name=Хват Души
 
 more.gui.apply=Применить
 more.gui.cancel=Отменить
@@ -51,6 +59,8 @@ more.gui.status=Статус
 more.gui.status.title=Статус: %s
 more.gui.status.status=Статус
 more.gui.status.overall=В целом
+more.gui.status.estitence=Эститенция
+more.gui.status.sin=Планопорядочность
 more.gui.status.illness=Болезнь
 more.gui.status.illness.cured=Болезнь излечена!
 more.gui.status.illness.lost=Болезнь победила!
@@ -79,6 +89,10 @@ more.feature.short.hnd=РЕМ
 more.feature.psi=Псионика
 more.feature.short.psi=ПСИ
 
+more.status.sin.-1=Праведник
+more.status.sin.0=Порядочная Душа
+more.status.sin.1=Грешник
+
 more.action.hit=Удар
 more.action.special_hit=Особый удар
 more.action.shot=Выстрел
@@ -98,6 +112,13 @@ more.diff.m=очков
 more.diff.char.feature=изменил стату %s с %d на %d
 
 more.diff.status.name=сменил имя на '%s'
+more.diff.status.add_estitence=получает %d %s эститенции
+more.diff.status.rem_estitence=теряет %d %s эститенции
+more.diff.status.add_max_health=получает %d ед. максимального здоровья
+more.diff.status.rem_max_health=теряет %d ед. максимального здоровья
+more.diff.status.add_sin=повышает грешность на %d %s
+more.diff.status.rem_sin=снижает грешность на %d %s
+more.diff.status.sinfulness_level=теперь %s
 
 more.diff.status.illness.add_illness=болезнь прогрессирует на %d пунктов
 more.diff.status.illness.rem_illness=болезнь отступает на %d пунктов
@@ -123,6 +144,21 @@ more.lock.reset=§7Новый пароль установлен
 more.lock.blank_lock=§7Новенький
 more.lock.pick_break=§7Отмычка сломалась
 more.lock.hacked=§7Замок взломан
+
+more.sin.scan=По ауре %s Вы определяете, что это %s и за ним %s грех(ов).
+more.sin.none=нет
+more.sin.indict=§4Вы накладываете грех на %s.
+more.sin.forgive=§bВы прощаете грех %s.
+more.sin.not_sinner=§4%s не является грешником!
+
+more.est.gift_not_enough=§4У Вас недостаточно эститенции.
+more.est.gift_too_much=§7%s - слишком могущественная душа для получения дополнительной эститенции.
+more.est.gift_to=§bВы преподносите Вашу эститецию %s.
+more.est.gift_from=§b%s преподносит Вам свою эститенцию.
+more.est.grab_not_enough=§4У %s недостаточно эститенции.
+more.est.grab_too_much=§7Вы слишком могущественная душа для получения дополнительной эститенции.
+more.est.grab_to=§4%s выхватывает Вашу эститецию!
+more.est.grab_from=§bВы выхватываете эститенцию %s.
 
 more.gen.used=использовал %s
 more.gen.shot=стреляет из %s

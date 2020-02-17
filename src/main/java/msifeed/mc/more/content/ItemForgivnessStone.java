@@ -37,13 +37,13 @@ public class ItemForgivnessStone extends Item {
             final EntityPlayer target = (EntityPlayer) event.target;
             final Character after = CharacterAttribute.require(target);
             if (after.sin == 0) {
-                player.addChatMessage(new ChatComponentText(L10n.fmt("aorta.sin.not_sinner", target.getDisplayName())));
+                player.addChatMessage(new ChatComponentText(L10n.fmt("more.sin.not_sinner", target.getDisplayName())));
                 return;
             }
             final Character before = new Character(after);
             after.sin = (byte)Math.max(after.sin - 1, 0);
 
-            player.addChatMessage(new ChatComponentText(L10n.fmt("aorta.sin.forgive", target.getDisplayName())));
+            player.addChatMessage(new ChatComponentText(L10n.fmt("more.sin.forgive", target.getDisplayName())));
             heldItem.stackSize--;
 
             CharacterAttribute.INSTANCE.set(player, after);

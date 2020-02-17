@@ -23,7 +23,7 @@ public class StatusScreen extends MellowGuiScreen {
         }
 
         final Window window = new Window();
-        window.setTitle(L10n.fmt("aorta.gui.status.title", character.name.isEmpty() ? entity.getCommandSenderName() : character.name));
+        window.setTitle(L10n.fmt("more.gui.status.title", character.name.isEmpty() ? entity.getCommandSenderName() : character.name));
         scene.addChild(window);
 
         final Widget content = window.getContent();
@@ -32,14 +32,14 @@ public class StatusScreen extends MellowGuiScreen {
         final ParamsView paramsView = new ParamsView(character, editable);
         final IllnessView illnessView = new IllnessView(character, editable, isGm);
         final OtherView otherView = new OtherView(character, editable);
-        tabs.addTab(L10n.tr("aorta.gui.status.status"), paramsView);
+        tabs.addTab(L10n.tr("more.gui.status.status"), paramsView);
         if (editable || character.illness.limit > 0)
-            tabs.addTab(L10n.tr("aorta.gui.status.illness"), illnessView);
-        tabs.addTab(L10n.tr("aorta.gui.status.other"), otherView);
+            tabs.addTab(L10n.tr("more.gui.status.illness"), illnessView);
+        tabs.addTab(L10n.tr("more.gui.status.other"), otherView);
         content.addChild(tabs);
 
         if (editable) {
-            final ButtonLabel submitBtn = new ButtonLabel(L10n.tr("aorta.gui.apply"));
+            final ButtonLabel submitBtn = new ButtonLabel(L10n.tr("more.gui.apply"));
             submitBtn.setClickCallback(() -> {
                 if (!entity.isEntityAlive()) {
                     System.out.println("entity is actually dead");

@@ -41,7 +41,7 @@ public class Differ {
         if (before.estitence != after.estitence) {
             final int n = Math.abs(before.estitence - after.estitence);
             diffs.add(L10n.fmt(
-                    before.estitence < after.estitence ? "aorta.diff.status.add_estitence" : "aorta.diff.status.rem_estitence",
+                    before.estitence < after.estitence ? "more.diff.status.add_estitence" : "more.diff.status.rem_estitence",
                     n, trPoints(n)
             ));
         }
@@ -49,7 +49,7 @@ public class Differ {
         if (before.sin != after.sin) {
             final int n = Math.abs(before.sin - after.sin);
             diffs.add(L10n.fmt(
-                    before.sin < after.sin ? "aorta.diff.status.add_sin" : "aorta.diff.status.rem_sin",
+                    before.sin < after.sin ? "more.diff.status.add_sin" : "more.diff.status.rem_sin",
                     n, trPoints(n)
             ));
         }
@@ -98,13 +98,13 @@ public class Differ {
         if (hpBefore != hpAfter) {
             final int n = Math.abs(hpBefore - hpAfter);
             diffs.add(L10n.fmt(
-                    hpBefore < hpAfter ? "aorta.diff.status.add_max_health" : "aorta.diff.status.rem_max_health", n
+                    hpBefore < hpAfter ? "more.diff.status.add_max_health" : "more.diff.status.rem_max_health", n
             ));
         }
 
         final int sinAfter = after.sinLevel();
         if (before.sinLevel() != sinAfter) {
-            diffs.add(L10n.fmt("aorta.diff.status.sin_level", L10n.tr("aorta.status.sin." + sinAfter)));
+            diffs.add(L10n.fmt("more.diff.status.sin_level", L10n.tr("more.status.sin." + sinAfter)));
         }
 
         return String.join(", ", diffs);

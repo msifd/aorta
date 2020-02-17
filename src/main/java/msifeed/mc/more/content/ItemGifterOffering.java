@@ -40,7 +40,7 @@ public class ItemGifterOffering extends Item {
             final Character playerBefore = new Character(playerAfter);
 
             if (playerAfter.estitence <= 10) {
-                player.addChatMessage(new ChatComponentText(L10n.fmt("aorta.est.gift_not_enough")));
+                player.addChatMessage(new ChatComponentText(L10n.fmt("more.est.gift_not_enough")));
                 return;
             }
 
@@ -48,7 +48,7 @@ public class ItemGifterOffering extends Item {
             final Character targetBefore = new Character(targetAfter);
 
             if (targetAfter.estitence >= 90) {
-                player.addChatMessage(new ChatComponentText(L10n.fmt("aorta.est.gift_too_much", target.getDisplayName())));
+                player.addChatMessage(new ChatComponentText(L10n.fmt("more.est.gift_too_much", target.getDisplayName())));
                 return;
             }
 
@@ -59,8 +59,8 @@ public class ItemGifterOffering extends Item {
             targetAfter.illness.treatment = 0;
             target.heal(target.getMaxHealth());
 
-            player.addChatMessage(new ChatComponentText(L10n.fmt("aorta.est.gift_to", target.getDisplayName())));
-            target.addChatMessage(new ChatComponentText(L10n.fmt("aorta.est.gift_from", player.getDisplayName())));
+            player.addChatMessage(new ChatComponentText(L10n.fmt("more.est.gift_to", target.getDisplayName())));
+            target.addChatMessage(new ChatComponentText(L10n.fmt("more.est.gift_from", player.getDisplayName())));
             heldItem.stackSize--;
 
             CharacterAttribute.INSTANCE.set(player, playerAfter);
