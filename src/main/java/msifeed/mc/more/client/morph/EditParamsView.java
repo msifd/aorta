@@ -14,8 +14,8 @@ class EditParamsView extends Widget {
         final TextInput estitenceInput = new TextInput();
         estitenceInput.getSizeHint().x = 30;
         estitenceInput.setText(String.valueOf(character.estitence));
-        estitenceInput.setFilter(s -> TextInput.isUnsignedIntBetween(s, 1, 90));
-        estitenceInput.setCallback(s -> character.estitence = (byte) Math.max(estitenceInput.getInt(), 10));
+        estitenceInput.setFilter(s -> TextInput.isUnsignedIntBetween(s, 1, 100));
+        estitenceInput.setCallback(s -> character.estitence = (byte) Math.max(estitenceInput.getInt(), 20));
         addChild(estitenceInput);
 
         addChild(new Label("Sin"));

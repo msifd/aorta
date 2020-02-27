@@ -16,7 +16,7 @@ public class Character {
     public EnumMap<Ability, Integer> abilities = new EnumMap<>(Ability.class);
     public Illness illness = new Illness();
 
-    public int estitence = 50;
+    public int estitence = 60;
     public int sin = 0;
 
     public Character() {
@@ -44,7 +44,7 @@ public class Character {
     }
 
     public int countMaxHealth() {
-        return Math.max((estitence - 10) / 2, 1);
+        return Math.max((estitence - 20) / 2, 1);
     }
 
     public int sinLevel() {

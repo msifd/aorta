@@ -39,7 +39,7 @@ public class ItemSoulGrab extends Item {
             final Character playerAfter = CharacterAttribute.require(player);
             final Character playerBefore = new Character(playerAfter);
 
-            if (playerAfter.estitence >= 90) {
+            if (playerAfter.estitence >= 100) {
                 player.addChatMessage(new ChatComponentText(L10n.fmt("more.est.grab_not_enough", target.getDisplayName())));
                 return;
             }
@@ -47,7 +47,7 @@ public class ItemSoulGrab extends Item {
             final Character targetAfter = CharacterAttribute.require(target);
             final Character targetBefore = new Character(targetAfter);
 
-            if (targetAfter.estitence <= 10) {
+            if (targetAfter.estitence <= 20) {
                 player.addChatMessage(new ChatComponentText(L10n.fmt("more.est.grab_too_much")));
                 return;
             }
