@@ -3,6 +3,7 @@ package msifeed.mc.more.content;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.Bootstrap;
 import msifeed.mc.genesis.GenesisCreativeTab;
+import msifeed.mc.more.More;
 import msifeed.mc.more.crabs.character.Character;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.more.crabs.utils.Differ;
@@ -41,7 +42,7 @@ public class ItemForgivnessStone extends Item {
                 return;
             }
             final Character before = new Character(after);
-            after.sin = (byte)Math.max(after.sin - 1, 0);
+            after.sin = Math.max(after.sin - More.DEFINES.get().items.forgivnessStoneSin, 0);
 
             player.addChatMessage(new ChatComponentText(L10n.fmt("more.sin.forgive", target.getDisplayName())));
             heldItem.stackSize--;
