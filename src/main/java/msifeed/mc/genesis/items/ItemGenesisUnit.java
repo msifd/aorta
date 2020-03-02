@@ -25,6 +25,8 @@ public class ItemGenesisUnit extends GenesisUnit {
     public int maxUsages = 0;
     public int specialAttackCost = 0;
     public int sanity = 0;
+    public boolean drug = false;
+    public String drugType;
 
     public ItemGenesisUnit(JsonObject json, HashSet<GenesisTrait> traits) {
         super(json, traits);
@@ -51,6 +53,12 @@ public class ItemGenesisUnit extends GenesisUnit {
 
         if (json.has(Props.sanity))
             JsonUtils.consumeInt(json, Props.sanity, i -> sanity = i);
+
+        if (json.has(Props.drug))
+            JsonUtils.consumeBool(json, Props.drug, i -> drug = i);
+
+        if (json.has(Props.drugType))
+            JsonUtils.consumeString(json, Props.drugType, i -> drugType = i);
     }
 
     private void loadDescriptionValues(JsonObject json) {
@@ -94,5 +102,7 @@ public class ItemGenesisUnit extends GenesisUnit {
         static final String usages = "usages";
         static final String specialAttackCost = "specialAttackCost";
         static final String sanity = "sanity";
+        static final String drug = "drug";
+        static final String drugType = "drugType";
     }
 }

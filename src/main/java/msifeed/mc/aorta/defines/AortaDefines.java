@@ -8,4 +8,5 @@ public class AortaDefines {
     public ChatDefines chat = new ChatDefines();
     public LocksDefines locks = new LocksDefines();
     public SanityDefines sanity = new SanityDefines();
+    public DrugDefines drug = new DrugDefines();
 }

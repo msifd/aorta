@@ -210,6 +210,13 @@ aorta.diff.status.illness.5=пациент в хорошем состоянии,
 aorta.diff.status.illness.6=пациент в великолепном состоянии, болезнь уже отступает
 aorta.diff.status.illness.7=пациент настолько здоров, что здоровее, кажется, уже некуда
 
+aorta.diff.status.drug.fulfilled=утоляет потребность в %s
+aorta.diff.status.drug.needed=необходимо принять %s
+aorta.diff.status.drug.become_addicted=обретает зависимость от %s
+aorta.diff.status.drug.not_addicted=теперь не зависит от %s
+aorta.diff.status.drug.less_addicted=теперь меньше зависит от %s
+aorta.diff.status.drug.more_addicted=теперь сильнее зависит от %s
+
 aorta.lock.locked=§7Закрыто
 aorta.lock.unlocked=§7Открыто
 aorta.lock.installed=§7Замок установлен

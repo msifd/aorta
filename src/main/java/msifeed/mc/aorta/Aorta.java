@@ -7,6 +7,7 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import msifeed.mc.aorta.client.GuiHandler;
 import msifeed.mc.aorta.core.Core;
+import msifeed.mc.aorta.core.commands.AddictSetCommand;
 import msifeed.mc.aorta.core.commands.DumpRollsCommand;
 import msifeed.mc.aorta.core.commands.RollCommand;
 import msifeed.mc.aorta.tools.AortaCommand;
@@ -84,6 +85,7 @@ public class Aorta {
         handler.registerCommand(new DumpRollsCommand());
         handler.registerCommand(new ItemMetaCommand());
         handler.registerCommand(new RollCommand());
+        handler.registerCommand(new AddictSetCommand());
 
         Speechat.registerCommands(handler);
         EnvironmentManager.registerCommands(handler);
