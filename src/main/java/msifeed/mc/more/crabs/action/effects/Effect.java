@@ -4,25 +4,22 @@ import msifeed.mc.more.crabs.combat.ActionContext;
 
 public abstract class Effect {
     public abstract String name();
-
     public abstract boolean shouldApply(Stage stage, ActionContext target, ActionContext other);
-
-    public abstract void apply(Stage stage, ActionContext target, ActionContext other);
+    public abstract void apply(ActionContext target, ActionContext other);
 
     @Override
     public String toString() {
         return name();
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        return this.getClass().equals(obj.getClass());
+    public boolean equals(Effect e) {
+        return this.getClass().equals(e.getClass());
     }
 
     // // // // // // // //
 
     public enum Stage {
-        SCORE, AFTER_SCORE, ACTION, AFTER_ACTION
+        SCORE, ACTION
     }
 
     // // // // // // // //
@@ -39,8 +36,9 @@ public abstract class Effect {
         }
 
         @Override
-        public void apply(Stage stage, ActionContext target, ActionContext other) {
-            target.damageToReceive += other.damageToDeal;
+        public void apply(ActionContext target, ActionContext other) {
+            if (other != null)
+                target.damageToReceive.addAll(other.damageToDeal);
         }
     }
 
@@ -58,8 +56,8 @@ public abstract class Effect {
         }
 
         @Override
-        public void apply(Stage stage, ActionContext target, ActionContext other) {
-            target.damageToReceive += other.damageToDeal;
+        public void apply(ActionContext target, ActionContext other) {
+            // TODO: impl skip
         }
     }
 }

@@ -2,10 +2,9 @@ package msifeed.mc.more.crabs.rolls;
 
 import msifeed.mc.more.crabs.character.Ability;
 
-import java.io.Serializable;
 import java.util.EnumMap;
 
-public class Modifiers implements Serializable {
+public class Modifiers {
     public int roll = 0;
     public EnumMap<Ability, Integer> features = new EnumMap<>(Ability.class);
 
@@ -18,7 +17,11 @@ public class Modifiers implements Serializable {
     }
 
     public boolean isZeroed() {
-        return roll == 0 && features.isEmpty();
+        return roll == 0 && !hasAbilityMods();
+    }
+
+    public boolean hasAbilityMods() {
+        return features.values().stream().anyMatch(i -> i != 0);
     }
 
     public int feat(Ability ability) {

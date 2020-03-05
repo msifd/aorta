@@ -63,12 +63,12 @@ public abstract class EntityAttribute<T> {
         }
     }
 
-    public void broadcast(EntityPlayerMP playerMP, Entity entity) {
+    protected void broadcast(EntityPlayerMP playerMP, Entity entity) {
         final SyncAttrMessage msg = new SyncAttrMessage(entity, this);
         AttributeHandler.INSTANCE.CHANNEL.sendTo(msg, playerMP);
     }
 
-    public void broadcast(World world, Entity entity) {
+    protected void broadcast(World world, Entity entity) {
         if (!(world instanceof WorldServer))
             return;
 

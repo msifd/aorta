@@ -5,11 +5,11 @@
   "description": "Awesome Ortega Additions",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "https://github.com/msifd/aorta",
+  "url": "https://github.com/msifd/more.",
   "updateUrl": "",
   "authorList": ["msifeed"],
   "credits": "",
-  "logoFile": "aorta.png",
+  "logoFile": "more..png",
   "screenshots": [],
   "dependencies": []
 }

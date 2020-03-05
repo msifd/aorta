@@ -17,12 +17,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-
-import java.io.IOException;
 
 public enum CharRpc {
     INSTANCE;
@@ -33,16 +29,11 @@ public enum CharRpc {
     private static final String clearEntity = Bootstrap.MODID + ":char.clear";
 
     public static void setLang(int entityId, Language lang) {
-        Rpc.sendToServer(setLang, entityId, lang);
+        Rpc.sendToServer(setLang, entityId, lang.ordinal());
     }
 
     public static void updateChar(int entityId, Character character) {
-        try {
-            byte[] charBytes = CompressedStreamTools.compress(character.toNBT());
-            Rpc.sendToServer(updateChar, entityId, charBytes);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Rpc.sendToServer(updateChar, entityId, character.toNBT());
     }
 
     public static void clearEntity(int entityId) {
@@ -50,17 +41,17 @@ public enum CharRpc {
     }
 
     @RpcMethod(setLang)
-    public void onSetLang(MessageContext ctx, int entityId, Language lang) {
+    public void onSetLang(MessageContext ctx, int entityId, int langIdx) {
         final World world = ctx.getServerHandler().playerEntity.worldObj;
         final Entity entity = world.getEntityByID(entityId);
         if (!(entity instanceof EntityPlayer))
             return;
 
-        LangAttribute.INSTANCE.set(entity, lang);
+        LangAttribute.INSTANCE.set(entity, Language.values()[langIdx]);
     }
 
     @RpcMethod(updateChar)
-    public void onUpdateChar(MessageContext ctx, int entityId, byte[] charBytes) {
+    public void onUpdateChar(MessageContext ctx, int entityId, NBTTagCompound charNbt) {
         final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
         final Entity entity = sender.worldObj.getEntityByID(entityId);
         if (!(entity instanceof EntityLivingBase))
@@ -76,33 +67,27 @@ public enum CharRpc {
             return;
         }
 
-        try {
-            final NBTTagCompound charNbt = CompressedStreamTools.func_152457_a(charBytes, new NBTSizeTracker(2097152L));
+        final Character after = CharacterAttribute.get(entity).orElse(null);
+        if (after != null) {
+            final Character before = new Character(after);
+            CharacterAttribute.INSTANCE.update(entity, c -> c.fromNBT(charNbt));
 
-            final Character after = CharacterAttribute.get(entity).orElse(null);
-            if (after != null) {
-                final Character before = new Character(after);
-                CharacterAttribute.INSTANCE.update(entity, c -> c.fromNBT(charNbt));
+            Differ.printDiffs(sender, entity, before, after);
 
-                Differ.printDiffs(sender, entity, before, after);
-
-                if (entity instanceof EntityPlayer) {
-                    if (!before.name.equals(after.name)) {
-                        ((EntityPlayer) entity).refreshDisplayName();
-                        Rpc.sendToAll(refreshName, entityId);
-                    }
-
-                    if (before.estitence != after.estitence) {
-                        ((EntityPlayer)entity).getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(after.countMaxHealth());
-                    }
+            if (entity instanceof EntityPlayer) {
+                if (!before.name.equals(after.name)) {
+                    ((EntityPlayer) entity).refreshDisplayName();
+                    Rpc.sendToAll(refreshName, entityId);
                 }
-            } else {
-                final Character c = new Character();
-                c.fromNBT(charNbt);
-                CharacterAttribute.INSTANCE.set(entity, c);
+
+                if (before.estitence != after.estitence) {
+                    ((EntityPlayer)entity).getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(after.countMaxHealth());
+                }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } else {
+            final Character c = new Character();
+            c.fromNBT(charNbt);
+            CharacterAttribute.INSTANCE.set(entity, c);
         }
     }
 

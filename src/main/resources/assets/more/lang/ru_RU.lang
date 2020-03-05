@@ -1,8 +1,6 @@
-aorta=Аорта
-
-itemGroup.more.blocks=Море - Блоки
-itemGroup.more.items=Море - Предметы
-itemGroup.more.tools=Море - Тулсы
+itemGroup.more.blocks=Море Блоки
+itemGroup.more.items=Море Предметы
+itemGroup.more.tools=Море Тулсы
 
 item.empty_sign.name=Прозрачный знак
 

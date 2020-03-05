@@ -11,9 +11,8 @@ import msifeed.mc.extensions.locks.client.ScreenDigitalLock;
 import msifeed.mc.extensions.locks.client.ScreenSkeletalKey;
 import msifeed.mc.extensions.rename.ScreenRenamer;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
-import msifeed.mc.more.client.combat.CombatEntityMarks;
-import msifeed.mc.more.client.combat.CombatOverlay;
 import msifeed.mc.more.client.combat.CombatScreen;
+import msifeed.mc.more.client.combat.other.CombatEntityMarks;
 import msifeed.mc.more.client.morph.MorphScreen;
 import msifeed.mc.more.client.status.StatusScreen;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
@@ -28,7 +27,7 @@ import java.util.function.Supplier;
 public class GuiHandlerClient extends GuiHandler {
     public void init() {
         MinecraftForge.EVENT_BUS.register(HudLock.INSTANCE);
-        MinecraftForge.EVENT_BUS.register(CombatOverlay.INSTANCE);
+//        MinecraftForge.EVENT_BUS.register(CombatOverlay.INSTANCE);
         MinecraftForge.EVENT_BUS.register(CombatEntityMarks.INSTANCE);
     }
 
@@ -36,6 +35,13 @@ public class GuiHandlerClient extends GuiHandler {
     public void toggleCombat(EntityLivingBase entity) {
         if (entity.worldObj.isRemote)
             toggleGui(CombatScreen.class, () -> new CombatScreen(entity));
+    }
+
+
+    public void toggleCombatController(EntityLivingBase entity) {
+        if (entity.worldObj.isRemote)
+            toggleGui(CombatScreen.class, () -> new CombatScreen(entity));
+//            toggleGui(CombatControllerScreen.class, () -> new CombatControllerScreen(entity));
     }
 
     @Override

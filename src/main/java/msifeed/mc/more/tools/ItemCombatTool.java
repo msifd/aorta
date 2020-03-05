@@ -32,9 +32,9 @@ public class ItemCombatTool extends Item {
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
         // RMB + Shift = Self
-        if (player.isSneaking()) {
+        if (player.isSneaking())
             handleEntity(player);
-        }
+
         return itemStack;
     }
 

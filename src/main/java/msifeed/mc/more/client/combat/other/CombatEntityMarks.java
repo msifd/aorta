@@ -1,8 +1,7 @@
-package msifeed.mc.more.client.combat;
+package msifeed.mc.more.client.combat.other;
 
 import com.google.common.collect.Lists;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import msifeed.mc.more.crabs.combat.CombatContext;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -22,25 +21,21 @@ public enum CombatEntityMarks {
         final EntityPlayer self = Minecraft.getMinecraft().thePlayer;
         if (event.entity == self) return;
 
-        final CombatContext cocx = CombatAttribute.get(event.entity).orElse(null);
-        if (cocx == null) {
-            renderLines(event, Lists.newArrayList("not in combat"));
-        }
+        CombatAttribute.get(event.entity).ifPresent(ctx -> {
+            renderLines(event, Lists.newArrayList("combatant - " + ctx.stage.toString()));
+        });
     }
 
     private void renderLines(RenderLivingEvent.Post event, List<String> lines) {
         final RenderManager renderManager = RenderManager.instance;
         final FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
 
-        float f = 1.6F;
-        float f1 = 0.016666668F * f;
 
         GL11.glPushMatrix();
 
-        GL11.glTranslatef((float) event.x, (float) event.y + event.entity.height + 1F, (float) event.z);
-//        GL11.glNormal3f(0.0F, 1.0F, 0.0F);
+        GL11.glTranslated(event.x, event.y + event.entity.height + 1F, event.z);
         GL11.glRotatef(-renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
-//        GL11.glRotatef(renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
+        final float f1 = 0.016666668F * 1.6F;
         GL11.glScalef(-f1, -f1, f1);
 
 //        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

@@ -236,9 +236,6 @@ public class Widget {
             w.render();
     }
 
-    public void refill() {
-    }
-
     public Collection<Widget> getChildren() {
         return children;
     }

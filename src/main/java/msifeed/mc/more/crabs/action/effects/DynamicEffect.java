@@ -1,18 +1,20 @@
 package msifeed.mc.more.crabs.action.effects;
 
 import msifeed.mc.more.crabs.combat.ActionContext;
+import msifeed.mc.more.crabs.combat.DamageAmount;
+import net.minecraft.util.DamageSource;
 
 import static msifeed.mc.more.crabs.action.effects.DynamicEffect.EffectArgs.FLOAT;
 import static msifeed.mc.more.crabs.action.effects.DynamicEffect.EffectArgs.INT;
 
 public abstract class DynamicEffect extends Effect {
     public abstract EffectArgs[] args();
-    public abstract void init(Object[] args);
+    public abstract DynamicEffect produce(Object[] args);
 
     // // // // // // // //
 
     public enum EffectArgs {
-        INT, FLOAT, EFFECT
+        INT, FLOAT, STRING, EFFECT
     }
 
     public static class DamageAdder extends DynamicEffect {
@@ -24,23 +26,25 @@ public abstract class DynamicEffect extends Effect {
         }
 
         @Override
-        public EffectArgs[] args() {
-            return new EffectArgs[]{INT};
-        }
-
-        @Override
-        public void init(Object[] args) {
-            value = (int) args[0];
-        }
-
-        @Override
         public boolean shouldApply(Stage stage, ActionContext target, ActionContext other) {
             return stage == Stage.ACTION;
         }
 
         @Override
-        public void apply(Stage stage, ActionContext target, ActionContext other) {
-            target.damageToReceive += value;
+        public void apply(ActionContext target, ActionContext other) {
+            target.damageToReceive.add(new DamageAmount(DamageSource.generic, value));
+        }
+
+        @Override
+        public EffectArgs[] args() {
+            return new EffectArgs[]{INT};
+        }
+
+        @Override
+        public DynamicEffect produce(Object[] args) {
+            final DamageAdder e = new DamageAdder();
+            e.value = (int) args[0];
+            return e;
         }
 
         @Override
@@ -58,23 +62,26 @@ public abstract class DynamicEffect extends Effect {
         }
 
         @Override
-        public EffectArgs[] args() {
-            return new EffectArgs[]{FLOAT};
-        }
-
-        @Override
-        public void init(Object[] args) {
-            value = (float) args[0];
-        }
-
-        @Override
         public boolean shouldApply(Stage stage, ActionContext target, ActionContext other) {
             return stage == Stage.ACTION;
         }
 
         @Override
-        public void apply(Stage stage, ActionContext target, ActionContext other) {
-            target.damageToReceive *= value;
+        public void apply(ActionContext target, ActionContext other) {
+            for (DamageAmount da : target.damageToReceive)
+                da.amount *= value;
+        }
+
+        @Override
+        public EffectArgs[] args() {
+            return new EffectArgs[]{FLOAT};
+        }
+
+        @Override
+        public DynamicEffect produce(Object[] args) {
+            final DamageMultiplier e = new DamageMultiplier();
+            e.value = (float) args[0];
+            return e;
         }
 
         @Override
@@ -92,23 +99,25 @@ public abstract class DynamicEffect extends Effect {
         }
 
         @Override
-        public EffectArgs[] args() {
-            return new EffectArgs[]{INT};
-        }
-
-        @Override
-        public void init(Object[] args) {
-            value = (int) args[0];
-        }
-
-        @Override
         public boolean shouldApply(Stage stage, ActionContext target, ActionContext other) {
             return stage == Stage.SCORE;
         }
 
         @Override
-        public void apply(Stage stage, ActionContext target, ActionContext other) {
+        public void apply(ActionContext target, ActionContext other) {
             target.scoreEffects += value;
+        }
+
+        @Override
+        public EffectArgs[] args() {
+            return new EffectArgs[]{INT};
+        }
+
+        @Override
+        public DynamicEffect produce(Object[] args) {
+            final ScoreAdder e = new ScoreAdder();
+            e.value = (int) args[0];
+            return e;
         }
 
         @Override
@@ -126,23 +135,25 @@ public abstract class DynamicEffect extends Effect {
         }
 
         @Override
-        public EffectArgs[] args() {
-            return new EffectArgs[]{FLOAT};
-        }
-
-        @Override
-        public void init(Object[] args) {
-            value = (float) args[0];
-        }
-
-        @Override
         public boolean shouldApply(Stage stage, ActionContext target, ActionContext other) {
             return stage == Stage.SCORE;
         }
 
         @Override
-        public void apply(Stage stage, ActionContext target, ActionContext other) {
-            target.scoreMultipliers += value;
+        public EffectArgs[] args() {
+            return new EffectArgs[]{FLOAT};
+        }
+
+        @Override
+        public DynamicEffect produce(Object[] args) {
+            final ScoreMultiplier e = new ScoreMultiplier();
+            e.value = (float) args[0];
+            return e;
+        }
+
+        @Override
+        public void apply(ActionContext target, ActionContext other) {
+            target.scoreMultiplier = value;
         }
 
         @Override
@@ -160,22 +171,24 @@ public abstract class DynamicEffect extends Effect {
         }
 
         @Override
+        public boolean shouldApply(Stage stage, ActionContext target, ActionContext other) {
+            return stage == Stage.SCORE;
+        }
+
+        @Override
         public EffectArgs[] args() {
             return new EffectArgs[]{INT};
         }
 
         @Override
-        public void init(Object[] args) {
-            value = (int) args[0];
+        public DynamicEffect produce(Object[] args) {
+            final MinScore e = new MinScore();
+            e.value = (int) args[0];
+            return e;
         }
 
         @Override
-        public boolean shouldApply(Stage stage, ActionContext target, ActionContext other) {
-            return stage == Stage.AFTER_SCORE;
-        }
-
-        @Override
-        public void apply(Stage stage, ActionContext target, ActionContext other) {
+        public void apply(ActionContext target, ActionContext other) {
             target.successful = target.score() >= value;
         }
 

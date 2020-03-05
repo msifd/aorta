@@ -59,12 +59,12 @@ public class RemoteBookRpc {
     }
 
     public static void publish(String text, String title, RemoteBook.Style style, Language lang) {
-        Rpc.sendToServer(publishRequest, text, title, style, lang);
+        Rpc.sendToServer(publishRequest, text, title, style.ordinal(), lang.ordinal());
     }
 
     @RpcMethod(publishRequest)
-    public void publishRequest(MessageContext ctx, String text, String title, RemoteBook.Style style, Language lang) {
+    public void publishRequest(MessageContext ctx, String text, String title, int style, int lang) {
         final EntityPlayerMP player = ctx.getServerHandler().playerEntity;
-        RemoteBookManager.INSTANCE.publishBook(player, text, title, style, lang);
+        RemoteBookManager.INSTANCE.publishBook(player, text, title, RemoteBook.Style.values()[style], Language.values()[lang]);
     }
 }
