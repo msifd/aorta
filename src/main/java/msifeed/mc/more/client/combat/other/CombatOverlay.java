@@ -4,10 +4,13 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.more.crabs.action.effects.Buff;
 import msifeed.mc.more.crabs.combat.CombatContext;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
+import msifeed.mc.more.tools.ItemCombatTool;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import org.lwjgl.opengl.GL11;
@@ -21,6 +24,11 @@ public enum CombatOverlay {
 
     @SubscribeEvent
     public void onRenderOverlay(RenderGameOverlayEvent.Text event) {
+        final EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+        final ItemStack heldItem = player.getHeldItem();
+        if (heldItem == null || !(heldItem.getItem() instanceof ItemCombatTool))
+            return;
+
         final FontRenderer fr = RenderManager.instance.getFontRenderer();
 
         if (fr == null)

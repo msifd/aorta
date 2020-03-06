@@ -25,6 +25,8 @@ class AttrProp<T> implements IExtendedEntityProperties {
 
     @Override
     public void loadNBTData(NBTTagCompound root) {
-        value = attribute.loadNBTData(root);
+        final T tmp = attribute.loadNBTData(root);
+        if (tmp != null)
+            value = tmp;
     }
 }

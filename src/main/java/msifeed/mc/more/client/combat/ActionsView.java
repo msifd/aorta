@@ -28,7 +28,12 @@ public class ActionsView extends Widget {
             final ActionTag incomingActionType;
             if (ctx.stage == CombatContext.Stage.DEFEND) {
                 final Entity foe = entity.worldObj.getEntityByID(ctx.target);
-                incomingActionType = CombatAttribute.require(foe).action.getType();
+                if (foe == null)
+                    return;
+                final ActionHeader action = CombatAttribute.require(foe).action;
+                if (action == null)
+                    return;
+                incomingActionType = action.getType();
             } else {
                 incomingActionType = null;
             }

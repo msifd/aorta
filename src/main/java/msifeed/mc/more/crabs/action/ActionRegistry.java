@@ -94,8 +94,7 @@ public enum ActionRegistry {
         this.actions.put(EQUIP_ACTION.id, EQUIP_ACTION);
         this.actions.put(RELOAD_ACTION.id, RELOAD_ACTION);
 
-        if (FMLCommonHandler.instance().getMinecraftServerInstance() != null)
-            ActionRpc.broadcastToAll(actions.values());
+        ActionRpc.broadcastToAll(actions.values());
     }
 
     private static boolean verifyAction(Action action, ArrayList<Action> list) {

@@ -13,6 +13,7 @@ import msifeed.mc.extensions.rename.ScreenRenamer;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.more.client.combat.CombatScreen;
 import msifeed.mc.more.client.combat.other.CombatEntityMarks;
+import msifeed.mc.more.client.combat.other.CombatOverlay;
 import msifeed.mc.more.client.morph.MorphScreen;
 import msifeed.mc.more.client.status.StatusScreen;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
@@ -27,7 +28,7 @@ import java.util.function.Supplier;
 public class GuiHandlerClient extends GuiHandler {
     public void init() {
         MinecraftForge.EVENT_BUS.register(HudLock.INSTANCE);
-//        MinecraftForge.EVENT_BUS.register(CombatOverlay.INSTANCE);
+        MinecraftForge.EVENT_BUS.register(CombatOverlay.INSTANCE);
         MinecraftForge.EVENT_BUS.register(CombatEntityMarks.INSTANCE);
     }
 

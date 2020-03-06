@@ -13,8 +13,7 @@ public enum NoclipRenderHandler {
 
     @SubscribeEvent
     public void onRenderEvent(RenderBlockOverlayEvent event) {
-        if (event.player.noClip && event.overlayType == RenderBlockOverlayEvent.OverlayType.BLOCK) {
+        if (event.player.noClip && event.overlayType == RenderBlockOverlayEvent.OverlayType.BLOCK)
             event.setCanceled(true);
-        }
     }
 }

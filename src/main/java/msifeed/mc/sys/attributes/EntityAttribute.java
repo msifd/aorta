@@ -57,43 +57,54 @@ public abstract class EntityAttribute<T> {
 
     public void onClonePlayer(PlayerEvent.Clone event) {
         if (event.wasDeath) {
-            final NBTTagCompound compound = new NBTTagCompound();
-            toNBT(event.original, compound);
-            fromNBT(event.entityPlayer, compound);
+            final NBTTagCompound nbt = toNBT(event.original);
+            if (nbt != null)
+                loadNBT(event.entityPlayer, nbt);
+            else
+                remove(event.entityPlayer);
         }
     }
 
     protected void broadcast(EntityPlayerMP playerMP, Entity entity) {
-        final SyncAttrMessage msg = new SyncAttrMessage(entity, this);
-        AttributeHandler.INSTANCE.CHANNEL.sendTo(msg, playerMP);
+        if (playerMP.worldObj.isRemote)
+            return;
+        AttributeHandler.CHANNEL.sendTo(SyncAttrMessage.create(entity, this), playerMP);
     }
 
     protected void broadcast(World world, Entity entity) {
-        if (!(world instanceof WorldServer))
+        if (world.isRemote || !(world instanceof WorldServer))
             return;
 
-        final SyncAttrMessage msg = new SyncAttrMessage(entity, this);
+        final SyncAttrMessage msg = SyncAttrMessage.create(entity, this);
         final EntityTracker tracker = ((WorldServer) world).getEntityTracker();
         if (tracker != null) {
             for (EntityPlayer player : tracker.getTrackingPlayers(entity)) {
-                AttributeHandler.INSTANCE.CHANNEL.sendTo(msg, (EntityPlayerMP) player);
+                AttributeHandler.CHANNEL.sendTo(msg, (EntityPlayerMP) player);
             }
         }
         if (entity instanceof EntityPlayerMP) {
-            AttributeHandler.INSTANCE.CHANNEL.sendTo(msg, (EntityPlayerMP) entity);
+            AttributeHandler.CHANNEL.sendTo(msg, (EntityPlayerMP) entity);
         }
     }
 
-    void toNBT(Entity entity, NBTTagCompound root) {
+    NBTTagCompound toNBT(Entity entity) {
         final AttrProp<T> attr = getProp(entity);
-        if (attr != null)
-            attr.saveNBTData(root);
+        if (attr == null || attr.value == null)
+            return null;
+        final NBTTagCompound nbt = new NBTTagCompound();
+        attr.saveNBTData(nbt);
+        return nbt;
     }
 
-    void fromNBT(Entity entity, NBTTagCompound root) {
+    void loadNBT(Entity entity, NBTTagCompound root) {
         final AttrProp<T> attr = getProp(entity);
         if (attr != null)
             attr.loadNBTData(root);
+    }
+
+    void remove(Entity entity) {
+        final AttrProp<T> attr = getProp(entity);
+        attr.value = null;
     }
 
     private AttrProp<T> getProp(Entity entity) {

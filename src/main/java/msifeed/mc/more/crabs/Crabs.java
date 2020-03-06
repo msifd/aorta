@@ -19,10 +19,10 @@ public class Crabs {
     }
 
     public void init() {
-        AttributeHandler.INSTANCE.registerAttribute(CharacterAttribute.INSTANCE);
-        AttributeHandler.INSTANCE.registerAttribute(MetaAttribute.INSTANCE);
-        AttributeHandler.INSTANCE.registerAttribute(CombatAttribute.INSTANCE);
-        AttributeHandler.INSTANCE.registerAttribute(ActionAttribute.INSTANCE);
+        AttributeHandler.registerAttribute(CharacterAttribute.INSTANCE);
+        AttributeHandler.registerAttribute(MetaAttribute.INSTANCE);
+        AttributeHandler.registerAttribute(CombatAttribute.INSTANCE);
+        AttributeHandler.registerAttribute(ActionAttribute.INSTANCE);
 
         Rpc.register(CharRpc.INSTANCE);
         Rpc.register(MetaRpc.INSTANCE);

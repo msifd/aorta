@@ -1,11 +1,13 @@
 package msifeed.mc.sys.rpc;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import msifeed.mc.Bootstrap;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -48,15 +50,23 @@ public class Rpc {
     }
 
     public static void sendTo(EntityPlayerMP player, String method, Object... args) {
-        INSTANCE.CHANNEL.sendTo(new RpcMessage(method, args), player);
+        if (serverStarted())
+            INSTANCE.CHANNEL.sendTo(new RpcMessage(method, args), player);
     }
 
     public static void sendToAll(String method, Object... args) {
-        INSTANCE.CHANNEL.sendToAll(new RpcMessage(method, args));
+        if (serverStarted())
+            INSTANCE.CHANNEL.sendToAll(new RpcMessage(method, args));
     }
 
     public static void sendToAllAround(String method, NetworkRegistry.TargetPoint point, Object... args) {
-        INSTANCE.CHANNEL.sendToAllAround(new RpcMessage(method, args), point);
+        if (serverStarted())
+            INSTANCE.CHANNEL.sendToAllAround(new RpcMessage(method, args), point);
+    }
+
+    private static boolean serverStarted() {
+        final MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+        return server != null && server.getConfigurationManager() != null;
     }
 
     static void onMessage(RpcMessage message, MessageContext ctx) {
