@@ -14,8 +14,8 @@ class EditParamsView extends Widget {
         final TextInput estitenceInput = new TextInput();
         estitenceInput.getSizeHint().x = 30;
         estitenceInput.setText(String.valueOf(character.estitence));
-        estitenceInput.setFilter(s -> TextInput.isUnsignedIntBetween(s, 1, 90));
-        estitenceInput.setCallback(s -> character.estitence = (byte) Math.max(estitenceInput.getInt(), 10));
+        estitenceInput.setFilter(s -> TextInput.isUnsignedIntBetween(s, 1, 100));
+        estitenceInput.setCallback(s -> character.estitence = estitenceInput.getInt());
         addChild(estitenceInput);
 
         addChild(new Label("Sin"));
@@ -23,7 +23,7 @@ class EditParamsView extends Widget {
         sinInput.getSizeHint().x = 30;
         sinInput.setText(String.valueOf(character.sin));
         sinInput.setFilter(s -> TextInput.isUnsignedIntBetween(s, -1, 100));
-        sinInput.setCallback(s -> character.sin = (byte) sinInput.getInt());
+        sinInput.setCallback(s -> character.sin = sinInput.getInt());
         addChild(sinInput);
     }
 }

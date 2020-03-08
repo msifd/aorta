@@ -41,7 +41,7 @@ public class ItemGifterOffering extends Item {
             final Character playerBefore = new Character(playerAfter);
             final ItemDefines config = More.DEFINES.get().items;
 
-            if (playerAfter.estitence <= 10) {
+            if (playerAfter.estitence <= 20) {
                 player.addChatMessage(new ChatComponentText(L10n.fmt("more.est.gift_not_enough")));
                 return;
             }
@@ -49,7 +49,7 @@ public class ItemGifterOffering extends Item {
             final Character targetAfter = CharacterAttribute.require(target);
             final Character targetBefore = new Character(targetAfter);
 
-            if (targetAfter.estitence >= 90) {
+            if (targetAfter.estitence >= 100) {
                 player.addChatMessage(new ChatComponentText(L10n.fmt("more.est.gift_too_much", target.getDisplayName())));
                 return;
             }
