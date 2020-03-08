@@ -8,19 +8,19 @@ import msifeed.mc.sys.rpc.RpcMethod;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.List;
 
 public enum RenameRpc {
     INSTANCE;
 
-    private static final String rename = Bootstrap.MODID + ":genesis.rename";
-    private static final String clear = Bootstrap.MODID + ":genesis.rename.clear";
-    private static final String setValue = Bootstrap.MODID + ":genesis.rename.value.set";
-    private static final String openRenameGui = Bootstrap.MODID + ":genesis.rename.gui";
+    private static final String rename = Bootstrap.MODID + ":rename";
+    private static final String clear = Bootstrap.MODID + ":rename.clear";
+    private static final String setValue = Bootstrap.MODID + ":rename.value.set";
+    private static final String openRenameGui = Bootstrap.MODID + ":rename.gui";
 
     public static void init() {
         Rpc.register(INSTANCE);
@@ -36,15 +36,11 @@ public enum RenameRpc {
             descNbt.appendTag(new NBTTagString(RenameProvider.fromAmpersandFormatting("\u00A7r" + l)));
         nbt.setTag("d", descNbt);
 
-        try {
-            Rpc.sendToServer(rename, (Serializable) CompressedStreamTools.compress(nbt));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Rpc.sendToServer(rename, nbt);
     }
 
     @RpcMethod(rename)
-    public void onRename(MessageContext ctx, byte[] nbtBytes) {
+    public void onRename(MessageContext ctx, NBTTagCompound nbt) {
         if (ctx.side.isClient())
             return;
         final EntityPlayer sender = ctx.getServerHandler().playerEntity;
@@ -52,15 +48,10 @@ public enum RenameRpc {
         if (itemStack == null)
             return;
 
-        try {
-            final NBTTagCompound nbt = CompressedStreamTools.func_152457_a(nbtBytes, new NBTSizeTracker(2097152L));
-            if (nbt.hasKey("t"))
-                RenameProvider.setTitle(itemStack, nbt.getString("t"));
-            if (nbt.hasKey("d"))
-                RenameProvider.setDescription(itemStack, nbt.getTagList("d", 8)); // 8 - string
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        if (nbt.hasKey("t"))
+            RenameProvider.setTitle(itemStack, nbt.getString("t"));
+        if (nbt.hasKey("d"))
+            RenameProvider.setDescription(itemStack, nbt.getTagList("d", 8)); // 8 - string
     }
 
     public static void clear() {

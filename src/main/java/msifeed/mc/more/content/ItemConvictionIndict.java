@@ -3,6 +3,7 @@ package msifeed.mc.more.content;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.Bootstrap;
 import msifeed.mc.genesis.GenesisCreativeTab;
+import msifeed.mc.more.More;
 import msifeed.mc.more.crabs.character.Character;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.more.crabs.utils.Differ;
@@ -37,7 +38,7 @@ public class ItemConvictionIndict extends Item {
             final EntityPlayer target = (EntityPlayer) event.target;
             final Character after = CharacterAttribute.require(target);
             final Character before = new Character(after);
-            after.sin = (byte)Math.min(after.sin + 1, 100);
+            after.sin = Math.min(after.sin + More.DEFINES.get().items.convictionIndictSin, 100);
 
             player.addChatMessage(new ChatComponentText(L10n.fmt("more.sin.indict", target.getDisplayName())));
             heldItem.stackSize--;

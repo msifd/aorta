@@ -1,5 +1,7 @@
 package msifeed.mc.more.crabs.rolls;
 
+import msifeed.mc.more.crabs.action.ActionCritical;
+
 import java.util.Random;
 
 public class Dices {
@@ -40,5 +42,12 @@ public class Dices {
             roll = rand.nextGaussian() * mean + std_dev;
         }
         return roll;
+    }
+
+    public static ActionCritical critical() {
+        final int roll = dice(20);
+        if (roll == 0) return ActionCritical.FAIL;
+        if (roll == 1) return ActionCritical.LUCK;
+        return ActionCritical.NONE;
     }
 }

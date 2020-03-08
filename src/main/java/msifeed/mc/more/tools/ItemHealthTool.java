@@ -16,10 +16,10 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import java.util.Arrays;
 import java.util.List;
 
-public class ItemHealthController extends Item {
-    public static final String ITEM_NAME = "health_controller";
+public class ItemHealthTool extends Item {
+    public static final String ITEM_NAME = "tool_health";
 
-    public ItemHealthController() {
+    public ItemHealthTool() {
         setUnlocalizedName(ITEM_NAME);
         setTextureName("nether_star");
         setCreativeTab(GenesisCreativeTab.TOOLS);
@@ -83,7 +83,7 @@ public class ItemHealthController extends Item {
         // ПКМ этим предметом по существу - добавить 1 хп существу
 
         final ItemStack itemStack = event.entityPlayer.getHeldItem();
-        if (itemStack == null || !(itemStack.getItem() instanceof ItemHealthController)) return;
+        if (itemStack == null || !(itemStack.getItem() instanceof ItemHealthTool)) return;
 
         if (!event.entityPlayer.isSneaking()) {
             if (!(event.target instanceof EntityLivingBase)) return;

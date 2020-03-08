@@ -22,10 +22,11 @@ public class SyncAttrHandlerClient extends SyncAttrHandler {
         final Entity e = w.getEntityByID(message.entityId);
         if (e != null) {
             final EntityAttribute attribute = AttributeHandler.INSTANCE.attributes.get(message.attrName);
-            if (attribute != null)
-                attribute.fromNBT(e, message.compound);
-        } else {
-            System.err.println("Missing sync entity!");
+            if (attribute == null) return;
+            if (message.compound != null)
+                attribute.loadNBT(e, message.compound);
+            else
+                attribute.remove(e);
         }
     }
 }

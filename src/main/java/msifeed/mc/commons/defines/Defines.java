@@ -2,6 +2,7 @@ package msifeed.mc.commons.defines;
 
 import msifeed.mc.extensions.chat.ChatDefines;
 import msifeed.mc.extensions.locks.LocksDefines;
+import msifeed.mc.more.content.ItemDefines;
 import msifeed.mc.more.crabs.combat.CombatDefines;
 import msifeed.mc.sys.config.ConfigBuilder;
 import msifeed.mc.sys.config.JsonConfig;
@@ -24,5 +25,6 @@ public class Defines {
     public static final class DefinesContent {
         public ChatDefines chat = new ChatDefines();
         public LocksDefines locks = new LocksDefines();
+        public ItemDefines items = new ItemDefines();
     }
 }

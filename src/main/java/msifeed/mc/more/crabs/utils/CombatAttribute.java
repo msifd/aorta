@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 
 import java.util.Optional;
 
-public class CombatAttribute extends EntityLivingAttribute<CombatContext> {
+public final class CombatAttribute extends EntityLivingAttribute<CombatContext> {
     public static final CombatAttribute INSTANCE = new CombatAttribute();
     private static final String PROP_NAME = Bootstrap.MODID + ".crabs.ctx";
 
@@ -20,10 +20,6 @@ public class CombatAttribute extends EntityLivingAttribute<CombatContext> {
     }
 
     public static CombatContext require(Entity e) {
-        return INSTANCE.getValue(e).orElseThrow(() -> new MissingRequiredAttributeException(INSTANCE, e));
-    }
-
-    public static CombatContext sync(Entity e) {
         return INSTANCE.getValue(e).orElseThrow(() -> new MissingRequiredAttributeException(INSTANCE, e));
     }
 

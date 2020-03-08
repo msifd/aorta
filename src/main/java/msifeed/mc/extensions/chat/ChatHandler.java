@@ -7,6 +7,7 @@ import msifeed.mc.commons.logs.ExternalLogs;
 import msifeed.mc.extensions.chat.composer.Composer;
 import msifeed.mc.extensions.chat.composer.SpeechType;
 import msifeed.mc.extensions.chat.gm.GmSpeech;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.ServerChatEvent;
 
@@ -20,7 +21,7 @@ public class ChatHandler {
         event.setCanceled(true);
     }
 
-    public static void sendSystemChatMessage(EntityPlayer at, ChatMessage message) {
+    public static void sendSystemChatMessage(Entity at, ChatMessage message) {
         final NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(at.dimension, at.posX, at.posY, at.posZ, message.radius);
         Speechat.CHANNEL.sendToAllAround(message, point);
     }

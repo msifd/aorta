@@ -19,8 +19,8 @@ import net.minecraftforge.event.world.WorldEvent;
 import java.time.ZoneId;
 import java.util.HashMap;
 
-public enum EnvironmentManager {
-    INSTANCE;
+public class EnvironmentManager {
+    private static final EnvironmentManager INSTANCE = new EnvironmentManager();
 
     private final TypeToken<HashMap<Integer, WorldEnv>> configContentType = new TypeToken<HashMap<Integer, WorldEnv>>() {};
     private final JsonConfig<HashMap<Integer, WorldEnv>> config = ConfigBuilder.of(configContentType, "world_env.json")

@@ -11,9 +11,9 @@ import msifeed.mc.extensions.locks.client.ScreenDigitalLock;
 import msifeed.mc.extensions.locks.client.ScreenSkeletalKey;
 import msifeed.mc.extensions.rename.ScreenRenamer;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
-import msifeed.mc.more.client.combat.CombatEntityMarks;
-import msifeed.mc.more.client.combat.CombatOverlay;
 import msifeed.mc.more.client.combat.CombatScreen;
+import msifeed.mc.more.client.combat.other.CombatEntityMarks;
+import msifeed.mc.more.client.combat.other.CombatOverlay;
 import msifeed.mc.more.client.morph.MorphScreen;
 import msifeed.mc.more.client.status.StatusScreen;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
@@ -36,6 +36,13 @@ public class GuiHandlerClient extends GuiHandler {
     public void toggleCombat(EntityLivingBase entity) {
         if (entity.worldObj.isRemote)
             toggleGui(CombatScreen.class, () -> new CombatScreen(entity));
+    }
+
+
+    public void toggleCombatController(EntityLivingBase entity) {
+        if (entity.worldObj.isRemote)
+            toggleGui(CombatScreen.class, () -> new CombatScreen(entity));
+//            toggleGui(CombatControllerScreen.class, () -> new CombatControllerScreen(entity));
     }
 
     @Override

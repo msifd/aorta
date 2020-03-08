@@ -16,7 +16,7 @@ public class Speechat {
     public void init() {
         CHANNEL.registerMessage(SpeechMessageHandler.class, ChatMessage.class, 0x01, Side.CLIENT);
         MinecraftForge.EVENT_BUS.register(new ChatHandler());
-        AttributeHandler.INSTANCE.registerAttribute(LangAttribute.INSTANCE);
+        AttributeHandler.registerAttribute(LangAttribute.INSTANCE);
     }
 
     public static void initClient() {

@@ -24,7 +24,6 @@ public class DropList<T> extends Widget {
         refill();
     }
 
-    @Override
     public void refill() {
         clearChildren();
 

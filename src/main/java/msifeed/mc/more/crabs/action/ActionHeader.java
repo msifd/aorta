@@ -19,6 +19,18 @@ public class ActionHeader {
 //        this.title = title.startsWith(".") ? L10n.tr("more.action" + title) : title;
     }
 
+    public boolean isPassive() {
+        return hasTag(ActionTag.passive) || hasTag(ActionTag.defencive);
+    }
+
+    public ActionTag getType() {
+        return tags.stream().filter(ActionTag::isType).findAny().orElse(ActionTag.melee);
+    }
+
+    public boolean hasTag(ActionTag tag) {
+        return tags.contains(tag);
+    }
+
     public ActionHeader(NBTTagCompound nbt) {
         this.id = nbt.getString("id");
         this.title = nbt.getString("title");

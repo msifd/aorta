@@ -3,6 +3,7 @@ package msifeed.mc.more.content;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.Bootstrap;
 import msifeed.mc.genesis.GenesisCreativeTab;
+import msifeed.mc.more.More;
 import msifeed.mc.more.crabs.character.Character;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.more.crabs.utils.Differ;
@@ -38,6 +39,7 @@ public class ItemSoulGrab extends Item {
             final EntityPlayer target = (EntityPlayer) event.target;
             final Character playerAfter = CharacterAttribute.require(player);
             final Character playerBefore = new Character(playerAfter);
+            final ItemDefines config = More.DEFINES.get().items;
 
             if (playerAfter.estitence >= 100) {
                 player.addChatMessage(new ChatComponentText(L10n.fmt("more.est.grab_not_enough", target.getDisplayName())));
@@ -52,9 +54,9 @@ public class ItemSoulGrab extends Item {
                 return;
             }
 
-            playerAfter.estitence++;
-            playerAfter.sin = (byte)Math.min(playerAfter.sin + 1, 100);
-            targetAfter.estitence--;
+            playerAfter.estitence = Math.min(playerAfter.estitence + config.soulGrabEstitence, 90);
+            playerAfter.sin = Math.min(playerAfter.sin + config.soulGrabSin, 100);
+            targetAfter.estitence = Math.max(targetAfter.estitence - config.soulGrabEstitence, 10);
 
             player.addChatMessage(new ChatComponentText(L10n.fmt("more.est.grab_from", target.getDisplayName())));
             target.addChatMessage(new ChatComponentText(L10n.fmt("more.est.grab_to", player.getDisplayName())));

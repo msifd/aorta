@@ -6,10 +6,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 
 class AttrProp<T> implements IExtendedEntityProperties {
-    T value = null;
     private final EntityAttribute<T> attribute;
+    T value = null;
 
-    public AttrProp(EntityAttribute<T> attribute) {
+    AttrProp(EntityAttribute<T> attribute) {
         this.attribute = attribute;
     }
 

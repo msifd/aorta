@@ -5,6 +5,7 @@ import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.button.Button;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
+import msifeed.mc.mellow.widgets.tabs.TabArea;
 import msifeed.mc.mellow.widgets.window.Window;
 import msifeed.mc.more.crabs.character.CharRpc;
 import msifeed.mc.more.crabs.character.Character;
@@ -55,7 +56,11 @@ public class MorphScreen extends MellowGuiScreen {
             });
             mainColumn.addChild(addDataBtn);
         } else {
-            mainColumn.addChild(new EditParamsView(character));
+            final TabArea tabArea = new TabArea();
+            mainColumn.addChild(tabArea);
+
+            tabArea.addTab("Params", new EditParamsView(character));
+            tabArea.addTab("Abilities", new EditAbilitiesView(character));
 
             if (!(entity instanceof EntityPlayer)) {
                 final ButtonLabel clearBtn = new ButtonLabel("Clear all data");

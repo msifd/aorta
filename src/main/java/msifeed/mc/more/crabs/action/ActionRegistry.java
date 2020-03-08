@@ -22,8 +22,8 @@ public enum ActionRegistry {
     INSTANCE;
 
     public static final Action NONE_ACTION = new Action("none", ".none", ActionTag.passive);
-    public static final Action EQUIP_ACTION = new Action("equip", ".equip", ActionTag.passive);
-    public static final Action RELOAD_ACTION = new Action("reload", ".reload", ActionTag.passive);
+    private static final Action EQUIP_ACTION = new Action("equip", ".equip", ActionTag.passive, ActionTag.equip);
+    private static final Action RELOAD_ACTION = new Action("reload", ".reload", ActionTag.passive, ActionTag.reload);
 
     private static final Logger logger = LogManager.getLogger(ActionRegistry.class);
 
@@ -43,6 +43,12 @@ public enum ActionRegistry {
 
     public static Action get(String id) {
         return INSTANCE.actions.get(id);
+    }
+
+    public static ActionHeader getHeader(String id) {
+        if (!INSTANCE.actions.isEmpty())
+            return get(id);
+        return INSTANCE.actionHeaders.get(id);
     }
 
     public static Collection<Action> getActions() {
@@ -88,18 +94,17 @@ public enum ActionRegistry {
         this.actions.put(EQUIP_ACTION.id, EQUIP_ACTION);
         this.actions.put(RELOAD_ACTION.id, RELOAD_ACTION);
 
-        if (FMLCommonHandler.instance().getMinecraftServerInstance() != null)
-            ActionRpc.broadcastToAll(actions.values());
+        ActionRpc.broadcastToAll(actions.values());
     }
 
     private static boolean verifyAction(Action action, ArrayList<Action> list) {
         if (list.stream().noneMatch(a -> a.id.equals(action.id))) {
-            logger.warn("Action {} has id conflict!", action.id);
+            logger.error("Action {} has id conflict!", action.id);
             return false;
         }
         for (String s : action.combo) {
             if (list.stream().noneMatch(a -> a.id.equals(s))) {
-                logger.warn("Action {} has unknown combo id {}!", action.id, s);
+                logger.error("Action {} has unknown combo id {}!", action.id, s);
                 return false;
             }
         }

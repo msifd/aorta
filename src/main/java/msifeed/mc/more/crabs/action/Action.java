@@ -11,17 +11,6 @@ public class Action extends ActionHeader {
     public ArrayList<Effect> target = new ArrayList<>();
     public ArrayList<Effect> self = new ArrayList<>();
 
-//    public Action(String signature) {
-//        final String[] parts = signature.split("/");
-//        final Iterator<String> it = Stream.of(parts).iterator();
-//
-//        this.name = it.next();
-//        this.title = it.next();
-//
-//        while (it.hasNext())
-//            tags.add(ActionTag.valueOf(it.next()));
-//    }
-
     public Action(String id, String title) {
         super(id, title);
     }
@@ -30,10 +19,6 @@ public class Action extends ActionHeader {
         this(id, title);
         this.tags.addAll(Arrays.asList(tags));
     }
-
-//    public boolean isDefencive() {
-//        return tags.contains(ActionTag.DEFENCIVE);
-//    }
 
     @Override
     public boolean equals(Object obj) {

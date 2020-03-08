@@ -22,7 +22,6 @@ class IllnessView extends Widget {
         refill();
     }
 
-    @Override
     public void refill() {
         clearChildren();
         if (editable)

@@ -14,7 +14,7 @@ public class EnvironmentCommand extends ExtCommand {
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return null;
+        return "/aenv";
     }
 
     @Override

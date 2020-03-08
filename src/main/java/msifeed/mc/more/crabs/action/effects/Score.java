@@ -2,14 +2,11 @@ package msifeed.mc.more.crabs.action.effects;
 
 import msifeed.mc.more.crabs.character.Character;
 import msifeed.mc.more.crabs.rolls.Dices;
+import msifeed.mc.more.crabs.rolls.Modifiers;
 
 public abstract class Score {
     public abstract String name();
-    public abstract int mod(Character c);
-
-    public boolean isDice() {
-        return true;
-    }
+    public abstract int mod(Character c, Modifiers m);
 
     @Override
     public boolean equals(Object obj) {
@@ -25,7 +22,7 @@ public abstract class Score {
         }
 
         @Override
-        public int mod(Character c) {
+        public int mod(Character c, Modifiers m) {
             return Dices.g40();
         }
     }
@@ -36,7 +33,7 @@ public abstract class Score {
             return "g40+";
         }
 
-        public int mod(Character c) {
+        public int mod(Character c, Modifiers m) {
             return Dices.g40_plus();
         }
     }
@@ -48,7 +45,7 @@ public abstract class Score {
         }
 
         @Override
-        public int mod(Character c) {
+        public int mod(Character c, Modifiers m) {
             return Dices.g40_minus();
         }
     }
@@ -66,13 +63,8 @@ public abstract class Score {
         }
 
         @Override
-        public int mod(Character c) {
-            return c.abilities.get(ability);
-        }
-
-        @Override
-        public boolean isDice() {
-            return false;
+        public int mod(Character c, Modifiers m) {
+            return c.abilities.get(ability) + m.features.getOrDefault(ability, 0);
         }
 
         @Override

@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 public class GuiHandler {
     public void init() {}
     public void toggleCombat(EntityLivingBase entity) { }
+    public void toggleCombatController(EntityLivingBase entity) { }
     public void openCharEditor(EntityLivingBase entity) { }
     public void toggleStatusEditor(EntityLivingBase entity) { }
     public void toggleStatus(EntityLivingBase entity) { }
