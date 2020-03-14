@@ -6,7 +6,6 @@ import msifeed.mc.more.crabs.action.Action;
 import msifeed.mc.more.crabs.action.ActionRegistry;
 import msifeed.mc.more.crabs.character.Character;
 import msifeed.mc.more.crabs.meta.MetaInfo;
-import msifeed.mc.more.crabs.utils.ActionAttribute;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
 import msifeed.mc.more.crabs.utils.MetaAttribute;
@@ -22,7 +21,6 @@ public enum CombatRpc {
     INSTANCE;
 
     private final static String doAction = Bootstrap.MODID + ":combat.action.do";
-    private final static String cancelAction = Bootstrap.MODID + ":combat.action.cancel";
 
     private final static String join = Bootstrap.MODID + ":combat.join";
     private final static String leave = Bootstrap.MODID + ":combat.leave";
@@ -54,36 +52,13 @@ public enum CombatRpc {
         if (action == null)
             throw new RpcMethodException(sender, "unknown action: " + actionId);
 
-        CombatAttribute.INSTANCE.update(target, context -> {
-            if (!context.stage.isInCombat())
-                throw new RpcMethodException(sender, "target is not in combat");
-            CombatManager.INSTANCE.doAction(target, context, action);
-        });
-    }
+        final CombatContext com = CombatAttribute.get(target)
+                .orElseThrow(() -> new RpcMethodException(sender, "target is not a combatant"));
 
-    public static void cancelAction(int entityId) {
-        Rpc.sendToServer(cancelAction, entityId);
-    }
+        if (!com.phase.isInCombat())
+            throw new RpcMethodException(sender, "target is not in combat");
 
-    @RpcMethod(cancelAction)
-    public void onCancelAction(MessageContext ctx, int entityId) {
-        final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
-        final Entity targetEntity = sender.worldObj.getEntityByID(entityId);
-
-        if (!(targetEntity instanceof EntityLivingBase))
-            throw new RpcMethodException(sender, "target is not a living entity");
-        final EntityLivingBase target = (EntityLivingBase) targetEntity;
-
-        CombatAttribute.INSTANCE.update(target, context -> {
-            if (!context.stage.isInCombat())
-                throw new RpcMethodException(sender, "target is not in combat");
-            if (context.stage != CombatContext.Stage.ACTION)
-                throw new RpcMethodException(sender, "cannot reset target's action on that move stage");
-            if (context.target != 0)
-                throw new RpcMethodException(sender, "cannot reset target's action after its target selected");
-            context.stage = CombatContext.Stage.IDLE;
-            ActionAttribute.remove(target);
-        });
+        CombatManager.INSTANCE.doAction(target, com, action);
     }
 
     // // // //
@@ -102,10 +77,10 @@ public enum CombatRpc {
         final EntityLivingBase target = (EntityLivingBase) targetEntity;
 
         CombatAttribute.INSTANCE.update(target, context -> {
-            if (context.stage.isInCombat())
+            if (context.phase.isInCombat())
                 throw new RpcMethodException(sender, "target is already in combat");
 
-            context.stage = CombatContext.Stage.IDLE;
+            context.phase = CombatContext.Phase.IDLE;
             context.weapon = target.getHeldItem();
             context.armor = target.getTotalArmorValue();
         });
@@ -124,13 +99,13 @@ public enum CombatRpc {
             throw new RpcMethodException(sender, "target is not a living entity");
 
         CombatAttribute.INSTANCE.update(targetEntity, context -> {
-            if (!context.stage.isInCombat())
+            if (!context.phase.isInCombat())
                 throw new RpcMethodException(sender, "target is not in combat");
-            if (context.stage != CombatContext.Stage.IDLE)
-                throw new RpcMethodException(sender, "target is not in " + CombatContext.Stage.IDLE.toString() + " stage");
+            if (context.phase != CombatContext.Phase.IDLE)
+                throw new RpcMethodException(sender, "target is not in " + CombatContext.Phase.IDLE.toString() + " stage");
 
             if (targetEntity instanceof EntityPlayer)
-                context.stage = CombatContext.Stage.LEAVE;
+                context.phase = CombatContext.Phase.LEAVE;
             else
                 CombatManager.removeFromCombat((EntityLivingBase) targetEntity, context);
         });

@@ -23,28 +23,24 @@ public class CombatContext {
 
     public ItemStack weapon = null;
     public int armor = 0;
-    public int prevTarget = 0;
     public HashSet<String> prevActions = new HashSet<>();
 
-    public Stage stage = Stage.NONE;
+    public Phase phase = Phase.NONE;
     public int target = 0;
     public ActionHeader action = null;
 
-    public boolean discardAction(ActionHeader action) {
+    public boolean acceptsOffendAction(ActionHeader action) {
         if (!prevActions.containsAll(action.combo))
-            return true;
+            return false;
+        return !action.hasTag(ActionTag.defencive);
+    }
 
-        if (stage == Stage.IDLE) {
-            if (action.hasTag(ActionTag.defencive))
-                return true;
+    public boolean acceptsDefendAction(ActionTag attackType, ActionHeader action) {
+        if (!prevActions.containsAll(action.combo))
             return false;
-        } else if (stage == CombatContext.Stage.DEFEND) {
-            if (!action.hasTag(ActionTag.passive) && !action.hasTag(ActionTag.defencive))
-                return true;
+        if (attackType != action.getType())
             return false;
-        } else {
-            return true;
-        }
+        return action.hasTag(ActionTag.none) || action.hasTag(ActionTag.defencive);
     }
 
     public void removeEndedEffects() {
@@ -65,14 +61,13 @@ public class CombatContext {
         if (weapon != null)
             c.setTag(Tags.weapon, NBTUtils.itemStackToNBT(weapon));
         c.setInteger(Tags.armor, armor);
-        c.setInteger(Tags.prevTarget, prevTarget);
 
         final NBTTagList prevActionsNbt = new NBTTagList();
         for (String s : prevActions)
             prevActionsNbt.appendTag(new NBTTagString(s));
         c.setTag(Tags.prevActions, prevActionsNbt);
 
-        c.setByte(Tags.stage, (byte) stage.ordinal());
+        c.setByte(Tags.phase, (byte) phase.ordinal());
         c.setInteger(Tags.target, target);
         if (action != null)
             c.setString(Tags.action, action.id);
@@ -93,24 +88,23 @@ public class CombatContext {
 
         weapon = NBTUtils.itemStackFromNBT(c.getCompoundTag(Tags.weapon));
         armor = c.getInteger(Tags.armor);
-        prevTarget = c.getInteger(Tags.prevTarget);
 
         final NBTTagList prevActionsNbt = c.getTagList(Tags.prevActions, 8); // 8 - NBTTagString
         for (int i = 0; i < prevActionsNbt.tagCount(); i++) {
             prevActions.add(prevActionsNbt.getStringTagAt(i));
         }
 
-        stage = Stage.values()[c.getByte(Tags.stage)];
+        phase = Phase.values()[c.getByte(Tags.phase)];
         target = c.getInteger(Tags.target);
         action = ActionRegistry.getHeader(c.getString(Tags.action));
     }
 
-    public enum Stage {
+    public enum Phase {
         NONE, // Not in combat
         IDLE, // Wait for action
-        DEFEND, // Wait for defencive action
-        ACTION, // Apply damage or skip
+        ATTACK, // Apply damage or skip
         WAIT, // Wait opponent's action
+        DEFEND, // Wait for defencive action
         END, // Pass damage to entity
         LEAVE, // Try to leave combat
         ;
@@ -131,9 +125,8 @@ public class CombatContext {
         static final String buffs = "buffs";
         static final String weapon = "weapon";
         static final String armor = "armor";
-        static final String prevTarget = "prevTarget";
         static final String prevActions = "prevActions";
-        static final String stage = "stage";
+        static final String phase = "phase";
         static final String target = "target";
         static final String action = "action";
     }

@@ -21,9 +21,9 @@ import java.util.HashMap;
 public enum ActionRegistry {
     INSTANCE;
 
-    public static final Action NONE_ACTION = new Action("none", ".none", ActionTag.passive);
-    private static final Action EQUIP_ACTION = new Action("equip", ".equip", ActionTag.passive, ActionTag.equip);
-    private static final Action RELOAD_ACTION = new Action("reload", ".reload", ActionTag.passive, ActionTag.reload);
+    public static final Action NONE_ACTION = new Action("none", ".none", ActionTag.none);
+    private static final Action EQUIP_ACTION = new Action("equip", ".equip", ActionTag.equip);
+    private static final Action RELOAD_ACTION = new Action("reload", ".reload", ActionTag.reload);
 
     private static final Logger logger = LogManager.getLogger(ActionRegistry.class);
 

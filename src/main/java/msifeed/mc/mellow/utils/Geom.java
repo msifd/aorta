@@ -84,9 +84,9 @@ public class Geom implements Cloneable {
         this.h = p.y;
     }
 
-    public void addSize(Geom g) {
-        this.w += g.w;
-        this.h += g.h;
+    public void addSize(int w, int h) {
+        this.w += w;
+        this.h += h;
     }
 
     public void offsetPos(Margins m) {

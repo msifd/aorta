@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 public class EntityControl {
-    private static Logger logger = LogManager.getLogger("Aorta.EntityControl");
+    private static Logger logger = LogManager.getLogger();
     private final TypeToken<ArrayList<ConfigContent>> configContentType = new TypeToken<ArrayList<ConfigContent>>() {};
     private JsonConfig<ArrayList<ConfigContent>> config = ConfigBuilder.of(configContentType, "entity_control.json").create();
 
@@ -52,9 +52,8 @@ public class EntityControl {
         if (!(event.entity instanceof EntityLivingBase))
             return;
 
-        if (isBlacklisted(event.world, event.entity)) {
+        if (isBlacklisted(event.world, event.entity))
             event.setCanceled(true);
-        }
     }
 
     private void compileConfig() {

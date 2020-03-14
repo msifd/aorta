@@ -17,6 +17,10 @@ public final class MouseHandler {
         void onClick(int xMouse, int yMouse, int button);
     }
 
+    public interface Wheel {
+        void onMouseWheel(int xMouse, int yMouse, int dWheel);
+    }
+
     public interface AllBasic extends Press, Move, Release {
     }
 

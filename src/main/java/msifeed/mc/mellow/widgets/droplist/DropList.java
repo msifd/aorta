@@ -65,7 +65,7 @@ public class DropList<T> extends Widget {
 
     @Override
     public boolean containsPoint(Point p) {
-        return super.containsPoint(p) || popupList.containsPoint(p);
+        return isVisible() && (getGeometry().contains(p) || popupList.containsPoint(p));
     }
 
     boolean isOpened() {

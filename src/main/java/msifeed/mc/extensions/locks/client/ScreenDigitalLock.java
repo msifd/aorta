@@ -9,7 +9,6 @@ import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
 import msifeed.mc.mellow.widgets.window.Window;
 import msifeed.mc.sys.rpc.Rpc;
-import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.input.Keyboard;
 
@@ -79,7 +78,7 @@ public class ScreenDigitalLock extends MellowGuiScreen {
         final int k = Keyboard.getEventKey();
 
         if (k == Keyboard.KEY_ESCAPE) {
-            closeScreen();
+            closeGui();
         } else if (keyButtons.containsKey(c)) {
             final SquareButton b = keyButtons.get(c);
             b.onClick(0, 0, 0);
@@ -145,16 +144,12 @@ public class ScreenDigitalLock extends MellowGuiScreen {
         if (lock.canUnlockWith(input)) {
             final TileEntity te = lock.getTileEntity();
             Rpc.sendToServer(LocksRpc.toggleDigital, te.xCoord, te.yCoord, te.zCoord, input);
-            closeScreen();
+            closeGui();
         }
     }
 
     private void updateResetBtn() {
         resetBtn.setDisabled(lock.isLocked() || mode == Mode.RESET_CHECK);
-    }
-
-    private void closeScreen() {
-        Minecraft.getMinecraft().displayGuiScreen(null);
     }
 
     private enum Mode {

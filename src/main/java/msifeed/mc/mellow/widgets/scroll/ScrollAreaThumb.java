@@ -41,19 +41,17 @@ class ScrollAreaThumb extends Button implements MouseHandler.AllBasic {
     public void onMove(int xMouse, int yMouse, int button) {
         dragHandler.drag(new Point(0, yMouse));
         clampYPos();
-        scrollArea.updateScroll();
     }
 
     @Override
     public void onRelease(int xMouse, int yMouse, int button) {
         dragHandler.stopDrag();
         clampYPos();
-        scrollArea.updateScroll();
     }
 
-    private void clampYPos() {
-        final Point p = getPos();
-        final int maxY = scrollArea.getSizeHint().y - getGeometry().h * 2 - 1;
-        p.y = MathHelper.clamp_int(p.y, 0, maxY);
+    void clampYPos() {
+        final Point pos = getPos();
+        final int maxY = scrollArea.getSizeHint().y - getGeometry().h;
+        pos.y = MathHelper.clamp_int(pos.y, 0, maxY);
     }
 }

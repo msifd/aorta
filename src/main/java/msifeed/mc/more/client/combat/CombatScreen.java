@@ -1,52 +1,57 @@
 package msifeed.mc.more.client.combat;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.mellow.widgets.Widget;
-import msifeed.mc.mellow.widgets.button.ButtonLabel;
 import msifeed.mc.mellow.widgets.tabs.TabArea;
 import msifeed.mc.mellow.widgets.window.Window;
-import msifeed.mc.more.crabs.character.Character;
-import msifeed.mc.more.crabs.combat.CombatRpc;
-import msifeed.mc.more.crabs.meta.MetaInfo;
-import msifeed.mc.more.crabs.utils.CharacterAttribute;
-import msifeed.mc.more.crabs.utils.MetaAttribute;
+import msifeed.mc.more.crabs.utils.CombatAttribute;
+import msifeed.mc.sys.attributes.AttributeUpdateEvent;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-
-import java.util.Optional;
+import net.minecraftforge.common.MinecraftForge;
 
 public class CombatScreen extends MellowGuiScreen {
+    private final EntityLivingBase entity;
+    private final Widget content;
+
     public CombatScreen(EntityLivingBase entity) {
+        this.entity = entity;
+
         final Window window = new Window();
-        window.setTitle("combat: " + entity.getCommandSenderName());
+        window.setTitle("Combat: " + entity.getCommandSenderName());
         scene.addChild(window);
 
-        final Widget content = window.getContent();
+        content = window.getContent();
+        content.setLayout(ListLayout.HORIZONTAL);
+
+        refill();
+
+        MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    private void refill() {
+        content.clearChildren();
+
+        content.addChild(new ActionsView(entity));
 
         final TabArea tabs = new TabArea();
+        tabs.addTab("Progress", new ProgressView(entity));
+        tabs.addTab("Mods", new ModsView(entity));
         content.addChild(tabs);
 
-        tabs.addTab("Actions", new ActionsView(entity));
-        tabs.addTab("Mods", new ModsView(entity));
-        tabs.addTab("Stage", new StageView(entity));
+        content.addChild(new StageView(entity));
+    }
 
-        final Optional<Character> charOpt = CharacterAttribute.get(entity);
-        final Optional<MetaInfo> metaOpt = MetaAttribute.get(entity);
-//        final Optional<CombatContext> combatOpt = MetaAttribute.get(entity);
-        if (!charOpt.isPresent() || !metaOpt.isPresent()) {
-            final ButtonLabel recruitEntity = new ButtonLabel("Recruit");
-            recruitEntity.setClickCallback(() -> CombatRpc.recruitEntity(entity.getEntityId()));
-            content.addChild(recruitEntity);
+    @Override
+    public void closeGui() {
+        super.closeGui();
+        MinecraftForge.EVENT_BUS.unregister(this);
+    }
 
-        } else {
-//            final String name = charOpt.map(c -> c.name).orElse(entity.getCommandSenderName());
-//            window.setTitle(L10n.fmt("more.gui.roller.title", name));
-
-            if (!(entity instanceof EntityPlayer)) {
-                final ButtonLabel dismissEntity = new ButtonLabel("Dismiss");
-                dismissEntity.setClickCallback(() -> CombatRpc.dismissEntity(entity.getEntityId()));
-                content.addChild(dismissEntity);
-            }
-        }
+    @SubscribeEvent
+    public void onAttributeUpdate(AttributeUpdateEvent event) {
+        if (event.entity == entity && event.attr instanceof CombatAttribute)
+            refill();
     }
 }

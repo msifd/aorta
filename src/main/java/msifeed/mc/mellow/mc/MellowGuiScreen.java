@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.entity.RenderItem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 
 public class MellowGuiScreen extends GuiScreen {
     private static final Logger LOGGER = LogManager.getLogger("Mellow.GuiScreen");
@@ -31,7 +32,6 @@ public class MellowGuiScreen extends GuiScreen {
 
     @Override
     public void initGui() {
-        final Minecraft mc = Minecraft.getMinecraft();
         final ScaledResolution scale = RenderUtils.getScaledResolution();
         scene.getGeometry().set(0, 0, scale.getScaledWidth(), scale.getScaledHeight());
     }
@@ -41,7 +41,7 @@ public class MellowGuiScreen extends GuiScreen {
         try {
             scene.update();
             scene.render();
-            Widget.hoveredWidget = scene.lookupWidget(new Point(xMouse, yMouse)).orElse(null);
+            Widget.hoveredWidget = scene.lookupWidget(new Point(xMouse, yMouse)).findFirst().orElse(null);
         } catch (Exception e) {
             LOGGER.throwing(e);
             closeGui();
@@ -53,13 +53,34 @@ public class MellowGuiScreen extends GuiScreen {
     }
 
     @Override
+    public void handleMouseInput() {
+        super.handleMouseInput();
+
+        final int xMouse = Mouse.getEventX() * this.width / this.mc.displayWidth;
+        final int yMouse = this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
+
+        if (Mouse.hasWheel()) {
+            final int dWheel = Mouse.getDWheel();
+            if (dWheel != 0) {
+                scene.lookupWidget(new Point(xMouse, yMouse))
+                        .filter(w -> w instanceof MouseHandler.Wheel)
+                        .findFirst()
+                        .ifPresent(w -> ((MouseHandler.Wheel) w).onMouseWheel(xMouse, yMouse, dWheel));
+            }
+        }
+    }
+
+    @Override
     protected void mouseClicked(int xMouse, int yMouse, int button) {
         try {
-            final Widget lookup = scene.lookupWidget(new Point(xMouse, yMouse)).orElse(null);
-            if (lookup instanceof MouseHandler.Press)
-                ((MouseHandler.Press) lookup).onPress(xMouse, yMouse, button);
-            Widget.setFocused(lookup);
-            Widget.pressedWidget = lookup;
+            scene.lookupWidget(new Point(xMouse, yMouse))
+                    .findFirst()
+                    .ifPresent(w -> {
+                        if (w instanceof MouseHandler.Press)
+                            ((MouseHandler.Press) w).onPress(xMouse, yMouse, button);
+                        Widget.setFocused(w);
+                        Widget.pressedWidget = w;
+                    });
         } catch (Exception e) {
             LOGGER.throwing(e);
         }
@@ -81,20 +102,19 @@ public class MellowGuiScreen extends GuiScreen {
             return;
 
         try {
-            final Widget widget = Widget.pressedWidget;
+            final Widget pressedWidget = Widget.pressedWidget;
             if (button == -1) {
-                if (widget instanceof MouseHandler.Move)
-                    ((MouseHandler.Move) widget).onMove(xMouse, yMouse, button);
+                if (pressedWidget instanceof MouseHandler.Move)
+                    ((MouseHandler.Move) pressedWidget).onMove(xMouse, yMouse, button);
             } else {
-                if (widget instanceof MouseHandler.Release)
-                    ((MouseHandler.Release) widget).onRelease(xMouse, yMouse, button);
+                if (pressedWidget instanceof MouseHandler.Release)
+                    ((MouseHandler.Release) pressedWidget).onRelease(xMouse, yMouse, button);
 
-                // If move mouse away click don't counts
-                final Widget lookup = scene.lookupWidget(new Point(xMouse, yMouse)).orElse(null);
-                if (lookup == Widget.pressedWidget) {
-                    if (Widget.pressedWidget == widget && widget instanceof MouseHandler.Click)
-                        ((MouseHandler.Click) widget).onClick(xMouse, yMouse, button);
-                }
+                scene.lookupWidget(new Point(xMouse, yMouse))
+                        .filter(w -> w == pressedWidget)
+                        .filter(w -> w instanceof MouseHandler.Click)
+                        .findFirst()
+                        .ifPresent(w -> ((MouseHandler.Click) w).onClick(xMouse, yMouse, button));
 
                 Widget.pressedWidget = null;
             }

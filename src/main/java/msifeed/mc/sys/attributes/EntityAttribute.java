@@ -96,10 +96,13 @@ public abstract class EntityAttribute<T> {
         return nbt;
     }
 
-    void loadNBT(Entity entity, NBTTagCompound root) {
+    T loadNBT(Entity entity, NBTTagCompound root) {
         final AttrProp<T> attr = getProp(entity);
-        if (attr != null)
+        if (attr != null) {
             attr.loadNBTData(root);
+            return attr.value;
+        }
+        return null;
     }
 
     void remove(Entity entity) {

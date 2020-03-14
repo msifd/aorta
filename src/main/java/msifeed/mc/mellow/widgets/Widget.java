@@ -11,6 +11,7 @@ import msifeed.mc.mellow.utils.SizePolicy;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.stream.Stream;
 
 public class Widget {
     public static Widget hoveredWidget = null;
@@ -42,23 +43,8 @@ public class Widget {
         this.visible = visible;
     }
 
-    public boolean isDirtyTree() {
-        Widget wit = this;
-        do {
-            if (wit.dirty)
-                return true;
-            wit = wit.parent;
-        } while (wit != null);
-        return false;
-    }
-
     public void setDirty() {
         dirty = true;
-//        Widget wit = this;
-//        do {
-//            wit.dirty = true;
-//            wit = wit.parent;
-//        } while (wit != null && !wit.dirty);
     }
 
     public Point getPos() {
@@ -179,9 +165,6 @@ public class Widget {
     }
 
     protected void updateIndependentLayout() {
-        if (children.isEmpty())
-            return;
-
         for (Widget child : children)
             child.updateIndependentLayout();
 
@@ -258,8 +241,12 @@ public class Widget {
         setDirty();
     }
 
-    public Collection<Widget> getLookupChildren() {
-        return getChildren();
+    public Stream<Widget> getLookupChildren() {
+        return getChildren().stream();
+    }
+
+    public boolean containsAnyChildren(Point p) {
+        return true;
     }
 
     public boolean containsPoint(Point p) {
@@ -290,9 +277,10 @@ public class Widget {
     protected void onFocusLoss() {
     }
 
-    public int isHigherThan(Widget another) {
+    public int compareDepth(Widget another) {
         return Comparator.comparingInt(Widget::getGeometryZ)
             .thenComparing(Widget::getWidgetTreeDepth)
+            .reversed()
             .compare(this, another);
     }
 }

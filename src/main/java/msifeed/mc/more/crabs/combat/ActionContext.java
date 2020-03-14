@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 public class ActionContext implements Comparable<ActionContext> {
-    public final CombatContext context;
     public final Action action;
 
     public ArrayList<DamageAmount> damageToDeal = new ArrayList<>();
@@ -23,8 +22,7 @@ public class ActionContext implements Comparable<ActionContext> {
     public ActionCritical critical;
     public boolean successful;
 
-    public ActionContext(CombatContext context, Action action) {
-        this.context = context;
+    public ActionContext(Action action) {
         this.action = action;
         resetScore();
     }

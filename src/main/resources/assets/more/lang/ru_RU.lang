@@ -38,12 +38,12 @@ more.gui.cancel=Отменить
 
 more.gui.roller=Роллер
 more.gui.roller.title=Роллер: %s
-more.gui.roller.feat=Хар-ки
+more.gui.roller.ability=Хар-ки
 more.gui.roller.fight=Бой
 more.gui.roller.target=Цель
 more.gui.roller.mods=Моды
 more.gui.roller.mods.roll=Мод. броска:
-more.gui.roller.mods.feat=Мод. характеристик
+more.gui.roller.mods.ability=Мод. способности
 more.gui.roller.luck=КРИТЛАК
 more.gui.roller.fail=КРИТФЭЙЛ
 
@@ -70,22 +70,22 @@ more.gui.status.other=Прочее
 more.gui.status.other.name=Имя
 more.gui.status.other.wiki=Вики
 
-more.feature.str=Тренированность
-more.feature.short.str=ТРЕН
-more.feature.dex=Выучка
-more.feature.short.dex=ВЫУЧ
-more.feature.ten=Упорство
-more.feature.short.ten=УПОР
-more.feature.int=Интеллект
-more.feature.short.int=ИНТ
-more.feature.ath=Атлетика
-more.feature.short.ath=АТЛ
-more.feature.end=Выносливость
-more.feature.short.end=ВЫН
-more.feature.hnd=Ремесло
-more.feature.short.hnd=РЕМ
-more.feature.psi=Псионика
-more.feature.short.psi=ПСИ
+more.ability.str=Тренированность
+more.ability.short.str=ТРЕН
+more.ability.dex=Выучка
+more.ability.short.dex=ВЫУЧ
+more.ability.ten=Упорство
+more.ability.short.ten=УПОР
+more.ability.int=Интеллект
+more.ability.short.int=ИНТ
+more.ability.ath=Атлетика
+more.ability.short.ath=АТЛ
+more.ability.end=Выносливость
+more.ability.short.end=ВЫН
+more.ability.hnd=Ремесло
+more.ability.short.hnd=РЕМ
+more.ability.psi=Псионика
+more.ability.short.psi=ПСИ
 
 more.status.sin.-1=Праведник
 more.status.sin.0=Порядочная Душа
@@ -107,7 +107,7 @@ more.diff.s=очко
 more.diff.g=очка
 more.diff.m=очков
 
-more.diff.char.feature=изменил стату %s с %d на %d
+more.diff.char.ability=изменил стату %s с %d на %d
 
 more.diff.status.name=сменил имя на '%s'
 more.diff.status.add_estitence=получает %d %s эститенции

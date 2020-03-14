@@ -5,7 +5,7 @@ import msifeed.mc.mellow.widgets.Widget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.profiler.Profiler;
 
-import java.util.Optional;
+import java.util.stream.Stream;
 
 public class ProfilingScene extends Scene {
     @Override
@@ -25,10 +25,10 @@ public class ProfilingScene extends Scene {
     }
 
     @Override
-    public Optional<Widget> lookupWidget(Point p) {
+    public Stream<Widget> lookupWidget(Point p) {
         final Profiler pr = Minecraft.getMinecraft().mcProfiler;
         pr.startSection("MellowLookup");
-        final Optional<Widget> lookup = super.lookupWidget(p);
+        final Stream<Widget> lookup = super.lookupWidget(p);
         pr.endSection();
         return lookup;
     }

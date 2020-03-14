@@ -51,12 +51,10 @@ public enum CombatOverlay {
             lines.add("  Buffs: " + com.buffs.stream().map(Buff::toString).collect(Collectors.joining(", ")));
             lines.add("  Weapon: " + com.weapon);
             lines.add("  Armor: " + com.armor);
-            lines.add("  Prev target: " + com.prevTarget);
             lines.add("  Prev actions: " + String.join(", ", com.prevActions));
-            lines.add("  Stage: " + com.stage);
+            lines.add("  Stage: " + com.phase);
             lines.add("  Target: " + com.target);
-            if (com.action != null)
-                lines.add("  Action: " + com.action.title);
+            lines.add("  Action: " + (com.action != null ? com.action.title : "null"));
         });
 
         GL11.glPushMatrix();

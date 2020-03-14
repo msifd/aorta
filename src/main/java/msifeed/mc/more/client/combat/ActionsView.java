@@ -1,8 +1,10 @@
 package msifeed.mc.more.client.combat;
 
 import msifeed.mc.mellow.layout.GridLayout;
+import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
+import msifeed.mc.mellow.widgets.scroll.ScrollArea;
 import msifeed.mc.more.crabs.action.ActionHeader;
 import msifeed.mc.more.crabs.action.ActionRegistry;
 import msifeed.mc.more.crabs.action.ActionTag;
@@ -18,35 +20,47 @@ public class ActionsView extends Widget {
 
     public ActionsView(EntityLivingBase entity) {
         this.entity = entity;
-
+        setSizeHint(100, 100);
+        setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.MINIMUM);
         setLayout(new GridLayout());
+
         refill();
     }
 
     public void refill() {
         CombatAttribute.get(entity).ifPresent(ctx -> {
-            final ActionTag incomingActionType;
-            if (ctx.stage == CombatContext.Stage.DEFEND) {
+            if (!ctx.phase.isInCombat())
+                return;
+
+            final ScrollArea list = new ScrollArea();
+            list.setSizeHint(100, 150);
+            addChild(list);
+
+            final boolean defence = ctx.phase == CombatContext.Phase.DEFEND;
+
+            final ActionTag incomingAttackType;
+            if (defence) {
                 final Entity foe = entity.worldObj.getEntityByID(ctx.target);
                 if (foe == null)
                     return;
                 final ActionHeader action = CombatAttribute.require(foe).action;
                 if (action == null)
                     return;
-                incomingActionType = action.getType();
+                incomingAttackType = action.getType();
             } else {
-                incomingActionType = null;
+                incomingAttackType = null;
             }
 
-            for (ActionHeader action : ActionRegistry.getActionHeaders()) {
-                if (ctx.discardAction(action))
-                    continue;
-                if (incomingActionType != null && incomingActionType != action.getType())
-                    continue;
-                final ButtonLabel btn = new ButtonLabel(String.format("%s - '%s'", action.id, action.title));
-                btn.setClickCallback(() -> doAction(action));
-                addChild(btn);
-            }
+            ActionRegistry.getActionHeaders().stream()
+                    .filter(action -> defence
+                            ? ctx.acceptsDefendAction(incomingAttackType, action)
+                            : ctx.acceptsOffendAction(action))
+                    .sorted(ActionHeader::compareTo)
+                    .forEach(action -> {
+                        final ButtonLabel btn = new ButtonLabel(action.title);
+                        btn.setClickCallback(() -> doAction(action));
+                        list.addChild(btn);
+                    });
         });
     }
 

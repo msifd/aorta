@@ -29,7 +29,7 @@ public final class RenderShapes {
         tessellator.addVertex(geom.x + 0, geom.y + h, geom.z);
         tessellator.addVertex(geom.x + w, geom.y + h, geom.z);
         tessellator.addVertex(geom.x + w, geom.y + 0, geom.z);
-        tessellator.addVertex(geom.x + .3, geom.y + 0, geom.z); // .3 to fix corner pixel
+        tessellator.addVertex(geom.x + .2, geom.y + 0, geom.z); // .3 to fix corner pixel
         tessellator.draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
     }

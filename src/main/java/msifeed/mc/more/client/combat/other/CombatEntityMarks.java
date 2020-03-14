@@ -22,7 +22,7 @@ public enum CombatEntityMarks {
         if (event.entity == self) return;
 
         CombatAttribute.get(event.entity).ifPresent(ctx -> {
-            renderLines(event, Lists.newArrayList("combatant - " + ctx.stage.toString()));
+            renderLines(event, Lists.newArrayList("combatant - " + ctx.phase.toString()));
         });
     }
 

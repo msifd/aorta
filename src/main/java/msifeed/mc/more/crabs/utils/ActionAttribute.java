@@ -3,7 +3,6 @@ package msifeed.mc.more.crabs.utils;
 import msifeed.mc.Bootstrap;
 import msifeed.mc.more.crabs.action.Action;
 import msifeed.mc.more.crabs.combat.ActionContext;
-import msifeed.mc.more.crabs.combat.CombatContext;
 import msifeed.mc.sys.attributes.EntityLivingAttribute;
 import msifeed.mc.sys.attributes.MissingRequiredAttributeException;
 import net.minecraft.entity.Entity;
@@ -25,8 +24,8 @@ public final class ActionAttribute extends EntityLivingAttribute<ActionContext> 
         return INSTANCE.getValue(e).orElseThrow(() -> new MissingRequiredAttributeException(INSTANCE, e));
     }
 
-    public static ActionContext create(Entity e, CombatContext com, Action action) {
-        final ActionContext act = new ActionContext(com, action);
+    public static ActionContext create(Entity e, Action action) {
+        final ActionContext act = new ActionContext(action);
         INSTANCE.set(e, act);
         return act;
     }

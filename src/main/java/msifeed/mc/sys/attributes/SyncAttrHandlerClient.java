@@ -6,6 +6,7 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.MinecraftForge;
 
 public class SyncAttrHandlerClient extends SyncAttrHandler {
     @Override
@@ -22,11 +23,15 @@ public class SyncAttrHandlerClient extends SyncAttrHandler {
         final Entity e = w.getEntityByID(message.entityId);
         if (e != null) {
             final EntityAttribute attribute = AttributeHandler.INSTANCE.attributes.get(message.attrName);
-            if (attribute == null) return;
+            if (attribute == null)
+                return;
             if (message.compound != null)
                 attribute.loadNBT(e, message.compound);
             else
                 attribute.remove(e);
+
+            if (w.isRemote)
+                MinecraftForge.EVENT_BUS.post(new AttributeUpdateEvent(e, attribute));
         }
     }
 }

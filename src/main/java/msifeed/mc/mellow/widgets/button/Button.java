@@ -3,8 +3,7 @@ package msifeed.mc.mellow.widgets.button;
 import msifeed.mc.mellow.handlers.MouseHandler;
 import msifeed.mc.mellow.widgets.Widget;
 
-import java.util.Collection;
-import java.util.Collections;
+import java.util.stream.Stream;
 
 public abstract class Button extends Widget implements MouseHandler.Click {
     private boolean disabled = false;
@@ -23,8 +22,8 @@ public abstract class Button extends Widget implements MouseHandler.Click {
     }
 
     @Override
-    public Collection<Widget> getLookupChildren() {
-        return Collections.emptyList();
+    public Stream<Widget> getLookupChildren() {
+        return Stream.empty();
     }
 
     @Override

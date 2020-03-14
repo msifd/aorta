@@ -1,6 +1,8 @@
 package msifeed.mc.more.client.combat;
 
 import msifeed.mc.mellow.layout.GridLayout;
+import msifeed.mc.mellow.layout.ListLayout;
+import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.text.Label;
 import msifeed.mc.mellow.widgets.text.TextInput;
@@ -9,68 +11,69 @@ import msifeed.mc.more.crabs.meta.MetaInfo;
 import msifeed.mc.more.crabs.meta.MetaRpc;
 import msifeed.mc.more.crabs.rolls.Modifiers;
 import msifeed.mc.more.crabs.utils.MetaAttribute;
-import msifeed.mc.sys.utils.L10n;
 import net.minecraft.entity.EntityLivingBase;
-
-import java.util.Optional;
 
 class ModsView extends Widget {
     private final EntityLivingBase entity;
-    private final MetaInfo meta;
-    private final Modifiers modifiers;
 
     ModsView(EntityLivingBase entity) {
         this.entity = entity;
 
-        final Optional<MetaInfo> metaOpt = MetaAttribute.get(entity);
-        if (metaOpt.isPresent()) {
-            meta = metaOpt.get();
-            modifiers = meta.modifiers;
-        } else {
-            meta = null;
-            modifiers = null;
-            return;
-        }
-
+        getSizeHint().x = 110;
+        setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.PREFERRED);
         setLayout(new GridLayout());
-        getSizeHint().x = 120;
 
-        addChild(new Label(L10n.tr("misca.gui.combat.mods.roll")));
-        final TextInput modInput = new TextInput();
-        modInput.getSizeHint().x = 29;
-        if (modifiers.roll != 0)
-            modInput.setText(Integer.toString(modifiers.roll));
-        modInput.setFilter(s -> s.length() < 5 && TextInput.isSignedInt(s));
-        modInput.setCallback(this::updateRollMod);
-        addChild(modInput);
-
-        for (final Ability a : Ability.values()) {
-            addChild(new Label(a.toString() + ":"));
-            final TextInput input = new TextInput();
-            input.getSizeHint().x = 20;
-            final int modValue = modifiers.features.getOrDefault(a, 0);
-            if (modValue != 0)
-                input.setText(Integer.toString(modValue));
-            input.setFilter(s -> s.length() < 5 && TextInput.isSignedInt(s));
-            input.setCallback(s -> updateFeatMods(a, s));
-            addChild(input);
-        }
+        refill();
     }
 
-    private void updateRollMod(String s) {
-        modifiers.roll = (s.isEmpty() || s.equals("-")) ? 0 : Integer.parseInt(s);
-        syncModifiers();
+    private void refill() {
+        MetaAttribute.get(entity).ifPresent(meta -> {
+            final Modifiers mods = meta.modifiers;
+
+            addChild(new Label("Roll:"));
+            final TextInput modInput = new TextInput();
+            modInput.getSizeHint().x = 16;
+            if (mods.roll != 0)
+                modInput.setText(Integer.toString(mods.roll));
+            modInput.setFilter(s -> s.length() < 5 && TextInput.isSignedInt(s));
+            modInput.setCallback(s -> updateRollMod(meta, s));
+            addChild(modInput);
+
+            for (final Ability a : Ability.values())
+                addAbilityMod(meta, a);
+        });
     }
 
-    private void updateFeatMods(Ability a, String s) {
+    private void addAbilityMod(MetaInfo meta, Ability a) {
+        final Widget pair = new Widget();
+        pair.setLayout(ListLayout.HORIZONTAL);
+        addChild(pair);
+
+        final Label label = new Label(a.toString() + ":");
+        label.getSizeHint().x = 16;
+        pair.addChild(label);
+
+        final TextInput input = new TextInput();
+        input.getSizeHint().x = 16;
+
+        final int modValue = meta.modifiers.features.getOrDefault(a, 0);
+        if (modValue != 0)
+            input.setText(Integer.toString(modValue));
+        input.setFilter(s -> s.length() < 5 && TextInput.isSignedInt(s));
+        input.setCallback(s -> updateFeatMods(meta, a, s));
+        pair.addChild(input);
+    }
+
+    private void updateRollMod(MetaInfo meta, String s) {
+        meta.modifiers.roll = (s.isEmpty() || s.equals("-")) ? 0 : Integer.parseInt(s);
+        MetaRpc.updateMeta(entity.getEntityId(), meta);
+    }
+
+    private void updateFeatMods(MetaInfo meta, Ability a, String s) {
         if (s.isEmpty() || s.equals("-"))
-            modifiers.features.remove(a);
+            meta.modifiers.features.remove(a);
         else
-            modifiers.features.put(a, Integer.parseInt(s));
-        syncModifiers();
-    }
-
-    private void syncModifiers() {
+            meta.modifiers.features.put(a, Integer.parseInt(s));
         MetaRpc.updateMeta(entity.getEntityId(), meta);
     }
 }

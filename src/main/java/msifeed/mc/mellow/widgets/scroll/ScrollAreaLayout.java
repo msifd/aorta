@@ -3,9 +3,9 @@ package msifeed.mc.mellow.widgets.scroll;
 import msifeed.mc.mellow.layout.Layout;
 import msifeed.mc.mellow.layout.LayoutUtils;
 import msifeed.mc.mellow.utils.Geom;
-import msifeed.mc.mellow.utils.Margins;
 import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.widgets.Widget;
+import net.minecraft.util.MathHelper;
 
 import java.util.Collection;
 
@@ -15,29 +15,51 @@ public class ScrollAreaLayout implements Layout {
     @Override
     public Point layoutIndependent(Widget parent, Collection<Widget> children) {
         final Point contentSize = new Point();
-
         if (!(parent instanceof ScrollArea))
             return contentSize;
 
         final ScrollArea scroll = (ScrollArea) parent;
-        final Widget content = scroll.content;
+        final Point scrollSize = scroll.getSizeHint();
+
         final ScrollAreaThumb thumb = scroll.thumb;
+        final Geom thumbGeom = thumb.getGeometry();
+        thumbGeom.reset();
+        thumbGeom.setSize(thumb.getSizeHint());
+        thumbGeom.translate(thumb.getPos(), thumb.getZLevel());
 
-        final Geom cGeom = content.getGeometry();
-        cGeom.reset();
-        cGeom.setSize(LayoutUtils.getPreferredSize(content));
-        cGeom.translate(content.getPos(), content.getZLevel());
+        final int availableWidth = scrollSize.x - thumbGeom.w - 1;
+        contentSize.x = availableWidth;
+        thumbGeom.translate(availableWidth + 1, 0);
 
-        final Geom tGeom = thumb.getGeometry();
-        tGeom.reset();
-        tGeom.setSize(LayoutUtils.getPreferredSize(thumb));
-        tGeom.translate(thumb.getPos(), thumb.getZLevel());
-        tGeom.translate(cGeom.w + spacing, 0);
+        for (Widget child : children) {
+            final Geom childGeom = child.getGeometry();
+            childGeom.reset();
+            childGeom.setSize(LayoutUtils.getPreferredSize(availableWidth, child.getContentSize().y, child));
+            childGeom.translate(child.getPos(), child.getZLevel());
+            childGeom.translate(0, contentSize.y);
+            childGeom.translate(0, spacing);
 
-        contentSize.translate(cGeom.w, cGeom.h);
-        contentSize.translate(tGeom.w + spacing, 0);
-        final Margins margin = parent.getMargin();
-        contentSize.translate(margin.horizontal(), margin.vertical());
+            contentSize.y += childGeom.h;
+        }
+
+        final int scrollHeight = contentSize.y - scrollSize.y;
+        final double percent;
+
+        if (scrollHeight > 0) {
+            thumb.setVisible(true);
+            final double scrollWindowPercent = (double) scrollSize.y / contentSize.y;
+            thumbGeom.h = MathHelper.floor_double(scrollSize.y * scrollWindowPercent);
+
+            percent = thumb.getPos().y / (double) (scrollSize.y - thumbGeom.h);
+        } else {
+            thumb.setVisible(false);
+            percent = 0;
+        }
+
+        for (Widget child : children) {
+            final Geom childGeom = child.getGeometry();
+            childGeom.translate(0, -MathHelper.floor_double(scrollHeight * percent));
+        }
 
         return contentSize;
     }
@@ -48,24 +70,16 @@ public class ScrollAreaLayout implements Layout {
             return;
 
         final ScrollArea scroll = (ScrollArea) parent;
-        final Widget content = scroll.content;
         final ScrollAreaThumb thumb = scroll.thumb;
 
         final Geom geometry = LayoutUtils.getGeomWithMargin(parent);
-        final Geom cGeom = content.getGeometry();
-        final Geom tGeom = thumb.getGeometry();
 
-        // content geometry is larger than wrapper
-        final double contentRelativeSize = geometry.h / (double) cGeom.h;
-        final int maxScrollHeight = cGeom.h - geometry.h;
-        final int scrolledHeight = (int) (scroll.scroll * maxScrollHeight);
-        final int thumbScrolledHeight = (int) (scrolledHeight * contentRelativeSize);
+        for (Widget child : children) {
+            final Geom childGeom = child.getGeometry();
+            childGeom.translate(geometry);
+        }
 
-        cGeom.setPos(0, -scrolledHeight);
-        tGeom.setPos(cGeom.w + spacing, thumbScrolledHeight);
-        tGeom.translate(thumb.getPos());
-
-        for (Widget w : children)
-            w.getGeometry().translate(geometry);
+        final Geom thumbGeom = thumb.getGeometry();
+        thumbGeom.translate(geometry);
     }
 }

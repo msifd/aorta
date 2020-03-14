@@ -4,6 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 
+import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashSet;
 
@@ -19,16 +20,29 @@ public class ActionHeader {
 //        this.title = title.startsWith(".") ? L10n.tr("more.action" + title) : title;
     }
 
-    public boolean isPassive() {
-        return hasTag(ActionTag.passive) || hasTag(ActionTag.defencive);
-    }
-
     public ActionTag getType() {
         return tags.stream().filter(ActionTag::isType).findAny().orElse(ActionTag.melee);
     }
 
+    public boolean isDefencive() {
+        return hasTag(ActionTag.defencive);
+    }
+
+    public boolean requiresNoRoll() {
+        return hasTag(ActionTag.none) || hasTag(ActionTag.equip) || hasTag(ActionTag.reload);
+    }
+
     public boolean hasTag(ActionTag tag) {
         return tags.contains(tag);
+    }
+
+    public int compareTo(ActionHeader o) {
+        return Comparator
+                .comparingInt((ActionHeader a) -> a.combo.size())
+                .reversed()
+                .thenComparing((ActionHeader a) -> a.requiresNoRoll())
+                .thenComparing((ActionHeader a) -> a.title)
+                .compare(this, o);
     }
 
     public ActionHeader(NBTTagCompound nbt) {
