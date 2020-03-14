@@ -13,12 +13,10 @@ import msifeed.mc.sys.attributes.AttributeHandler;
 import msifeed.mc.sys.rpc.Rpc;
 
 public class Crabs {
-    public Crabs() {
+    public void preInit() {
         ActionRegistry.INSTANCE.init();
         CombatManager.INSTANCE.init();
-    }
 
-    public void init() {
         AttributeHandler.registerAttribute(CharacterAttribute.INSTANCE);
         AttributeHandler.registerAttribute(MetaAttribute.INSTANCE);
         AttributeHandler.registerAttribute(CombatAttribute.INSTANCE);

@@ -26,7 +26,9 @@ public class AttributeHandler {
     )
     private static SyncAttrHandler syncAttrHandler;
 
-    public static void init() {
+    private AttributeHandler() {}
+
+    public static void preInit() {
         MinecraftForge.EVENT_BUS.register(INSTANCE);
         CHANNEL.registerMessage(syncAttrHandler, SyncAttrMessage.class, 0, Side.CLIENT);
     }

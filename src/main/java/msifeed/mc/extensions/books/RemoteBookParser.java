@@ -1,5 +1,6 @@
 package msifeed.mc.extensions.books;
 
+import com.google.common.base.Enums;
 import msifeed.mc.extensions.chat.Language;
 
 import java.io.BufferedReader;
@@ -23,10 +24,9 @@ class RemoteBookParser {
                 final String[] header = firstLine.substring(2).trim().split(" ");
 
                 if (header.length > 0)
-                    book.style = RemoteBook.Style.valueOf(header[0].toUpperCase());
+                    book.style = Enums.getIfPresent(RemoteBook.Style.class, header[0].toUpperCase()).or(RemoteBook.Style.REGULAR);
                 if (header.length > 1)
-                    book.lang = Language.valueOf(header[1].toUpperCase());
-
+                    book.lang = Enums.getIfPresent(Language.class, header[1].toUpperCase()).or(Language.VANILLA);
                 book.title = reader.readLine();
                 if (book.title == null)
                     return null;

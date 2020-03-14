@@ -20,6 +20,11 @@ public class Locks {
     private static final Item iconLock = GenesisCreativeTab.makeIcon("tab_locks");
     public static final GenesisCreativeTab LOCKS = new GenesisCreativeTab(Bootstrap.MODID + ".locks", iconLock);
 
+    public void preInit() {
+        MinecraftForge.EVENT_BUS.register(this);
+        Rpc.register(rpcHandler);
+    }
+
     public void init() {
         LockType.locks().forEach(t -> GameRegistry.registerItem(new LockItem(t), LockItem.getItemId(t)));
         GameRegistry.registerItem(new BlankKeyItem(), BlankKeyItem.ID);
@@ -33,9 +38,6 @@ public class Locks {
 
         GameRegistry.addRecipe(new CopyKeyRecipe());
         RecipeSorter.register(Bootstrap.MODID + ":copy_key", CopyKeyRecipe.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
-
-        Rpc.register(rpcHandler);
-        MinecraftForge.EVENT_BUS.register(this);
     }
 
     @SubscribeEvent

@@ -34,13 +34,15 @@ public enum RemoteBookManager {
     private Consumer<Boolean> checkConsumer = null;
     private Consumer<RemoteBook> fetchConsumer = null;
 
-    public static void init() {
+    public static void preInit() {
         Rpc.register(rpcHandler);
 
         final File mcRootDir = Loader.instance().getConfigDir().getParentFile();
         INSTANCE.booksDir = new File(mcRootDir, "books");
         INSTANCE.booksDir.mkdirs();
+    }
 
+    public static void init() {
         GameRegistry.registerItem(new ItemRemoteBook(), ItemRemoteBook.ID);
         GameRegistry.registerItem(new ItemRemoteBookEditor(), "remote_book_editor");
         GameRegistry.registerItem(new ItemRemoteBookLoader(), "remote_book_loader");

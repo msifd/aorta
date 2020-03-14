@@ -52,32 +52,27 @@ public class More {
     private Locks locks = new Locks();
 
     public void preInit() {
+        crabs.preInit();
+        externalLogs.preInit();
+        entityControl.preInit();
+        speechat.preInit();
+        locks.preInit();
+
+        RemoteBookManager.preInit();
+        RenameRpc.preInit();
+        SetMaxHealth.preInit();
+        NoclipRpc.preInit();
+        Nametag.preInit();
+        EnvironmentManager.preInit();
     }
 
     public void init() {
         genesis.init();
-
-        crabs.init();
-        externalLogs.init();
-
-        entityControl.init();
-        speechat.init();
         locks.init();
 
-        EnvironmentManager.init();
         RemoteBookManager.init();
-        Nametag.init();
-        RenameRpc.init();
-        SetMaxHealth.init();
-        NoclipRpc.init();
-
         ToolItems.init();
         Items.init();
-//        GameRegistry.registerItem(new ItemDebugTool(), ItemDebugTool.ITEM_NAME);
-//        GameRegistry.registerItem(new ItemCharSheet(), ItemCharSheet.ITEM_NAME);
-//        GameRegistry.registerItem(new ItemStatusTool(), ItemStatusTool.ITEM_NAME);
-//        GameRegistry.registerItem(new ItemRollerTool(), ItemRollerTool.ITEM_NAME);
-//        GameRegistry.registerItem(new ItemDesignerTool(), ItemDesignerTool.ID);
     }
 
     public void postInit() {

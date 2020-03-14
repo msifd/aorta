@@ -34,7 +34,7 @@ public class EnvironmentManager {
     )
     private static EnvHandler envHandler;
 
-    public static void init() {
+    public static void preInit() {
         MinecraftForge.EVENT_BUS.register(INSTANCE);
         envHandler.init();
     }

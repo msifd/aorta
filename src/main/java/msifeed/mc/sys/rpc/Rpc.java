@@ -21,7 +21,7 @@ public class Rpc {
 
     private Rpc() {}
 
-    public static void init() {
+    public static void preInit() {
         INSTANCE.CHANNEL.registerMessage(RpcMessage.class, RpcMessage.class, 0, Side.SERVER);
         INSTANCE.CHANNEL.registerMessage(RpcMessage.class, RpcMessage.class, 1, Side.CLIENT);
     }

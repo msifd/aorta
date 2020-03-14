@@ -22,7 +22,7 @@ public enum RenameRpc {
     private static final String setValue = Bootstrap.MODID + ":rename.value.set";
     private static final String openRenameGui = Bootstrap.MODID + ":rename.gui";
 
-    public static void init() {
+    public static void preInit() {
         Rpc.register(INSTANCE);
     }
 

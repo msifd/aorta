@@ -27,7 +27,7 @@ public class EntityControl {
     private final TypeToken<ArrayList<ConfigContent>> configContentType = new TypeToken<ArrayList<ConfigContent>>() {};
     private JsonConfig<ArrayList<ConfigContent>> config = ConfigBuilder.of(configContentType, "entity_control.json").create();
 
-    public void init() {
+    public void preInit() {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -52,8 +52,10 @@ public class EntityControl {
         if (!(event.entity instanceof EntityLivingBase))
             return;
 
-        if (isBlacklisted(event.world, event.entity))
+        if (isBlacklisted(event.world, event.entity)) {
+//            event.entity.setDead();
             event.setCanceled(true);
+        }
     }
 
     private void compileConfig() {
@@ -90,7 +92,7 @@ public class EntityControl {
                 try {
                     classes.add(Class.forName(s));
                 } catch (ClassNotFoundException e) {
-                    logger.error("Unknown class '%s'.", s);
+                    logger.error("Unknown class '{}'.", s);
                 }
             }
         }

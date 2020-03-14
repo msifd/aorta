@@ -9,7 +9,7 @@ import net.minecraftforge.common.MinecraftForge;
 public class ExternalLogs {
     private static final DBHandler dbHandler = new DBHandler();
 
-    public void init() {
+    public void preInit() {
         if (FMLCommonHandler.instance().getSide().isServer()) {
             FMLCommonHandler.instance().bus().register(this);
             MinecraftForge.EVENT_BUS.register(this);

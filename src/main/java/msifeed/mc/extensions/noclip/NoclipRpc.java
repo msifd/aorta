@@ -14,7 +14,7 @@ public enum NoclipRpc {
 
     private static final String toggle = Bootstrap.MODID + ":noclip";
 
-    public static void init() {
+    public static void preInit() {
         Rpc.register(INSTANCE);
     }
 

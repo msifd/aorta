@@ -28,7 +28,7 @@ public class Nametag {
     static final String broadcastTyping = Bootstrap.MODID + ":nametags.broadcast";
     private static final String notifyTyping = Bootstrap.MODID + ":nametags.notify";
 
-    public static void init() {
+    public static void preInit() {
         Rpc.register(INSTANCE);
         MinecraftForge.EVENT_BUS.register(INSTANCE);
         FMLCommonHandler.instance().bus().register(INSTANCE);

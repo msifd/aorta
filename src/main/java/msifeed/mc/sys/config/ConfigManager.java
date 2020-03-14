@@ -20,7 +20,7 @@ public enum ConfigManager {
     private File configDir;
     private ArrayList<JsonConfig> handlers = new ArrayList<>();
 
-    public static void init(FMLPreInitializationEvent event) {
+    public static void preInit(FMLPreInitializationEvent event) {
         INSTANCE.configDir = new File(event.getModConfigurationDirectory(), Bootstrap.MODID);
         INSTANCE.configDir.mkdirs();
 

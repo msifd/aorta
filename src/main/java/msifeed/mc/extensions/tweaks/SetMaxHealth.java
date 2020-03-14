@@ -10,7 +10,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 
 public class SetMaxHealth {
-    public static void init() {
+    public static void preInit() {
         MinecraftForge.EVENT_BUS.register(new SetMaxHealth());
     }
 

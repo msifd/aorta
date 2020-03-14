@@ -13,10 +13,10 @@ import net.minecraftforge.common.MinecraftForge;
 public class Speechat {
     static final SimpleNetworkWrapper CHANNEL = NetworkRegistry.INSTANCE.newSimpleChannel(Bootstrap.MODID + ".chat");
 
-    public void init() {
-        CHANNEL.registerMessage(SpeechMessageHandler.class, ChatMessage.class, 0x01, Side.CLIENT);
+    public void preInit() {
         MinecraftForge.EVENT_BUS.register(new ChatHandler());
         AttributeHandler.registerAttribute(LangAttribute.INSTANCE);
+        CHANNEL.registerMessage(SpeechMessageHandler.class, ChatMessage.class, 0x01, Side.CLIENT);
     }
 
     public static void initClient() {
