@@ -22,6 +22,9 @@ public class ListLayout implements Layout {
 
     @Override
     public Point layoutIndependent(Widget parent, Collection<Widget> children) {
+        if (children.isEmpty())
+            return new Point();
+
         int offsetPrimary = 0;
         int maxSecondary = 0;
 

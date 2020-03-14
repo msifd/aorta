@@ -18,7 +18,7 @@ public class TestNestedLayout extends LayoutFixture {
         container.setLayout(new FreeLayout());
         container.setPos(cPos);
         container.setSizeHint(cSize);
-        checkGeom(container, cPos.x, cPos.y, 0, 0);
+        checkGeom(container, cPos.x, cPos.y, cSize.x, cSize.y);
 
         givenWidgets(1);
 
