@@ -79,6 +79,12 @@ public enum CombatManager {
             return;
         }
 
+        if (((EntityLivingBase) damageSrcEntity).getHeldItem() == null) {
+            CharacterAttribute.get(damageSrcEntity).ifPresent(character -> {
+                if (character.fistsDamage > 0)
+                    event.ammount = character.fistsDamage;
+            });
+        }
 
         final CombatContext vicCom;
         final EntityLivingBase srcEntity;

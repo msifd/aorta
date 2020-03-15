@@ -10,6 +10,14 @@ class EditParamsView extends Widget {
     EditParamsView(Character character) {
         setLayout(new GridLayout());
 
+        addChild(new Label("Fists damage"));
+        final TextInput fistsDmgInput = new TextInput();
+        fistsDmgInput.getSizeHint().x = 30;
+        fistsDmgInput.setText(String.valueOf(character.fistsDamage));
+        fistsDmgInput.setFilter(s -> TextInput.isUnsignedIntBetween(s, 0, 100));
+        fistsDmgInput.setCallback(s -> character.fistsDamage = fistsDmgInput.getInt());
+        addChild(fistsDmgInput);
+
         addChild(new Label("Estitence"));
         final TextInput estitenceInput = new TextInput();
         estitenceInput.getSizeHint().x = 30;

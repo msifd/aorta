@@ -16,6 +16,7 @@ public class Character {
     public EnumMap<Ability, Integer> abilities = new EnumMap<>(Ability.class);
     public Illness illness = new Illness();
 
+    public int fistsDamage = 0;
     public int estitence = 60;
     public int sin = 0;
 
@@ -31,6 +32,7 @@ public class Character {
         for (EnumMap.Entry<Ability, Integer> e : c.abilities.entrySet())
             abilities.put(e.getKey(), e.getValue());
         illness.unpack(c.illness.pack());
+        fistsDamage = c.fistsDamage;
         estitence = c.estitence;
         sin = c.sin;
     }
@@ -65,6 +67,7 @@ public class Character {
 
         c.setInteger(Tags.illness, illness.pack());
 
+        c.setInteger(Tags.fistsDmg, fistsDamage);
         c.setInteger(Tags.estitence, estitence);
         c.setInteger(Tags.sin, sin);
 
@@ -82,6 +85,7 @@ public class Character {
 
         illness.unpack(c.getInteger(Tags.illness));
 
+        fistsDamage = c.getInteger(Tags.fistsDmg);
         estitence = c.getInteger(Tags.estitence);
         sin = c.getInteger(Tags.sin);
     }
@@ -92,6 +96,7 @@ public class Character {
         static final String traits = "traits";
         static final String abilities = "abs";
         static final String illness = "illness";
+        static final String fistsDmg = "fistsDmg";
         static final String estitence = "estitence";
         static final String sin = "sin";
     }

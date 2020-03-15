@@ -38,11 +38,18 @@ public class Differ {
         if (before.illness.treatment > after.illness.treatment)
             diffs.add(L10n.fmt("more.diff.status.illness.rem_treatment", before.illness.treatment - after.illness.treatment));
 
+        if (before.fistsDamage != after.fistsDamage) {
+            diffs.add(L10n.fmt(
+                    before.fistsDamage < after.fistsDamage ? "more.diff.status.add_fists_damage" : "more.diff.status.rem_fists_damage",
+                    after.fistsDamage, trGenPoints(after.fistsDamage)
+            ));
+        }
+
         if (before.estitence != after.estitence) {
             final int n = Math.abs(before.estitence - after.estitence);
             diffs.add(L10n.fmt(
                     before.estitence < after.estitence ? "more.diff.status.add_estitence" : "more.diff.status.rem_estitence",
-                    n, trPoints(n)
+                    n, trNomPoints(n)
             ));
         }
 
@@ -50,14 +57,14 @@ public class Differ {
             final int n = Math.abs(before.sin - after.sin);
             diffs.add(L10n.fmt(
                     before.sin < after.sin ? "more.diff.status.add_sin" : "more.diff.status.rem_sin",
-                    n, trPoints(n)
+                    n, trNomPoints(n)
             ));
         }
 
         return String.join(", ", diffs);
     }
 
-    private static String trPoints(int points) {
+    private static String trNomPoints(int points) {
         switch (points) {
             case 11:
             case 12:
@@ -78,6 +85,12 @@ public class Differ {
                         return L10n.tr("more.diff.m");
                 }
         }
+    }
+
+    private static String trGenPoints(int points) {
+        if (points == 1)
+            return L10n.tr("more.diff.g");
+        return L10n.tr("more.diff.m");
     }
 
     public static String diffResults(Character before, Character after) {

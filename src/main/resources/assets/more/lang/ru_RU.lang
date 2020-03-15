@@ -117,6 +117,8 @@ more.diff.status.rem_max_health=теряет %d ед. максимального
 more.diff.status.add_sin=повышает грешность на %d %s
 more.diff.status.rem_sin=снижает грешность на %d %s
 more.diff.status.sinfulness_level=теперь %s
+more.diff.status.add_fists_damage=повышает урон без оружия до %d %s
+more.diff.status.rem_fists_damage=уменьшает урон без оружия до %d %s
 
 more.diff.status.illness.add_illness=болезнь прогрессирует на %d пунктов
 more.diff.status.illness.rem_illness=болезнь отступает на %d пунктов
