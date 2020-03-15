@@ -6,14 +6,11 @@ public abstract class Effect {
     public abstract String name();
     public abstract boolean shouldApply(Stage stage, ActionContext target, ActionContext other);
     public abstract void apply(ActionContext target, ActionContext other);
+    public abstract boolean equals(Effect other);
 
     @Override
     public String toString() {
         return name();
-    }
-
-    public boolean equals(Effect e) {
-        return this.getClass().equals(e.getClass());
     }
 
     // // // // // // // //
@@ -40,6 +37,10 @@ public abstract class Effect {
             if (other != null)
                 target.damageToReceive.addAll(other.damageToDeal);
         }
+
+        public boolean equals(Effect other) {
+            return other instanceof Damage;
+        }
     }
 
     // // // // // // // //
@@ -58,6 +59,10 @@ public abstract class Effect {
         @Override
         public void apply(ActionContext target, ActionContext other) {
             // TODO: impl skip
+        }
+
+        public boolean equals(Effect other) {
+            return other instanceof SkipMove;
         }
     }
 }

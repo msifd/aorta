@@ -61,6 +61,11 @@ public final class Buff extends DynamicEffect {
             pause--;
     }
 
+    @Override
+    public boolean equals(Effect other) {
+        return other instanceof Buff && effect.equals(((Buff) other).effect);
+    }
+
     /**
      * [pause before activation]:[number of time the effect is applied]:[repeat mode]:[effect]
      */

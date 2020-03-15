@@ -10,6 +10,7 @@ import static msifeed.mc.more.crabs.action.effects.DynamicEffect.EffectArgs.INT;
 public abstract class DynamicEffect extends Effect {
     public abstract EffectArgs[] args();
     public abstract DynamicEffect produce(Object[] args);
+    public abstract boolean equals(Effect other);
 
     // // // // // // // //
 
@@ -33,6 +34,11 @@ public abstract class DynamicEffect extends Effect {
         @Override
         public void apply(ActionContext target, ActionContext other) {
             target.damageToReceive.add(new DamageAmount(DamageSource.generic, value));
+        }
+
+        @Override
+        public boolean equals(Effect other) {
+            return other instanceof DamageAdder && value == ((DamageAdder) other).value;
         }
 
         @Override
@@ -73,6 +79,11 @@ public abstract class DynamicEffect extends Effect {
         }
 
         @Override
+        public boolean equals(Effect other) {
+            return other instanceof DamageMultiplier && value == ((DamageMultiplier) other).value;
+        }
+
+        @Override
         public EffectArgs[] args() {
             return new EffectArgs[]{FLOAT};
         }
@@ -106,6 +117,11 @@ public abstract class DynamicEffect extends Effect {
         @Override
         public void apply(ActionContext target, ActionContext other) {
             target.scoreEffects += value;
+        }
+
+        @Override
+        public boolean equals(Effect other) {
+            return other instanceof ScoreAdder && value == ((ScoreAdder) other).value;
         }
 
         @Override
@@ -145,6 +161,11 @@ public abstract class DynamicEffect extends Effect {
         }
 
         @Override
+        public boolean equals(Effect other) {
+            return other instanceof ScoreMultiplier && value == ((ScoreMultiplier) other).value;
+        }
+
+        @Override
         public DynamicEffect produce(Object[] args) {
             final ScoreMultiplier e = new ScoreMultiplier();
             e.value = (float) args[0];
@@ -176,6 +197,16 @@ public abstract class DynamicEffect extends Effect {
         }
 
         @Override
+        public void apply(ActionContext target, ActionContext other) {
+            target.successful = target.score() >= value;
+        }
+
+        @Override
+        public boolean equals(Effect other) {
+            return other instanceof MinScore && value == ((MinScore) other).value;
+        }
+
+        @Override
         public EffectArgs[] args() {
             return new EffectArgs[]{INT};
         }
@@ -185,11 +216,6 @@ public abstract class DynamicEffect extends Effect {
             final MinScore e = new MinScore();
             e.value = (int) args[0];
             return e;
-        }
-
-        @Override
-        public void apply(ActionContext target, ActionContext other) {
-            target.successful = target.score() >= value;
         }
 
         @Override
