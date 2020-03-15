@@ -46,8 +46,6 @@ public enum ActionRegistry {
     }
 
     public static ActionHeader getHeader(String id) {
-        if (!INSTANCE.actions.isEmpty())
-            return get(id);
         return INSTANCE.actionHeaders.get(id);
     }
 

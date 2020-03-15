@@ -45,8 +45,8 @@ public class CombatScreen extends MellowGuiScreen {
 
     @Override
     public void closeGui() {
-        super.closeGui();
         MinecraftForge.EVENT_BUS.unregister(this);
+        super.closeGui();
     }
 
     @SubscribeEvent
