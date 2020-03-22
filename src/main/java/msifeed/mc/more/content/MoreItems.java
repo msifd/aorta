@@ -2,7 +2,7 @@ package msifeed.mc.more.content;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class Items {
+public class MoreItems {
     public static void init() {
         GameRegistry.registerItem(new ItemOldEye(), ItemOldEye.ITEM_NAME);
         GameRegistry.registerItem(new ItemFragileOldEye(), ItemFragileOldEye.ITEM_NAME);

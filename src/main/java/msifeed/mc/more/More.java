@@ -20,13 +20,13 @@ import msifeed.mc.extensions.rename.RenameCommand;
 import msifeed.mc.extensions.rename.RenameRpc;
 import msifeed.mc.extensions.tweaks.EntityControl;
 import msifeed.mc.extensions.tweaks.MakeFoodEdible;
-import msifeed.mc.extensions.tweaks.SetMaxHealth;
+import msifeed.mc.extensions.tweaks.EsitenceHealthModifier;
 import msifeed.mc.extensions.tweaks.UnstuckCommand;
 import msifeed.mc.genesis.Genesis;
 import msifeed.mc.more.client.common.GuiHandler;
 import msifeed.mc.more.commands.MoreCommand;
 import msifeed.mc.more.commands.RollCommand;
-import msifeed.mc.more.content.Items;
+import msifeed.mc.more.content.MoreItems;
 import msifeed.mc.more.crabs.Crabs;
 import msifeed.mc.more.tools.ToolItems;
 import net.minecraft.command.CommandHandler;
@@ -60,7 +60,7 @@ public class More {
 
         RemoteBookManager.preInit();
         RenameRpc.preInit();
-        SetMaxHealth.preInit();
+        EsitenceHealthModifier.preInit();
         NoclipRpc.preInit();
         Nametag.preInit();
         EnvironmentManager.preInit();
@@ -72,7 +72,7 @@ public class More {
 
         RemoteBookManager.init();
         ToolItems.init();
-        Items.init();
+        MoreItems.init();
     }
 
     public void postInit() {

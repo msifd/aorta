@@ -7,6 +7,7 @@ import msifeed.mc.commons.logs.ExternalLogs;
 import msifeed.mc.commons.traits.Trait;
 import msifeed.mc.extensions.chat.LangAttribute;
 import msifeed.mc.extensions.chat.Language;
+import msifeed.mc.extensions.tweaks.EsitenceHealthModifier;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.more.crabs.utils.Differ;
 import msifeed.mc.more.crabs.utils.MetaAttribute;
@@ -81,7 +82,7 @@ public enum CharRpc {
                 }
 
                 if (before.estitence != after.estitence) {
-                    ((EntityPlayer)entity).getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(after.countMaxHealth());
+                    EsitenceHealthModifier.applyModifier((EntityPlayer) entity, after);
                 }
             }
         } else {
