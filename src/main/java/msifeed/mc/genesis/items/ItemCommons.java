@@ -1,6 +1,8 @@
 package msifeed.mc.genesis.items;
 
 import msifeed.mc.extensions.rename.RenameProvider;
+import msifeed.mc.more.crabs.action.ActionHeader;
+import msifeed.mc.more.crabs.action.ActionRegistry;
 import msifeed.mc.sys.utils.L10n;
 import net.minecraft.item.ItemStack;
 
@@ -22,6 +24,11 @@ public class ItemCommons {
         for (Map.Entry<String, String> entry : values.entrySet())
             if (!entry.getValue().isEmpty())
                 lines.add("\u00A7r" + entry.getKey() + "\u00A7r: " + entry.getValue());
+
+        if (unit.crabsData.action != null) {
+            final ActionHeader a = ActionRegistry.getHeader(unit.crabsData.action);
+            lines.add("\u00A7r" + L10n.fmt("more.gen.crabs.action", a.title));
+        }
 
         if (unit.specialAttackCost > 0 && unit.maxUsages > 0)
             lines.add("\u00A7r" + L10n.fmt("more.gen.special_attack_cost", unit.specialAttackCost));

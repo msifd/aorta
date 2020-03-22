@@ -71,8 +71,13 @@
       "offset": 0.8,
       "recess": 1
     },
+    "crabs": {
+      "action": "hard_hit"
+    },
     "traits": [
-      "item"
+      "item",
+      "usable",
+      "reusable"
     ]
   },
   {

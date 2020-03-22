@@ -34,30 +34,36 @@ public enum CombatManager {
         FMLCommonHandler.instance().bus().register(this);
     }
 
-    public void doAction(EntityLivingBase self, CombatContext ctx, Action action) {
+    public boolean doAction(EntityLivingBase self, CombatContext ctx, Action action) {
         final boolean actionChanged = ctx.action == null || !ctx.action.id.equals(action.id);
 
         if (ctx.phase == CombatContext.Phase.IDLE) {
             if (!ctx.acceptsOffendAction(action))
-                return;
+                return false;
 
             if (actionChanged)
                 updateAction(self, action);
             else if (action.requiresNoRoll())
                 finishSoloMove(new FighterInfo(self));
+
+            return true;
         } else if (ctx.phase == CombatContext.Phase.DEFEND) {
             final Entity offender = self.worldObj.getEntityByID(ctx.target);
             if (offender == null)
-                return;
+                return false;
             final ActionContext offenderAct = ActionAttribute.require(offender);
             if (!ctx.acceptsDefendAction(offenderAct.action.getType(), action))
-                return;
+                return false;
 
             if (actionChanged)
                 updateAction(self, action);
             else
                 finishMove(new FighterInfo((EntityLivingBase) offender), new FighterInfo(self));
+
+            return true;
         }
+
+        return false;
     }
 
     private static void updateAction(EntityLivingBase self, Action action) {

@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import msifeed.mc.genesis.GenesisTrait;
 import msifeed.mc.genesis.GenesisUnit;
+import msifeed.mc.genesis.items.data.CrabsData;
 import msifeed.mc.genesis.items.data.ItemDurabilityData;
 import msifeed.mc.genesis.items.data.ItemRenderData;
 import msifeed.mc.sys.utils.JsonUtils;
@@ -22,6 +23,7 @@ public class ItemGenesisUnit extends GenesisUnit {
     public ItemRarity rarity;
     public ItemRenderData renderData = null;
     public ItemDurabilityData durData = new ItemDurabilityData();
+    public CrabsData crabsData = new CrabsData();
     public int maxUsages = 0;
     public int specialAttackCost = 0;
 
@@ -38,9 +40,10 @@ public class ItemGenesisUnit extends GenesisUnit {
 
         if (json.has(Props.render))
             renderData = new ItemRenderData(json);
-
         if (json.has(Props.durability))
             durData = new ItemDurabilityData(json);
+        if (json.has(Props.crabs))
+            crabsData = new CrabsData(json.getAsJsonObject(Props.crabs));
 
         if (json.has(Props.usages))
             JsonUtils.consumeInt(json, Props.usages, i -> maxUsages = i);
@@ -85,6 +88,7 @@ public class ItemGenesisUnit extends GenesisUnit {
         static final String render = "render";
         static final String durability = "durability";
         static final String usages = "usages";
+        static final String crabs = "crabs";
         static final String specialAttackCost = "specialAttackCost";
         static final String sanity = "sanity";
     }

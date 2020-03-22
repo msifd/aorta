@@ -136,6 +136,8 @@ more.diff.status.illness.5=пациент в хорошем состоянии, 
 more.diff.status.illness.6=пациент в великолепном состоянии, болезнь уже отступает
 more.diff.status.illness.7=пациент настолько здоров, что здоровее, кажется, уже некуда
 
+more.crabs.action_changed=Выбрано действие: %s
+
 more.lock.locked=§7Закрыто
 more.lock.unlocked=§7Открыто
 more.lock.installed=§7Замок установлен
@@ -171,3 +173,4 @@ more.gen.uses_left=Осталось использований: %d
 more.gen.needs_reload=Требуется перезарядка
 more.gen.durability=Прочность: %d/%d (%s%%)
 more.gen.broken=Этот предмет сломан и не может быть использован
+more.gen.crabs.action=Спец. действие: %s

@@ -48,7 +48,7 @@ public enum CombatRpc {
             throw new RpcMethodException(sender, "target is not a living entity");
         final EntityLivingBase target = (EntityLivingBase) targetEntity;
 
-        final Action action = ActionRegistry.get(actionId);
+        final Action action = ActionRegistry.getFullAction(actionId);
         if (action == null)
             throw new RpcMethodException(sender, "unknown action: " + actionId);
 

@@ -1,6 +1,6 @@
 package msifeed.mc.more.client.combat;
 
-import msifeed.mc.mellow.Mellow;
+import joptsimple.internal.Strings;
 import msifeed.mc.mellow.layout.AnchorLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.render.RenderShapes;
@@ -12,6 +12,7 @@ import msifeed.mc.more.crabs.combat.CombatContext;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
 import net.minecraft.entity.EntityLivingBase;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class ProgressView extends Widget {
@@ -81,14 +82,19 @@ public class ProgressView extends Widget {
                 break;
         }
 
-        final StringBuilder buffsSb = new StringBuilder();
-        for (Buff b : context.buffs) {
-            buffsSb.append(b.toString());
-            buffsSb.append('\n');
+        if (!context.buffs.isEmpty()) {
+            final StringBuilder sb = new StringBuilder();
+            sb.append("Buffs:\n");
+            for (Buff b : context.buffs) {
+                sb.append(b.toString());
+                sb.append('\n');
+            }
+            sb.deleteCharAt(sb.length() - 1);
+            addPane(sb.toString());
         }
-        if (buffsSb.length() > 0) {
-            buffsSb.deleteCharAt(buffsSb.length() - 1);
-            addPane("Buffs:" + buffsSb.toString());
+
+        if (!context.prevActions.isEmpty()) {
+            addPane("Prev. actions:\n" + Strings.join(new ArrayList<>(context.prevActions), ","));
         }
     }
 
@@ -101,8 +107,6 @@ public class ProgressView extends Widget {
     }
 
     private static class Pane extends Widget {
-        private int color = Mellow.getColor("text_bright");
-
         Pane(String text, int width) {
             getSizeHint().x = width;
             getMargin().set(1, 2, 2, 2);

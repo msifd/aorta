@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
 public enum ActionRegistry {
     INSTANCE;
@@ -41,16 +42,12 @@ public enum ActionRegistry {
         Rpc.register(ActionRpc.INSTANCE);
     }
 
-    public static Action get(String id) {
-        return INSTANCE.actions.get(id);
-    }
-
     public static ActionHeader getHeader(String id) {
         return INSTANCE.actionHeaders.get(id);
     }
 
-    public static Collection<Action> getActions() {
-        return INSTANCE.actions.values();
+    public static Action getFullAction(String id) {
+        return INSTANCE.actions.get(id);
     }
 
     public static Collection<ActionHeader> getActionHeaders() {
@@ -85,12 +82,17 @@ public enum ActionRegistry {
 
     private void setActions(Collection<Action> newActions) {
         this.actions.clear();
+        this.actionHeaders.clear();
+
         for (Action a : newActions)
             this.actions.put(a.id, a);
 
         this.actions.put(NONE_ACTION.id, NONE_ACTION);
         this.actions.put(EQUIP_ACTION.id, EQUIP_ACTION);
         this.actions.put(RELOAD_ACTION.id, RELOAD_ACTION);
+
+        for (Map.Entry<String, Action> e : this.actions.entrySet())
+            this.actionHeaders.put(e.getKey(), e.getValue());
 
         ActionRpc.broadcastToAll(actions.values());
     }

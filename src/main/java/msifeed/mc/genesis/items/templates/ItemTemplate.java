@@ -9,6 +9,12 @@ import msifeed.mc.genesis.GenesisTrait;
 import msifeed.mc.genesis.items.IItemTemplate;
 import msifeed.mc.genesis.items.ItemCommons;
 import msifeed.mc.genesis.items.ItemGenesisUnit;
+import msifeed.mc.more.crabs.action.Action;
+import msifeed.mc.more.crabs.action.ActionRegistry;
+import msifeed.mc.more.crabs.combat.CombatContext;
+import msifeed.mc.more.crabs.combat.CombatManager;
+import msifeed.mc.more.crabs.utils.CombatAttribute;
+import msifeed.mc.more.crabs.utils.CombatMessages;
 import msifeed.mc.sys.utils.L10n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
@@ -99,7 +105,14 @@ public class ItemTemplate extends Item implements IItemTemplate {
     }
 
     private void onUse(EntityPlayer player, ItemStack itemStack, boolean special) {
-
+        if (unit.crabsData.action != null) {
+            if (!player.worldObj.isRemote) {
+                final CombatContext com = CombatAttribute.require(player);
+                final Action newAction = ActionRegistry.getFullAction(unit.crabsData.action);
+                if (CombatManager.INSTANCE.doAction(player, com, newAction))
+                    CombatMessages.actionChanged(player, player, newAction);
+            }
+        }
     }
 
     private void onReload(EntityPlayer player, ItemStack itemStack, boolean special) {
@@ -142,6 +155,9 @@ public class ItemTemplate extends Item implements IItemTemplate {
                                 onReload(player, itemStack, special);
 
                         itemStack.getTagCompound().setInteger("usages", usages == 0 ? unit.maxUsages : 0);
+                    } else {
+                        if (!world.isRemote)
+                            onUse(player, itemStack, special);
                     }
                 } else {
                     if (!world.isRemote)

@@ -29,7 +29,7 @@ public class GuiHandlerClient extends GuiHandler {
     public void init() {
         MinecraftForge.EVENT_BUS.register(HudLock.INSTANCE);
         MinecraftForge.EVENT_BUS.register(CombatOverlay.INSTANCE);
-        MinecraftForge.EVENT_BUS.register(CombatEntityMarks.INSTANCE);
+//        MinecraftForge.EVENT_BUS.register(CombatEntityMarks.INSTANCE);
     }
 
     @Override
