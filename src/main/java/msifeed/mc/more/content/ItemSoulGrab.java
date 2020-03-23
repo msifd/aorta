@@ -9,7 +9,6 @@ import msifeed.mc.more.crabs.character.Character;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.more.crabs.utils.Differ;
 import msifeed.mc.sys.utils.L10n;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -36,7 +35,7 @@ public class ItemSoulGrab extends Item {
         final ItemStack heldItem = player.getHeldItem();
         if (heldItem == null || !(heldItem.getItem() instanceof ItemSoulGrab))
             return;
-        
+
         if (!(event.target instanceof EntityPlayer) || player.worldObj.isRemote)
             return;
 

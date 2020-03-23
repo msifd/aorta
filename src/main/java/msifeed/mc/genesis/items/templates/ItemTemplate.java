@@ -13,8 +13,8 @@ import msifeed.mc.more.crabs.action.Action;
 import msifeed.mc.more.crabs.action.ActionRegistry;
 import msifeed.mc.more.crabs.combat.CombatContext;
 import msifeed.mc.more.crabs.combat.CombatManager;
+import msifeed.mc.more.crabs.combat.CombatNotifications;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
-import msifeed.mc.more.crabs.utils.CombatMessages;
 import msifeed.mc.sys.utils.L10n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
@@ -110,7 +110,7 @@ public class ItemTemplate extends Item implements IItemTemplate {
                 final CombatContext com = CombatAttribute.require(player);
                 final Action newAction = ActionRegistry.getFullAction(unit.crabsData.action);
                 if (CombatManager.INSTANCE.doAction(player, com, newAction))
-                    CombatMessages.actionChanged(player, player, newAction);
+                    CombatNotifications.actionChanged(player, player, newAction);
             }
         }
     }

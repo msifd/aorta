@@ -102,8 +102,8 @@ public class CombatContext {
     public enum Phase {
         NONE, // Not in combat
         IDLE, // Wait for action
-        ATTACK, // Apply damage or skip
-        WAIT, // Wait opponent's action
+        ATTACK, // Apply damage
+        WAIT, // Wait defender's action
         DEFEND, // Wait for defencive action
         END, // Pass damage to entity
         LEAVE, // Try to leave combat

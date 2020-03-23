@@ -25,13 +25,13 @@ public abstract class ExtCommand extends CommandBase {
         return super.canCommandSenderUseCommand(sender);
     }
 
-    protected boolean isAdmin(ICommandSender sender) {
+    protected static boolean isAdmin(ICommandSender sender) {
         return FMLCommonHandler.instance().getSide().isClient()
             || sender instanceof MinecraftServer
             || sender instanceof EntityPlayer && CharacterAttribute.has((EntityPlayer)sender, Trait.__admin);
     }
 
-    protected boolean isGm(ICommandSender sender) {
+    protected static boolean isGm(ICommandSender sender) {
         return FMLCommonHandler.instance().getSide().isClient()
             || sender instanceof MinecraftServer
             || sender instanceof EntityPlayer && (
@@ -40,27 +40,27 @@ public abstract class ExtCommand extends CommandBase {
             );
     }
 
-    protected void title(ICommandSender sender, String format, Object... args) {
+    protected static void title(ICommandSender sender, String format, Object... args) {
         sendColored(sender, EnumChatFormatting.BLUE, format, args);
     }
 
-    protected void info(ICommandSender sender, String format, Object... args) {
+    protected static void info(ICommandSender sender, String format, Object... args) {
         send(sender, format, args);
     }
 
-    protected void success(ICommandSender sender, String format, Object... args) {
+    protected static void success(ICommandSender sender, String format, Object... args) {
         sendColored(sender, EnumChatFormatting.GREEN, format, args);
     }
 
-    protected void error(ICommandSender sender, String format, Object... args) {
+    protected static void error(ICommandSender sender, String format, Object... args) {
         sendColored(sender, EnumChatFormatting.RED, format, args);
     }
 
-    protected void send(ICommandSender sender, String format, Object... args) {
+    protected static void send(ICommandSender sender, String format, Object... args) {
         sender.addChatMessage(new ChatComponentText(args.length == 0 ? format : String.format(format, args)));
     }
 
-    protected void sendColored(ICommandSender sender, EnumChatFormatting color, String format, Object... args) {
+    protected static void sendColored(ICommandSender sender, EnumChatFormatting color, String format, Object... args) {
         final ChatComponentText c = new ChatComponentText(args.length == 0 ? format : String.format(format, args));
         c.getChatStyle().setColor(color);
         sender.addChatMessage(c);

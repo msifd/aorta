@@ -15,8 +15,6 @@ public enum ActionRpc {
     INSTANCE;
 
     private static final String actionsUpdate = Bootstrap.MODID + ":actions.upd";
-//    private static final String actionsRequest = Bootstrap.MODID + ":actions.req";
-
     public static void broadcastToAll(Collection<Action> actions) {
         Rpc.sendToAll(actionsUpdate, wrapHeaders(actions));
     }
@@ -24,16 +22,6 @@ public enum ActionRpc {
     public static void broadcastTo(EntityPlayerMP player, Collection<Action> actions) {
         Rpc.sendTo(player, actionsUpdate, wrapHeaders(actions));
     }
-
-//    public static void requestActions() {
-//        Rpc.sendToServer(actionsRequest);
-//    }
-//
-//    @RpcMethod(actionsRequest)
-//    public void onActionsRequest(MessageContext ctx) {
-//        final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
-//        Rpc.sendTo(sender, actionsUpdate, wrapHeaders(ActionRegistry.getActions()));
-//    }
 
     @RpcMethod(actionsUpdate)
     public void onActionsUpdate(MessageContext ctx, NBTTagCompound nbt) {

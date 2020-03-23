@@ -5,12 +5,17 @@ import msifeed.mc.extensions.chat.ChatMessage;
 import msifeed.mc.extensions.chat.Language;
 import msifeed.mc.extensions.chat.composer.SpeechType;
 import msifeed.mc.more.crabs.action.ActionCritical;
+import msifeed.mc.more.crabs.action.ActionHeader;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.stream.Collectors;
 
-final class CombatNotifications {
+public final class CombatNotifications {
+    public static void actionChanged(EntityPlayer sender, EntityLivingBase target, ActionHeader action) {
+        notify(sender, "§f выбрано действие " + action.title);
+    }
+
     static void notifyKnockedOut(EntityLivingBase entity) {
         notify(entity, "is knocked out!");
     }
@@ -19,14 +24,14 @@ final class CombatNotifications {
         notify(entity, "is killed!");
     }
 
-    static void notifyAction(CombatManager.FighterInfo winner, CombatManager.FighterInfo looser) {
+    static void moveResult(CombatManager.FighterInfo winner, CombatManager.FighterInfo looser) {
         // Chad - LUCK Punch [50] (+5 STR+99) > Virgin - Roll [10]
         final String text = formatAction(winner) + " > " + formatAction(looser);
 
         notify(winner.entity, text);
     }
 
-    static void notifySoloAction(CombatManager.FighterInfo info) {
+    static void soloMoveResult(CombatManager.FighterInfo info) {
         final String name = info.entity instanceof EntityPlayer
                 ? ((EntityPlayer) info.entity).getDisplayName() : info.entity.getCommandSenderName();
 

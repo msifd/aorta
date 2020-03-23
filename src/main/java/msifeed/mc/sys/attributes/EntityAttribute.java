@@ -16,12 +16,13 @@ import java.util.function.Consumer;
 
 public abstract class EntityAttribute<T> {
     public abstract String getName();
-
     public abstract T init(Entity entity, World world, T currentValue);
-
     public abstract void saveNBTData(T value, NBTTagCompound root);
-
     public abstract T loadNBTData(NBTTagCompound root);
+
+    public boolean syncOnChange() {
+        return true;
+    }
 
     public Optional<T> getValue(Entity entity) {
         final AttrProp<T> attr = getProp(entity);
@@ -34,7 +35,8 @@ public abstract class EntityAttribute<T> {
         final AttrProp<T> attr = getProp(entity);
         if (attr != null) {
             attr.value = value;
-            broadcast(entity.worldObj, entity);
+            if (syncOnChange())
+                broadcast(entity.worldObj, entity);
         }
     }
 
@@ -42,7 +44,8 @@ public abstract class EntityAttribute<T> {
         final AttrProp<T> attr = getProp(entity);
         if (attr != null) {
             fn.accept(attr.value);
-            broadcast(entity.worldObj, entity);
+            if (syncOnChange())
+                broadcast(entity.worldObj, entity);
         }
     }
 

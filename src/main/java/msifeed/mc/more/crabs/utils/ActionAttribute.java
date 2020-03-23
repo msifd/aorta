@@ -6,7 +6,6 @@ import msifeed.mc.more.crabs.combat.ActionContext;
 import msifeed.mc.sys.attributes.EntityLivingAttribute;
 import msifeed.mc.sys.attributes.MissingRequiredAttributeException;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
@@ -73,12 +72,7 @@ public final class ActionAttribute extends EntityLivingAttribute<ActionContext> 
     }
 
     @Override
-    protected void broadcast(EntityPlayerMP playerMP, Entity entity) {
-
-    }
-
-    @Override
-    protected void broadcast(World world, Entity entity) {
-
+    public boolean syncOnChange() {
+        return false;
     }
 }

@@ -64,6 +64,17 @@ public class CharacterAttribute extends EntityLivingAttribute<Character> {
         return INSTANCE.getValue(entity).map(c -> c.has(trait)).orElse(false);
     }
 
+    public static boolean hasAny(EntityLivingBase entity, Trait... traits) {
+        return INSTANCE.getValue(entity)
+                .map(c -> {
+                    for (Trait t : traits)
+                        if (c.has(t))
+                            return true;
+                    return false;
+                })
+                .orElse(false);
+    }
+
     public static boolean toggle(EntityLivingBase entity, Trait trait) {
         final Optional<Character> charOpt = INSTANCE.getValue(entity);
         if (charOpt.isPresent()) {

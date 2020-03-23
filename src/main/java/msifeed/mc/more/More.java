@@ -19,11 +19,12 @@ import msifeed.mc.extensions.noclip.NoclipRpc;
 import msifeed.mc.extensions.rename.RenameCommand;
 import msifeed.mc.extensions.rename.RenameRpc;
 import msifeed.mc.extensions.tweaks.EntityControl;
-import msifeed.mc.extensions.tweaks.MakeFoodEdible;
 import msifeed.mc.extensions.tweaks.EsitenceHealthModifier;
+import msifeed.mc.extensions.tweaks.MakeFoodEdible;
 import msifeed.mc.extensions.tweaks.UnstuckCommand;
 import msifeed.mc.genesis.Genesis;
 import msifeed.mc.more.client.common.GuiHandler;
+import msifeed.mc.more.commands.ItemAttrCommand;
 import msifeed.mc.more.commands.MoreCommand;
 import msifeed.mc.more.commands.RollCommand;
 import msifeed.mc.more.content.MoreItems;
@@ -92,6 +93,7 @@ public class More {
         handler.registerCommand(new ItemMetaCommand());
         handler.registerCommand(new RollCommand());
         handler.registerCommand(new NoclipCommand());
+        handler.registerCommand(new ItemAttrCommand());
 
         Speechat.registerCommands(handler);
         EnvironmentManager.registerCommands(handler);

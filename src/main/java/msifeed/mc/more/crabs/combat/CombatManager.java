@@ -51,6 +51,9 @@ public enum CombatManager {
             final Entity offender = self.worldObj.getEntityByID(ctx.target);
             if (offender == null)
                 return false;
+            final CombatContext offenderCom = CombatAttribute.require(offender);
+            if (offenderCom.phase != CombatContext.Phase.WAIT)
+                return false;
             final ActionContext offenderAct = ActionAttribute.require(offender);
             if (!ctx.acceptsDefendAction(offenderAct.action.getType(), action))
                 return false;
@@ -203,7 +206,7 @@ public enum CombatManager {
         if (!winner.act.action.requiresNoRoll())
             winner.com.prevActions.add(winner.act.action.id);
 
-        CombatNotifications.notifyAction(winner, looser);
+        CombatNotifications.moveResult(winner, looser);
     }
 
     private void finishSoloMove(FighterInfo self) {
@@ -218,7 +221,7 @@ public enum CombatManager {
             self.com.armor = self.entity.getTotalArmorValue();
         }
 
-        CombatNotifications.notifySoloAction(self);
+        CombatNotifications.soloMoveResult(self);
 
         cleanupMove(self);
         CombatAttribute.INSTANCE.set(self.entity, self.com);
