@@ -5,12 +5,20 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.Bootstrap;
 import msifeed.mc.commons.logs.ExternalLogs;
 import msifeed.mc.commons.traits.Trait;
+import msifeed.mc.extensions.chat.ChatHandler;
 import msifeed.mc.extensions.chat.LangAttribute;
 import msifeed.mc.extensions.chat.Language;
+import msifeed.mc.extensions.chat.composer.Composer;
+import msifeed.mc.extensions.chat.composer.SpeechType;
 import msifeed.mc.extensions.tweaks.EsitenceHealthModifier;
+import msifeed.mc.more.crabs.combat.CombatNotifications;
+import msifeed.mc.more.crabs.rolls.Dices;
+import msifeed.mc.more.crabs.rolls.Modifiers;
+import msifeed.mc.more.crabs.rolls.Rolls;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.more.crabs.utils.Differ;
 import msifeed.mc.more.crabs.utils.MetaAttribute;
+import msifeed.mc.sys.attributes.MissingRequiredAttributeException;
 import msifeed.mc.sys.rpc.Rpc;
 import msifeed.mc.sys.rpc.RpcMethod;
 import net.minecraft.entity.Entity;
@@ -27,6 +35,7 @@ public enum CharRpc {
     private static final String updateChar = Bootstrap.MODID + ":char.update";
     private static final String refreshName = Bootstrap.MODID + ":char.refreshName";
     private static final String clearEntity = Bootstrap.MODID + ":char.clear";
+    private static final String rollAbility = Bootstrap.MODID + ":char.roll";
 
     public static void setLang(int entityId, Language lang) {
         Rpc.sendToServer(setLang, entityId, lang.ordinal());
@@ -108,6 +117,33 @@ public enum CharRpc {
         if (CharacterAttribute.require(sender).has(Trait.gm)) {
             CharacterAttribute.INSTANCE.set(entity, null);
             MetaAttribute.INSTANCE.set(entity, null);
+        }
+    }
+
+    public static void rollAbility(int entityId, Ability ability) {
+        Rpc.sendToServer(rollAbility, entityId, ability.ordinal());
+    }
+
+    @RpcMethod(rollAbility)
+    public void onRollAbility(MessageContext ctx, int entityId, int abilityOrd) {
+        final EntityPlayer sender = ctx.getServerHandler().playerEntity;
+        final World world = sender.worldObj;
+        final Entity entity = world.getEntityByID(entityId);
+
+        final Ability[] abilityValues = Ability.values();
+        if (abilityOrd >= abilityValues.length)
+            return;
+
+        try {
+            final Character c = CharacterAttribute.require(entity);
+            final Modifiers m = MetaAttribute.require(entity).modifiers;
+            final Ability a = abilityValues[abilityOrd];
+
+            final Rolls.Result roll = Rolls.rollAbility(c, m, a);
+            final String text = String.format("%s = %d", a.toString(), roll.result);
+
+            ChatHandler.sendSystemChatMessage(entity, Composer.makeMessage(SpeechType.ROLL, sender, text));
+        } catch (MissingRequiredAttributeException e) {
         }
     }
 }

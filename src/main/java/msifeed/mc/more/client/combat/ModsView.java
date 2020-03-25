@@ -56,7 +56,7 @@ class ModsView extends Widget {
         final TextInput input = new TextInput();
         input.getSizeHint().x = 16;
 
-        final int modValue = meta.modifiers.features.getOrDefault(a, 0);
+        final int modValue = meta.modifiers.toAbility(a);
         if (modValue != 0)
             input.setText(Integer.toString(modValue));
         input.setFilter(s -> s.length() < 5 && TextInput.isSignedInt(s));
@@ -71,9 +71,9 @@ class ModsView extends Widget {
 
     private void updateFeatMods(MetaInfo meta, Ability a, String s) {
         if (s.isEmpty() || s.equals("-"))
-            meta.modifiers.features.remove(a);
+            meta.modifiers.abilities.remove(a);
         else
-            meta.modifiers.features.put(a, Integer.parseInt(s));
+            meta.modifiers.abilities.put(a, Integer.parseInt(s));
         MetaRpc.updateMeta(entity.getEntityId(), meta);
     }
 }

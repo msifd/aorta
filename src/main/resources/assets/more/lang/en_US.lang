@@ -69,6 +69,7 @@ more.gui.status.treatment=Лечение
 more.gui.status.other=Прочее
 more.gui.status.other.name=Имя
 more.gui.status.other.wiki=Вики
+more.gui.status.rolls=Роллы
 
 more.feature.str=Тренированность
 more.feature.short.str=ТРЕН

@@ -1,7 +1,7 @@
 package msifeed.mc.more.crabs.combat;
 
 import msifeed.mc.more.crabs.action.Action;
-import msifeed.mc.more.crabs.action.ActionCritical;
+import msifeed.mc.more.crabs.rolls.Criticalness;
 import msifeed.mc.more.crabs.action.effects.Buff;
 import net.minecraft.util.MathHelper;
 
@@ -19,7 +19,7 @@ public class ActionContext implements Comparable<ActionContext> {
     public int scoreEffects;
     public int scoreScores;
     public float scoreMultiplier;
-    public ActionCritical critical;
+    public Criticalness critical;
     public boolean successful;
 
     public ActionContext(Action action) {
@@ -32,7 +32,7 @@ public class ActionContext implements Comparable<ActionContext> {
         scoreEffects = 0;
         scoreScores = 0;
         scoreMultiplier = 1;
-        critical = ActionCritical.NONE;
+        critical = Criticalness.NONE;
         successful = true;
     }
 
@@ -53,7 +53,7 @@ public class ActionContext implements Comparable<ActionContext> {
                 .compare(this, o);
     }
 
-    private ActionCritical getCritical() {
+    private Criticalness getCritical() {
         return critical;
     }
 

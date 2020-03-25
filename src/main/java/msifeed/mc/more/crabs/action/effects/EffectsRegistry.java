@@ -13,9 +13,7 @@ public enum EffectsRegistry {
 
     EffectsRegistry() {
         Stream.of(
-                new Score.DiceG40(),
-                new Score.DiceG40Plus(),
-                new Score.DiceG40Minus()
+                new Score.Dice3d7m3()
         ).forEach(s -> scores.put(s.name(), s));
         Stream.of(Ability.values())
                 .map(Score.Ability::new)

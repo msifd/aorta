@@ -1,30 +1,12 @@
 package msifeed.mc.more.crabs.rolls;
 
-import msifeed.mc.more.crabs.action.ActionCritical;
-
 import java.util.Random;
 
 public class Dices {
     private static final Random rand = new Random();
 
-    public static int g15() {
-        return (int) Math.floor(gauss(4.15, 1, 16));
-    }
-
-    public static int g20() {
-        return (int) Math.floor(gauss(4.5, 1, 21));
-    }
-
-    public static int g40() {
-        return (int) Math.floor(gauss(9.01, 1, 41));
-    }
-
-    public static int g40_plus() {
-        return (int) Math.floor(gauss(9.01, 3, 41));
-    }
-
-    public static int g40_minus() {
-        return (int) Math.floor(gauss(9.01, 1, 39));
+    public static int n3d7m3() {
+        return dice(7) + dice(7) + dice(7) - 3;
     }
 
     public static int d20() {
@@ -44,10 +26,10 @@ public class Dices {
         return roll;
     }
 
-    public static ActionCritical critical() {
+    public static Criticalness critical() {
         final int roll = dice(20);
-        if (roll == 0) return ActionCritical.FAIL;
-        if (roll == 1) return ActionCritical.LUCK;
-        return ActionCritical.NONE;
+        if (roll == 0) return Criticalness.FAIL;
+        if (roll == 1) return Criticalness.LUCK;
+        return Criticalness.NONE;
     }
 }

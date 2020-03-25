@@ -15,38 +15,15 @@ public abstract class Score {
 
     // // // // // // // //
 
-    public static class DiceG40 extends Score {
+    public static class Dice3d7m3 extends Score {
         @Override
         public String name() {
-            return "g40";
+            return "3d7-3";
         }
 
         @Override
         public int mod(Character c, Modifiers m) {
-            return Dices.g40();
-        }
-    }
-
-    public static class DiceG40Plus extends DiceG40 {
-        @Override
-        public String name() {
-            return "g40+";
-        }
-
-        public int mod(Character c, Modifiers m) {
-            return Dices.g40_plus();
-        }
-    }
-
-    public static class DiceG40Minus extends DiceG40 {
-        @Override
-        public String name() {
-            return "g40-";
-        }
-
-        @Override
-        public int mod(Character c, Modifiers m) {
-            return Dices.g40_minus();
+            return Dices.n3d7m3();
         }
     }
 
@@ -64,7 +41,7 @@ public abstract class Score {
 
         @Override
         public int mod(Character c, Modifiers m) {
-            return c.abilities.get(ability) + m.features.getOrDefault(ability, 0);
+            return c.abilities.get(ability) + m.toAbility(ability);
         }
 
         @Override

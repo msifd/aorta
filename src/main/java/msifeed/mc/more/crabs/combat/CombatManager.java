@@ -5,7 +5,7 @@ import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import msifeed.mc.more.crabs.action.Action;
-import msifeed.mc.more.crabs.action.ActionCritical;
+import msifeed.mc.more.crabs.rolls.Criticalness;
 import msifeed.mc.more.crabs.action.ActionTag;
 import msifeed.mc.more.crabs.action.effects.Buff;
 import msifeed.mc.more.crabs.action.effects.Effect;
@@ -183,7 +183,7 @@ public enum CombatManager {
 
         self.act.scorePlayerMod = self.mod.roll;
         self.act.critical = Dices.critical();
-        if (self.act.critical == ActionCritical.FAIL)
+        if (self.act.critical == Criticalness.FAIL)
             self.act.successful = false;
 
         for (Score s : self.act.action.score)
@@ -287,6 +287,7 @@ public enum CombatManager {
         com.phase = CombatContext.Phase.NONE;
         com.weapon = null;
         com.armor = 0;
+        com.prevActions.clear();
     }
 
     public static void softReset(Entity entity, CombatContext com) {

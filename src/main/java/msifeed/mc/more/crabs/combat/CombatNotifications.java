@@ -4,7 +4,7 @@ import msifeed.mc.extensions.chat.ChatHandler;
 import msifeed.mc.extensions.chat.ChatMessage;
 import msifeed.mc.extensions.chat.Language;
 import msifeed.mc.extensions.chat.composer.SpeechType;
-import msifeed.mc.more.crabs.action.ActionCritical;
+import msifeed.mc.more.crabs.rolls.Criticalness;
 import msifeed.mc.more.crabs.action.ActionHeader;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -51,9 +51,9 @@ public final class CombatNotifications {
         final ActionContext act = info.act;
         final StringBuilder sb = new StringBuilder();
 
-        if (!act.successful || act.critical == ActionCritical.FAIL)
+        if (!act.successful || act.critical == Criticalness.FAIL)
             sb.append("FAIL ");
-        else if (act.critical == ActionCritical.LUCK)
+        else if (act.critical == Criticalness.LUCK)
             sb.append("LUCK ");
 
         sb.append(act.action.title);
@@ -72,7 +72,7 @@ public final class CombatNotifications {
                 if (info.mod.hasAbilityMods()) {
                     if (info.mod.roll != 0)
                         sb.append(' ');
-                    sb.append(info.mod.features.entrySet().stream()
+                    sb.append(info.mod.abilities.entrySet().stream()
                             .filter(e -> e.getValue() != 0)
                             .map(e -> e.getKey().toString() + explicitSignInt(e.getValue()))
                             .collect(Collectors.joining(" ")));

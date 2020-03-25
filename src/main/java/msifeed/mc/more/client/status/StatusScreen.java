@@ -37,8 +37,7 @@ public class StatusScreen extends MellowGuiScreen {
         if (editable || character.illness.limit > 0)
             tabs.addTab(L10n.tr("more.gui.status.illness"), illnessView);
         tabs.addTab(L10n.tr("more.gui.status.other"), otherView);
-        if (isGm)
-            tabs.addTab("more.gui.status.combatGm", new CombatGmView(entity));
+        tabs.addTab(L10n.tr("more.gui.status.rolls"), new RollAbilityView(entity));
         content.addChild(tabs);
 
         if (editable) {

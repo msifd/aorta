@@ -26,7 +26,7 @@ public class MetaInfo {
         final Ability[] feats = Ability.values();
         final int[] featsArray = new int[feats.length];
         for (int i = 0; i < feats.length; i++)
-            featsArray[i] = modifiers.features.getOrDefault(feats[i], 0);
+            featsArray[i] = modifiers.toAbility(feats[i]);
         c.setIntArray("fmod", featsArray);
 
         c.setBoolean("recglob", receiveGlobal);
@@ -37,11 +37,11 @@ public class MetaInfo {
     public void fromNBT(NBTTagCompound c) {
         modifiers.roll = c.getInteger("rmod");
 
-        modifiers.features.clear();
+        modifiers.abilities.clear();
         final Ability[] feats = Ability.values();
         final int[] featsArray = c.getIntArray("fmod");
         for (int i = 0; i < feats.length; i++)
-            modifiers.features.put(feats[i], featsArray[i]);
+            modifiers.abilities.put(feats[i], featsArray[i]);
 
         receiveGlobal = c.getBoolean("recglob");
     }
