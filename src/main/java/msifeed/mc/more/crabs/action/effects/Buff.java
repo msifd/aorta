@@ -84,25 +84,23 @@ public final class Buff extends DynamicEffect {
         return b;
     }
 
-    public static void mergeBuffs(ArrayList<Buff> current, ArrayList<Buff> incoming) {
-        for (Buff buff : incoming) {
-            final Buff cur = current.stream()
-                    .filter(b -> b.effect.equals(buff.effect))
-                    .findAny().orElse(null);
-            if (cur != null) {
-                switch (buff.repeatMode) {
-                    case extend:
-                        cur.steps += buff.steps;
-                        return;
-                    case replace:
-                        cur.pause = buff.pause;
-                        cur.steps = buff.steps;
-                        return;
-                }
+    public static void mergeBuff(ArrayList<Buff> current, Buff buff) {
+        final Buff cur = current.stream()
+                .filter(b -> b.effect.equals(buff.effect))
+                .findAny().orElse(null);
+        if (cur != null) {
+            switch (buff.repeatMode) {
+                case extend:
+                    cur.steps += buff.steps;
+                    return;
+                case replace:
+                    cur.pause = buff.pause;
+                    cur.steps = buff.steps;
+                    return;
             }
-            // If there are no current buffs with this effect or it have stack mode
-            current.add(buff);
         }
+        // If there are no current buffs with this effect or it have stack mode
+        current.add(buff);
     }
 
     private enum RepeatMode {

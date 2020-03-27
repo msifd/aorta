@@ -7,6 +7,7 @@ import msifeed.mc.more.crabs.character.Character;
 import msifeed.mc.more.crabs.combat.CombatRpc;
 import msifeed.mc.more.crabs.meta.MetaInfo;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
+import msifeed.mc.more.crabs.utils.CombatAttribute;
 import msifeed.mc.more.crabs.utils.MetaAttribute;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,10 +17,14 @@ import java.util.Optional;
 public class StageView extends Widget {
     public StageView(EntityLivingBase entity) {
         setLayout(ListLayout.VERTICAL);
-        addButton("join", () -> CombatRpc.join(entity.getEntityId()));
-        addButton("leave", () -> CombatRpc.leave(entity.getEntityId()));
-        addButton("soft reset", () -> CombatRpc.reset(entity.getEntityId()));
-//        addButton("hard reset", () -> CombatRpc.reset(entity.getEntityId()));
+
+        CombatAttribute.get(entity).ifPresent(context -> {
+            if (context.phase.isInCombat())
+                addButton("leave", () -> CombatRpc.leave(entity.getEntityId()));
+            else
+                addButton("join", () -> CombatRpc.join(entity.getEntityId()));
+            addButton("soft reset", () -> CombatRpc.reset(entity.getEntityId()));
+        });
 
         final Optional<Character> charOpt = CharacterAttribute.get(entity);
         final Optional<MetaInfo> metaOpt = MetaAttribute.get(entity);

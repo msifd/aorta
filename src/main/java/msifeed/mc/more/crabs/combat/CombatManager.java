@@ -22,6 +22,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
 import java.util.List;
@@ -149,9 +150,6 @@ public enum CombatManager {
         }
 
         srcAct.damageToDeal.add(new DamageAmount(event.source, event.ammount));
-
-        // FIXME: implement attack window
-        CombatAttribute.INSTANCE.update(srcEntity, context -> context.phase = CombatContext.Phase.WAIT);
     }
 
     private void finishMove(FighterInfo offender, FighterInfo defender) {
@@ -252,7 +250,8 @@ public enum CombatManager {
                 resetCombo = true;
         }
 
-        Buff.mergeBuffs(self.com.buffs, self.act.buffsToReceive);
+        for (Buff buff : self.act.buffsToReceive)
+            Buff.mergeBuff(self.com.buffs, buff);
 
         if (resetCombo && !self.com.prevActions.isEmpty()) {
             self.com.prevActions.clear();

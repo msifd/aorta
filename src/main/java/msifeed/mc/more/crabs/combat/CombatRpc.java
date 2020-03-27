@@ -21,6 +21,7 @@ public enum CombatRpc {
     INSTANCE;
 
     private final static String doAction = Bootstrap.MODID + ":combat.action.do";
+    private final static String endAttack = Bootstrap.MODID + ":combat.endAttack";
 
     private final static String join = Bootstrap.MODID + ":combat.join";
     private final static String leave = Bootstrap.MODID + ":combat.leave";
@@ -59,6 +60,29 @@ public enum CombatRpc {
             throw new RpcMethodException(sender, "target is not in combat");
 
         CombatManager.INSTANCE.doAction(target, com, action);
+    }
+
+    public static void endAttack(int entityId) {
+        Rpc.sendToServer(endAttack, entityId);
+    }
+
+    @RpcMethod(endAttack)
+    public void onEndAttack(MessageContext ctx, int entityId) {
+        final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
+        final Entity targetEntity = sender.worldObj.getEntityByID(entityId);
+
+        if (!(targetEntity instanceof EntityLivingBase))
+            throw new RpcMethodException(sender, "target is not a living entity");
+        final EntityLivingBase target = (EntityLivingBase) targetEntity;
+
+        final CombatContext com = CombatAttribute.get(target)
+                .orElseThrow(() -> new RpcMethodException(sender, "target is not a combatant"));
+
+        if (com.phase != CombatContext.Phase.ATTACK)
+            throw new RpcMethodException(sender, "target is attacking!");
+
+        com.phase = CombatContext.Phase.WAIT;
+        CombatAttribute.INSTANCE.set(target, com);
     }
 
     // // // //

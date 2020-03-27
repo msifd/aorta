@@ -4,6 +4,7 @@ import msifeed.mc.more.crabs.action.ActionRegistry;
 import msifeed.mc.more.crabs.character.CharRpc;
 import msifeed.mc.more.crabs.combat.CombatManager;
 import msifeed.mc.more.crabs.combat.CombatRpc;
+import msifeed.mc.more.crabs.combat.PotionsHandler;
 import msifeed.mc.more.crabs.meta.MetaRpc;
 import msifeed.mc.more.crabs.utils.ActionAttribute;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
@@ -16,6 +17,7 @@ public class Crabs {
     public void preInit() {
         ActionRegistry.INSTANCE.init();
         CombatManager.INSTANCE.init();
+        PotionsHandler.INSTANCE.init();
 
         AttributeHandler.registerAttribute(CharacterAttribute.INSTANCE);
         AttributeHandler.registerAttribute(MetaAttribute.INSTANCE);

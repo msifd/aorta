@@ -140,7 +140,13 @@ public enum CharRpc {
             final Ability a = abilityValues[abilityOrd];
 
             final Rolls.Result roll = Rolls.rollAbility(c, m, a);
-            final String text = String.format("%s = %d", a.toString(), roll.result);
+            final String text;
+            if (entity == sender) {
+                text = String.format("%s = %d", a.toString(), roll.result);
+            } else {
+                final String name = entity instanceof EntityPlayer ? ((EntityPlayer) entity).getDisplayName() : entity.getCommandSenderName();
+                text = String.format("%s: %s = %d", name, a.toString(), roll.result);
+            }
 
             ChatHandler.sendSystemChatMessage(entity, Composer.makeMessage(SpeechType.ROLL, sender, text));
         } catch (MissingRequiredAttributeException e) {

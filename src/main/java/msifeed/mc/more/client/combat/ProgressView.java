@@ -6,9 +6,11 @@ import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.render.RenderShapes;
 import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
+import msifeed.mc.mellow.widgets.button.ButtonLabel;
 import msifeed.mc.mellow.widgets.text.WordwrapLabel;
 import msifeed.mc.more.crabs.action.effects.Buff;
 import msifeed.mc.more.crabs.combat.CombatContext;
+import msifeed.mc.more.crabs.combat.CombatRpc;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
 import net.minecraft.entity.EntityLivingBase;
 
@@ -61,6 +63,9 @@ public class ProgressView extends Widget {
                 break;
             case ATTACK:
                 addPane("Damage your enemy");
+                final ButtonLabel endBtn = new ButtonLabel("End attack");
+                endBtn.setClickCallback(() -> CombatRpc.endAttack(entity.getEntityId()));
+                addChild(endBtn);
                 break;
             case WAIT:
                 addPane("Wait for your enemy action");
