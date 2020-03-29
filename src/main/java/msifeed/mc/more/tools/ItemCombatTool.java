@@ -1,6 +1,5 @@
 package msifeed.mc.more.tools;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.Bootstrap;
 import msifeed.mc.genesis.GenesisCreativeTab;
 import msifeed.mc.more.More;
@@ -9,19 +8,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.EntityInteractEvent;
 
 public class ItemCombatTool extends Item {
     public static String ITEM_NAME = "tool_combat";
 
-    public ItemCombatTool() {
+    ItemCombatTool() {
         setUnlocalizedName(ITEM_NAME);
         setTextureName(Bootstrap.MODID + ":" + ITEM_NAME);
         setCreativeTab(GenesisCreativeTab.TOOLS);
         setMaxStackSize(1);
-
-        MinecraftForge.EVENT_BUS.register(this);
     }
 
     @Override
@@ -38,13 +33,10 @@ public class ItemCombatTool extends Item {
         return itemStack;
     }
 
-    @SubscribeEvent
-    public void onEntityInteract(EntityInteractEvent event) {
-        final ItemStack heldItem = event.entityPlayer.getHeldItem();
-        if (heldItem == null || !(heldItem.getItem() instanceof ItemCombatTool))
-            return;
-        if (event.target instanceof EntityLivingBase)
-            handleEntity((EntityLivingBase) event.target);
+    @Override
+    public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase entity) {
+        handleEntity(entity);
+        return true;
     }
 
     private void handleEntity(EntityLivingBase entity) {

@@ -7,6 +7,7 @@ import msifeed.mc.mellow.widgets.button.Button;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
 import msifeed.mc.mellow.widgets.tabs.TabArea;
 import msifeed.mc.mellow.widgets.window.Window;
+import msifeed.mc.more.client.status.EditAbilitiesView;
 import msifeed.mc.more.crabs.character.CharRpc;
 import msifeed.mc.more.crabs.character.Character;
 import msifeed.mc.more.crabs.meta.MetaInfo;

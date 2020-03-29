@@ -3,7 +3,6 @@ package msifeed.mc.more.crabs.combat;
 import com.google.gson.reflect.TypeToken;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.more.crabs.action.effects.Buff;
-import msifeed.mc.more.crabs.action.effects.Effect;
 import msifeed.mc.more.crabs.action.parser.BuffJsonAdapter;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
 import msifeed.mc.sys.config.ConfigBuilder;

@@ -25,25 +25,36 @@ item.lock_access_tuner.name=Настройщик доступа
 item.lock_advanced_tuner.name=Рекомбинатор схем
 item.lock_skeletal_key.name=Скелетный ключ
 
+item.desc.consumable=Разрушается при использовании.
 item.old_eye.name=Старый Глаз
+item.old_eye.desc1=Позволяет видеть ауры грешников и праведников,
+item.old_eye.desc2= что позволяет безошибочно определять их.
 item.fragile_old_eye.name=Хрупкий Старый Глаз
 item.conviction_indict.name=Указание Осуждения
+item.conviction_indict.desc=Позволяет наложить на другого персонажа один грех.
 item.forgivness_stone.name=Камень Прощения
+item.forgivness_stone.desc1=Позволяет снять с другого персонажа один грех.
+item.forgivness_stone.desc2=Невозможно использовать неискренне.
 item.convicts_list.name=Список Осужденных
+item.convicts_list.desc1=Выводит имена случайных грешников.
+item.convicts_list.desc2=Если у вас есть Список осужденных и вы убиваете грешника,
+item.convicts_list.desc3= то вам прощается часть ваших грехов.
 item.gifter_offering.name=Жертва Дарителя
+item.gifter_offering.desc=Позволяет передать одну единицу эститенции.
 item.soul_grab.name=Хват Души
+item.soul_grab.desc=Позволяет насильно забрать у другой души одну единицу эститенции
 
 more.gui.apply=Применить
 more.gui.cancel=Отменить
 
 more.gui.roller=Роллер
 more.gui.roller.title=Роллер: %s
-more.gui.roller.feat=Хар-ки
+more.gui.roller.ability=Хар-ки
 more.gui.roller.fight=Бой
 more.gui.roller.target=Цель
 more.gui.roller.mods=Моды
 more.gui.roller.mods.roll=Мод. броска:
-more.gui.roller.mods.feat=Мод. характеристик
+more.gui.roller.mods.ability=Мод. способности
 more.gui.roller.luck=КРИТЛАК
 more.gui.roller.fail=КРИТФЭЙЛ
 
@@ -56,51 +67,71 @@ more.gui.renamer.desc=Описание
 more.gui.status=Статус
 more.gui.status.title=Статус: %s
 more.gui.status.status=Статус
-more.gui.status.overall=В целом
-more.gui.status.estitence=Эститенция
-more.gui.status.sin=Планопорядочность
+more.gui.status.status.estitence=Эститенция
+more.gui.status.status.sin=Планопорядочность
 more.gui.status.illness=Болезнь
 more.gui.status.illness.cured=Болезнь излечена!
 more.gui.status.illness.lost=Болезнь победила!
 more.gui.status.illness.limit=Предел болезни
 more.gui.status.illness.limit_visible=Показывать предел болезни
 more.gui.status.illness.debuff=Штраф болезни: %d
-more.gui.status.treatment=Лечение
+more.gui.status.illness.treatment=Лечение
+more.gui.status.abilities=Хар-ки
 more.gui.status.other=Прочее
 more.gui.status.other.name=Имя
 more.gui.status.other.wiki=Вики
-more.gui.status.rolls=Роллы
 
-more.feature.str=Тренированность
-more.feature.short.str=ТРЕН
-more.feature.dex=Выучка
-more.feature.short.dex=ВЫУЧ
-more.feature.ten=Упорство
-more.feature.short.ten=УПОР
-more.feature.int=Интеллект
-more.feature.short.int=ИНТ
-more.feature.ath=Атлетика
-more.feature.short.ath=АТЛ
-more.feature.end=Выносливость
-more.feature.short.end=ВЫН
-more.feature.hnd=Ремесло
-more.feature.short.hnd=РЕМ
-more.feature.psi=Псионика
-more.feature.short.psi=ПСИ
+
+more.gui.combat=Боевка: %s
+more.gui.combat.progress=Прогресс
+more.gui.combat.mods=Моды
+more.gui.combat.rolls=Роллы
+
+more.gui.combat.join=Войти в бой
+more.gui.combat.leave=Покинуть бой
+more.gui.combat.recruit=Завербовать
+more.gui.combat.dismiss=Уволить
+more.gui.combat.end_attack=Завершить атаку
+more.gui.combat.reset=Сброс хода
+
+more.gui.combat.tips.offence_action=Выберите атакующее действие
+more.gui.combat.tips.current_action=Текущее действие: %s
+more.gui.combat.tips.confirm_action=Выберите действие снова чтобы подтвердить
+more.gui.combat.tips.change_action=Действие можно изменить
+more.gui.combat.tips.damage_target=Наносите урон цели
+more.gui.combat.tips.wait_defender=Ждите действия защищающегося
+more.gui.combat.tips.defence_action=Выберите атакующее действие
+more.gui.combat.tips.leaving=Вы покидаете бой
+more.gui.combat.tips.buffs=Баффы:\n%s
+more.gui.combat.tips.prev_actions=Прошлые действия:\n%s
+
+more.gui.combat.mods.roll=Бросок:
+
+more.ability.str=Тренированность
+more.ability.short.str=ТРЕН
+more.ability.end=Выносливость
+more.ability.short.end=ВЫН
+more.ability.per=Восприятие
+more.ability.short.per=ВОСП
+more.ability.ref=Рефлексы
+more.ability.short.ref=РЕФЛ
+more.ability.det=Решительность
+more.ability.short.det=РЕШ
+more.ability.int=Интеллект
+more.ability.short.int=ИНТ
+more.ability.wil=Сила Воли
+more.ability.short.wil=ВОЛЯ
+more.ability.spr=Дух
+more.ability.short.spr=ДУХ
 
 more.status.sin.-1=Праведник
 more.status.sin.0=Порядочная Душа
 more.status.sin.1=Грешник
 
-more.action.hit=Удар
-more.action.special_hit=Особый удар
-more.action.shot=Выстрел
-more.action.special_shot=Особый выстрел
-more.action.self_use=Применение
-more.action.enemy_use=Использование
-more.action.block=Блокирование
-more.action.dodge=Уклонение
-more.action.psionic=Псионика
+more.action.none=(Ничего)
+more.action.apply=(Применить)
+more.action.equip=(Экипировать)
+more.action.reload=(Перезарядить)
 
 more.lang.vanilla=Ванильный
 
@@ -108,7 +139,7 @@ more.diff.s=очко
 more.diff.g=очка
 more.diff.m=очков
 
-more.diff.char.feature=изменил стату %s с %d на %d
+more.diff.char.ability=изменил стату %s с %d на %d
 
 more.diff.status.name=сменил имя на '%s'
 more.diff.status.add_estitence=получает %d %s эститенции

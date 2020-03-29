@@ -137,6 +137,17 @@ public class TextInput extends TextInputArea {
         }
     }
 
+    public static boolean isSignedIntBetween(String s, int min, int max) {
+        if (s.isEmpty() || s.equals("-"))
+            return true;
+        try {
+            final int i = Integer.parseInt(s);
+            return i >= min && i <= max;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
     public static boolean isUnsignedFloat(String s) {
         if (s.isEmpty())
             return true;

@@ -11,8 +11,6 @@ import msifeed.mc.extensions.chat.Language;
 import msifeed.mc.extensions.chat.composer.Composer;
 import msifeed.mc.extensions.chat.composer.SpeechType;
 import msifeed.mc.extensions.tweaks.EsitenceHealthModifier;
-import msifeed.mc.more.crabs.combat.CombatNotifications;
-import msifeed.mc.more.crabs.rolls.Dices;
 import msifeed.mc.more.crabs.rolls.Modifiers;
 import msifeed.mc.more.crabs.rolls.Rolls;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;

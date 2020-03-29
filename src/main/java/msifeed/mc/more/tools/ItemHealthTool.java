@@ -1,6 +1,5 @@
 package msifeed.mc.more.tools;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import msifeed.mc.genesis.GenesisCreativeTab;
 import net.minecraft.entity.Entity;
@@ -9,8 +8,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.util.Arrays;
@@ -19,13 +16,11 @@ import java.util.List;
 public class ItemHealthTool extends Item {
     public static final String ITEM_NAME = "tool_health";
 
-    public ItemHealthTool() {
+    ItemHealthTool() {
         setUnlocalizedName(ITEM_NAME);
         setTextureName("nether_star");
         setCreativeTab(GenesisCreativeTab.TOOLS);
         setMaxStackSize(1);
-
-        MinecraftForge.EVENT_BUS.register(this);
     }
 
     @Override
@@ -78,18 +73,15 @@ public class ItemHealthTool extends Item {
         return stack;
     }
 
-    @SubscribeEvent
-    public void onEntityInteract(EntityInteractEvent event) {
+    @Override
+    public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase entity) {
         // ПКМ этим предметом по существу - добавить 1 хп существу
-
-        final ItemStack itemStack = event.entityPlayer.getHeldItem();
-        if (itemStack == null || !(itemStack.getItem() instanceof ItemHealthTool)) return;
-
-        if (!event.entityPlayer.isSneaking()) {
-            if (!(event.target instanceof EntityLivingBase)) return;
-            final EntityLivingBase entity = (EntityLivingBase) event.target;
+        if (!player.isSneaking()) {
             changeHealth(entity, 1);
+            return true;
         }
+
+        return false;
     }
 
     private static void changeHealth(EntityLivingBase entity, int value) {

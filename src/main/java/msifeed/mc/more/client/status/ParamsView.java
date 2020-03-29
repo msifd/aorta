@@ -18,24 +18,27 @@ class ParamsView extends Widget {
 
     public void refill() {
         clearChildren();
-        if (editable)
-            fillEditable();
-        else
-            fillNonEditable();
-    }
 
-    private void fillEditable() {
-        setLayout(new GridLayout());
+        setLayout(new GridLayout(2));
 
-        addChild(new Label(L10n.tr("more.gui.status.estitence")));
+        addChild(new Label(L10n.tr("more.gui.status.status.estitence")));
         addChild(new Label(Integer.toString(character.estitence)));
 
         final int sin = character.sin;
         final String sinLevel = L10n.tr("more.status.sin." +
                 (sin < 0 ? "-1" : sin > 0 ? "1" : "0"));
 
-        addChild(new Label(L10n.tr("more.gui.status.sin")));
+        addChild(new Label(L10n.tr("more.gui.status.status.sin")));
         addChild(new Label(sinLevel + (sin > 0 ? " (" + sin + ")" : "")));
+
+//        if (editable)
+//            fillEditable();
+//        else
+//            fillNonEditable();
+    }
+
+    private void fillEditable() {
+
     }
 
     private void fillNonEditable() {

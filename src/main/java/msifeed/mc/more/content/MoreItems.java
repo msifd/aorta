@@ -4,8 +4,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class MoreItems {
     public static void init() {
-        GameRegistry.registerItem(new ItemOldEye(), ItemOldEye.ITEM_NAME);
-        GameRegistry.registerItem(new ItemFragileOldEye(), ItemFragileOldEye.ITEM_NAME);
+        GameRegistry.registerItem(ItemOldEye.makeNormal(), ItemOldEye.NORMAL_ITEM_NAME);
+        GameRegistry.registerItem(ItemOldEye.makeFragile(), ItemOldEye.FRAGILE_ITEM_NAME);
         GameRegistry.registerItem(new ItemConvictionIndict(), ItemConvictionIndict.ITEM_NAME);
         GameRegistry.registerItem(new ItemForgivnessStone(), ItemForgivnessStone.ITEM_NAME);
         GameRegistry.registerItem(new ItemConvictsList(), ItemConvictsList.ITEM_NAME);

@@ -3,7 +3,7 @@ package msifeed.mc.more.crabs.action;
 public enum ActionTag {
     melee, ranged, magical, intellectual,
     defencive,
-    none, equip, reload,
+    none, apply, equip, reload,
     ;
 
     public boolean isType() {

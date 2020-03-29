@@ -1,5 +1,6 @@
 package msifeed.mc.more.crabs.action;
 
+import msifeed.mc.sys.utils.L10n;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -20,6 +21,10 @@ public class ActionHeader {
 //        this.title = title.startsWith(".") ? L10n.tr("more.action" + title) : title;
     }
 
+    public String getTitle() {
+        return title.startsWith(".") ? L10n.tr("more.action" + title) : title;
+    }
+
     public ActionTag getType() {
         return tags.stream().filter(ActionTag::isType).findAny().orElse(ActionTag.melee);
     }
@@ -29,7 +34,7 @@ public class ActionHeader {
     }
 
     public boolean requiresNoRoll() {
-        return hasTag(ActionTag.none) || hasTag(ActionTag.equip) || hasTag(ActionTag.reload);
+        return hasTag(ActionTag.none) || hasTag(ActionTag.apply) || hasTag(ActionTag.equip) || hasTag(ActionTag.reload);
     }
 
     public boolean hasTag(ActionTag tag) {

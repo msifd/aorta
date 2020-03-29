@@ -1,6 +1,5 @@
 package msifeed.mc.more.tools;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.Bootstrap;
 import msifeed.mc.genesis.GenesisCreativeTab;
 import msifeed.mc.more.More;
@@ -9,19 +8,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.EntityInteractEvent;
 
 public class ItemCharTool extends Item {
     public static String ITEM_NAME = "tool_char";
 
-    public ItemCharTool() {
+    ItemCharTool() {
         setUnlocalizedName(ITEM_NAME);
         setTextureName(Bootstrap.MODID + ":" + ITEM_NAME);
         setCreativeTab(GenesisCreativeTab.TOOLS);
         setMaxStackSize(1);
-
-        MinecraftForge.EVENT_BUS.register(this);
     }
 
     @Override
@@ -32,22 +27,14 @@ public class ItemCharTool extends Item {
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
         // RMB + Shift = Self
-        if (player.isSneaking()) {
-            handleEntity(player);
-        }
+        if (player.isSneaking())
+            More.GUI_HANDLER.openCharEditor(player);
         return itemStack;
     }
 
-    @SubscribeEvent
-    public void onEntityInteract(EntityInteractEvent event) {
-        final ItemStack heldItem = event.entityPlayer.getHeldItem();
-        if (heldItem == null || !(heldItem.getItem() instanceof ItemCharTool))
-            return;
-        if (event.target instanceof EntityLivingBase)
-            handleEntity((EntityLivingBase) event.target);
-    }
-
-    private void handleEntity(EntityLivingBase entity) {
+    @Override
+    public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase entity) {
         More.GUI_HANDLER.openCharEditor(entity);
+        return true;
     }
 }

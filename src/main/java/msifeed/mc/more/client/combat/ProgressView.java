@@ -1,31 +1,31 @@
 package msifeed.mc.more.client.combat;
 
-import joptsimple.internal.Strings;
 import msifeed.mc.mellow.layout.AnchorLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.render.RenderShapes;
-import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
-import msifeed.mc.mellow.widgets.button.ButtonLabel;
+import msifeed.mc.mellow.widgets.button.FlatButtonLabel;
 import msifeed.mc.mellow.widgets.text.WordwrapLabel;
+import msifeed.mc.more.crabs.action.ActionHeader;
+import msifeed.mc.more.crabs.action.ActionRegistry;
 import msifeed.mc.more.crabs.action.effects.Buff;
 import msifeed.mc.more.crabs.combat.CombatContext;
 import msifeed.mc.more.crabs.combat.CombatRpc;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
+import msifeed.mc.sys.utils.L10n;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.ArrayList;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ProgressView extends Widget {
     private final EntityLivingBase entity;
 
     ProgressView(EntityLivingBase entity) {
         this.entity = entity;
-
-        getSizeHint().x = 110;
-        setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.PREFERRED);
-//        setSizeHint(110, 0);
+//
+//        getSizeHint().x = 110;
 //        setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.PREFERRED);
 
         getMargin().top = 1;
@@ -47,68 +47,81 @@ public class ProgressView extends Widget {
     private void refillHasContext(CombatContext context) {
         switch (context.phase) {
             case NONE:
-                addPane("Join combat");
+                addButton("more.gui.combat.join", () -> CombatRpc.join(entity.getEntityId()));
                 break;
             case IDLE:
                 if (context.action == null)
-                    addPane("Select offence action");
+                    addPane("more.gui.combat.tips.offence_action");
                 else {
-                    addPane("Current action: " + context.action.title);
+                    addPane("more.gui.combat.tips.current_action", context.action.title);
                     if (context.action.requiresNoRoll())
-                        addPane("Select offence action again to confirm");
+                        addPane("more.gui.combat.tips.confirm_action");
                     else
-                        addPane("Damage your enemy");
-                    addPane("You can change action");
+                        addPane("more.gui.combat.tips.damage_target");
+                    addPane("more.gui.combat.tips.change_action");
                 }
                 break;
             case ATTACK:
-                addPane("Damage your enemy");
-                final ButtonLabel endBtn = new ButtonLabel("End attack");
-                endBtn.setClickCallback(() -> CombatRpc.endAttack(entity.getEntityId()));
-                addChild(endBtn);
+                addPane("more.gui.combat.tips.current_action", context.action.title);
+                addPane("more.gui.combat.tips.damage_target");
+                addButton("more.gui.combat.end_attack", () -> CombatRpc.endAttack(entity.getEntityId()));
                 break;
             case WAIT:
-                addPane("Wait for your enemy action");
+                addPane("more.gui.combat.tips.wait_defender");
                 break;
             case DEFEND:
                 if (context.action == null)
-                    addPane("Select defence action");
+                    addPane("more.gui.combat.tips.defence_action");
                 else {
-                    addPane("Current action: " + context.action.title);
-                    addPane("Select defence action again to confirm");
-                    addPane("You can change action");
+                    addPane("more.gui.combat.tips.current_action", context.action.title);
+                    addPane("more.gui.combat.tips.confirm_action");
+                    addPane("more.gui.combat.tips.change_action");
                 }
                 break;
             case END:
-                addPane("Stay calm...");
                 break;
             case LEAVE:
-                addPane("You are leaving");
+                addPane("more.gui.combat.tips.leaving");
                 break;
         }
 
         if (!context.buffs.isEmpty()) {
-            final StringBuilder sb = new StringBuilder();
-            sb.append("Buffs:\n");
-            for (Buff b : context.buffs) {
-                sb.append(b.toString());
-                sb.append('\n');
-            }
-            sb.deleteCharAt(sb.length() - 1);
-            addPane(sb.toString());
+            final String buffs = context.buffs.stream()
+                    .map(Buff::toString)
+                    .collect(Collectors.joining("\n"));
+            addPane("more.gui.combat.tips.buffs", buffs);
         }
 
         if (!context.prevActions.isEmpty()) {
-            addPane("Prev. actions:\n" + Strings.join(new ArrayList<>(context.prevActions), ","));
+            final String actions = context.prevActions.stream()
+                    .map(ActionRegistry::getHeader)
+                    .map(ActionHeader::getTitle)
+                    .collect(Collectors.joining(", "));
+            addPane("more.gui.combat.tips.prev_actions", actions);
+        }
+
+        if (context.phase.isInCombat()) {
+            addButton("more.gui.combat.leave", () -> CombatRpc.leave(entity.getEntityId()));
+            addButton("more.gui.combat.reset", () -> CombatRpc.reset(entity.getEntityId()));
+
+            if (!(entity instanceof EntityPlayer))
+                addButton("more.gui.combat.dismiss", () -> CombatRpc.dismissEntity(entity.getEntityId()));
         }
     }
 
     private void refillWithoutContext() {
-        addPane("Not a combatant!");
+        if (!(entity instanceof EntityPlayer))
+            addButton("more.gui.combat.recruit", () -> CombatRpc.recruitEntity(entity.getEntityId()));
     }
 
-    private void addPane(String text) {
-        addChild(new Pane(text, 100));
+    private void addButton(String trKey, Runnable callback) {
+        final FlatButtonLabel btn = new FlatButtonLabel(L10n.tr(trKey));
+        btn.setClickCallback(callback);
+        addChild(btn);
+    }
+
+    private void addPane(String fmtKey, Object... args) {
+        addChild(new Pane(L10n.fmt(fmtKey, args), 140));
     }
 
     private static class Pane extends Widget {
@@ -128,4 +141,5 @@ public class ProgressView extends Widget {
             RenderShapes.frame(getGeometry(), 2, 0xb3937b);
         }
     }
+
 }

@@ -3,11 +3,14 @@ package msifeed.mc.more.client.combat;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
+import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.tabs.TabArea;
 import msifeed.mc.mellow.widgets.window.Window;
+import msifeed.mc.more.crabs.combat.CombatContext;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
 import msifeed.mc.sys.attributes.AttributeUpdateEvent;
+import msifeed.mc.sys.utils.L10n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -19,7 +22,7 @@ public class CombatScreen extends MellowGuiScreen {
         this.entity = entity;
 
         final Window window = new Window();
-        window.setTitle("Combat: " + entity.getCommandSenderName());
+        window.setTitle(L10n.fmt("more.gui.combat", entity.getCommandSenderName()));
         scene.addChild(window);
 
         content = window.getContent();
@@ -36,11 +39,13 @@ public class CombatScreen extends MellowGuiScreen {
         content.addChild(new ActionsView(entity));
 
         final TabArea tabs = new TabArea();
-        tabs.addTab("Progress", new ProgressView(entity));
-        tabs.addTab("Mods", new ModsView(entity));
-        content.addChild(tabs);
+        tabs.getSizeHint().x = 150;
+        tabs.setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.PREFERRED);
 
-        content.addChild(new StageView(entity));
+        tabs.addTab(L10n.tr("more.gui.combat.progress"), new ProgressView(entity));
+        tabs.addTab(L10n.tr("more.gui.combat.mods"), new ModsView(entity));
+        tabs.addTab(L10n.tr("more.gui.combat.rolls"), new RollAbilityView(entity));
+        content.addChild(tabs);
     }
 
     @Override
@@ -51,7 +56,14 @@ public class CombatScreen extends MellowGuiScreen {
 
     @SubscribeEvent
     public void onAttributeUpdate(AttributeUpdateEvent event) {
-        if (event.entity == entity && event.attr instanceof CombatAttribute)
-            refill();
+        if (event.entity == entity && event.attr instanceof CombatAttribute) {
+            final boolean hasLeft = CombatAttribute.get(event.entity)
+                    .map(context -> context.phase == CombatContext.Phase.LEAVE)
+                    .orElse(false);
+            if (hasLeft)
+                closeGui();
+            else
+                refill();
+        }
     }
 }

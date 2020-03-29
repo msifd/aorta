@@ -41,7 +41,7 @@ public class WikiUrlLabel extends Label implements MouseHandler.Click {
     public void onClick(int xMouse, int yMouse, int button) {
         if (Desktop.isDesktopSupported()) {
             try {
-                final String url = "https://wiki.ortega.su/index.php?search=" + URLEncoder.encode(getText(), "UTF-8");
+                final String url = "https://wiki.morgana.su/index.php?search=" + URLEncoder.encode(getText(), "UTF-8");
                 Desktop.getDesktop().browse(new URI(url));
             } catch (Exception e) {
             }

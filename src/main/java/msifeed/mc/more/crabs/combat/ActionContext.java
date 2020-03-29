@@ -1,8 +1,8 @@
 package msifeed.mc.more.crabs.combat;
 
 import msifeed.mc.more.crabs.action.Action;
-import msifeed.mc.more.crabs.rolls.Criticalness;
 import msifeed.mc.more.crabs.action.effects.Buff;
+import msifeed.mc.more.crabs.rolls.Criticalness;
 import net.minecraft.util.MathHelper;
 
 import java.util.ArrayList;

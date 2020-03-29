@@ -2,7 +2,6 @@ package msifeed.mc.more.client.combat;
 
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.layout.ListLayout;
-import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.text.Label;
 import msifeed.mc.mellow.widgets.text.TextInput;
@@ -11,6 +10,7 @@ import msifeed.mc.more.crabs.meta.MetaInfo;
 import msifeed.mc.more.crabs.meta.MetaRpc;
 import msifeed.mc.more.crabs.rolls.Modifiers;
 import msifeed.mc.more.crabs.utils.MetaAttribute;
+import msifeed.mc.sys.utils.L10n;
 import net.minecraft.entity.EntityLivingBase;
 
 class ModsView extends Widget {
@@ -19,8 +19,6 @@ class ModsView extends Widget {
     ModsView(EntityLivingBase entity) {
         this.entity = entity;
 
-        getSizeHint().x = 110;
-        setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.PREFERRED);
         setLayout(new GridLayout());
 
         refill();
@@ -30,12 +28,12 @@ class ModsView extends Widget {
         MetaAttribute.get(entity).ifPresent(meta -> {
             final Modifiers mods = meta.modifiers;
 
-            addChild(new Label("Roll:"));
+            addChild(new Label(L10n.tr("more.gui.combat.mods.roll")));
             final TextInput modInput = new TextInput();
             modInput.getSizeHint().x = 16;
             if (mods.roll != 0)
                 modInput.setText(Integer.toString(mods.roll));
-            modInput.setFilter(s -> s.length() < 5 && TextInput.isSignedInt(s));
+            modInput.setFilter(s -> TextInput.isSignedIntBetween(s, -99, 99));
             modInput.setCallback(s -> updateRollMod(meta, s));
             addChild(modInput);
 
@@ -49,8 +47,10 @@ class ModsView extends Widget {
         pair.setLayout(ListLayout.HORIZONTAL);
         addChild(pair);
 
-        final Label label = new Label(a.toString() + ":");
-        label.getSizeHint().x = 16;
+        final String abilityName = L10n.tr("more.ability.short." + a.name().toLowerCase());
+        final Label label = new Label(abilityName + ":");
+        label.getSizeHint().x = 22;
+        label.getPos().y = 1;
         pair.addChild(label);
 
         final TextInput input = new TextInput();
@@ -59,7 +59,7 @@ class ModsView extends Widget {
         final int modValue = meta.modifiers.toAbility(a);
         if (modValue != 0)
             input.setText(Integer.toString(modValue));
-        input.setFilter(s -> s.length() < 5 && TextInput.isSignedInt(s));
+        input.setFilter(s -> TextInput.isSignedIntBetween(s, -99, 99));
         input.setCallback(s -> updateFeatMods(meta, a, s));
         pair.addChild(input);
     }

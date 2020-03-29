@@ -1,4 +1,4 @@
-package msifeed.mc.more.client.status;
+package msifeed.mc.more.client.combat;
 
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.widgets.Widget;
@@ -6,6 +6,7 @@ import msifeed.mc.mellow.widgets.button.ButtonLabel;
 import msifeed.mc.more.crabs.character.Ability;
 import msifeed.mc.more.crabs.character.CharRpc;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
+import msifeed.mc.sys.utils.L10n;
 import net.minecraft.entity.EntityLivingBase;
 
 public class RollAbilityView extends Widget {
@@ -24,7 +25,8 @@ public class RollAbilityView extends Widget {
             return;
 
         for (Ability ability : Ability.values()) {
-            final ButtonLabel btn = new ButtonLabel(ability.toString());
+            final String label = L10n.tr("more.ability.short." + ability.name().toLowerCase());
+            final ButtonLabel btn = new ButtonLabel(label);
             btn.setClickCallback(() -> {
                 CharRpc.rollAbility(entity.getEntityId(), ability);
             });

@@ -5,7 +5,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import msifeed.mc.genesis.GenesisCreativeTab;
 import msifeed.mc.sys.utils.L10n;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -43,16 +42,12 @@ public class ItemCharSheet extends Item {
         lines.add(L10n.tr("item.char_sheet.desc"));
     }
 
-    @Override
-    public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity target) {
-        return false;
-    }
-
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void onEntityInteract(EntityInteractEvent event) {
         // ПКМ листком по существу для редактирования его стат
-        if (!(event.target instanceof EntityLivingBase)) return;
+        if (!(event.target instanceof EntityLivingBase))
+            return;
 
 //        final ItemStack itemStack = event.entityPlayer.getHeldItem();
 //        if (itemStack == null) {

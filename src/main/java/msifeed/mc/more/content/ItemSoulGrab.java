@@ -1,6 +1,5 @@
 package msifeed.mc.more.content;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.Bootstrap;
 import msifeed.mc.extensions.tweaks.EsitenceHealthModifier;
 import msifeed.mc.genesis.GenesisCreativeTab;
@@ -9,44 +8,45 @@ import msifeed.mc.more.crabs.character.Character;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.more.crabs.utils.Differ;
 import msifeed.mc.sys.utils.L10n;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.EntityInteractEvent;
+
+import java.util.List;
 
 public class ItemSoulGrab extends Item {
     public static String ITEM_NAME = "soul_grab";
 
-    public ItemSoulGrab() {
+    ItemSoulGrab() {
         setUnlocalizedName(ITEM_NAME);
         setTextureName(Bootstrap.MODID + ":" + ITEM_NAME);
         setCreativeTab(GenesisCreativeTab.ITEMS);
         setMaxStackSize(16);
-
-        MinecraftForge.EVENT_BUS.register(this);
     }
 
-    @SubscribeEvent
-    public void onEntityInteract(EntityInteractEvent event) {
-        final EntityPlayer player = event.entityPlayer;
-        final ItemStack heldItem = player.getHeldItem();
-        if (heldItem == null || !(heldItem.getItem() instanceof ItemSoulGrab))
-            return;
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer player, List lines, boolean extra) {
+        lines.add(L10n.tr("item.soul_grab.desc"));
+    }
 
-        if (!(event.target instanceof EntityPlayer) || player.worldObj.isRemote)
-            return;
+    @Override
+    public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase entity) {
+        if (!(entity instanceof EntityPlayer))
+            return false;
+        if (player.worldObj.isRemote)
+            return true;
 
-        final EntityPlayer target = (EntityPlayer) event.target;
+        final EntityPlayer target = (EntityPlayer) entity;
         final Character playerAfter = CharacterAttribute.require(player);
         final Character playerBefore = new Character(playerAfter);
         final ItemDefines config = More.DEFINES.get().items;
 
         if (playerAfter.estitence >= 100) {
             player.addChatMessage(new ChatComponentText(L10n.fmt("more.est.grab_not_enough", target.getDisplayName())));
-            return;
+            return true;
         }
 
         final Character targetAfter = CharacterAttribute.require(target);
@@ -54,7 +54,7 @@ public class ItemSoulGrab extends Item {
 
         if (targetAfter.estitence <= 20) {
             player.addChatMessage(new ChatComponentText(L10n.fmt("more.est.grab_too_much")));
-            return;
+            return true;
         }
 
         playerAfter.estitence = Math.min(playerAfter.estitence + config.soulGrabEstitence, 90);
@@ -63,7 +63,7 @@ public class ItemSoulGrab extends Item {
 
         player.addChatMessage(new ChatComponentText(L10n.fmt("more.est.grab_from", target.getDisplayName())));
         target.addChatMessage(new ChatComponentText(L10n.fmt("more.est.grab_to", player.getDisplayName())));
-        heldItem.stackSize--;
+        stack.stackSize--;
 
         CharacterAttribute.INSTANCE.set(player, playerAfter);
         Differ.printDiffs((EntityPlayerMP)player, player, playerBefore, playerAfter);
@@ -74,5 +74,7 @@ public class ItemSoulGrab extends Item {
         Differ.printDiffs((EntityPlayerMP)player, target, targetBefore, targetAfter);
         if (targetBefore.countMaxHealth() != targetAfter.countMaxHealth())
             EsitenceHealthModifier.applyModifier(target, targetAfter);
+
+        return true;
     }
 }

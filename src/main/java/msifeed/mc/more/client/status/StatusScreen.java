@@ -1,5 +1,6 @@
 package msifeed.mc.more.client.status;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.basic.Separator;
@@ -9,35 +10,60 @@ import msifeed.mc.mellow.widgets.window.Window;
 import msifeed.mc.more.crabs.character.CharRpc;
 import msifeed.mc.more.crabs.character.Character;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
+import msifeed.mc.sys.attributes.AttributeUpdateEvent;
 import msifeed.mc.sys.utils.L10n;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraftforge.common.MinecraftForge;
 
 public class StatusScreen extends MellowGuiScreen {
+    private final EntityLivingBase entity;
+    private final boolean editable;
+    private final boolean isGm;
     private Character character;
 
+    private final Widget content;
+
     public StatusScreen(EntityLivingBase entity, boolean editable, boolean isGm) {
-        CharacterAttribute.get(entity).ifPresent(c -> character = new Character(c));
-        if (character == null) {
-            closeGui();
-            return;
-        }
+        this.entity = entity;
+        this.editable = editable;
+        this.isGm = isGm;
+
+        updateCharacter();
 
         final Window window = new Window();
         window.setTitle(L10n.fmt("more.gui.status.title", character.name.isEmpty() ? entity.getCommandSenderName() : character.name));
         scene.addChild(window);
+        content = window.getContent();
 
-        final Widget content = window.getContent();
+        refill();
+
+        MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    private void updateCharacter() {
+        CharacterAttribute.get(entity).ifPresent(c -> character = new Character(c));
+        if (character == null) {
+            closeGui();
+        }
+    }
+
+    private void refill() {
+        updateCharacter();
+
+        content.clearChildren();
 
         final TabArea tabs = new TabArea();
         final ParamsView paramsView = new ParamsView(character, editable);
         final IllnessView illnessView = new IllnessView(character, editable, isGm);
+        final EditAbilitiesView abilitiesView = new EditAbilitiesView(character);
         final OtherView otherView = new OtherView(character, editable);
 
         tabs.addTab(L10n.tr("more.gui.status.status"), paramsView);
         if (editable || character.illness.limit > 0)
             tabs.addTab(L10n.tr("more.gui.status.illness"), illnessView);
+        if (editable || isGm)
+            tabs.addTab(L10n.tr("more.gui.status.abilities"), abilitiesView);
         tabs.addTab(L10n.tr("more.gui.status.other"), otherView);
-        tabs.addTab(L10n.tr("more.gui.status.rolls"), new RollAbilityView(entity));
         content.addChild(tabs);
 
         if (editable) {
@@ -51,11 +77,25 @@ public class StatusScreen extends MellowGuiScreen {
                     CharRpc.updateChar(entity.getEntityId(), character);
                     paramsView.refill();
                     illnessView.refill();
+                    abilitiesView.refill();
                     otherView.refill();
                 }
             });
             content.addChild(new Separator());
             content.addChild(submitBtn);
+        }
+    }
+
+    @Override
+    public void closeGui() {
+        MinecraftForge.EVENT_BUS.unregister(this);
+        super.closeGui();
+    }
+
+    @SubscribeEvent
+    public void onAttributeUpdate(AttributeUpdateEvent event) {
+        if (event.entity == entity && event.attr instanceof CharacterAttribute) {
+            updateCharacter();
         }
     }
 }

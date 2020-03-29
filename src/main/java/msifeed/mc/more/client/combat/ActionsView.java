@@ -57,7 +57,7 @@ public class ActionsView extends Widget {
                             : ctx.acceptsOffendAction(action))
                     .sorted(ActionHeader::compareTo)
                     .forEach(action -> {
-                        final ButtonLabel btn = new ButtonLabel(action.title);
+                        final ButtonLabel btn = new ButtonLabel(action.getTitle());
                         btn.setClickCallback(() -> doAction(action));
                         list.addChild(btn);
                     });

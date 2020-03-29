@@ -4,8 +4,8 @@ import msifeed.mc.extensions.chat.ChatHandler;
 import msifeed.mc.extensions.chat.ChatMessage;
 import msifeed.mc.extensions.chat.Language;
 import msifeed.mc.extensions.chat.composer.SpeechType;
-import msifeed.mc.more.crabs.rolls.Criticalness;
 import msifeed.mc.more.crabs.action.ActionHeader;
+import msifeed.mc.more.crabs.rolls.Criticalness;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 

@@ -8,6 +8,7 @@ public class L10n {
     }
 
     public static String fmt(String key, Object... args) {
-        return String.format(LanguageRegistry.instance().getStringLocalization(key), args);
+        final String loc = LanguageRegistry.instance().getStringLocalization(key);
+        return String.format(loc.replaceAll("\\\\n", "\n"), args);
     }
 }

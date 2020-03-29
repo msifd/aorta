@@ -23,6 +23,7 @@ public enum ActionRegistry {
     INSTANCE;
 
     public static final Action NONE_ACTION = new Action("none", ".none", ActionTag.none);
+    private static final Action APPLY_ACTION = new Action("apply", ".apply", ActionTag.apply);
     private static final Action EQUIP_ACTION = new Action("equip", ".equip", ActionTag.equip);
     private static final Action RELOAD_ACTION = new Action("reload", ".reload", ActionTag.reload);
 
@@ -88,6 +89,7 @@ public enum ActionRegistry {
             this.actions.put(a.id, a);
 
         this.actions.put(NONE_ACTION.id, NONE_ACTION);
+        this.actions.put(APPLY_ACTION.id, APPLY_ACTION);
         this.actions.put(EQUIP_ACTION.id, EQUIP_ACTION);
         this.actions.put(RELOAD_ACTION.id, RELOAD_ACTION);
 

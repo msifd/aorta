@@ -1,16 +1,10 @@
 package msifeed.mc.more.crabs.action.parser;
 
 import com.google.gson.*;
-import msifeed.mc.more.crabs.action.Action;
-import msifeed.mc.more.crabs.action.ActionTag;
 import msifeed.mc.more.crabs.action.effects.Buff;
 import msifeed.mc.more.crabs.action.effects.Effect;
-import msifeed.mc.more.crabs.action.effects.EffectsRegistry;
-import msifeed.mc.more.crabs.action.effects.Score;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class BuffJsonAdapter implements JsonSerializer<Buff>, JsonDeserializer<Buff> {
     @Override

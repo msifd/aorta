@@ -79,7 +79,7 @@ class IllnessView extends Widget {
         params.addChild(illnessInput);
 
 
-        params.addChild(new Label(L10n.tr("more.gui.status.treatment")));
+        params.addChild(new Label(L10n.tr("more.gui.status.illness.treatment")));
         final TextInput treatmentInput = new TextInput();
         treatmentInput.getSizeHint().x = 25;
         treatmentInput.setFilter(s -> TextInput.isUnsignedIntBetween(s, 0, 999));
