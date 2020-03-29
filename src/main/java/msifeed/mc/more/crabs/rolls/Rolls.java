@@ -8,9 +8,10 @@ public final class Rolls {
         final Result r = new Result();
 
         r.dice = Dices.n3d7m3();
+        r.ability = c.abilities.get(a);
         r.flatMod = m.roll;
         r.statMod = m.toAbility(a);
-        r.result = r.dice + r.statMod + r.flatMod;
+        r.result = r.dice + r.ability + r.statMod + r.flatMod;
 
         return r;
     }
@@ -18,6 +19,7 @@ public final class Rolls {
     public static class Result {
         public Criticalness crit = Dices.critical();
         public int dice;
+        public int ability;
         public int flatMod;
         public int statMod;
         public int result;

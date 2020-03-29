@@ -25,7 +25,7 @@ public class Differ {
             final int b = before.abilities.get(e.getKey());
             final int a = e.getValue();
             if (b != a)
-                diffs.add(L10n.fmt("more.diff.char.feature", e.getKey().toString(), b, a));
+                diffs.add(L10n.fmt("more.diff.char.ability", e.getKey().toString(), b, a));
         }
 
         // Illness

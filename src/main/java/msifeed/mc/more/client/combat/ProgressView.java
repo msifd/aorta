@@ -53,7 +53,7 @@ public class ProgressView extends Widget {
                 if (context.action == null)
                     addPane("more.gui.combat.tips.offence_action");
                 else {
-                    addPane("more.gui.combat.tips.current_action", context.action.title);
+                    addPane("more.gui.combat.tips.current_action", context.action.getTitle());
                     if (context.action.requiresNoRoll())
                         addPane("more.gui.combat.tips.confirm_action");
                     else
@@ -62,7 +62,7 @@ public class ProgressView extends Widget {
                 }
                 break;
             case ATTACK:
-                addPane("more.gui.combat.tips.current_action", context.action.title);
+                addPane("more.gui.combat.tips.current_action", context.action.getTitle());
                 addPane("more.gui.combat.tips.damage_target");
                 addButton("more.gui.combat.end_attack", () -> CombatRpc.endAttack(entity.getEntityId()));
                 break;
@@ -73,7 +73,7 @@ public class ProgressView extends Widget {
                 if (context.action == null)
                     addPane("more.gui.combat.tips.defence_action");
                 else {
-                    addPane("more.gui.combat.tips.current_action", context.action.title);
+                    addPane("more.gui.combat.tips.current_action", context.action.getTitle());
                     addPane("more.gui.combat.tips.confirm_action");
                     addPane("more.gui.combat.tips.change_action");
                 }

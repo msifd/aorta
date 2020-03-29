@@ -15,6 +15,7 @@ import org.lwjgl.opengl.GL11;
 public enum CombatEntityMarks {
     INSTANCE;
 
+    private static final int MAX_ICON_DISTANCE = 15;
     private ResourceLocation icons = new ResourceLocation(Bootstrap.MODID, "textures/gui/combat_icons.png");
 
     @SubscribeEvent
@@ -22,6 +23,9 @@ public enum CombatEntityMarks {
         final EntityPlayer self = Minecraft.getMinecraft().thePlayer;
         if (event.entity == self)
             return;
+        if (event.entity.getDistanceToEntity(self) > MAX_ICON_DISTANCE)
+            return;
+
         if (!CombatAttribute.require(self).phase.isInCombat())
             return;
 
