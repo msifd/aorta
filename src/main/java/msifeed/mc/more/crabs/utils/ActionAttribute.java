@@ -60,7 +60,7 @@ public final class ActionAttribute extends EntityLivingAttribute<ActionContext> 
     }
 
     @Override
-    public ActionContext loadNBTData(NBTTagCompound root) {
+    public ActionContext loadNBTData(ActionContext value, NBTTagCompound root) {
         return null;
 
 //        if (!root.hasKey(PROP_NAME))
@@ -72,7 +72,7 @@ public final class ActionAttribute extends EntityLivingAttribute<ActionContext> 
     }
 
     @Override
-    public boolean syncOnChange() {
+    public boolean shouldSync(ActionContext value) {
         return false;
     }
 }

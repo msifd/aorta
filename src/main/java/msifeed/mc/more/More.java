@@ -13,6 +13,8 @@ import msifeed.mc.extensions.chat.Speechat;
 import msifeed.mc.extensions.environment.EnvironmentManager;
 import msifeed.mc.extensions.itemmeta.ItemMetaCommand;
 import msifeed.mc.extensions.locks.Locks;
+import msifeed.mc.extensions.mining.MiningNerf;
+import msifeed.mc.extensions.mining.StaminaCommand;
 import msifeed.mc.extensions.nametag.Nametag;
 import msifeed.mc.extensions.noclip.NoclipCommand;
 import msifeed.mc.extensions.noclip.NoclipRpc;
@@ -65,6 +67,7 @@ public class More {
         NoclipRpc.preInit();
         Nametag.preInit();
         EnvironmentManager.preInit();
+        MiningNerf.preInit();
     }
 
     public void init() {
@@ -78,6 +81,7 @@ public class More {
 
     public void postInit() {
         MakeFoodEdible.apply();
+        MiningNerf.onPostInit();
     }
 
     public void serverStarting(FMLServerStartingEvent event) {
@@ -94,6 +98,7 @@ public class More {
         handler.registerCommand(new RollCommand());
         handler.registerCommand(new NoclipCommand());
         handler.registerCommand(new ItemAttrCommand());
+        handler.registerCommand(new StaminaCommand());
 
         Speechat.registerCommands(handler);
         EnvironmentManager.registerCommands(handler);

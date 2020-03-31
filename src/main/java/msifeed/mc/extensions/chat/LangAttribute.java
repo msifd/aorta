@@ -48,7 +48,7 @@ public class LangAttribute extends PlayerAttribute<Language> {
     }
 
     @Override
-    public Language loadNBTData(NBTTagCompound root) {
+    public Language loadNBTData(Language value, NBTTagCompound root) {
         if (root.hasKey(PROP_NAME)) {
             final byte ord = root.getByte(PROP_NAME);
             return Language.values()[ord];

@@ -52,7 +52,7 @@ public class CharacterAttribute extends EntityLivingAttribute<Character> {
     }
 
     @Override
-    public Character loadNBTData(NBTTagCompound root) {
+    public Character loadNBTData(Character value, NBTTagCompound root) {
         if (!root.hasKey(PROP_NAME))
             return null;
         final Character character = new Character();

@@ -49,7 +49,7 @@ public class MetaAttribute extends EntityLivingAttribute<MetaInfo> {
     }
 
     @Override
-    public MetaInfo loadNBTData(NBTTagCompound root) {
+    public MetaInfo loadNBTData(MetaInfo value, NBTTagCompound root) {
         if (!root.hasKey(PROP_NAME))
             return null;
         final MetaInfo meta = new MetaInfo();

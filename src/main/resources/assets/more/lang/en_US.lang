@@ -206,3 +206,7 @@ more.gen.needs_reload=Требуется перезарядка
 more.gen.durability=Прочность: %d/%d (%s%%)
 more.gen.broken=Этот предмет сломан и не может быть использован
 more.gen.crabs.action=Спец. действие: %s
+
+more.mining.self=Ваш запас сил равен %d%%
+more.mining.someone=Запас сил %s равен %d%%
+more.mining.set=Запас сил %s теперь равен %d%%

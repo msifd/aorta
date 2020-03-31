@@ -18,9 +18,9 @@ public abstract class EntityAttribute<T> {
     public abstract String getName();
     public abstract T init(Entity entity, World world, T currentValue);
     public abstract void saveNBTData(T value, NBTTagCompound root);
-    public abstract T loadNBTData(NBTTagCompound root);
+    public abstract T loadNBTData(T value, NBTTagCompound root);
 
-    public boolean syncOnChange() {
+    public boolean shouldSync(T value) {
         return true;
     }
 
@@ -35,7 +35,7 @@ public abstract class EntityAttribute<T> {
         final AttrProp<T> attr = getProp(entity);
         if (attr != null) {
             attr.value = value;
-            if (syncOnChange())
+            if (shouldSync(attr.value))
                 broadcast(entity.worldObj, entity);
         }
     }
@@ -44,7 +44,7 @@ public abstract class EntityAttribute<T> {
         final AttrProp<T> attr = getProp(entity);
         if (attr != null) {
             fn.accept(attr.value);
-            if (syncOnChange())
+            if (shouldSync(attr.value))
                 broadcast(entity.worldObj, entity);
         }
     }

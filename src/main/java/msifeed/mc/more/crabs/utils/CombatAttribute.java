@@ -49,7 +49,7 @@ public final class CombatAttribute extends EntityLivingAttribute<CombatContext> 
     }
 
     @Override
-    public CombatContext loadNBTData(NBTTagCompound root) {
+    public CombatContext loadNBTData(CombatContext value, NBTTagCompound root) {
         if (!root.hasKey(PROP_NAME))
             return null;
 

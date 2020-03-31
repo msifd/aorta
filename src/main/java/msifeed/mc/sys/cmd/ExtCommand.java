@@ -5,7 +5,6 @@ import msifeed.mc.commons.traits.Trait;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
@@ -34,10 +33,8 @@ public abstract class ExtCommand extends CommandBase {
     protected static boolean isGm(ICommandSender sender) {
         return FMLCommonHandler.instance().getSide().isClient()
             || sender instanceof MinecraftServer
-            || sender instanceof EntityPlayer && (
-                CharacterAttribute.has((EntityPlayer) sender, Trait.__admin)
-                || CharacterAttribute.has((EntityPlayer) sender, Trait.gm)
-            );
+            || sender instanceof EntityPlayer && CharacterAttribute.hasAny((EntityPlayer) sender, Trait.__admin, Trait.gm)
+            ;
     }
 
     protected static void title(ICommandSender sender, String format, Object... args) {
@@ -76,12 +73,12 @@ public abstract class ExtCommand extends CommandBase {
         return sb.toString();
     }
 
-    protected EntityLivingBase findPlayer(String name) {
+    protected EntityPlayer findPlayer(String name) {
         final MinecraftServer mcServer = FMLCommonHandler.instance().getMinecraftServerInstance();
         if (mcServer == null)
             return null;
         for (WorldServer server : mcServer.worldServers) {
-            final EntityLivingBase tmp = server.getPlayerEntityByName(name);
+            final EntityPlayer tmp = server.getPlayerEntityByName(name);
             if (tmp != null)
                 return tmp;
         }
