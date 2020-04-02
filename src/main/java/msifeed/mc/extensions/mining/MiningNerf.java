@@ -91,8 +91,9 @@ public enum MiningNerf {
         final MiningInfo info = MiningAttribute.require(player);
 
         final long now = System.currentTimeMillis();
-        final double passedSec = (now - info.lastMining) / 1000d;
-        final double diff = passedSec * (passedSec > 1 ? config.restPerSec : config.costPerSec);
+        final double secFromUpdate = (now - info.lastUpdate) / 1000d;
+        final double secFromMining = (now - info.lastMining) / 1000d;
+        final double diff = secFromUpdate * (secFromMining > 1 ? config.restPerSec : config.costPerSec);
         // Если прошло больше секунды, то стамина восстанавливается
 
         info.lastUpdate = now;
