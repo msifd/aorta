@@ -3,7 +3,15 @@ package msifeed.mc.extensions.locks.items;
 import msifeed.mc.Bootstrap;
 import msifeed.mc.extensions.locks.LockObject;
 import msifeed.mc.extensions.locks.LockType;
+import msifeed.mc.more.crabs.character.Ability;
+import msifeed.mc.more.crabs.character.Character;
+import msifeed.mc.more.crabs.meta.MetaInfo;
+import msifeed.mc.more.crabs.rolls.Criticalness;
+import msifeed.mc.more.crabs.rolls.Rolls;
+import msifeed.mc.more.crabs.utils.CharacterAttribute;
+import msifeed.mc.more.crabs.utils.MetaAttribute;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
 
@@ -18,6 +26,20 @@ public class AccessTunerItem extends LockpickItem {
     @Override
     protected boolean canPick(LockObject lock) {
         return lock.getLockType() == LockType.DIGITAL;
+    }
+
+    @Override
+    protected boolean rollPick(LockObject lock, ItemStack pick, EntityPlayer player) {
+        final Character c = CharacterAttribute.require(player);
+        final MetaInfo m = MetaAttribute.require(player);
+        final Rolls.Result result = Rolls.rollAbility(c, m.modifiers, Ability.INT);
+
+        if (result.beats(lock.getDifficulty()))
+            return true;
+        else {
+            consumePick(lock, pick, player, result.crit == Criticalness.FAIL ? 0 : result.result);
+            return false;
+        }
     }
 
     @Override

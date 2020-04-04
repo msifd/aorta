@@ -23,5 +23,16 @@ public final class Rolls {
         public int flatMod;
         public int statMod;
         public int result;
+
+        public boolean beats(int threshold) {
+            switch (crit) {
+                case FAIL:
+                    return false;
+                case LUCK:
+                    return true;
+                default:
+                    return result >= threshold;
+            }
+        }
     }
 }

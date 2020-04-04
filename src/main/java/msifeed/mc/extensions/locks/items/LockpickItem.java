@@ -6,8 +6,11 @@ import msifeed.mc.extensions.locks.LockObject;
 import msifeed.mc.extensions.locks.LockType;
 import msifeed.mc.extensions.locks.Locks;
 import msifeed.mc.more.More;
+import msifeed.mc.more.crabs.character.Ability;
 import msifeed.mc.more.crabs.character.Character;
 import msifeed.mc.more.crabs.meta.MetaInfo;
+import msifeed.mc.more.crabs.rolls.Criticalness;
+import msifeed.mc.more.crabs.rolls.Rolls;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.more.crabs.utils.MetaAttribute;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,21 +37,16 @@ public class LockpickItem extends Item {
         if (lock.getDifficulty() >= 100)
             return false;
 
-        final Character character = CharacterAttribute.require(player);
-        final MetaInfo meta = MetaAttribute.require(player);
+        final Character c = CharacterAttribute.require(player);
+        final MetaInfo m = MetaAttribute.require(player);
+        final Rolls.Result result = Rolls.rollAbility(c, m.modifiers, Ability.REF);
 
-        // FIXME: roll something
-        return false;
-//        final FeatureRoll roll = new FeatureRoll(character, meta, "", Feature.HND);
-//
-//        final String text = RollComposer.makeText(player, character, roll);
-//        final ChatMessage m = Composer.makeMessage(SpeechType.ROLL, player, text);
-//        ChatHandler.sendSystemChatMessage(player, m);
-//        ExternalLogs.log(player, "feature", ChatUtils.stripFormatting(text));
-//
-//        consumePick(lock, pick, player, roll);
-//
-//        return roll.check(lock.getDifficulty());
+        if (result.beats(lock.getDifficulty()))
+            return true;
+        else {
+            consumePick(lock, pick, player, result.crit == Criticalness.FAIL ? 0 : result.result);
+            return false;
+        }
     }
 
     protected void consumePick(LockObject lock, ItemStack pick, EntityPlayer player, int roll) {
