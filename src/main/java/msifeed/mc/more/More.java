@@ -11,6 +11,7 @@ import msifeed.mc.commons.traits.TraitSetCommand;
 import msifeed.mc.extensions.books.RemoteBookManager;
 import msifeed.mc.extensions.chat.Speechat;
 import msifeed.mc.extensions.environment.EnvironmentManager;
+import msifeed.mc.extensions.invulnerability.TempInvulnerability;
 import msifeed.mc.extensions.itemmeta.ItemMetaCommand;
 import msifeed.mc.extensions.locks.Locks;
 import msifeed.mc.extensions.mining.MiningNerf;
@@ -53,6 +54,7 @@ public class More {
     private EntityControl entityControl = new EntityControl();
     private Speechat speechat = new Speechat();
     private Locks locks = new Locks();
+    private TempInvulnerability invulnerability = new TempInvulnerability();
 
     public void preInit() {
         crabs.preInit();
@@ -73,6 +75,7 @@ public class More {
     public void init() {
         genesis.init();
         locks.init();
+        invulnerability.init();
 
         RemoteBookManager.init();
         ToolItems.init();
