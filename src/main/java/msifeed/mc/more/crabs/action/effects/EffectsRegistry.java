@@ -1,38 +1,31 @@
 package msifeed.mc.more.crabs.action.effects;
 
-import msifeed.mc.more.crabs.character.Ability;
-
 import java.util.HashMap;
 import java.util.stream.Stream;
 
 public enum EffectsRegistry {
     INSTANCE;
 
-    private HashMap<String, Score> scores = new HashMap<>();
     private HashMap<String, Effect> effects = new HashMap<>();
 
     EffectsRegistry() {
         Stream.of(
-                new Score.Dice3d7m3()
-        ).forEach(s -> scores.put(s.name(), s));
-        Stream.of(Ability.values())
-                .map(Score.Ability::new)
-                .forEach(s -> scores.put(s.name().toLowerCase(), s));
-
-        Stream.of(
-                new Effect.Damage(),
-                new Effect.SkipMove(),
-                new DynamicEffect.DamageAdder(),
-                new DynamicEffect.DamageMultiplier(),
-                new DynamicEffect.ScoreAdder(),
-                new DynamicEffect.ScoreMultiplier(),
-                new DynamicEffect.MinScore(),
-                new Buff()
+                // Scores
+                new ScoreEffects.Roll3d7m3(),
+                new ScoreEffects.ScoreAbility(),
+                new ScoreEffects.ScoreAdder(),
+                new ScoreEffects.ScoreMultiplier(),
+                new ScoreEffects.MinScore(),
+                // Actions
+                new ActionEffects.Damage(),
+                new ActionEffects.SkipMove(),
+                new ActionEffects.DamageAdder(),
+                new ActionEffects.RawDamageAdder(),
+                new ActionEffects.DamageMultiplier(),
+                // Buffs
+                new Buff(),
+                new Buff.OnRole()
         ).forEach(s -> effects.put(s.name(), s));
-    }
-
-    public static Score getScore(String name) {
-        return INSTANCE.scores.get(name);
     }
 
     public static Effect getEffect(String name) {

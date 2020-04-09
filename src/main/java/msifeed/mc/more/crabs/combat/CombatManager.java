@@ -5,23 +5,20 @@ import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import msifeed.mc.more.crabs.action.Action;
+import msifeed.mc.more.crabs.action.ActionRegistry;
 import msifeed.mc.more.crabs.action.ActionTag;
+import msifeed.mc.more.crabs.action.Combo;
 import msifeed.mc.more.crabs.action.effects.Buff;
 import msifeed.mc.more.crabs.action.effects.Effect;
-import msifeed.mc.more.crabs.action.effects.Score;
-import msifeed.mc.more.crabs.character.Character;
 import msifeed.mc.more.crabs.rolls.Criticalness;
 import msifeed.mc.more.crabs.rolls.Dices;
-import msifeed.mc.more.crabs.rolls.Modifiers;
 import msifeed.mc.more.crabs.utils.ActionAttribute;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
-import msifeed.mc.more.crabs.utils.MetaAttribute;
 import msifeed.mc.sys.attributes.MissingRequiredAttributeException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
 import java.util.List;
@@ -38,11 +35,11 @@ public enum CombatManager {
         final boolean actionChanged = ctx.action == null || !ctx.action.id.equals(action.id);
 
         if (ctx.phase == CombatContext.Phase.IDLE) {
-            if (!ctx.acceptsOffendAction(action))
+            if (!action.isOffencive())
                 return false;
 
             if (actionChanged)
-                updateAction(self, action);
+                updateAction(self, action, ActionContext.Role.OFFENCE);
             else if (action.requiresNoRoll())
                 finishSoloMove(new FighterInfo(self));
 
@@ -55,11 +52,11 @@ public enum CombatManager {
             if (offenderCom.phase != CombatContext.Phase.WAIT)
                 return false;
             final ActionContext offenderAct = ActionAttribute.require(offender);
-            if (!ctx.acceptsDefendAction(offenderAct.action.getType(), action))
+            if (!action.isValidDefencive(offenderAct.action.getType()))
                 return false;
 
             if (actionChanged)
-                updateAction(self, action);
+                updateAction(self, action, ActionContext.Role.DEFENCE);
             else
                 finishMove(new FighterInfo((EntityLivingBase) offender), new FighterInfo(self));
 
@@ -69,9 +66,9 @@ public enum CombatManager {
         return false;
     }
 
-    private static void updateAction(EntityLivingBase self, Action action) {
+    private static void updateAction(EntityLivingBase self, Action action, ActionContext.Role role) {
         CombatAttribute.INSTANCE.update(self, context -> context.action = action);
-        ActionAttribute.INSTANCE.set(self, new ActionContext(action));
+        ActionAttribute.INSTANCE.set(self, new ActionContext(action, role));
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -183,25 +180,32 @@ public enum CombatManager {
         if (self.act.critical == Criticalness.FAIL)
             self.act.successful = false;
 
-        for (Score s : self.act.action.score)
-            self.act.scoreScores += s.mod(self.chr, self.mod);
-
-        applyBuffs(self.com.buffs, Effect.Stage.SCORE, self.act);
-        applyEffects(self.act.action.self, Effect.Stage.SCORE, self.act, null);
+        applyEffects(self.act.action.self, Effect.Stage.SCORE, self, null);
+        applyBuffs(self.com.buffs, Effect.Stage.SCORE, self);
     }
 
     private static void applyEffectsAndResults(FighterInfo winner, FighterInfo looser) {
-        applyBuffs(winner.com.buffs, Effect.Stage.ACTION, winner.act);
-        applyBuffs(looser.com.buffs, Effect.Stage.ACTION, looser.act);
+        applyEffects(winner.act.action.self, Effect.Stage.ACTION, winner, looser);
+        applyEffects(winner.act.action.target, Effect.Stage.ACTION, looser, winner);
 
-        applyEffects(winner.act.action.self, Effect.Stage.ACTION, winner.act, looser.act);
-        applyEffects(winner.act.action.target, Effect.Stage.ACTION, looser.act, winner.act);
+        applyBuffs(winner.com.buffs, Effect.Stage.ACTION, winner);
+        applyBuffs(looser.com.buffs, Effect.Stage.ACTION, looser);
+
+        if (winner.act.action.isOffencive() && !winner.act.action.requiresNoRoll()) {
+            final Combo.ComboLookup combo = Combo.find(ActionRegistry.getCombos(), winner.com.prevActions, winner.act.action.id);
+
+            if (combo != null) {
+                winner.com.prevActions.removeAll(combo.match);
+                winner.comboAction = combo.c.action;
+                applyEffects(combo.c.action.self, Effect.Stage.ACTION, winner, looser);
+                applyEffects(combo.c.action.target, Effect.Stage.ACTION, looser, winner);
+            } else {
+                winner.com.addPrevAction(winner.act.action.id);
+            }
+        }
 
         applyActionResults(winner);
         applyActionResults(looser);
-
-        if (!winner.act.action.requiresNoRoll())
-            winner.com.prevActions.add(winner.act.action.id);
 
         CombatNotifications.moveResult(winner, looser);
     }
@@ -209,11 +213,11 @@ public enum CombatManager {
     private void finishSoloMove(FighterInfo self) {
         self.com.phase = CombatContext.Phase.END;
 
-        applyBuffs(self.com.buffs, Effect.Stage.ACTION, self.act);
-        applyEffects(self.act.action.self, Effect.Stage.ACTION, self.act, null);
+        applyEffects(self.act.action.self, Effect.Stage.ACTION, self, null);
+        applyBuffs(self.com.buffs, Effect.Stage.ACTION, self);
         applyActionResults(self);
 
-        if (self.act.action.hasTag(ActionTag.equip)) {
+        if (self.act.action.hasAnyTag(ActionTag.equip)) {
             self.com.weapon = self.entity.getHeldItem();
             self.com.armor = self.entity.getTotalArmorValue();
         }
@@ -229,15 +233,15 @@ public enum CombatManager {
         softReset(self.entity, self.com);
     }
 
-    private static void applyBuffs(List<Buff> buffs, Effect.Stage stage, ActionContext self) {
+    private static void applyBuffs(List<Buff> buffs, Effect.Stage stage, FighterInfo self) {
         for (Buff b : buffs)
-            if (b.shouldApply(stage, self, null))
+            if (b.shouldApply(stage, self.act, null))
                 b.apply(self, null);
     }
 
-    private static void applyEffects(List<Effect> effects, Effect.Stage stage, ActionContext self, ActionContext other) {
+    private static void applyEffects(List<Effect> effects, Effect.Stage stage, FighterInfo self, FighterInfo other) {
         for (Effect e : effects)
-            if (e.shouldApply(stage, self, other))
+            if (e.shouldApply(stage, self.act, other != null ? other.act : null))
                 e.apply(self, other);
     }
 
@@ -252,10 +256,8 @@ public enum CombatManager {
         for (Buff buff : self.act.buffsToReceive)
             Buff.mergeBuff(self.com.buffs, buff);
 
-        if (resetCombo && !self.com.prevActions.isEmpty()) {
+        if (resetCombo && !self.com.prevActions.isEmpty())
             self.com.prevActions.clear();
-            CombatNotifications.notify(self.entity, "combo breaker");
-        }
 
         if (self.entity.isDead) {
             if (self.com.knockedOut) {
@@ -271,7 +273,7 @@ public enum CombatManager {
     @SubscribeEvent
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (event.phase != TickEvent.Phase.END) return;
-        if (event.player.worldObj.getTotalWorldTime() % 20 != 0) return; //
+        if (event.player.worldObj.getTotalWorldTime() % 20 != 0) return;
 
         final CombatContext com = CombatAttribute.get(event.player).orElse(null);
         if (com == null) return;
@@ -295,14 +297,14 @@ public enum CombatManager {
         ActionAttribute.remove(entity);
     }
 
-    @SubscribeEvent
-    public void onEntityJoinWorld(EntityJoinWorldEvent e) {
-        CombatAttribute.get(e.entity).ifPresent(context -> validate(e.entity, context));
-    }
-
-    public static void validate(Entity entity, CombatContext com) {
-
-    }
+//    @SubscribeEvent
+//    public void onEntityJoinWorld(EntityJoinWorldEvent e) {
+//        CombatAttribute.get(e.entity).ifPresent(context -> validate(e.entity, context));
+//    }
+//
+//    public static void validate(Entity entity, CombatContext com) {
+//
+//    }
 
     public static void hardReset(Entity entity, CombatContext com) {
         softReset(entity, com);
@@ -319,19 +321,4 @@ public enum CombatManager {
         com.phase = CombatContext.Phase.NONE;
     }
 
-    static class FighterInfo {
-        final EntityLivingBase entity;
-        final CombatContext com;
-        final ActionContext act;
-        final Character chr;
-        final Modifiers mod;
-
-        FighterInfo(EntityLivingBase entity) {
-            this.entity = entity;
-            this.com = CombatAttribute.require(entity);
-            this.act = ActionAttribute.require(entity);
-            this.chr = CharacterAttribute.require(entity);
-            this.mod = MetaAttribute.require(entity).modifiers;
-        }
-    }
 }

@@ -27,7 +27,7 @@ public class ItemCommons {
 
         if (unit.crabsData.action != null) {
             final ActionHeader a = ActionRegistry.getHeader(unit.crabsData.action);
-            lines.add("\u00A7r" + L10n.fmt("more.gen.crabs.action", a.title));
+            lines.add("\u00A7r" + a.getTitle());
         }
 
         if (unit.specialAttackCost > 0 && unit.maxUsages > 0)

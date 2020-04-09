@@ -54,7 +54,7 @@ public enum CombatOverlay {
             lines.add("  Prev actions: " + String.join(", ", com.prevActions));
             lines.add("  Stage: " + com.phase);
             lines.add("  Target: " + com.target);
-            lines.add("  Action: " + (com.action != null ? com.action.title : "null"));
+            lines.add("  Action: " + (com.action != null ? com.action.getTitle() : "null"));
         });
 
         GL11.glPushMatrix();

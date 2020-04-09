@@ -44,7 +44,7 @@ public class RollCommand extends ExtCommand {
         final String name = sender instanceof EntityPlayer
                 ? ((EntityPlayer) sender).getDisplayName()
                 : sender.getCommandSenderName();
-        final String text = String.format("[DICE] \u00a7r%s\u00a76 d%d = %d", name, sides, roll);
+        final String text = String.format("\u00a7r%s\u00a76 d%d = %d", name, sides, roll);
 
         if (sender instanceof EntityPlayer) {
             final EntityPlayer player = (EntityPlayer) sender;

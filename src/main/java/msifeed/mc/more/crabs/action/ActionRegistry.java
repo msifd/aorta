@@ -1,6 +1,5 @@
 package msifeed.mc.more.crabs.action;
 
-import com.google.gson.reflect.TypeToken;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
@@ -14,10 +13,9 @@ import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public enum ActionRegistry {
     INSTANCE;
@@ -27,15 +25,17 @@ public enum ActionRegistry {
     private static final Action EQUIP_ACTION = new Action("equip", ".equip", ActionTag.equip);
     private static final Action RELOAD_ACTION = new Action("reload", ".reload", ActionTag.reload);
 
-    private static final Logger logger = LogManager.getLogger(ActionRegistry.class);
+    private static final Logger logger = LogManager.getLogger(ActionRegistry.class.getSimpleName());
 
-    private TypeToken<ArrayList<Action>> actionsFileType = new TypeToken<ArrayList<Action>>() {};
-    private JsonConfig<ArrayList<Action>> config = ConfigBuilder.of(actionsFileType, "actions.json")
+    private JsonConfig<ActionsConfigContent> actionsConfig = ConfigBuilder.of(ActionsConfigContent.class, "actions.json")
             .addAdapter(Action.class, new ActionJsonAdapter())
             .create();
 
     private HashMap<String, Action> actions = new HashMap<>();
-    private HashMap<String, ActionHeader> actionHeaders = new HashMap<>(); /// Client-side headers
+    private ArrayList<Combo> combos = new ArrayList<>();
+
+    /// Client-side headers
+    private HashMap<String, ActionHeader> actionHeaders = new HashMap<>();
 
     public void init() {
         MinecraftForge.EVENT_BUS.register(this);
@@ -49,6 +49,10 @@ public enum ActionRegistry {
 
     public static Action getFullAction(String id) {
         return INSTANCE.actions.get(id);
+    }
+
+    public static ArrayList<Combo> getCombos() {
+        return INSTANCE.combos;
     }
 
     public static Collection<ActionHeader> getActionHeaders() {
@@ -69,23 +73,37 @@ public enum ActionRegistry {
 
     @SubscribeEvent
     public void onConfigUpdate(ConfigEvent.AfterUpdate event) {
-        final ArrayList<Action> newActions = config.get();
+        final ActionsConfigContent newConfig = actionsConfig.get();
 
-        boolean applyActions = true;
-        for (Action a : newActions)
-            applyActions &= verifyAction(a, newActions);
+        final Map<String, Long> idCounts = Stream.concat(
+                newConfig.actions.stream().map(ActionHeader::getId),
+                newConfig.combos.stream().map(combo -> combo.action.getId())
+        ).collect(Collectors.groupingBy(e -> e, Collectors.counting()));
 
-        if (applyActions)
-            setActions(newActions);
-        else
+        boolean idsOk = true;
+        for (Map.Entry<String, Long> e : idCounts.entrySet()) {
+            if (e.getValue() == 1) continue;
+            idsOk = false;
+            logger.error("Action id '{}' is conflicting!", e.getKey());
+        }
+
+        final boolean combosOk = newConfig.combos.stream().allMatch(c -> verifyCombo(c, idCounts.keySet()));
+
+        if (idsOk && combosOk) {
+            applyConfigActions();
+        } else {
             logger.error("Actions are not updated due to errors.");
+        }
     }
 
-    private void setActions(Collection<Action> newActions) {
+    private void applyConfigActions() {
+        final ActionsConfigContent newConfig = actionsConfig.get();
+
         this.actions.clear();
+        this.combos.clear();
         this.actionHeaders.clear();
 
-        for (Action a : newActions)
+        for (Action a : newConfig.actions)
             this.actions.put(a.id, a);
 
         this.actions.put(NONE_ACTION.id, NONE_ACTION);
@@ -96,20 +114,23 @@ public enum ActionRegistry {
         for (Map.Entry<String, Action> e : this.actions.entrySet())
             this.actionHeaders.put(e.getKey(), e.getValue());
 
+        this.combos.addAll(newConfig.combos);
+
         ActionRpc.broadcastToAll(actions.values());
     }
 
-    private static boolean verifyAction(Action action, ArrayList<Action> list) {
-        if (list.stream().noneMatch(a -> a.id.equals(action.id))) {
-            logger.error("Action {} has id conflict!", action.id);
+    private static boolean verifyCombo(Combo combo, Set<String> actions) {
+        final Set<String> casesIds = combo.cases.stream().flatMap(List::stream).collect(Collectors.toSet());
+        if (!actions.containsAll(casesIds)) {
+            logger.error("Combo '{}' has unknown case actions! ({})", combo.action.id, casesIds);
             return false;
         }
-        for (String s : action.combo) {
-            if (list.stream().noneMatch(a -> a.id.equals(s))) {
-                logger.error("Action {} has unknown combo id {}!", action.id, s);
-                return false;
-            }
-        }
+
         return true;
+    }
+
+    public static final class ActionsConfigContent {
+        public ArrayList<Action> actions = new ArrayList<>();
+        public ArrayList<Combo> combos = new ArrayList<>();
     }
 }

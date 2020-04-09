@@ -10,34 +10,34 @@ import java.util.Comparator;
 
 public class ActionContext implements Comparable<ActionContext> {
     public final Action action;
+    public final Role role;
 
     public ArrayList<DamageAmount> damageToDeal = new ArrayList<>();
     public ArrayList<DamageAmount> damageToReceive = new ArrayList<>();
     public ArrayList<Buff> buffsToReceive = new ArrayList<>();
 
     public int scorePlayerMod;
-    public int scoreEffects;
-    public int scoreScores;
+    public int scoreAction;
     public float scoreMultiplier;
     public Criticalness critical;
     public boolean successful;
 
-    public ActionContext(Action action) {
+    public ActionContext(Action action, Role role) {
         this.action = action;
+        this.role = role;
         resetScore();
     }
 
     public void resetScore() {
         scorePlayerMod = 0;
-        scoreEffects = 0;
-        scoreScores = 0;
+        scoreAction = 0;
         scoreMultiplier = 1;
         critical = Criticalness.NONE;
         successful = true;
     }
 
     public int scoreRoll() {
-        return MathHelper.floor_float((scoreScores + scoreEffects) * scoreMultiplier);
+        return MathHelper.floor_float(scoreAction * scoreMultiplier);
     }
 
     public int score() {
@@ -46,6 +46,7 @@ public class ActionContext implements Comparable<ActionContext> {
 
     @Override
     public int compareTo(ActionContext o) {
+        if (this == o) return 0;
         return Comparator
                 .comparing(ActionContext::isSuccessful)
                 .thenComparing(ActionContext::getCritical)
@@ -59,5 +60,9 @@ public class ActionContext implements Comparable<ActionContext> {
 
     private boolean isSuccessful() {
         return successful;
+    }
+
+    public enum Role {
+        OFFENCE, DEFENCE;
     }
 }

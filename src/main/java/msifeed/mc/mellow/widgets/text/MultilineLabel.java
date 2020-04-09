@@ -8,11 +8,14 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class MultilineLabel extends TextWall {
+    public int brightColor = Mellow.getColor("text_bright");
+    public int darkColor = Mellow.getColor("text_dark");
+
     protected List<String> lines = Collections.emptyList();
     protected int lineSkip = 0;
     protected int lineLimit = 10;
 
-    protected int color = Mellow.getColor("text_dark");
+    protected int color = darkColor;
 
     public MultilineLabel() {
         setZLevel(1);

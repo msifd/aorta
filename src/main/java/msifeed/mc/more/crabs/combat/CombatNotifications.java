@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public final class CombatNotifications {
     public static void actionChanged(EntityPlayer sender, EntityLivingBase target, ActionHeader action) {
-        notify(sender, "§f выбрано действие " + action.title);
+        notify(sender, "§f выбрано действие " + action.getTitle());
     }
 
     static void notifyKnockedOut(EntityLivingBase entity) {
@@ -24,14 +24,13 @@ public final class CombatNotifications {
         notify(entity, "is killed!");
     }
 
-    static void moveResult(CombatManager.FighterInfo winner, CombatManager.FighterInfo looser) {
-        // Chad - LUCK Punch [50] (+5 STR+99) > Virgin - Roll [10]
+    static void moveResult(FighterInfo winner, FighterInfo looser) {
+        // Chad - LUCK Punch + Stun [50] (+5 STR+99) > Virgin - Roll [10]
         final String text = formatAction(winner) + " > " + formatAction(looser);
-
         notify(winner.entity, text);
     }
 
-    static void soloMoveResult(CombatManager.FighterInfo info) {
+    static void soloMoveResult(FighterInfo info) {
         final String name = info.entity instanceof EntityPlayer
                 ? ((EntityPlayer) info.entity).getDisplayName() : info.entity.getCommandSenderName();
 
@@ -41,13 +40,13 @@ public final class CombatNotifications {
         notify(info.entity, text);
     }
 
-    private static String formatAction(CombatManager.FighterInfo info) {
+    private static String formatAction(FighterInfo info) {
         final String name = info.entity instanceof EntityPlayer
                 ? ((EntityPlayer) info.entity).getDisplayName() : info.entity.getCommandSenderName();
         return name + " - " + formatScores(info);
     }
 
-    private static String formatScores(CombatManager.FighterInfo info) {
+    private static String formatScores(FighterInfo info) {
         final ActionContext act = info.act;
         final StringBuilder sb = new StringBuilder();
 
@@ -56,7 +55,11 @@ public final class CombatNotifications {
         else if (act.critical == Criticalness.LUCK)
             sb.append("LUCK ");
 
-        sb.append(act.action.title);
+        sb.append(act.action.getTitle());
+        if (info.comboAction != null) {
+            sb.append(" + ");
+            sb.append(info.comboAction.getTitle());
+        }
 
         if (act.score() > 0) {
             if (act.scoreRoll() > 0) {

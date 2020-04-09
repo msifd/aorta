@@ -3,16 +3,19 @@ package msifeed.mc.more.client.combat;
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
-import msifeed.mc.mellow.widgets.button.ButtonLabel;
+import msifeed.mc.mellow.widgets.button.ButtonMultiLabel;
 import msifeed.mc.mellow.widgets.scroll.ScrollArea;
 import msifeed.mc.more.crabs.action.ActionHeader;
 import msifeed.mc.more.crabs.action.ActionRegistry;
 import msifeed.mc.more.crabs.action.ActionTag;
+import msifeed.mc.more.crabs.action.Combo;
 import msifeed.mc.more.crabs.combat.CombatContext;
 import msifeed.mc.more.crabs.combat.CombatRpc;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+
+import java.util.HashMap;
 
 public class ActionsView extends Widget {
     private final EntityLivingBase entity;
@@ -33,7 +36,7 @@ public class ActionsView extends Widget {
                 return;
 
             final ScrollArea list = new ScrollArea();
-            list.setSizeHint(100, 150);
+            list.setSizeHint(120, 150);
             addChild(list);
 
             final boolean defence = ctx.phase == CombatContext.Phase.DEFEND;
@@ -51,13 +54,24 @@ public class ActionsView extends Widget {
                 incomingAttackType = null;
             }
 
+            final HashMap<String, String> availableCombos = new HashMap<>();
+            for (ActionHeader header : ActionRegistry.getActionHeaders()) {
+                final Combo.ComboLookup combo = Combo.find(ActionRegistry.getCombos(), ctx.prevActions, header.id);
+                if (combo != null)
+                    availableCombos.put(header.id, combo.c.action.getTitle());
+            }
+
             ActionRegistry.getActionHeaders().stream()
                     .filter(action -> defence
-                            ? ctx.acceptsDefendAction(incomingAttackType, action)
-                            : ctx.acceptsOffendAction(action))
+                            ? action.isValidDefencive(incomingAttackType)
+                            : action.isOffencive())
                     .sorted(ActionHeader::compareTo)
                     .forEach(action -> {
-                        final ButtonLabel btn = new ButtonLabel(action.getTitle());
+                        final ButtonMultiLabel btn = new ButtonMultiLabel(action.getTitle());
+                        final String comboTitle = availableCombos.get(action.getId());
+                        if (comboTitle != null)
+                            btn.addLabel(" + " + comboTitle);
+
                         btn.setClickCallback(() -> doAction(action));
                         list.addChild(btn);
                     });

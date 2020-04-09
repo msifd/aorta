@@ -2,7 +2,6 @@ package msifeed.mc.more.crabs.combat;
 
 import msifeed.mc.more.crabs.action.ActionHeader;
 import msifeed.mc.more.crabs.action.ActionRegistry;
-import msifeed.mc.more.crabs.action.ActionTag;
 import msifeed.mc.more.crabs.action.effects.Buff;
 import msifeed.mc.more.crabs.action.effects.Effect;
 import msifeed.mc.more.crabs.action.parser.EffectStringParser;
@@ -14,6 +13,8 @@ import net.minecraft.nbt.NBTTagString;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Stack;
 
 public class CombatContext {
     public int puppet;
@@ -23,28 +24,19 @@ public class CombatContext {
 
     public ItemStack weapon = null;
     public int armor = 0;
-    public HashSet<String> prevActions = new HashSet<>();
+    public Stack<String> prevActions = new Stack<>();
 
     public Phase phase = Phase.NONE;
     public int target = 0;
     public ActionHeader action = null;
 
-    public boolean acceptsOffendAction(ActionHeader action) {
-        if (!prevActions.containsAll(action.combo))
-            return false;
-        return !action.hasTag(ActionTag.defencive);
-    }
-
-    public boolean acceptsDefendAction(ActionTag attackType, ActionHeader action) {
-        if (!prevActions.containsAll(action.combo))
-            return false;
-        if (attackType != action.getType())
-            return false;
-        return action.hasTag(ActionTag.none) || action.hasTag(ActionTag.defencive);
-    }
-
     public void removeEndedEffects() {
         buffs.removeIf(Buff::ended);
+    }
+
+    public void addPrevAction(String id) {
+        prevActions.remove(id);
+        prevActions.push(id);
     }
 
     public NBTTagCompound toNBT() {

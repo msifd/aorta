@@ -1,7 +1,6 @@
 package msifeed.mc.more.crabs.utils;
 
 import msifeed.mc.Bootstrap;
-import msifeed.mc.more.crabs.action.Action;
 import msifeed.mc.more.crabs.combat.ActionContext;
 import msifeed.mc.sys.attributes.EntityLivingAttribute;
 import msifeed.mc.sys.attributes.MissingRequiredAttributeException;
@@ -21,12 +20,6 @@ public final class ActionAttribute extends EntityLivingAttribute<ActionContext> 
 
     public static ActionContext require(Entity e) {
         return INSTANCE.getValue(e).orElseThrow(() -> new MissingRequiredAttributeException(INSTANCE, e));
-    }
-
-    public static ActionContext create(Entity e, Action action) {
-        final ActionContext act = new ActionContext(action);
-        INSTANCE.set(e, act);
-        return act;
     }
 
     public static void remove(Entity e) {

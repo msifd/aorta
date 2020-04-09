@@ -1,6 +1,8 @@
 package msifeed.mc.more.crabs.action.effects;
 
 import msifeed.mc.more.crabs.combat.ActionContext;
+import msifeed.mc.more.crabs.combat.FighterInfo;
+import org.apache.commons.lang3.EnumUtils;
 
 import java.util.ArrayList;
 
@@ -30,7 +32,7 @@ public final class Buff extends DynamicEffect {
     }
 
     @Override
-    public void apply(ActionContext target, ActionContext other) {
+    public void apply(FighterInfo target, FighterInfo other) {
         if (other == null) {
             // Apply from buffs
             if (active())
@@ -38,7 +40,7 @@ public final class Buff extends DynamicEffect {
             step();
         } else {
             // Apply from action effects
-            target.buffsToReceive.add(this);
+            target.act.buffsToReceive.add(this);
         }
     }
 
@@ -105,5 +107,45 @@ public final class Buff extends DynamicEffect {
 
     private enum RepeatMode {
         extend, replace, stack
+    }
+
+    public static class OnRole extends DynamicEffect {
+        private ActionContext.Role role;
+        private Effect effect;
+
+        @Override
+        public String name() {
+            return "role";
+        }
+
+        @Override
+        public boolean shouldApply(Stage stage, ActionContext target, ActionContext other) {
+            return stage == Stage.ACTION
+                    && role == target.role
+                    && effect.shouldApply(stage, target, other);
+        }
+
+        @Override
+        public void apply(FighterInfo target, FighterInfo other) {
+            this.effect.apply(target, other);
+        }
+
+        @Override
+        public boolean equals(Effect other) {
+            return other instanceof OnRole && ((OnRole) other).effect.equals(this.effect);
+        }
+
+        @Override
+        public EffectArgs[] args() {
+            return new EffectArgs[]{STRING, EFFECT};
+        }
+
+        @Override
+        public DynamicEffect produce(Object[] args) {
+            final OnRole e = new OnRole();
+            e.role = EnumUtils.getEnum(ActionContext.Role.class, (String) args[0]);
+            e.effect = (Effect) args[1];
+            return e;
+        }
     }
 }
