@@ -47,8 +47,7 @@ class ModsView extends Widget {
         pair.setLayout(ListLayout.HORIZONTAL);
         addChild(pair);
 
-        final String abilityName = L10n.tr("more.ability.short." + a.name().toLowerCase());
-        final Label label = new Label(abilityName + ":");
+        final Label label = new Label(a.trShort() + ":");
         label.getSizeHint().x = 22;
         label.getPos().y = 1;
         pair.addChild(label);

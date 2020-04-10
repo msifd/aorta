@@ -39,7 +39,7 @@ public enum CombatManager {
                 return false;
 
             if (actionChanged)
-                updateAction(self, action, ActionContext.Role.OFFENCE);
+                updateAction(self, action, ActionContext.Role.offence);
             else if (action.requiresNoRoll())
                 finishSoloMove(new FighterInfo(self));
 
@@ -56,7 +56,7 @@ public enum CombatManager {
                 return false;
 
             if (actionChanged)
-                updateAction(self, action, ActionContext.Role.DEFENCE);
+                updateAction(self, action, ActionContext.Role.defence);
             else
                 finishMove(new FighterInfo((EntityLivingBase) offender), new FighterInfo(self));
 

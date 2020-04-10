@@ -5,6 +5,7 @@ import msifeed.mc.more.crabs.combat.ActionContext;
 import msifeed.mc.more.crabs.combat.FighterInfo;
 import msifeed.mc.more.crabs.rolls.Dices;
 import msifeed.mc.more.crabs.rolls.Rolls;
+import net.minecraft.util.MathHelper;
 
 import static msifeed.mc.more.crabs.action.effects.DynamicEffect.EffectArgs.*;
 
@@ -29,6 +30,11 @@ public final class ScoreEffects {
         public boolean equals(Effect other) {
             return other instanceof Roll3d7m3;
         }
+
+        @Override
+        public String toString() {
+            return name();
+        }
     }
 
     public static class ScoreAbility extends DynamicEffect {
@@ -48,7 +54,7 @@ public final class ScoreEffects {
         @Override
         public void apply(FighterInfo target, FighterInfo other) {
             final Rolls.Result r = Rolls.rollAbility(target.chr, target.mod, ability);
-            target.act.scoreAction += r.result;
+            target.act.scoreAction += MathHelper.floor_float(r.result * multiplier);
         }
 
         @Override

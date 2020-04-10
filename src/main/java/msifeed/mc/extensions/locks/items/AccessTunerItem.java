@@ -1,12 +1,13 @@
 package msifeed.mc.extensions.locks.items;
 
 import msifeed.mc.Bootstrap;
+import msifeed.mc.commons.logs.ExternalLogs;
 import msifeed.mc.extensions.locks.LockObject;
 import msifeed.mc.extensions.locks.LockType;
 import msifeed.mc.more.crabs.character.Ability;
 import msifeed.mc.more.crabs.character.Character;
-import msifeed.mc.more.crabs.meta.MetaInfo;
 import msifeed.mc.more.crabs.rolls.Criticalness;
+import msifeed.mc.more.crabs.rolls.Modifiers;
 import msifeed.mc.more.crabs.rolls.Rolls;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.more.crabs.utils.MetaAttribute;
@@ -31,8 +32,10 @@ public class AccessTunerItem extends LockpickItem {
     @Override
     protected boolean rollPick(LockObject lock, ItemStack pick, EntityPlayer player) {
         final Character c = CharacterAttribute.require(player);
-        final MetaInfo m = MetaAttribute.require(player);
-        final Rolls.Result result = Rolls.rollAbility(c, m.modifiers, Ability.INT);
+        final Modifiers m = MetaAttribute.require(player).modifiers;
+        final Rolls.Result result = Rolls.rollAbility(c, m, Ability.INT);
+        final String fmtResult = result.format(m.roll, m.toAbility(Ability.INT), Ability.INT);
+        ExternalLogs.log(player, "roll", String.format("pick digital lock (diff %d) = %s", lock.getDifficulty(), fmtResult));
 
         if (result.beats(lock.getDifficulty()))
             return true;

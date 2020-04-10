@@ -16,6 +16,7 @@ import msifeed.mc.sys.utils.L10n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -95,6 +96,7 @@ public class ProgressView extends Widget {
         if (!context.prevActions.isEmpty()) {
             final String actions = context.prevActions.stream()
                     .map(ActionRegistry::getHeader)
+                    .filter(Objects::nonNull)
                     .map(ActionHeader::getTitle)
                     .collect(Collectors.joining(", "));
             addPane("more.gui.combat.tips.prev_actions", actions);

@@ -2,7 +2,6 @@ package msifeed.mc.more.crabs.action.effects;
 
 import msifeed.mc.more.crabs.combat.ActionContext;
 import msifeed.mc.more.crabs.combat.FighterInfo;
-import org.apache.commons.lang3.EnumUtils;
 
 import java.util.ArrayList;
 
@@ -136,6 +135,11 @@ public final class Buff extends DynamicEffect {
         }
 
         @Override
+        public String toString() {
+            return name() + ':' + role.toString() + ':' + effect.toString();
+        }
+
+        @Override
         public EffectArgs[] args() {
             return new EffectArgs[]{STRING, EFFECT};
         }
@@ -143,7 +147,7 @@ public final class Buff extends DynamicEffect {
         @Override
         public DynamicEffect produce(Object[] args) {
             final OnRole e = new OnRole();
-            e.role = EnumUtils.getEnum(ActionContext.Role.class, (String) args[0]);
+            e.role = ActionContext.Role.valueOf(((String) args[0]).toLowerCase());
             e.effect = (Effect) args[1];
             return e;
         }

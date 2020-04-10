@@ -2,6 +2,7 @@ package msifeed.mc.more.crabs.rolls;
 
 import msifeed.mc.more.crabs.character.Ability;
 import msifeed.mc.more.crabs.character.Character;
+import msifeed.mc.more.crabs.combat.CombatNotifications;
 
 public final class Rolls {
     public static Result rollAbility(Character c, Modifiers m, Ability a) {
@@ -33,6 +34,34 @@ public final class Rolls {
                 default:
                     return result >= threshold;
             }
+        }
+
+        public String format(int rollMod, int abilityMod, Ability a) {
+            final StringBuilder sb = new StringBuilder();
+
+            if (crit == Criticalness.FAIL)
+                sb.append("FAIL ");
+            else if (crit == Criticalness.LUCK)
+                sb.append("LUCK ");
+
+            sb.append("[");
+            sb.append(result);
+            sb.append(']');
+
+            if (rollMod != 0 || abilityMod != 0) {
+                sb.append(" (");
+                if (rollMod != 0)
+                    sb.append(CombatNotifications.explicitSignInt(rollMod));
+                if (abilityMod != 0) {
+                    if (rollMod != 0)
+                        sb.append(' ');
+                    sb.append(a.trShort());
+                    sb.append(CombatNotifications.explicitSignInt(abilityMod));
+                }
+                sb.append(')');
+            }
+
+            return sb.toString();
         }
     }
 }

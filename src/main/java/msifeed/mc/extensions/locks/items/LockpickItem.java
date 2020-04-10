@@ -8,8 +8,8 @@ import msifeed.mc.extensions.locks.Locks;
 import msifeed.mc.more.More;
 import msifeed.mc.more.crabs.character.Ability;
 import msifeed.mc.more.crabs.character.Character;
-import msifeed.mc.more.crabs.meta.MetaInfo;
 import msifeed.mc.more.crabs.rolls.Criticalness;
+import msifeed.mc.more.crabs.rolls.Modifiers;
 import msifeed.mc.more.crabs.rolls.Rolls;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.more.crabs.utils.MetaAttribute;
@@ -38,8 +38,10 @@ public class LockpickItem extends Item {
             return false;
 
         final Character c = CharacterAttribute.require(player);
-        final MetaInfo m = MetaAttribute.require(player);
-        final Rolls.Result result = Rolls.rollAbility(c, m.modifiers, Ability.REF);
+        final Modifiers m = MetaAttribute.require(player).modifiers;
+        final Rolls.Result result = Rolls.rollAbility(c, m, Ability.REF);
+        final String fmtResult = result.format(m.roll, m.toAbility(Ability.REF), Ability.REF);
+        ExternalLogs.log(player, "roll", String.format("pick mechanical lock (diff %d) = %s", lock.getDifficulty(), fmtResult));
 
         if (result.beats(lock.getDifficulty()))
             return true;
@@ -54,6 +56,7 @@ public class LockpickItem extends Item {
             pick.stackSize--;
             makeBreakSound(lock);
             player.addChatMessage(new ChatComponentTranslation("more.lock.pick_break"));
+            ExternalLogs.log(player, "log", "pick broken, left " + pick.stackSize);
         }
     }
 

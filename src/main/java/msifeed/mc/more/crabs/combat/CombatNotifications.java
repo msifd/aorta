@@ -1,11 +1,13 @@
 package msifeed.mc.more.crabs.combat;
 
+import msifeed.mc.commons.logs.ExternalLogs;
 import msifeed.mc.extensions.chat.ChatHandler;
 import msifeed.mc.extensions.chat.ChatMessage;
 import msifeed.mc.extensions.chat.Language;
 import msifeed.mc.extensions.chat.composer.SpeechType;
 import msifeed.mc.more.crabs.action.ActionHeader;
 import msifeed.mc.more.crabs.rolls.Criticalness;
+import msifeed.mc.sys.utils.L10n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -17,7 +19,7 @@ public final class CombatNotifications {
     }
 
     static void notifyKnockedOut(EntityLivingBase entity) {
-        notify(entity, "is knocked out!");
+        notify(entity, L10n.fmt("more.crabs.knocked_out", entity));
     }
 
     static void notifyKilled(EntityLivingBase entity) {
@@ -41,9 +43,7 @@ public final class CombatNotifications {
     }
 
     private static String formatAction(FighterInfo info) {
-        final String name = info.entity instanceof EntityPlayer
-                ? ((EntityPlayer) info.entity).getDisplayName() : info.entity.getCommandSenderName();
-        return name + " - " + formatScores(info);
+        return getName(info.entity) + " - " + formatScores(info);
     }
 
     private static String formatScores(FighterInfo info) {
@@ -77,7 +77,7 @@ public final class CombatNotifications {
                         sb.append(' ');
                     sb.append(info.mod.abilities.entrySet().stream()
                             .filter(e -> e.getValue() != 0)
-                            .map(e -> e.getKey().toString() + explicitSignInt(e.getValue()))
+                            .map(e -> e.getKey().trShort() + explicitSignInt(e.getValue()))
                             .collect(Collectors.joining(" ")));
                 }
                 sb.append(')');
@@ -87,13 +87,19 @@ public final class CombatNotifications {
         return sb.toString();
     }
 
-    private static String explicitSignInt(int i) {
+    public static String explicitSignInt(int i) {
         return (i >= 0 ? "+": "") + i;
+    }
+
+    private static String getName(EntityLivingBase entity) {
+        return entity instanceof EntityPlayer
+                ? ((EntityPlayer) entity).getDisplayName()
+                : entity.getCommandSenderName();
     }
 
     static void notify(EntityLivingBase entity, String text) {
         final ChatMessage message = new ChatMessage();
-        message.type = SpeechType.LOG;
+        message.type = SpeechType.COMBAT;
         message.language = Language.VANILLA;
         message.radius = 15;
         message.senderId = entity.getEntityId();
@@ -101,5 +107,6 @@ public final class CombatNotifications {
         message.text = text;
 
         ChatHandler.sendSystemChatMessage(entity, message);
+        ExternalLogs.logEntity(entity, "combat", text);
     }
 }

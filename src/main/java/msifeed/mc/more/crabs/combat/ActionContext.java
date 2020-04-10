@@ -63,6 +63,6 @@ public class ActionContext implements Comparable<ActionContext> {
     }
 
     public enum Role {
-        OFFENCE, DEFENCE;
+        offence, defence
     }
 }

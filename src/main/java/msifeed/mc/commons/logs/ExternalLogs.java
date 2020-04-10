@@ -4,6 +4,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.common.MinecraftForge;
 
 public class ExternalLogs {
@@ -20,6 +21,11 @@ public class ExternalLogs {
     public static void log(ICommandSender sender, String type, String message) {
         if (FMLCommonHandler.instance().getSide().isServer())
             dbHandler.logCommand(sender, type, message);
+    }
+
+    public static void logEntity(EntityLivingBase entity, String type, String message) {
+        if (FMLCommonHandler.instance().getSide().isServer())
+            dbHandler.logCommand(entity, type, message);
     }
 
     @SubscribeEvent

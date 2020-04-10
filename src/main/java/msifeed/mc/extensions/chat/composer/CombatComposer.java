@@ -22,9 +22,9 @@ public class CombatComposer implements ChatComposer {
 
     @Override
     public IChatComponent format(EntityPlayer self, ChatMessage message) {
-        final String prefix = String.format("[LOG] %s: %s", message.speaker, message.text);
-        final ChatComponentText compPrefix = new ChatComponentText(prefix);
-        compPrefix.getChatStyle().setColor(EnumChatFormatting.GRAY);
-        return compPrefix;
+        final String prefix = String.format("[COMBAT] %s", message.text);
+        final ChatComponentText comp = new ChatComponentText(prefix);
+        comp.getChatStyle().setColor(EnumChatFormatting.YELLOW);
+        return comp;
     }
 }

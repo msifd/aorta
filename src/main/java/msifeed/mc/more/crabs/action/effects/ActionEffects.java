@@ -26,8 +26,14 @@ public final class ActionEffects {
                 target.act.damageToReceive.addAll(other.act.damageToDeal);
         }
 
+        @Override
         public boolean equals(Effect other) {
             return other instanceof Damage;
+        }
+
+        @Override
+        public String toString() {
+            return name();
         }
     }
 
@@ -47,8 +53,14 @@ public final class ActionEffects {
             // TODO: impl skip
         }
 
+        @Override
         public boolean equals(Effect other) {
             return other instanceof SkipMove;
+        }
+
+        @Override
+        public String toString() {
+            return name();
         }
     }
 

@@ -9,8 +9,11 @@ import msifeed.mc.sys.config.ConfigEvent;
 import msifeed.mc.sys.config.JsonConfig;
 import msifeed.mc.sys.config.adapters.ZoneIdAdapter;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.MathHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -59,6 +62,10 @@ public class DBHandler {
         threadPool.submit(() -> asyncLog(sender, cmd, text));
     }
 
+    void logCommand(EntityLivingBase entity, String cmd, String text) {
+        threadPool.submit(() -> asyncLog(entity, cmd, text));
+    }
+
     private void asyncLog(ICommandSender sender, String cmd, String text) {
         try (Connection conn = dataSource.getConnection()) {
             if (conn == null) {
@@ -85,6 +92,37 @@ public class DBHandler {
             s.setInt(5, coord.posX);
             s.setInt(6, coord.posY);
             s.setInt(7, coord.posZ);
+            s.setString(8, cmd);
+            s.setString(9, text);
+            s.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error("Failed to send log to the database!", e);
+        }
+    }
+
+    private void asyncLog(EntityLivingBase entity, String cmd, String text) {
+        try (Connection conn = dataSource.getConnection()) {
+            if (conn == null) {
+                LOGGER.error("Can't get connection to DB!");
+                return;
+            }
+
+            final ConfigSection cfg = config.get();
+            final String query = "INSERT INTO `" + cfg.chat_table +
+                    "` (`chara`,`uuid`,`time`,`world`,`X`,`Y`,`Z`,`command`,`text`) " +
+                    "VALUES (?,?,?,?,?,?,?,?,?);";
+
+            final String uuid = entity instanceof EntityPlayer ? entity.getUniqueID().toString() : "";
+            final long timeSecs = LocalDateTime.now(cfg.timezone).toEpochSecond(ZoneOffset.UTC);
+
+            final PreparedStatement s = conn.prepareStatement(query);
+            s.setString(1, entity.getCommandSenderName());
+            s.setString(2, uuid);
+            s.setLong(3, timeSecs * 1000);
+            s.setString(4, entity.worldObj.getWorldInfo().getWorldName());
+            s.setInt(5, MathHelper.floor_double(entity.posX));
+            s.setInt(6, MathHelper.floor_double(entity.posY));
+            s.setInt(7, MathHelper.floor_double(entity.posZ));
             s.setString(8, cmd);
             s.setString(9, text);
             s.executeUpdate();

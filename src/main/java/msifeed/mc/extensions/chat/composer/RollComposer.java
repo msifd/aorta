@@ -15,14 +15,14 @@ public class RollComposer implements ChatComposer {
         message.type = SpeechType.ROLL;
         message.language = Language.VANILLA;
         message.radius = More.DEFINES.get().chat.logRadius;
-        message.speaker = player.getDisplayName();
+        message.speaker = "";
         message.text = text;
         return message;
     }
 
     @Override
     public IChatComponent format(EntityPlayer self, ChatMessage message) {
-        final String prefix = String.format("[ROLL] %s: %s", message.speaker, message.text);
+        final String prefix = String.format("[ROLL] %s", message.text);
         final ChatComponentText compPrefix = new ChatComponentText(prefix);
         compPrefix.getChatStyle().setColor(EnumChatFormatting.GOLD);
         return compPrefix;

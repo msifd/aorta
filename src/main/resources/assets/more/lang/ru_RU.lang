@@ -169,6 +169,7 @@ more.diff.status.illness.6=пациент в великолепном состо
 more.diff.status.illness.7=пациент настолько здоров, что здоровее, кажется, уже некуда
 
 more.crabs.action_changed=Выбрано действие: %s
+more.crabs.knocked_out=%s теперь без сознания!
 
 more.lock.locked=§7Закрыто
 more.lock.unlocked=§7Открыто
