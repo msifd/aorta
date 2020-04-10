@@ -72,6 +72,7 @@ public class ActionsView extends Widget {
                         if (comboTitle != null)
                             btn.addLabel(" + " + comboTitle);
 
+                        btn.setDisabled(ctx.phase != CombatContext.Phase.IDLE && ctx.phase != CombatContext.Phase.DEFEND);
                         btn.setClickCallback(() -> doAction(action));
                         list.addChild(btn);
                     });

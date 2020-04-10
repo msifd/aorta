@@ -44,9 +44,8 @@ public class ActionHeader {
     }
 
     public boolean isValidDefencive(ActionTag offenceType) {
-        if (offenceType != getType())
-            return false;
-        return hasAnyTag(ActionTag.none, ActionTag.defencive);
+        return hasAnyTag(ActionTag.none)
+                || offenceType == getType() && hasAnyTag(ActionTag.defencive);
     }
 
     public int compareTo(ActionHeader o) {
