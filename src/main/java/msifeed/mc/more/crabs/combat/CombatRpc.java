@@ -27,8 +27,8 @@ public enum CombatRpc {
     private final static String leave = Bootstrap.MODID + ":combat.leave";
     private final static String reset = Bootstrap.MODID + ":combat.reset";
 
-    private final static String recruitEntity = Bootstrap.MODID + ":combat.recruit";
-    private final static String dismissEntity = Bootstrap.MODID + ":combat.dismiss";
+    private final static String addCombat = Bootstrap.MODID + ":combat.add";
+    private final static String removeCombat = Bootstrap.MODID + ":combat.remove";
 
     private final static String setPuppet = Bootstrap.MODID + ":combat.set.puppet";
     private final static String setWeapon = Bootstrap.MODID + ":combat.set.weapon";
@@ -152,16 +152,16 @@ public enum CombatRpc {
 
     // // // //
 
-    public static void recruitEntity(int entityId) {
-        Rpc.sendToServer(recruitEntity, entityId);
+    public static void addCombatToEntity(int entityId) {
+        Rpc.sendToServer(addCombat, entityId);
     }
 
-    public static void dismissEntity(int entityId) {
-        Rpc.sendToServer(dismissEntity, entityId);
+    public static void removeCombatFromEntity(int entityId) {
+        Rpc.sendToServer(removeCombat, entityId);
     }
 
-    @RpcMethod(recruitEntity)
-    public void onRecruitEntity(MessageContext ctx, int entityId) {
+    @RpcMethod(addCombat)
+    public void onAddCombatToEntity(MessageContext ctx, int entityId) {
         final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
         final Entity targetEntity = sender.worldObj.getEntityByID(entityId);
 
@@ -173,8 +173,8 @@ public enum CombatRpc {
         CombatAttribute.INSTANCE.set(targetEntity, new CombatContext());
     }
 
-    @RpcMethod(dismissEntity)
-    public void onDismissEntity(MessageContext ctx, int entityId) {
+    @RpcMethod(removeCombat)
+    public void onRemoveCombatFromEntity(MessageContext ctx, int entityId) {
         final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
         final Entity targetEntity = sender.worldObj.getEntityByID(entityId);
 

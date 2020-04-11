@@ -11,6 +11,7 @@ import msifeed.mc.more.crabs.combat.CombatContext;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
 import msifeed.mc.sys.attributes.AttributeUpdateEvent;
 import msifeed.mc.sys.utils.L10n;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -56,7 +57,10 @@ public class CombatScreen extends MellowGuiScreen {
 
     @SubscribeEvent
     public void onAttributeUpdate(AttributeUpdateEvent event) {
-        if (event.entity == entity && event.attr instanceof CombatAttribute) {
+        if (event.attr instanceof CombatAttribute) {
+            if (event.entity != entity && event.entity != Minecraft.getMinecraft().thePlayer)
+                return;
+
             final boolean hasLeft = CombatAttribute.get(event.entity)
                     .map(context -> context.phase == CombatContext.Phase.LEAVE)
                     .orElse(false);

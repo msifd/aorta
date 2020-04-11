@@ -89,8 +89,10 @@ more.gui.combat.rolls=Роллы
 
 more.gui.combat.join=Войти в бой
 more.gui.combat.leave=Покинуть бой
-more.gui.combat.recruit=Завербовать
-more.gui.combat.dismiss=Уволить
+more.gui.combat.control=Контролировать
+more.gui.combat.end_control=Прекратить контроль
+more.gui.combat.add_combat=Вкл. боевку
+more.gui.combat.rem_combat=Выкл. боевку
 more.gui.combat.end_attack=Завершить атаку
 more.gui.combat.reset=Сброс хода
 

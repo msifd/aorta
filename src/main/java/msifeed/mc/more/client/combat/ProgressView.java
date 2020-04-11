@@ -1,5 +1,6 @@
 package msifeed.mc.more.client.combat;
 
+import msifeed.mc.commons.traits.Trait;
 import msifeed.mc.mellow.layout.AnchorLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.render.RenderShapes;
@@ -11,8 +12,10 @@ import msifeed.mc.more.crabs.action.ActionRegistry;
 import msifeed.mc.more.crabs.action.effects.Buff;
 import msifeed.mc.more.crabs.combat.CombatContext;
 import msifeed.mc.more.crabs.combat.CombatRpc;
+import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
 import msifeed.mc.sys.utils.L10n;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -106,14 +109,24 @@ public class ProgressView extends Widget {
             addButton("more.gui.combat.leave", () -> CombatRpc.leave(entity.getEntityId()));
             addButton("more.gui.combat.reset", () -> CombatRpc.reset(entity.getEntityId()));
 
+            final EntityPlayer self = Minecraft.getMinecraft().thePlayer;
+            final boolean canControl = CharacterAttribute.hasAny(self, Trait.gm, Trait.__admin);
+            if (self.getEntityId() != entity.getEntityId() && canControl) {
+                final CombatContext selfCom = CombatAttribute.require(self);
+                if (selfCom.puppet == entity.getEntityId())
+                    addButton("more.gui.combat.end_control", () -> CombatRpc.setPuppet(0));
+                else
+                    addButton("more.gui.combat.control", () -> CombatRpc.setPuppet(entity.getEntityId()));
+            }
+
             if (!(entity instanceof EntityPlayer))
-                addButton("more.gui.combat.dismiss", () -> CombatRpc.dismissEntity(entity.getEntityId()));
+                addButton("more.gui.combat.rem_combat", () -> CombatRpc.removeCombatFromEntity(entity.getEntityId()));
         }
     }
 
     private void refillWithoutContext() {
         if (!(entity instanceof EntityPlayer))
-            addButton("more.gui.combat.recruit", () -> CombatRpc.recruitEntity(entity.getEntityId()));
+            addButton("more.gui.combat.add_combat", () -> CombatRpc.addCombatToEntity(entity.getEntityId()));
     }
 
     private void addButton(String trKey, Runnable callback) {

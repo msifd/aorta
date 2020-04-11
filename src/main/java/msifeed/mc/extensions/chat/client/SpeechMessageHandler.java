@@ -22,7 +22,7 @@ public class SpeechMessageHandler implements IMessageHandler<ChatMessage, IMessa
             final IChatComponent chatComponent = Composer.formatMessage(player, message);
             player.addChatMessage(chatComponent);
 
-            if (message.type == SpeechType.SPEECH) {
+            if (message.type == SpeechType.SPEECH || message.type == SpeechType.GM) {
                 final Entity speaker = player.worldObj.getEntityByID(message.senderId);
                 if (speaker != null) {
                     final float distance = player.getDistanceToEntity(speaker);
