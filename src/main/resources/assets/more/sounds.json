@@ -1,0 +1,8 @@
+{
+  "speechat.message": {
+    "category": "player",
+    "sounds": [
+      "speechat/message"
+    ]
+  }
+}

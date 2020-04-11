@@ -5,6 +5,7 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import msifeed.mc.Bootstrap;
 import msifeed.mc.extensions.chat.ChatMessage;
 import msifeed.mc.extensions.chat.composer.Composer;
 import msifeed.mc.extensions.chat.composer.SpeechType;
@@ -27,7 +28,7 @@ public class SpeechMessageHandler implements IMessageHandler<ChatMessage, IMessa
                 if (speaker != null) {
                     final float distance = player.getDistanceToEntity(speaker);
                     final float volume = (1 - distance / message.radius) + 0.4f;
-                    player.playSound("random.pop", volume, 0.7F);
+                    player.playSound(Bootstrap.MODID + ":speechat.message", volume, 0.7F);
                 }
             }
         }

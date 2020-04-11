@@ -2,14 +2,14 @@
 {
   "modid": "more",
   "name": "More",
-  "description": "Awesome Ortega Additions",
+  "description": "Morgana Extensions",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "https://github.com/msifd/more.",
+  "url": "https://github.com/msifd/aorta",
   "updateUrl": "",
   "authorList": ["msifeed"],
   "credits": "",
-  "logoFile": "more..png",
+  "logoFile": "aorta.png",
   "screenshots": [],
   "dependencies": []
 }
