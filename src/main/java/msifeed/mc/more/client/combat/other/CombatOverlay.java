@@ -49,8 +49,6 @@ public enum CombatOverlay {
             lines.add("  Puppet: " + com.puppet);
             lines.add("  Knocked out: " + com.knockedOut);
             lines.add("  Buffs: " + com.buffs.stream().map(Buff::toString).collect(Collectors.joining(", ")));
-            lines.add("  Weapon: " + com.weapon);
-            lines.add("  Armor: " + com.armor);
             lines.add("  Prev actions: " + String.join(", ", com.prevActions));
             lines.add("  Stage: " + com.phase);
             lines.add("  Target: " + com.target);

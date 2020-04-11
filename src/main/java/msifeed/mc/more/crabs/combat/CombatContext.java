@@ -5,8 +5,6 @@ import msifeed.mc.more.crabs.action.ActionRegistry;
 import msifeed.mc.more.crabs.action.effects.Buff;
 import msifeed.mc.more.crabs.action.effects.Effect;
 import msifeed.mc.more.crabs.action.parser.EffectStringParser;
-import msifeed.mc.sys.utils.NBTUtils;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -19,9 +17,6 @@ public class CombatContext {
 
     public boolean knockedOut;
     public ArrayList<Buff> buffs = new ArrayList<>();
-
-    public ItemStack weapon = null;
-    public int armor = 0;
     public Stack<String> prevActions = new Stack<>();
 
     public Phase phase = Phase.NONE;
@@ -48,10 +43,6 @@ public class CombatContext {
             buffsNbt.appendTag(new NBTTagString(b.toString()));
         c.setTag(Tags.buffs, buffsNbt);
 
-        if (weapon != null)
-            c.setTag(Tags.weapon, NBTUtils.itemStackToNBT(weapon));
-        c.setInteger(Tags.armor, armor);
-
         final NBTTagList prevActionsNbt = new NBTTagList();
         for (String s : prevActions)
             prevActionsNbt.appendTag(new NBTTagString(s));
@@ -75,9 +66,6 @@ public class CombatContext {
             if (e instanceof Buff)
                 buffs.add((Buff) e);
         }
-
-        weapon = NBTUtils.itemStackFromNBT(c.getCompoundTag(Tags.weapon));
-        armor = c.getInteger(Tags.armor);
 
         final NBTTagList prevActionsNbt = c.getTagList(Tags.prevActions, 8); // 8 - NBTTagString
         for (int i = 0; i < prevActionsNbt.tagCount(); i++) {
@@ -113,8 +101,6 @@ public class CombatContext {
         static final String puppet = "puppet";
         static final String knocked = "knocked";
         static final String buffs = "buffs";
-        static final String weapon = "weapon";
-        static final String armor = "armor";
         static final String prevActions = "prevActions";
         static final String phase = "phase";
         static final String target = "target";

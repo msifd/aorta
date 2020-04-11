@@ -15,7 +15,7 @@ apply plugin: 'forge'
 apply plugin: 'idea'
 
 
-version = "0.93.2"
+version = "0.94.0"
 group = "msifeed.mc.more"
 archivesBaseName = "more"
 
@@ -45,6 +45,10 @@ jar {
         from(project.zipTree(dep)){
             exclude 'META-INF', 'META-INF/**'
         }
+    }
+
+    manifest {
+        attributes 'FMLCorePlugin': 'msifeed.mc.core.MoreCorePlugin'
     }
 }
 

@@ -1,10 +1,10 @@
 package msifeed.mc.more.crabs.action.effects;
 
+import msifeed.mc.more.More;
 import msifeed.mc.more.crabs.character.Ability;
 import msifeed.mc.more.crabs.combat.ActionContext;
 import msifeed.mc.more.crabs.combat.FighterInfo;
 import msifeed.mc.more.crabs.rolls.Dices;
-import msifeed.mc.more.crabs.rolls.Rolls;
 import net.minecraft.util.MathHelper;
 
 import static msifeed.mc.more.crabs.action.effects.DynamicEffect.EffectArgs.*;
@@ -23,7 +23,9 @@ public final class ScoreEffects {
 
         @Override
         public void apply(FighterInfo target, FighterInfo other) {
-            target.act.scoreAction += Dices.n3d7m3();
+            final float penaltyRate = More.DEFINES.combat().armorPenalty.onRoll;
+            final float penalty = penaltyRate * target.entity.getTotalArmorValue();
+            target.act.scoreAction += Dices.n3d7m3() - penalty;
         }
 
         @Override
@@ -53,8 +55,12 @@ public final class ScoreEffects {
 
         @Override
         public void apply(FighterInfo target, FighterInfo other) {
-            final Rolls.Result r = Rolls.rollAbility(target.chr, target.mod, ability);
-            target.act.scoreAction += MathHelper.floor_float(r.result * multiplier);
+            final float mod = target.mod.toAbility(ability);
+            final float value = target.chr.abilities.getOrDefault(ability, 0);
+            final float penaltyRate = More.DEFINES.combat().armorPenalty.onStats.getOrDefault(ability, 0f);
+            final float penalty = penaltyRate * target.entity.getTotalArmorValue();
+
+            target.act.scoreAction += MathHelper.floor_float((mod + value - penalty) * multiplier);
         }
 
         @Override

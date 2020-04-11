@@ -31,8 +31,6 @@ public enum CombatRpc {
     private final static String removeCombat = Bootstrap.MODID + ":combat.remove";
 
     private final static String setPuppet = Bootstrap.MODID + ":combat.set.puppet";
-    private final static String setWeapon = Bootstrap.MODID + ":combat.set.weapon";
-    private final static String setArmor = Bootstrap.MODID + ":combat.set.armor";
 
     // // // //
 
@@ -105,8 +103,6 @@ public enum CombatRpc {
                 throw new RpcMethodException(sender, "target is already in combat");
 
             context.phase = CombatContext.Phase.IDLE;
-            context.weapon = target.getHeldItem();
-            context.armor = target.getTotalArmorValue();
         });
     }
 
@@ -192,14 +188,6 @@ public enum CombatRpc {
         Rpc.sendToServer(setPuppet, entityId);
     }
 
-    public static void setWeapon(int entityId) {
-        Rpc.sendToServer(setWeapon, entityId);
-    }
-
-    public static void setArmor(int entityId) {
-        Rpc.sendToServer(setArmor, entityId);
-    }
-
     @RpcMethod(setPuppet)
     public void onSetPuppet(MessageContext ctx, int entityId) {
         final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
@@ -213,27 +201,5 @@ public enum CombatRpc {
         }
 
         CombatAttribute.INSTANCE.update(sender, context -> context.puppet = entityId);
-    }
-
-    @RpcMethod(setWeapon)
-    public void onSetWeapon(MessageContext ctx, int entityId) {
-        final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
-        final Entity targetEntity = sender.worldObj.getEntityByID(entityId);
-
-        if (!(targetEntity instanceof EntityLivingBase))
-            throw new RpcMethodException(sender, "target not found");
-
-        CombatAttribute.INSTANCE.update(targetEntity, context -> context.weapon = sender.getHeldItem());
-    }
-
-    @RpcMethod(setArmor)
-    public void onSetArmor(MessageContext ctx, int entityId) {
-        final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
-        final Entity targetEntity = sender.worldObj.getEntityByID(entityId);
-
-        if (!(targetEntity instanceof EntityLivingBase))
-            throw new RpcMethodException(sender, "target not found");
-
-        CombatAttribute.INSTANCE.update(targetEntity, context -> context.armor = sender.getTotalArmorValue());
     }
 }

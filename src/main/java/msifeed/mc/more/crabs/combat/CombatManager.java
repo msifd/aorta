@@ -6,7 +6,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import msifeed.mc.more.crabs.action.Action;
 import msifeed.mc.more.crabs.action.ActionRegistry;
-import msifeed.mc.more.crabs.action.ActionTag;
 import msifeed.mc.more.crabs.action.Combo;
 import msifeed.mc.more.crabs.action.effects.Buff;
 import msifeed.mc.more.crabs.action.effects.Effect;
@@ -217,11 +216,6 @@ public enum CombatManager {
         applyBuffs(self.com.buffs, Effect.Stage.ACTION, self);
         applyActionResults(self);
 
-        if (self.act.action.hasAnyTag(ActionTag.equip)) {
-            self.com.weapon = self.entity.getHeldItem();
-            self.com.armor = self.entity.getTotalArmorValue();
-        }
-
         CombatNotifications.soloMoveResult(self);
 
         cleanupMove(self);
@@ -286,8 +280,6 @@ public enum CombatManager {
     public static void removeFromCombat(EntityLivingBase entity, CombatContext com) {
         softReset(entity, com);
         com.phase = CombatContext.Phase.NONE;
-        com.weapon = null;
-        com.armor = 0;
         com.prevActions.clear();
     }
 
@@ -297,29 +289,4 @@ public enum CombatManager {
         com.action = null;
         ActionAttribute.remove(entity);
     }
-
-//    @SubscribeEvent
-//    public void onEntityJoinWorld(EntityJoinWorldEvent e) {
-//        CombatAttribute.get(e.entity).ifPresent(context -> validate(e.entity, context));
-//    }
-//
-//    public static void validate(Entity entity, CombatContext com) {
-//
-//    }
-
-    public static void hardReset(Entity entity, CombatContext com) {
-        softReset(entity, com);
-
-        com.puppet = 0;
-
-        com.knockedOut = false;
-        com.buffs.clear();
-
-        com.weapon = null;
-        com.armor = 0;
-        com.prevActions.clear();
-
-        com.phase = CombatContext.Phase.NONE;
-    }
-
 }
