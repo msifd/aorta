@@ -259,12 +259,13 @@ public enum CombatManager {
         if (resetCombo && !self.com.prevActions.isEmpty())
             self.com.prevActions.clear();
 
-        if (self.entity.isDead) {
+        if (self.entity.isDead || self.entity.getHealth() <= 0) {
             if (self.com.knockedOut) {
                 CombatNotifications.notifyKilled(self.entity);
             } else {
                 self.entity.setHealth(1);
                 self.entity.isDead = false;
+                self.com.knockedOut = true;
                 CombatNotifications.notifyKnockedOut(self.entity);
             }
         }

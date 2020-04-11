@@ -19,7 +19,7 @@ public final class CombatNotifications {
     }
 
     static void notifyKnockedOut(EntityLivingBase entity) {
-        notify(entity, L10n.fmt("more.crabs.knocked_out", entity));
+        notify(entity, L10n.fmt("more.crabs.knocked_out", getName(entity)));
     }
 
     static void notifyKilled(EntityLivingBase entity) {

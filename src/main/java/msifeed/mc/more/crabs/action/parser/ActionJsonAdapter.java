@@ -39,18 +39,10 @@ public class ActionJsonAdapter implements JsonSerializer<Action>, JsonDeserializ
 
         if (raw.tags == null)
             throw new JsonParseException("Action `" + raw.id + "` has no `tags` field!");
-//        if (raw.tags.isEmpty())
-//            throw new JsonParseException("Action `" + raw.id + "` has no tags in `tags` field!");
-        ActionTag type = null;
+
         for (String st : raw.tags) {
             try {
-                final ActionTag at = ActionTag.valueOf(st.toLowerCase());
-                if (at.isType()) {
-                    if (type != null)
-                        throw new JsonParseException("Action `" + raw.id + "` has has multiple type tags!");
-                    type = at;
-                }
-                action.tags.add(at);
+                action.tags.add(ActionTag.valueOf(st.toLowerCase()));
             } catch (IllegalArgumentException ignore) {
                 throw new JsonParseException("Action `" + raw.id + "` has invalid tag `" + st + "`!");
             }
