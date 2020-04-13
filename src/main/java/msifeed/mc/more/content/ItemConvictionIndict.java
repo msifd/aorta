@@ -45,7 +45,7 @@ class ItemConvictionIndict extends Item {
         player.addChatMessage(new ChatComponentText(L10n.fmt("more.sin.indict", target.getDisplayName())));
         stack.stackSize--;
 
-        CharacterAttribute.INSTANCE.set(player, after);
+        CharacterAttribute.INSTANCE.set(target, after);
         Differ.printDiffs((EntityPlayerMP)player, target, before, after);
 
         return true;

@@ -50,51 +50,51 @@ public enum CharRpc {
     @RpcMethod(setLang)
     public void onSetLang(MessageContext ctx, int entityId, int langIdx) {
         final World world = ctx.getServerHandler().playerEntity.worldObj;
-        final Entity entity = world.getEntityByID(entityId);
-        if (!(entity instanceof EntityPlayer))
+        final Entity target = world.getEntityByID(entityId);
+        if (!(target instanceof EntityPlayer))
             return;
 
-        LangAttribute.INSTANCE.set(entity, Language.values()[langIdx]);
+        LangAttribute.INSTANCE.set(target, Language.values()[langIdx]);
     }
 
     @RpcMethod(updateChar)
     public void onUpdateChar(MessageContext ctx, int entityId, NBTTagCompound charNbt) {
         final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
-        final Entity entity = sender.worldObj.getEntityByID(entityId);
-        if (!(entity instanceof EntityLivingBase))
+        final Entity target = sender.worldObj.getEntityByID(entityId);
+        if (!(target instanceof EntityLivingBase))
             return;
 
         final boolean senderIsGm = CharacterAttribute.has(sender, Trait.gm);
-        final boolean senderIsTarget = sender.getEntityId() == entity.getEntityId();
-        final boolean targetIsPlayer = entity instanceof EntityPlayer;
+        final boolean senderIsTarget = sender.getEntityId() == target.getEntityId();
+        final boolean targetIsPlayer = target instanceof EntityPlayer;
 
         if (!senderIsGm && !senderIsTarget && targetIsPlayer) {
-            ExternalLogs.log(sender, "warning", String.format("%s tried to change character %s while not GM!", sender.getCommandSenderName(), entity.getCommandSenderName()));
+            ExternalLogs.log(sender, "warning", String.format("%s tried to change character %s while not GM!", sender.getCommandSenderName(), target.getCommandSenderName()));
             ctx.getServerHandler().kickPlayerFromServer("Forbidden!");
             return;
         }
 
-        final Character after = CharacterAttribute.get(entity).orElse(null);
+        final Character after = CharacterAttribute.get(target).orElse(null);
         if (after != null) {
             final Character before = new Character(after);
-            CharacterAttribute.INSTANCE.update(entity, c -> c.fromNBT(charNbt));
+            CharacterAttribute.INSTANCE.update(target, c -> c.fromNBT(charNbt));
 
-            Differ.printDiffs(sender, entity, before, after);
+            Differ.printDiffs(sender, target, before, after);
 
-            if (entity instanceof EntityPlayer) {
+            if (target instanceof EntityPlayer) {
                 if (!before.name.equals(after.name)) {
-                    ((EntityPlayer) entity).refreshDisplayName();
+                    ((EntityPlayer) target).refreshDisplayName();
                     Rpc.sendToAll(refreshName, entityId);
                 }
 
                 if (before.estitence != after.estitence) {
-                    EsitenceHealthModifier.applyModifier((EntityPlayer) entity, after);
+                    EsitenceHealthModifier.applyModifier((EntityPlayer) target, after);
                 }
             }
         } else {
             final Character c = new Character();
             c.fromNBT(charNbt);
-            CharacterAttribute.INSTANCE.set(entity, c);
+            CharacterAttribute.INSTANCE.set(target, c);
         }
     }
 
@@ -108,13 +108,13 @@ public enum CharRpc {
     @RpcMethod(clearEntity)
     public void onClearEntity(MessageContext ctx, int entityId) {
         final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
-        final Entity entity = sender.worldObj.getEntityByID(entityId);
-        if (!(entity instanceof EntityLivingBase) || entity instanceof EntityPlayer)
+        final Entity target = sender.worldObj.getEntityByID(entityId);
+        if (!(target instanceof EntityLivingBase) || target instanceof EntityPlayer)
             return;
 
         if (CharacterAttribute.require(sender).has(Trait.gm)) {
-            CharacterAttribute.INSTANCE.set(entity, null);
-            MetaAttribute.INSTANCE.set(entity, null);
+            CharacterAttribute.INSTANCE.set(target, null);
+            MetaAttribute.INSTANCE.set(target, null);
         }
     }
 

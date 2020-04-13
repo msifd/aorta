@@ -23,16 +23,16 @@ public enum MetaRpc {
     @RpcMethod(updateMeta)
     public void onUpdateMeta(MessageContext ctx, int entityId, NBTTagCompound metaNbt) {
         final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
-        final Entity entity = sender.worldObj.getEntityByID(entityId);
-        if (!(entity instanceof EntityLivingBase))
+        final Entity target = sender.worldObj.getEntityByID(entityId);
+        if (!(target instanceof EntityLivingBase))
             return;
 
-        if (entity instanceof EntityPlayer)
-            MetaAttribute.INSTANCE.update(entity, meta -> meta.fromNBT(metaNbt));
+        if (target instanceof EntityPlayer)
+            MetaAttribute.INSTANCE.update(target, meta -> meta.fromNBT(metaNbt));
         else {
             final MetaInfo m = new MetaInfo();
             m.fromNBT(metaNbt);
-            MetaAttribute.INSTANCE.set(entity, m);
+            MetaAttribute.INSTANCE.set(target, m);
         }
     }
 }
