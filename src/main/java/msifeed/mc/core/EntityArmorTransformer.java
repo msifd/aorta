@@ -7,8 +7,10 @@ import org.objectweb.asm.tree.*;
 import java.util.ListIterator;
 
 public class EntityArmorTransformer implements IClassTransformer, Opcodes {
-    private static final String METHOD_OBF = "func_70655_b";
-    private static final String METHOD_DEOBF = "applyArmorCalculations";
+    private static final String METHOD_NAME_OBF = "b";
+    private static final String METHOD_DESC_OBF = "(Lro;F)F";
+    private static final String METHOD_NAME_DEOBF = "applyArmorCalculations";
+    private static final String METHOD_DESC_DEOBF = "(Lnet/minecraft/util/DamageSource;F)F";
 
     private static final int VANILLA_ARMOR_DIVIDER = 25;
     private static final int ARMOR_DIVIDER = 40;
@@ -25,9 +27,10 @@ public class EntityArmorTransformer implements IClassTransformer, Opcodes {
         final ClassReader reader = new ClassReader(basicClass);
         reader.accept(cnode, ClassReader.EXPAND_FRAMES);
 
-        final String mnName = MoreCorePlugin.isDevEnv ? METHOD_DEOBF : METHOD_OBF;
+        final String mnName = MoreCorePlugin.isDevEnv ? METHOD_NAME_DEOBF : METHOD_NAME_OBF;
+        final String mnDesc = MoreCorePlugin.isDevEnv ? METHOD_DESC_DEOBF : METHOD_DESC_OBF;
         final MethodNode mn = cnode.methods.stream()
-                .filter(m -> m.name.equals(mnName))
+                .filter(m -> m.name.equals(mnName) && m.desc.equals(mnDesc))
                 .findAny()
                 .orElseThrow(() -> new RuntimeException("Cant find method " + mnName));
         patchArmorRating(mn);
