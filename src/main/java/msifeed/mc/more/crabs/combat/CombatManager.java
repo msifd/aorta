@@ -280,7 +280,9 @@ public enum CombatManager {
     public static void removeFromCombat(EntityLivingBase entity, CombatContext com) {
         softReset(entity, com);
         com.phase = CombatContext.Phase.NONE;
+        com.knockedOut = false;
         com.prevActions.clear();
+        com.buffs.clear();
     }
 
     public static void softReset(Entity entity, CombatContext com) {
