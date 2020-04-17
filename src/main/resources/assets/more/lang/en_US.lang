@@ -102,6 +102,7 @@ more.gui.combat.tips.confirm_action=Выберите действие снова
 more.gui.combat.tips.change_action=Действие можно изменить
 more.gui.combat.tips.damage_target=Наносите урон цели
 more.gui.combat.tips.wait_defender=Ждите действия защищающегося
+more.gui.combat.tips.enemy_action=Действие противника: %s
 more.gui.combat.tips.defence_action=Выберите атакующее действие
 more.gui.combat.tips.leaving=Вы покидаете бой
 more.gui.combat.tips.buffs=Баффы:\n%s

@@ -16,6 +16,7 @@ import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
 import msifeed.mc.sys.utils.L10n;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -74,6 +75,19 @@ public class ProgressView extends Widget {
                 addPane("more.gui.combat.tips.wait_defender");
                 break;
             case DEFEND:
+                final Entity foe = entity.worldObj.getEntityByID(context.target);
+                if (foe == null) {
+                    CombatRpc.reset(entity.getEntityId());
+                    return;
+                }
+                final ActionHeader action = CombatAttribute.get(foe)
+                        .map(c -> c.action).orElse(null);
+                if (action == null) {
+                    CombatRpc.reset(entity.getEntityId());
+                    return;
+                }
+
+                addPane("more.gui.combat.tips.enemy_action", action.getTitle());
                 if (context.action == null)
                     addPane("more.gui.combat.tips.defence_action");
                 else {

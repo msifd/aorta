@@ -3,7 +3,6 @@ package msifeed.mc.more.crabs.combat;
 import msifeed.mc.more.crabs.action.Action;
 import msifeed.mc.more.crabs.action.effects.Buff;
 import msifeed.mc.more.crabs.rolls.Criticalness;
-import net.minecraft.util.MathHelper;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -31,17 +30,12 @@ public class ActionContext implements Comparable<ActionContext> {
     public void resetScore() {
         scorePlayerMod = 0;
         scoreAction = 0;
-        scoreMultiplier = 1;
         critical = Criticalness.NONE;
         successful = true;
     }
 
-    public int scoreRoll() {
-        return MathHelper.floor_float(scoreAction * scoreMultiplier);
-    }
-
     public int score() {
-        return scoreRoll() + scorePlayerMod;
+        return scoreAction + scorePlayerMod;
     }
 
     @Override

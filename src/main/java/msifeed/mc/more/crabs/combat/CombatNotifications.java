@@ -62,9 +62,9 @@ public final class CombatNotifications {
         }
 
         if (act.score() > 0) {
-            if (act.scoreRoll() > 0) {
+            if (act.scoreAction > 0) {
                 sb.append(" [");
-                sb.append(act.scoreRoll());
+                sb.append(act.scoreAction);
                 sb.append(']');
             }
 

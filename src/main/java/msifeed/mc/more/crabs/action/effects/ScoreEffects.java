@@ -162,7 +162,7 @@ public final class ScoreEffects {
 
         @Override
         public void apply(FighterInfo target, FighterInfo other) {
-            target.act.scoreMultiplier = value;
+            target.act.scoreAction = MathHelper.floor_float(target.act.scoreAction * value);
         }
 
         @Override
