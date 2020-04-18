@@ -14,6 +14,7 @@ public final class EffectsRegistry {
                 new ScoreEffects.ScoreAdder(),
                 new ScoreEffects.ScoreMultiplier(),
                 new ScoreEffects.MinScore(),
+                new ScoreEffects.ModAbility(),
                 // Actions
                 new ActionEffects.Damage(),
                 new ActionEffects.SkipMove(),

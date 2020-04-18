@@ -2,10 +2,12 @@ package msifeed.mc.more.crabs.combat;
 
 import msifeed.mc.more.crabs.action.Action;
 import msifeed.mc.more.crabs.action.effects.Buff;
+import msifeed.mc.more.crabs.character.Ability;
 import msifeed.mc.more.crabs.rolls.Criticalness;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.EnumMap;
 
 public class ActionContext implements Comparable<ActionContext> {
     public final Action action;
@@ -14,6 +16,8 @@ public class ActionContext implements Comparable<ActionContext> {
     public ArrayList<DamageAmount> damageToDeal = new ArrayList<>();
     public ArrayList<DamageAmount> damageToReceive = new ArrayList<>();
     public ArrayList<Buff> buffsToReceive = new ArrayList<>();
+
+    public EnumMap<Ability, Integer> abilityEffectMods = new EnumMap<>(Ability.class);
 
     public int scorePlayerMod;
     public int scoreAction;

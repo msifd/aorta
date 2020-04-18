@@ -179,6 +179,7 @@ public enum CombatManager {
         if (self.act.critical == Criticalness.FAIL)
             self.act.successful = false;
 
+        applyBuffs(self.com.buffs, Effect.Stage.PRE_SCORE, self);
         applyEffects(self.act.action.self, Effect.Stage.SCORE, self, null);
         applyBuffs(self.com.buffs, Effect.Stage.SCORE, self);
     }

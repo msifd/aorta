@@ -55,7 +55,7 @@ public final class ScoreEffects {
 
         @Override
         public void apply(FighterInfo target, FighterInfo other) {
-            final float mod = target.mod.toAbility(ability);
+            final float mod = target.mod.toAbility(ability) + target.act.abilityEffectMods.getOrDefault(ability, 0);
             final float value = target.chr.abilities.getOrDefault(ability, 0);
             final float penaltyRate = More.DEFINES.combat().armorPenalty.onStats.getOrDefault(ability, 0f);
             final float penalty = penaltyRate * target.entity.getTotalArmorValue();
@@ -209,6 +209,51 @@ public final class ScoreEffects {
         @Override
         public String toString() {
             return name() + ':' + value;
+        }
+    }
+
+    public static class ModAbility extends DynamicEffect {
+        private Ability ability;
+        private int modifier;
+
+        @Override
+        public String name() {
+            return "mod ability";
+        }
+
+        @Override
+        public boolean shouldApply(Stage stage, ActionContext target, ActionContext other) {
+            return stage == Stage.PRE_SCORE;
+        }
+
+        @Override
+        public void apply(FighterInfo target, FighterInfo other) {
+            target.act.abilityEffectMods.compute(ability, (k, v) -> (v == null) ? modifier : v + modifier);
+        }
+
+        @Override
+        public boolean equals(Effect other) {
+            return other instanceof ModAbility
+                    && ability == ((ModAbility) other).ability
+                    && modifier == ((ModAbility) other).modifier;
+        }
+
+        @Override
+        public EffectArgs[] args() {
+            return new EffectArgs[]{STRING, INT};
+        }
+
+        @Override
+        public DynamicEffect produce(Object[] args) {
+            final ModAbility e = new ModAbility();
+            e.ability = Ability.valueOf(((String) args[0]).toUpperCase());
+            e.modifier = (int) args[1];
+            return e;
+        }
+
+        @Override
+        public String toString() {
+            return name() + ':' + ability + ':' + modifier;
         }
     }
 }

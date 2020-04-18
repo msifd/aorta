@@ -11,6 +11,6 @@ public abstract class Effect {
     public abstract String toString();
 
     public enum Stage {
-        SCORE, ACTION
+        PRE_SCORE, SCORE, ACTION
     }
 }

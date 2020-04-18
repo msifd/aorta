@@ -79,6 +79,15 @@ public class TestCombatScreen extends MellowGuiScreen {
         send(player, String.format("%s - mod %d, crit: %s", action.getTitle(), self.act.scorePlayerMod, self.act.critical.toString()));
 
         for (Effect e : self.act.action.self) {
+            if (e.shouldApply(Effect.Stage.PRE_SCORE, self.act, null)) {
+                final int scoreBefore = self.act.scoreAction;
+                e.apply(self, null);
+                final int scoreDiff = self.act.scoreAction - scoreBefore;
+                send(player, String.format("  %s -> %d (%+d)", e.toString(), self.act.scoreAction, scoreDiff));
+            }
+        }
+
+        for (Effect e : self.act.action.self) {
             if (e.shouldApply(Effect.Stage.SCORE, self.act, null)) {
                 final int scoreBefore = self.act.scoreAction;
                 e.apply(self, null);
@@ -87,12 +96,7 @@ public class TestCombatScreen extends MellowGuiScreen {
             }
         }
 
-//        applyEffects(self.act.action.self, Effect.Stage.SCORE, self, null);
-//        applyBuffs(self.com.buffs, Effect.Stage.SCORE, self);
-
-
         send(player, String.format("result score %d", self.act.score()));
-
     }
 
     private static void send(EntityPlayer player, String text) {
