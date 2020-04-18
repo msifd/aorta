@@ -17,7 +17,7 @@ public class FighterInfo {
     public final Modifiers mod;
     public Action comboAction = null;
 
-    FighterInfo(EntityLivingBase entity) {
+    public FighterInfo(EntityLivingBase entity) {
         this.entity = entity;
         this.com = CombatAttribute.require(entity);
         this.act = ActionAttribute.require(entity);

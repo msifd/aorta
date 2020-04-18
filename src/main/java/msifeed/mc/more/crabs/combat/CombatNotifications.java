@@ -88,7 +88,7 @@ public final class CombatNotifications {
     }
 
     public static String explicitSignInt(int i) {
-        return (i >= 0 ? "+": "") + i;
+        return String.format("%+d", i);
     }
 
     private static String getName(EntityLivingBase entity) {

@@ -59,6 +59,10 @@ public enum ActionRegistry {
         return INSTANCE.actionHeaders.values();
     }
 
+    public static Collection<Action> getFullActions() {
+        return INSTANCE.actions.values();
+    }
+
     public static void setActionHeaders(Collection<ActionHeader> headers) {
         INSTANCE.actionHeaders.clear();
         for (ActionHeader h : headers)

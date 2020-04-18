@@ -26,20 +26,15 @@ public class ItemCombatTool extends Item {
 
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-        // RMB + Shift = Self
-        if (player.isSneaking())
-            handleEntity(player);
+        if (player.isSneaking() && player.worldObj.isRemote)
+            More.GUI_HANDLER.toggleTestCombat();
 
         return itemStack;
     }
 
     @Override
     public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase entity) {
-        handleEntity(entity);
-        return true;
-    }
-
-    private void handleEntity(EntityLivingBase entity) {
         More.GUI_HANDLER.toggleCombat(entity);
+        return true;
     }
 }

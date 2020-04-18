@@ -5,6 +5,7 @@ import msifeed.mc.mellow.layout.AnchorLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.render.RenderShapes;
 import msifeed.mc.mellow.widgets.Widget;
+import msifeed.mc.mellow.widgets.basic.Separator;
 import msifeed.mc.mellow.widgets.button.FlatButtonLabel;
 import msifeed.mc.mellow.widgets.text.WordwrapLabel;
 import msifeed.mc.more.crabs.action.ActionHeader;
@@ -120,6 +121,7 @@ public class ProgressView extends Widget {
         }
 
         if (context.phase.isInCombat()) {
+            addChild(new Separator());
             addButton("more.gui.combat.leave", () -> CombatRpc.leave(entity.getEntityId()));
             addButton("more.gui.combat.reset", () -> CombatRpc.reset(entity.getEntityId()));
 

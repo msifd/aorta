@@ -17,7 +17,6 @@ public class ActionContext implements Comparable<ActionContext> {
 
     public int scorePlayerMod;
     public int scoreAction;
-    public float scoreMultiplier;
     public Criticalness critical;
     public boolean successful;
 
