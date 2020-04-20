@@ -12,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.*;
 
 import java.util.List;
+import java.util.Random;
 
 public class SpeechComposer implements ChatComposer {
     @Override
@@ -53,15 +54,13 @@ public class SpeechComposer implements ChatComposer {
 
     private static ChatComponentText applyDistance(String text, EntityPlayer player, ChatMessage message) {
         final float distance = MathHelper.sqrt_float(player.getPlayerCoordinates().getDistanceSquaredToChunkCoordinates(message.source));
+        final float garblness = distance / (float) message.radius;
+        final float threshold = More.DEFINES.get().chat.garbleThreshold;
 
-        final ChatComponentText cc = new ChatComponentText(text);
-        final float grayness = distance / message.radius;
-        if (grayness > 0.7)
-            cc.getChatStyle().setColor(EnumChatFormatting.DARK_GRAY);
-        else if (grayness > 0.4)
-            cc.getChatStyle().setColor(EnumChatFormatting.GRAY);
-
-        return cc;
+        if (garblness < threshold)
+            return new ChatComponentText(text);
+        else
+            return garbleficate(text, (garblness - threshold) / (1 - threshold));
     }
 
     private static ChatComponentText getNamePrefix(String name, boolean myName) {
@@ -102,6 +101,10 @@ public class SpeechComposer implements ChatComposer {
         if (exclamations == 0) {
             int silencers = 0;
             for (int i = 0; i < text.length(); ++i) {
+                if (text.charAt(i) == '.') silencers++;
+                else break;
+            }
+            for (int i = 0; i < text.length(); ++i) {
                 if (text.charAt(i) == '(' && text.charAt(text.length() - i - 1) == ')')
                     silencers++;
                 else
@@ -113,5 +116,53 @@ public class SpeechComposer implements ChatComposer {
         loudness = MathHelper.clamp_int(loudness, 0, speechRadius.length - 1);
 
         return speechRadius[loudness];
+    }
+
+    private static ChatComponentText garbleficate(String input, float garblness) {
+        final ChatComponentText root = new ChatComponentText("");
+        root.getChatStyle().setColor(garblness > 0.5f ? EnumChatFormatting.GRAY : EnumChatFormatting.WHITE);
+
+        final Random rand = new Random();
+        final float heavyGarblness = garblness / 3;
+
+        final EnumChatFormatting[] prevColor = {null};
+        final StringBuilder sb = new StringBuilder();
+
+        input.codePoints().forEach(cp -> {
+            final float cr = rand.nextFloat();
+
+            final EnumChatFormatting color;
+            if (cr < heavyGarblness) {
+                color = EnumChatFormatting.DARK_GRAY;
+            } else if (cr < garblness) {
+                color = EnumChatFormatting.GRAY;
+            } else {
+                color = null;
+            }
+
+            if (color != prevColor[0] && sb.length() > 0) {
+                final ChatComponentText cc = new ChatComponentText(sb.toString());
+                cc.getChatStyle().setColor(prevColor[0]);
+                root.appendSibling(cc);
+
+                sb.setLength(0);
+            }
+
+            if (Character.isLetterOrDigit(cp) && rand.nextFloat() < garblness) {
+                sb.append('.');
+            } else {
+                sb.appendCodePoint(cp);
+            }
+
+            prevColor[0] = color;
+        });
+
+        if (sb.length() > 0) {
+            final ChatComponentText cc = new ChatComponentText(sb.toString());
+            cc.getChatStyle().setColor(prevColor[0]);
+            root.appendSibling(cc);
+        }
+
+        return root;
     }
 }
