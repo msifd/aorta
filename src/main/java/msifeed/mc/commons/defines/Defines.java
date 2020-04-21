@@ -8,8 +8,8 @@ import msifeed.mc.sys.config.ConfigBuilder;
 import msifeed.mc.sys.config.JsonConfig;
 
 public class Defines {
-    private JsonConfig<DefinesContent> config = ConfigBuilder.of(DefinesContent.class, "defines.json").create();
-    private JsonConfig<CombatDefines> combat = ConfigBuilder.of(CombatDefines.class, "combat.json").create();
+    private JsonConfig<DefinesContent> config = ConfigBuilder.of(DefinesContent.class, "defines.json").sync().create();
+    private JsonConfig<CombatDefines> combat = ConfigBuilder.of(CombatDefines.class, "combat.json").sync().create();
 
     public Defines() {
     }

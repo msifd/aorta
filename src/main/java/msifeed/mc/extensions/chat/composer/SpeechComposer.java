@@ -1,5 +1,6 @@
 package msifeed.mc.extensions.chat.composer;
 
+import msifeed.mc.extensions.chat.ChatDefines;
 import msifeed.mc.extensions.chat.ChatMessage;
 import msifeed.mc.extensions.chat.LangAttribute;
 import msifeed.mc.extensions.chat.Language;
@@ -54,13 +55,14 @@ public class SpeechComposer implements ChatComposer {
 
     private static ChatComponentText applyDistance(String text, EntityPlayer player, ChatMessage message) {
         final float distance = MathHelper.sqrt_float(player.getPlayerCoordinates().getDistanceSquaredToChunkCoordinates(message.source));
-        final float garblness = distance / (float) message.radius;
-        final float threshold = More.DEFINES.get().chat.garbleThreshold;
+        final int thresholdDistance = More.DEFINES.get().chat.garble.thresholdDistance;
 
-        if (garblness < threshold)
+        if (distance > thresholdDistance) {
+            final float garblness = (distance - thresholdDistance) / (float) message.radius;
+            return garbleficate(text, garblness);
+        } else {
             return new ChatComponentText(text);
-        else
-            return garbleficate(text, (garblness - threshold) / (1 - threshold));
+        }
     }
 
     private static ChatComponentText getNamePrefix(String name, boolean myName) {
@@ -101,14 +103,8 @@ public class SpeechComposer implements ChatComposer {
         if (exclamations == 0) {
             int silencers = 0;
             for (int i = 0; i < text.length(); ++i) {
-                if (text.charAt(i) == '.') silencers++;
+                if (text.charAt(i) == '(') silencers++;
                 else break;
-            }
-            for (int i = 0; i < text.length(); ++i) {
-                if (text.charAt(i) == '(' && text.charAt(text.length() - i - 1) == ')')
-                    silencers++;
-                else
-                    break;
             }
             loudness -= silencers;
         }
@@ -119,22 +115,23 @@ public class SpeechComposer implements ChatComposer {
     }
 
     private static ChatComponentText garbleficate(String input, float garblness) {
-        final ChatComponentText root = new ChatComponentText("");
-        root.getChatStyle().setColor(garblness > 0.5f ? EnumChatFormatting.GRAY : EnumChatFormatting.WHITE);
+        final ChatDefines.GarbleSettings settings = More.DEFINES.get().chat.garble;
 
         final Random rand = new Random();
-        final float heavyGarblness = garblness / 3;
 
+        final ChatComponentText root = new ChatComponentText("");
         final EnumChatFormatting[] prevColor = {null};
         final StringBuilder sb = new StringBuilder();
 
         input.codePoints().forEach(cp -> {
-            final float cr = rand.nextFloat();
+            final double r = garblness + rand.nextFloat() / 2;
 
             final EnumChatFormatting color;
-            if (cr < heavyGarblness) {
+            if (r > settings.missThreshold) {
+                color = prevColor[0];
+            } else if (r > settings.darkGrayThreshold) {
                 color = EnumChatFormatting.DARK_GRAY;
-            } else if (cr < garblness) {
+            } else if (r > settings.grayThreshold) {
                 color = EnumChatFormatting.GRAY;
             } else {
                 color = null;
@@ -148,8 +145,8 @@ public class SpeechComposer implements ChatComposer {
                 sb.setLength(0);
             }
 
-            if (Character.isLetterOrDigit(cp) && rand.nextFloat() < garblness) {
-                sb.append('.');
+            if (Character.isLetterOrDigit(cp) && r > settings.missThreshold) {
+                sb.append(' ');
             } else {
                 sb.appendCodePoint(cp);
             }
