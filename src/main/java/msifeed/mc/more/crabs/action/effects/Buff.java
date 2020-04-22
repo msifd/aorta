@@ -1,9 +1,11 @@
 package msifeed.mc.more.crabs.action.effects;
 
 import msifeed.mc.more.crabs.combat.ActionContext;
+import msifeed.mc.more.crabs.combat.CombatContext;
 import msifeed.mc.more.crabs.combat.FighterInfo;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static msifeed.mc.more.crabs.action.effects.DynamicEffect.EffectArgs.*;
 
@@ -32,13 +34,13 @@ public final class Buff extends DynamicEffect {
 
     @Override
     public void apply(FighterInfo target, FighterInfo other) {
-        if (other == null) {
-            // Apply from buffs
+        if (target.com.phase != CombatContext.Phase.END) {
+            // Call from buffs - apply effect
             if (active())
                 effect.apply(target, null);
             step();
         } else {
-            // Apply from action effects
+            // Call from action effects - add to buffs
             target.act.buffsToReceive.add(this);
         }
     }
@@ -85,7 +87,7 @@ public final class Buff extends DynamicEffect {
         return b;
     }
 
-    public static void mergeBuff(ArrayList<Buff> current, Buff buff) {
+    public static void mergeBuff(List<Buff> current, Buff buff) {
         final Buff cur = current.stream()
                 .filter(b -> b.effect.equals(buff.effect))
                 .findAny().orElse(null);

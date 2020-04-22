@@ -179,17 +179,17 @@ public enum CombatManager {
         if (self.act.critical == Criticalness.FAIL)
             self.act.successful = false;
 
-        applyBuffs(self.com.buffs, Effect.Stage.PRE_SCORE, self);
+        applyBuffs(self.com.buffs, Effect.Stage.PRE_SCORE, self, null);
         applyEffects(self.act.action.self, Effect.Stage.SCORE, self, null);
-        applyBuffs(self.com.buffs, Effect.Stage.SCORE, self);
+        applyBuffs(self.com.buffs, Effect.Stage.SCORE, self, null);
     }
 
     private static void applyEffectsAndResults(FighterInfo winner, FighterInfo looser) {
         applyEffects(winner.act.action.self, Effect.Stage.ACTION, winner, looser);
         applyEffects(winner.act.action.target, Effect.Stage.ACTION, looser, winner);
 
-        applyBuffs(winner.com.buffs, Effect.Stage.ACTION, winner);
-        applyBuffs(looser.com.buffs, Effect.Stage.ACTION, looser);
+        applyBuffs(winner.com.buffs, Effect.Stage.ACTION, winner, looser);
+        applyBuffs(looser.com.buffs, Effect.Stage.ACTION, looser, winner);
 
         if (winner.act.action.isOffencive() && !winner.act.action.requiresNoRoll()) {
             final Combo.ComboLookup combo = Combo.find(ActionRegistry.getCombos(), winner.com.prevActions, winner.act.action.id);
@@ -214,7 +214,7 @@ public enum CombatManager {
         self.com.phase = CombatContext.Phase.END;
 
         applyEffects(self.act.action.self, Effect.Stage.ACTION, self, null);
-        applyBuffs(self.com.buffs, Effect.Stage.ACTION, self);
+        applyBuffs(self.com.buffs, Effect.Stage.ACTION, self, null);
         applyActionResults(self);
 
         CombatNotifications.soloMoveResult(self);
@@ -228,10 +228,10 @@ public enum CombatManager {
         softReset(self.entity, self.com);
     }
 
-    private static void applyBuffs(List<Buff> buffs, Effect.Stage stage, FighterInfo self) {
+    private static void applyBuffs(List<Buff> buffs, Effect.Stage stage, FighterInfo self, FighterInfo other) {
         for (Buff b : buffs)
-            if (b.shouldApply(stage, self.act, null))
-                b.apply(self, null);
+            if (b.shouldApply(stage, self.act, other != null ? other.act : null))
+                b.apply(self, other);
     }
 
     private static void applyEffects(List<Effect> effects, Effect.Stage stage, FighterInfo self, FighterInfo other) {

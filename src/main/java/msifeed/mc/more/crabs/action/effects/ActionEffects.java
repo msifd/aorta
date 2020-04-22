@@ -3,6 +3,7 @@ package msifeed.mc.more.crabs.action.effects;
 import msifeed.mc.more.crabs.combat.ActionContext;
 import msifeed.mc.more.crabs.combat.DamageAmount;
 import msifeed.mc.more.crabs.combat.FighterInfo;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
 
 import static msifeed.mc.more.crabs.action.effects.DynamicEffect.EffectArgs.FLOAT;
@@ -37,35 +38,7 @@ public final class ActionEffects {
         }
     }
 
-    public static class SkipMove extends Effect {
-        @Override
-        public String name() {
-            return "skip";
-        }
-
-        @Override
-        public boolean shouldApply(Stage stage, ActionContext target, ActionContext other) {
-            return stage == Stage.ACTION;
-        }
-
-        @Override
-        public void apply(FighterInfo target, FighterInfo other) {
-            // TODO: impl skip
-        }
-
-        @Override
-        public boolean equals(Effect other) {
-            return other instanceof SkipMove;
-        }
-
-        @Override
-        public String toString() {
-            return name();
-        }
-    }
-
     public static class DamageAdder extends DynamicEffect {
-        private static final DamageSource damageSource = new DamageSource("action");
         private int value;
 
         @Override
@@ -80,7 +53,10 @@ public final class ActionEffects {
 
         @Override
         public void apply(FighterInfo target, FighterInfo other) {
-            target.act.damageToReceive.add(new DamageAmount(damageSource, value));
+            final DamageSource ds = other.entity instanceof EntityPlayer
+                    ? DamageSource.causePlayerDamage((EntityPlayer) other.entity)
+                    : DamageSource.causeMobDamage(other.entity);
+            target.act.damageToReceive.add(new DamageAmount(ds, value));
         }
 
         @Override
@@ -180,6 +156,50 @@ public final class ActionEffects {
         public DynamicEffect produce(Object[] args) {
             final DamageMultiplier e = new DamageMultiplier();
             e.value = (float) args[0];
+            return e;
+        }
+
+        @Override
+        public String toString() {
+            return name() + ':' + value;
+        }
+    }
+
+    public static class OtherDamageAdder extends DynamicEffect {
+        private int value;
+
+        @Override
+        public String name() {
+            return "other damage+";
+        }
+
+        @Override
+        public boolean shouldApply(Stage stage, ActionContext target, ActionContext other) {
+            return stage == Stage.ACTION;
+        }
+
+        @Override
+        public void apply(FighterInfo target, FighterInfo other) {
+            final DamageSource ds = target.entity instanceof EntityPlayer
+                    ? DamageSource.causePlayerDamage((EntityPlayer) target.entity)
+                    : DamageSource.causeMobDamage(target.entity);
+            other.act.damageToReceive.add(new DamageAmount(ds, value));
+        }
+
+        @Override
+        public boolean equals(Effect other) {
+            return other instanceof OtherDamageAdder && value == ((OtherDamageAdder) other).value;
+        }
+
+        @Override
+        public EffectArgs[] args() {
+            return new EffectArgs[]{INT};
+        }
+
+        @Override
+        public DynamicEffect produce(Object[] args) {
+            final OtherDamageAdder e = new OtherDamageAdder();
+            e.value = (int) args[0];
             return e;
         }
 

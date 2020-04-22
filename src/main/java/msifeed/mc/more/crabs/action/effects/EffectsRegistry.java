@@ -17,10 +17,10 @@ public final class EffectsRegistry {
                 new ScoreEffects.ModAbility(),
                 // Actions
                 new ActionEffects.Damage(),
-                new ActionEffects.SkipMove(),
                 new ActionEffects.DamageAdder(),
                 new ActionEffects.RawDamageAdder(),
                 new ActionEffects.DamageMultiplier(),
+                new ActionEffects.OtherDamageAdder(),
                 // Buffs
                 new Buff(),
                 new Buff.OnRole()

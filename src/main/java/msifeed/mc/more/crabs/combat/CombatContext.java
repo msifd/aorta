@@ -10,13 +10,14 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 public class CombatContext {
     public int puppet;
 
     public boolean knockedOut;
-    public ArrayList<Buff> buffs = new ArrayList<>();
+    public List<Buff> buffs = new ArrayList<>();
     public Stack<String> prevActions = new Stack<>();
 
     public Phase phase = Phase.NONE;
