@@ -33,6 +33,11 @@ public final class ActionEffects {
         }
 
         @Override
+        public Effect clone() {
+            return new Damage();
+        }
+
+        @Override
         public String toString() {
             return name();
         }
@@ -62,6 +67,13 @@ public final class ActionEffects {
         @Override
         public boolean equals(Effect other) {
             return other instanceof DamageAdder && value == ((DamageAdder) other).value;
+        }
+
+        @Override
+        public Effect clone() {
+            final DamageAdder e = new DamageAdder();
+            e.value = value;
+            return e;
         }
 
         @Override
@@ -103,6 +115,13 @@ public final class ActionEffects {
         @Override
         public boolean equals(Effect other) {
             return other instanceof RawDamageAdder && value == ((RawDamageAdder) other).value;
+        }
+
+        @Override
+        public Effect clone() {
+            final RawDamageAdder e = new RawDamageAdder();
+            e.value = value;
+            return e;
         }
 
         @Override
@@ -148,6 +167,13 @@ public final class ActionEffects {
         }
 
         @Override
+        public Effect clone() {
+            final DamageMultiplier e = new DamageMultiplier();
+            e.value = value;
+            return e;
+        }
+
+        @Override
         public EffectArgs[] args() {
             return new EffectArgs[]{FLOAT};
         }
@@ -189,6 +215,13 @@ public final class ActionEffects {
         @Override
         public boolean equals(Effect other) {
             return other instanceof OtherDamageAdder && value == ((OtherDamageAdder) other).value;
+        }
+
+        @Override
+        public Effect clone() {
+            final OtherDamageAdder e = new OtherDamageAdder();
+            e.value = value;
+            return e;
         }
 
         @Override

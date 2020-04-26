@@ -34,6 +34,11 @@ public final class ScoreEffects {
         }
 
         @Override
+        public Effect clone() {
+            return new Roll3d7m3();
+        }
+
+        @Override
         public String toString() {
             return name();
         }
@@ -68,6 +73,14 @@ public final class ScoreEffects {
             return other instanceof ScoreAbility
                     && ability == ((ScoreAbility) other).ability
                     && multiplier == ((ScoreAbility) other).multiplier;
+        }
+
+        @Override
+        public Effect clone() {
+            final ScoreAbility e = new ScoreAbility();
+            e.ability = ability;
+            e.multiplier = multiplier;
+            return e;
         }
 
         @Override
@@ -113,6 +126,13 @@ public final class ScoreEffects {
         }
 
         @Override
+        public Effect clone() {
+            final ScoreAdder e = new ScoreAdder();
+            e.value = value;
+            return e;
+        }
+
+        @Override
         public EffectArgs[] args() {
             return new EffectArgs[]{INT};
         }
@@ -151,6 +171,13 @@ public final class ScoreEffects {
         @Override
         public boolean equals(Effect other) {
             return other instanceof ScoreMultiplier && value == ((ScoreMultiplier) other).value;
+        }
+
+        @Override
+        public Effect clone() {
+            final ScoreMultiplier e = new ScoreMultiplier();
+            e.value = value;
+            return e;
         }
 
         @Override
@@ -195,6 +222,13 @@ public final class ScoreEffects {
         }
 
         @Override
+        public Effect clone() {
+            final MinScore e = new MinScore();
+            e.value = value;
+            return e;
+        }
+
+        @Override
         public EffectArgs[] args() {
             return new EffectArgs[]{INT};
         }
@@ -236,6 +270,14 @@ public final class ScoreEffects {
             return other instanceof ModAbility
                     && ability == ((ModAbility) other).ability
                     && modifier == ((ModAbility) other).modifier;
+        }
+
+        @Override
+        public Effect clone() {
+            final ModAbility e = new ModAbility();
+            e.ability = ability;
+            e.modifier = modifier;
+            return e;
         }
 
         @Override

@@ -4,7 +4,6 @@ import msifeed.mc.more.crabs.combat.ActionContext;
 import msifeed.mc.more.crabs.combat.CombatContext;
 import msifeed.mc.more.crabs.combat.FighterInfo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static msifeed.mc.more.crabs.action.effects.DynamicEffect.EffectArgs.*;
@@ -69,6 +68,16 @@ public final class Buff extends DynamicEffect {
         return other instanceof Buff && effect.equals(((Buff) other).effect);
     }
 
+    @Override
+    public Effect clone() {
+        final Buff b = new Buff();
+        b.pause = pause;
+        b.steps = steps;
+        b.repeatMode = repeatMode;
+        b.effect = effect.clone();
+        return b;
+    }
+
     /**
      * [pause before activation]:[number of time the effect is applied]:[repeat mode]:[effect]
      */
@@ -83,7 +92,7 @@ public final class Buff extends DynamicEffect {
         b.pause = (int) args[0];
         b.steps = (int) args[1];
         b.repeatMode = RepeatMode.valueOf(((String) args[2]).toLowerCase());
-        b.effect = (Effect) args[3];
+        b.effect = ((Effect) args[3]).clone();
         return b;
     }
 
@@ -134,6 +143,14 @@ public final class Buff extends DynamicEffect {
         @Override
         public boolean equals(Effect other) {
             return other instanceof OnRole && ((OnRole) other).effect.equals(this.effect);
+        }
+
+        @Override
+        public Effect clone() {
+            final OnRole e = new OnRole();
+            e.role = role;
+            e.effect = effect.clone();
+            return e;
         }
 
         @Override
