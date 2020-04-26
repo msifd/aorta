@@ -56,20 +56,12 @@ public class ScreenNoteEditor extends MellowGuiScreen {
         style.selectItem(BookParts.NOTE.ordinal());
         publishTab.addChild(style);
 
-        final Character character = CharacterAttribute.require(player);
-        final List<Language> knownLanguages = Stream.of(Language.values())
-                .filter(l -> character.traits.contains(l.trait))
-                .collect(Collectors.toList());
-        final DropList<Language> lang = new DropList<>(knownLanguages);
-        lang.selectItem(knownLanguages.indexOf(LangAttribute.require(player)));
-        publishTab.addChild(lang);
-
         final ButtonLabel publishBtn = new ButtonLabel("Publish");
         publishBtn.setClickCallback(() -> {
             final String text = textArea.getText();
             if (text.length() < 3 || title.getText().length() < 3)
                 return;
-            RemoteBookRpc.publish(text, title.getText(), style.getSelectedItem(), lang.getSelectedItem());
+            RemoteBookRpc.publish(text, title.getText(), style.getSelectedItem(), Language.VANILLA);
 //            textArea.getController().clear();
 //            closeGui();
         });
