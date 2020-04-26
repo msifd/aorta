@@ -15,6 +15,7 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 public enum PotionsHandler {
     INSTANCE;
@@ -57,9 +58,11 @@ public enum PotionsHandler {
                 continue;
             for (PotionRule pr : rules) {
                 if (e.getDuration() <= pr.maxDuration && e.getAmplifier() <= pr.maxAmplifier) {
-                    System.out.println(String.format("Add buff '%s' to %s", pr.buff.toString(), event.entityLiving.getCommandSenderName()));
-                    Buff.mergeBuff(com.buffs, pr.buff);
-                    toRemove.add(e.getPotionID());
+                    for (Buff b : pr.buffs) {
+//                        System.out.println(String.format("Add buff '%s' to %s", b.toString(), event.entityLiving.getCommandSenderName()));
+                        Buff.mergeBuff(com.buffs, b);
+                        toRemove.add(e.getPotionID());
+                    }
                     break;
                 }
             }
@@ -75,6 +78,6 @@ public enum PotionsHandler {
     public static class PotionRule {
         public int maxDuration;
         public int maxAmplifier;
-        public Buff buff;
+        public List<Buff> buffs;
     }
 }
