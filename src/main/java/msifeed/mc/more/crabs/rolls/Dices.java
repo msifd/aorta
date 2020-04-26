@@ -27,7 +27,7 @@ public class Dices {
     }
 
     public static Criticalness critical() {
-        final int roll = dice(20);
+        final int roll = dice(40);
         if (roll == 1) return Criticalness.FAIL;
         if (roll == 2) return Criticalness.LUCK;
         return Criticalness.NONE;
