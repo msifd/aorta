@@ -24,7 +24,7 @@ public final class Buff extends DynamicEffect {
         return name() + ':' + pause + ':' + steps + ':' + repeatMode + ':' + effect.toString();
     }
 
-    public boolean shouldApply(Stage stage, ActionContext target, ActionContext other) {
+    public boolean shouldApply(Stage stage, FighterInfo target, FighterInfo other) {
         if (other == null)
             return effect.shouldApply(stage, target, null);
         else
@@ -120,7 +120,7 @@ public final class Buff extends DynamicEffect {
     }
 
     public static class OnRole extends DynamicEffect {
-        private ActionContext.Role role;
+        private CombatContext.Role role;
         private Effect effect;
 
         @Override
@@ -129,9 +129,9 @@ public final class Buff extends DynamicEffect {
         }
 
         @Override
-        public boolean shouldApply(Stage stage, ActionContext target, ActionContext other) {
+        public boolean shouldApply(Stage stage, FighterInfo target, FighterInfo other) {
             return stage == Stage.ACTION
-                    && role == target.role
+                    && role == target.com.role
                     && effect.shouldApply(stage, target, other);
         }
 
@@ -155,7 +155,7 @@ public final class Buff extends DynamicEffect {
 
         @Override
         public String toString() {
-            return name() + ':' + role.toString() + ':' + effect.toString();
+            return name() + ':' + role.toString().toLowerCase() + ':' + effect.toString();
         }
 
         @Override
@@ -166,7 +166,7 @@ public final class Buff extends DynamicEffect {
         @Override
         public DynamicEffect produce(Object[] args) {
             final OnRole e = new OnRole();
-            e.role = ActionContext.Role.valueOf(((String) args[0]).toLowerCase());
+            e.role = CombatContext.Role.valueOf(((String) args[0]).toUpperCase());
             e.effect = (Effect) args[1];
             return e;
         }

@@ -1,7 +1,5 @@
 package msifeed.mc.mellow.layout;
 
-import msifeed.mc.mellow.utils.Geom;
-import msifeed.mc.mellow.utils.Margins;
 import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;

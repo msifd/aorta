@@ -14,12 +14,13 @@ import msifeed.mc.more.crabs.action.ActionHeader;
 import msifeed.mc.more.crabs.action.ActionRegistry;
 import msifeed.mc.more.crabs.action.effects.Buff;
 import msifeed.mc.more.crabs.combat.CombatContext;
+import msifeed.mc.more.crabs.combat.CombatNotifications;
 import msifeed.mc.more.crabs.combat.CombatRpc;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
+import msifeed.mc.more.crabs.utils.GetUtils;
 import msifeed.mc.sys.utils.L10n;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -49,10 +50,14 @@ public class ProgressView extends Widget {
         scroll.clearChildren();
 
         final Optional<CombatContext> optCom = CombatAttribute.get(entity);
-        if (optCom.isPresent())
-            refillHasContext(optCom.get());
-        else
-            refillWithoutContext();
+        try {
+            if (optCom.isPresent())
+                refillHasContext(optCom.get());
+            else
+                refillWithoutContext();
+        } catch (Exception e) {
+            CombatRpc.reset(entity.getEntityId());
+        }
     }
 
     private void refillHasContext(CombatContext context) {
@@ -75,24 +80,45 @@ public class ProgressView extends Widget {
             case ATTACK:
                 addPane("more.gui.combat.tips.current_action", context.action.getTitle());
                 addPane("more.gui.combat.tips.damage_target");
+                addPane("more.gui.combat.tips.targets",
+                        context.targets.stream()
+                            .map(id -> GetUtils.entityLiving(entity, id).orElse(null))
+                            .filter(Objects::nonNull)
+                            .map(CombatNotifications::getName)
+                            .collect(Collectors.joining("\n"))
+                );
+
                 addButton("more.gui.combat.end_attack", () -> CombatRpc.endAttack(entity.getEntityId()));
                 break;
             case WAIT:
-                addPane("more.gui.combat.tips.wait_defender");
+                final CombatContext offenderCom;
+                if (context.role == CombatContext.Role.DEFENCE) {
+                    if (context.targets.isEmpty())
+                        throw new RuntimeException();
+                    offenderCom = GetUtils.entityLiving(entity, context.targets.get(0))
+                            .flatMap(CombatAttribute::get)
+                            .orElseThrow(RuntimeException::new);
+                } else {
+                    offenderCom = context;
+                }
+                addPane("more.gui.combat.tips.wait_defenders",
+                        offenderCom.targets.stream()
+                                .map(id -> GetUtils.entityLiving(entity, id).orElse(null))
+                                .filter(Objects::nonNull)
+                                .map(CombatNotifications::getName)
+                                .collect(Collectors.joining("\n"))
+                );
                 break;
             case DEFEND:
-                final Entity foe = entity.worldObj.getEntityByID(context.target);
-                if (foe == null) {
-                    CombatRpc.reset(entity.getEntityId());
-                    return;
-                }
+                if (context.targets.isEmpty())
+                    throw new RuntimeException();
+                final EntityLivingBase foe = GetUtils.entityLiving(entity, context.targets.get(0))
+                        .orElseThrow(RuntimeException::new);
                 final ActionHeader action = CombatAttribute.get(foe)
-                        .map(c -> c.action).orElse(null);
-                if (action == null) {
-                    CombatRpc.reset(entity.getEntityId());
-                    return;
-                }
+                        .map(c -> c.action)
+                        .orElseThrow(RuntimeException::new);
 
+                addPane("more.gui.combat.tips.offender", CombatNotifications.getName(foe));
                 addPane("more.gui.combat.tips.enemy_action", action.getTitle());
                 if (context.action == null)
                     addPane("more.gui.combat.tips.defence_action");

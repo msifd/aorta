@@ -6,7 +6,9 @@ import msifeed.mc.extensions.chat.ChatMessage;
 import msifeed.mc.extensions.chat.Language;
 import msifeed.mc.extensions.chat.composer.SpeechType;
 import msifeed.mc.more.crabs.action.ActionHeader;
+import msifeed.mc.more.crabs.character.Character;
 import msifeed.mc.more.crabs.rolls.Criticalness;
+import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.sys.utils.L10n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -91,10 +93,15 @@ public final class CombatNotifications {
         return String.format("%+d", i);
     }
 
-    private static String getName(EntityLivingBase entity) {
-        return entity instanceof EntityPlayer
-                ? ((EntityPlayer) entity).getDisplayName()
-                : entity.getCommandSenderName();
+    public static String getName(EntityLivingBase entity) {
+        if (entity instanceof EntityPlayer)
+            return ((EntityPlayer) entity).getDisplayName();
+
+        final Character chr = CharacterAttribute.get(entity).orElse(null);
+        if (chr != null && !chr.name.isEmpty())
+            return chr.name;
+
+        return entity.getCommandSenderName();
     }
 
     static void notify(EntityLivingBase entity, String text) {

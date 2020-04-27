@@ -10,23 +10,31 @@ import java.util.Comparator;
 import java.util.EnumMap;
 
 public class ActionContext implements Comparable<ActionContext> {
-    public final Action action;
-    public final Role role;
+    public Action action;
 
-    public ArrayList<DamageAmount> damageToDeal = new ArrayList<>();
+    public ArrayList<DamageAmount> damageDealt = new ArrayList<>();
     public ArrayList<DamageAmount> damageToReceive = new ArrayList<>();
     public ArrayList<Buff> buffsToReceive = new ArrayList<>();
 
-    public EnumMap<Ability, Integer> abilityEffectMods = new EnumMap<>(Ability.class);
+    public EnumMap<Ability, Integer> effectAbilityMods = new EnumMap<>(Ability.class);
 
     public int scorePlayerMod;
     public int scoreAction;
     public Criticalness critical;
     public boolean successful;
 
-    public ActionContext(Action action, Role role) {
+    public void updateAction(Action action) {
         this.action = action;
-        this.role = role;
+        resetScore();
+    }
+
+    public void reset() {
+        action = null;
+        damageDealt.clear();
+        damageToReceive.clear();
+        buffsToReceive.clear();
+        effectAbilityMods.clear();
+
         resetScore();
     }
 
@@ -57,9 +65,5 @@ public class ActionContext implements Comparable<ActionContext> {
 
     private boolean isSuccessful() {
         return successful;
-    }
-
-    public enum Role {
-        offence, defence
     }
 }

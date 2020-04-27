@@ -2,7 +2,6 @@ package msifeed.mc.more.crabs.action.effects;
 
 import msifeed.mc.more.More;
 import msifeed.mc.more.crabs.character.Ability;
-import msifeed.mc.more.crabs.combat.ActionContext;
 import msifeed.mc.more.crabs.combat.FighterInfo;
 import msifeed.mc.more.crabs.rolls.Dices;
 import net.minecraft.util.MathHelper;
@@ -17,7 +16,7 @@ public final class ScoreEffects {
         }
 
         @Override
-        public boolean shouldApply(Stage stage, ActionContext target, ActionContext other) {
+        public boolean shouldApply(Stage stage, FighterInfo target, FighterInfo other) {
             return stage == Stage.SCORE;
         }
 
@@ -54,13 +53,13 @@ public final class ScoreEffects {
         }
 
         @Override
-        public boolean shouldApply(Stage stage, ActionContext target, ActionContext other) {
+        public boolean shouldApply(Stage stage, FighterInfo target, FighterInfo other) {
             return stage == Stage.SCORE;
         }
 
         @Override
         public void apply(FighterInfo target, FighterInfo other) {
-            final float mod = target.mod.toAbility(ability) + target.act.abilityEffectMods.getOrDefault(ability, 0);
+            final float mod = target.mod.toAbility(ability) + target.act.effectAbilityMods.getOrDefault(ability, 0);
             final float value = target.chr.abilities.getOrDefault(ability, 0);
             final float penaltyRate = More.DEFINES.combat().armorPenalty.onStats.getOrDefault(ability, 0f);
             final float penalty = penaltyRate * target.entity.getTotalArmorValue();
@@ -111,7 +110,7 @@ public final class ScoreEffects {
         }
 
         @Override
-        public boolean shouldApply(Stage stage, ActionContext target, ActionContext other) {
+        public boolean shouldApply(Stage stage, FighterInfo target, FighterInfo other) {
             return stage == Stage.SCORE;
         }
 
@@ -159,7 +158,7 @@ public final class ScoreEffects {
         }
 
         @Override
-        public boolean shouldApply(Stage stage, ActionContext target, ActionContext other) {
+        public boolean shouldApply(Stage stage, FighterInfo target, FighterInfo other) {
             return stage == Stage.SCORE;
         }
 
@@ -207,7 +206,7 @@ public final class ScoreEffects {
         }
 
         @Override
-        public boolean shouldApply(Stage stage, ActionContext target, ActionContext other) {
+        public boolean shouldApply(Stage stage, FighterInfo target, FighterInfo other) {
             return stage == Stage.SCORE;
         }
 
@@ -256,13 +255,13 @@ public final class ScoreEffects {
         }
 
         @Override
-        public boolean shouldApply(Stage stage, ActionContext target, ActionContext other) {
+        public boolean shouldApply(Stage stage, FighterInfo target, FighterInfo other) {
             return stage == Stage.PRE_SCORE;
         }
 
         @Override
         public void apply(FighterInfo target, FighterInfo other) {
-            target.act.abilityEffectMods.compute(ability, (k, v) -> (v == null) ? modifier : v + modifier);
+            target.act.effectAbilityMods.compute(ability, (k, v) -> (v == null) ? modifier : v + modifier);
         }
 
         @Override

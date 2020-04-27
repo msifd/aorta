@@ -1,6 +1,5 @@
 package msifeed.mc.more.crabs.action.effects;
 
-import msifeed.mc.more.crabs.combat.ActionContext;
 import msifeed.mc.more.crabs.combat.DamageAmount;
 import msifeed.mc.more.crabs.combat.FighterInfo;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,14 +16,14 @@ public final class ActionEffects {
         }
 
         @Override
-        public boolean shouldApply(Stage stage, ActionContext target, ActionContext other) {
+        public boolean shouldApply(Stage stage, FighterInfo target, FighterInfo other) {
             return stage == Stage.ACTION;
         }
 
         @Override
         public void apply(FighterInfo target, FighterInfo other) {
             if (other != null)
-                target.act.damageToReceive.addAll(other.act.damageToDeal);
+                target.act.damageToReceive.addAll(target.act.damageDealt);
         }
 
         @Override
@@ -52,7 +51,7 @@ public final class ActionEffects {
         }
 
         @Override
-        public boolean shouldApply(Stage stage, ActionContext target, ActionContext other) {
+        public boolean shouldApply(Stage stage, FighterInfo target, FighterInfo other) {
             return stage == Stage.ACTION;
         }
 
@@ -103,7 +102,7 @@ public final class ActionEffects {
         }
 
         @Override
-        public boolean shouldApply(Stage stage, ActionContext target, ActionContext other) {
+        public boolean shouldApply(Stage stage, FighterInfo target, FighterInfo other) {
             return stage == Stage.ACTION;
         }
 
@@ -151,7 +150,7 @@ public final class ActionEffects {
         }
 
         @Override
-        public boolean shouldApply(Stage stage, ActionContext target, ActionContext other) {
+        public boolean shouldApply(Stage stage, FighterInfo target, FighterInfo other) {
             return stage == Stage.ACTION;
         }
 
@@ -200,7 +199,7 @@ public final class ActionEffects {
         }
 
         @Override
-        public boolean shouldApply(Stage stage, ActionContext target, ActionContext other) {
+        public boolean shouldApply(Stage stage, FighterInfo target, FighterInfo other) {
             return stage == Stage.ACTION;
         }
 

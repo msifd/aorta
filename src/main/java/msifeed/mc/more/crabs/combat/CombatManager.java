@@ -3,9 +3,9 @@ package msifeed.mc.more.crabs.combat;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
 import msifeed.mc.more.crabs.action.Action;
 import msifeed.mc.more.crabs.action.ActionRegistry;
+import msifeed.mc.more.crabs.action.ActionTag;
 import msifeed.mc.more.crabs.action.Combo;
 import msifeed.mc.more.crabs.action.effects.Buff;
 import msifeed.mc.more.crabs.action.effects.Effect;
@@ -14,13 +14,20 @@ import msifeed.mc.more.crabs.rolls.Dices;
 import msifeed.mc.more.crabs.utils.ActionAttribute;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
+import msifeed.mc.more.crabs.utils.GetUtils;
 import msifeed.mc.sys.attributes.MissingRequiredAttributeException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public enum CombatManager {
     INSTANCE;
@@ -38,13 +45,13 @@ public enum CombatManager {
                 return false;
 
             if (actionChanged)
-                updateAction(self, action, ActionContext.Role.offence);
-            else if (action.requiresNoRoll())
-                finishSoloMove(new FighterInfo(self));
+                updateAction(self, action, CombatContext.Role.OFFENCE);
 
             return true;
         } else if (ctx.phase == CombatContext.Phase.DEFEND) {
-            final Entity offender = self.worldObj.getEntityByID(ctx.target);
+            if (ctx.targets.isEmpty())
+                return false;
+            final EntityLivingBase offender = GetUtils.entityLiving(self, ctx.targets.get(0)).orElse(null);
             if (offender == null)
                 return false;
             final CombatContext offenderCom = CombatAttribute.require(offender);
@@ -55,9 +62,13 @@ public enum CombatManager {
                 return false;
 
             if (actionChanged)
-                updateAction(self, action, ActionContext.Role.defence);
-            else
-                finishMove(new FighterInfo((EntityLivingBase) offender), new FighterInfo(self));
+                updateAction(self, action, CombatContext.Role.DEFENCE);
+            else {
+                CombatAttribute.INSTANCE.update(self, com -> {
+                    com.phase = CombatContext.Phase.WAIT;
+                });
+                tryFinishMove(offender, offenderCom);
+            }
 
             return true;
         }
@@ -65,9 +76,21 @@ public enum CombatManager {
         return false;
     }
 
-    private static void updateAction(EntityLivingBase self, Action action, ActionContext.Role role) {
-        CombatAttribute.INSTANCE.update(self, context -> context.action = action);
-        ActionAttribute.INSTANCE.set(self, new ActionContext(action, role));
+    public void endAction(EntityLivingBase self, CombatContext com) {
+        if (com.action.requiresNoRoll()) {
+            finishSoloMove(new FighterInfo(self));
+        } else {
+            com.phase = CombatContext.Phase.WAIT;
+            CombatAttribute.INSTANCE.set(self, com);
+        }
+    }
+
+    private static void updateAction(EntityLivingBase self, Action action, CombatContext.Role role) {
+        CombatAttribute.INSTANCE.update(self, com -> com.updateAction(action, role));
+
+        final ActionContext act = ActionAttribute.get(self).orElse(new ActionContext());
+        act.updateAction(action);
+        ActionAttribute.INSTANCE.set(self, act);
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -119,53 +142,85 @@ public enum CombatManager {
 
         if (srcCom.phase != CombatContext.Phase.IDLE && srcCom.phase != CombatContext.Phase.ATTACK)
             return;
-        if (srcEntity == vicEntity) // Do not attack your puppet
+        if (srcCom.action == null)
             return;
-        if (srcCom.target != 0 && srcCom.target != vicEntity.getEntityId()) // Do not change first target
+        if (vicCom.phase != CombatContext.Phase.IDLE && vicCom.phase != CombatContext.Phase.DEFEND)
+            return;
+        if (srcEntity == vicEntity) // Do not attack your puppet
             return;
 //        if (!ItemStack.areItemStackTagsEqual(srcEntity.getHeldItem(), srcCom.weapon))
 //            return;
 
-        final ActionContext srcAct = ActionAttribute.get(srcEntity).orElse(null);
-        if (srcAct == null)
-            return;
+        final ActionContext vicAct = ActionAttribute.require(vicEntity);
 
+        boolean shouldUpdateOffender = false;
         if (srcCom.phase != CombatContext.Phase.ATTACK) {
-            CombatAttribute.INSTANCE.update(srcEntity, context -> {
-                context.phase = CombatContext.Phase.ATTACK;
-                context.target = vicEntity.getEntityId();
-            });
+            srcCom.phase = CombatContext.Phase.ATTACK;
+            srcCom.targets = new ArrayList<>();
+            shouldUpdateOffender = true;
         }
+        if (!srcCom.targets.contains(vicEntity.getEntityId())) {
+            srcCom.targets.add(vicEntity.getEntityId());
+            shouldUpdateOffender = true;
+        }
+        if (shouldUpdateOffender)
+            CombatAttribute.INSTANCE.set(srcEntity, srcCom);
 
         if (vicCom.phase != CombatContext.Phase.DEFEND) {
             CombatAttribute.INSTANCE.update(vicEntity, context -> {
                 context.phase = CombatContext.Phase.DEFEND;
-                context.target = srcEntity.getEntityId();
+                context.targets = Collections.singletonList(srcEntity.getEntityId());
             });
         }
 
-        srcAct.damageToDeal.add(new DamageAmount(event.source, event.ammount));
+        vicAct.damageDealt.add(new DamageAmount(event.source, event.ammount));
     }
 
-    private void finishMove(FighterInfo offender, FighterInfo defender) {
-        offender.com.phase = CombatContext.Phase.END;
-        defender.com.phase = CombatContext.Phase.END;
+    private void tryFinishMove(EntityLivingBase offender, CombatContext offenderCom) {
+        final List<EntityLivingBase> defenderEntities =  offenderCom.targets.stream()
+                .map(id -> GetUtils.entityLiving(offender, id).orElse(null))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        final List<CombatContext> defenderComs = defenderEntities.stream()
+                .map(CombatAttribute::require)
+                .collect(Collectors.toList());
+        final boolean allDefendersAreWaiting = defenderComs.stream()
+                .allMatch(ctx -> ctx.phase == CombatContext.Phase.WAIT);
 
-        while (offender.act.compareTo(defender.act) == 0) {
-            applyScores(offender);
-            applyScores(defender);
+        final boolean everyoneIsReady = defenderEntities.size() == defenderComs.size() && allDefendersAreWaiting;
+        if (everyoneIsReady)
+            finishMove(offender, defenderEntities);
+    }
+
+    private void finishMove(EntityLivingBase offenderEntity, List<EntityLivingBase> defenderEntities) {
+        final FighterInfo offender = new FighterInfo(offenderEntity);
+        final List<FighterInfo> defenders = defenderEntities.stream().map(FighterInfo::new).collect(Collectors.toList());
+
+        offender.com.phase = CombatContext.Phase.END;
+        for (FighterInfo defender : defenders)
+            defender.com.phase = CombatContext.Phase.END;
+
+        applyScores(offender);
+        for (FighterInfo defender : defenders) {
+            do {
+                applyScores(defender);
+            } while (offender.act.compareTo(defender.act) == 0);
         }
 
-        if (offender.act.compareTo(defender.act) > 0)
-            applyEffectsAndResults(offender, defender);
-        else
-            applyEffectsAndResults(defender, offender);
+        for (FighterInfo defender : defenders) {
+            if (offender.act.compareTo(defender.act) > 0)
+                applyEffectsAndResults(offender, defender);
+            else
+                applyEffectsAndResults(defender, offender);
+        }
 
         cleanupMove(offender);
-        cleanupMove(defender);
+        for (FighterInfo defender : defenders)
+            cleanupMove(defender);
 
         CombatAttribute.INSTANCE.set(offender.entity, offender.com);
-        CombatAttribute.INSTANCE.set(defender.entity, defender.com);
+        for (FighterInfo defender : defenders)
+            CombatAttribute.INSTANCE.set(defender.entity, defender.com);
     }
 
     private static void applyScores(FighterInfo self) {
@@ -217,6 +272,10 @@ public enum CombatManager {
         applyBuffs(self.com.buffs, Effect.Stage.ACTION, self, null);
         applyActionResults(self);
 
+        if (self.act.action.hasAnyTag(ActionTag.apply)) {
+            PotionsHandler.convertPotionEffects(self.entity, self.com);
+        }
+
         CombatNotifications.soloMoveResult(self);
 
         cleanupMove(self);
@@ -225,18 +284,19 @@ public enum CombatManager {
 
     private static void cleanupMove(FighterInfo self) {
         self.com.removeEndedEffects();
-        softReset(self.entity, self.com);
+        softReset(self.com);
+        self.act.reset();
     }
 
     private static void applyBuffs(List<Buff> buffs, Effect.Stage stage, FighterInfo self, FighterInfo other) {
         for (Buff b : buffs)
-            if (b.shouldApply(stage, self.act, other != null ? other.act : null))
+            if (b.shouldApply(stage, self, other))
                 b.apply(self, other);
     }
 
     private static void applyEffects(List<Effect> effects, Effect.Stage stage, FighterInfo self, FighterInfo other) {
         for (Effect e : effects)
-            if (e.shouldApply(stage, self.act, other != null ? other.act : null))
+            if (e.shouldApply(stage, self, other))
                 e.apply(self, other);
     }
 
@@ -266,30 +326,54 @@ public enum CombatManager {
         }
     }
 
+//    @SubscribeEvent
+//    public void onPlayerTick(TickEvent.PlayerTickEvent event) {
+//        if (event.phase != TickEvent.Phase.END) return;
+//        if (event.player.worldObj.getTotalWorldTime() % 20 != 0) return;
+//
+//        final CombatContext com = CombatAttribute.get(event.player).orElse(null);
+//        if (com == null) return;
+//
+//        if (com.phase == CombatContext.Phase.LEAVE)
+//            removeFromCombat(event.player, com);
+//    }
+
     @SubscribeEvent
-    public void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END) return;
-        if (event.player.worldObj.getTotalWorldTime() % 20 != 0) return;
+    public void onLivingJoinWorld(EntityJoinWorldEvent event) {
+        if (event.entity.worldObj.isRemote || !(event.entity instanceof EntityLivingBase))
+            return;
 
-        final CombatContext com = CombatAttribute.get(event.player).orElse(null);
-        if (com == null) return;
+        final CombatContext com = CombatAttribute.get(event.entity).orElse(null);
+        if (com == null)
+            return;
 
-        if (com.phase == CombatContext.Phase.LEAVE)
-            removeFromCombat(event.player, com);
+        softReset(com);
+        CombatAttribute.INSTANCE.set(event.entity, com);
+
+        if (com.phase.isInCombat())
+            ActionAttribute.INSTANCE.set(event.entity, new ActionContext());
     }
 
-    public static void removeFromCombat(EntityLivingBase entity, CombatContext com) {
-        softReset(entity, com);
+    public void joinCombat(EntityLivingBase target, CombatContext com) {
+        com.phase = CombatContext.Phase.IDLE;
+
+        CombatAttribute.INSTANCE.set(target, com);
+        ActionAttribute.INSTANCE.set(target, new ActionContext());
+    }
+
+    public void removeFromCombat(Entity entity, CombatContext com) {
+        softReset(com);
         com.phase = CombatContext.Phase.NONE;
         com.knockedOut = false;
         com.prevActions.clear();
         com.buffs.clear();
+        ActionAttribute.remove(entity);
     }
 
-    public static void softReset(Entity entity, CombatContext com) {
+    public static void softReset(CombatContext com) {
         com.phase = com.phase.isInCombat() ? CombatContext.Phase.IDLE : CombatContext.Phase.NONE;
-        com.target = 0;
+        com.role = CombatContext.Role.NONE;
+        com.targets = Collections.emptyList();
         com.action = null;
-        ActionAttribute.remove(entity);
     }
 }

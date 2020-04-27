@@ -7,9 +7,6 @@ import msifeed.mc.mellow.widgets.text.Label;
 import msifeed.mc.mellow.widgets.text.TextInput;
 import msifeed.mc.more.crabs.character.Ability;
 import msifeed.mc.more.crabs.character.Character;
-import msifeed.mc.more.crabs.meta.MetaInfo;
-
-import java.util.Map;
 
 public class EditAbilitiesView extends Widget {
     private final Character character;

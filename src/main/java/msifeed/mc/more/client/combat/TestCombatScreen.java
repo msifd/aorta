@@ -1,6 +1,5 @@
 package msifeed.mc.more.client.combat;
 
-import msifeed.mc.mellow.layout.FillLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.mellow.utils.SizePolicy;
@@ -14,6 +13,7 @@ import msifeed.mc.more.crabs.action.ActionHeader;
 import msifeed.mc.more.crabs.action.ActionRegistry;
 import msifeed.mc.more.crabs.action.effects.Effect;
 import msifeed.mc.more.crabs.combat.ActionContext;
+import msifeed.mc.more.crabs.combat.CombatContext;
 import msifeed.mc.more.crabs.combat.FighterInfo;
 import msifeed.mc.more.crabs.rolls.Criticalness;
 import msifeed.mc.more.crabs.rolls.Dices;
@@ -66,9 +66,9 @@ public class TestCombatScreen extends MellowGuiScreen {
     private static void doAction(Action action) {
         final EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 
-
-        CombatAttribute.INSTANCE.update(player, context -> context.action = action);
-        ActionAttribute.INSTANCE.set(player, new ActionContext(action, action.isOffencive() ? ActionContext.Role.offence : ActionContext.Role.defence));
+        final CombatContext.Role role = action.isOffencive() ? CombatContext.Role.OFFENCE : CombatContext.Role.DEFENCE;
+        CombatAttribute.INSTANCE.update(player, ctx -> ctx.updateAction(action, role));
+        ActionAttribute.INSTANCE.update(player, ctx -> ctx.updateAction(action));
         final FighterInfo self = new FighterInfo(player);
 
         // Apply scores
@@ -82,7 +82,7 @@ public class TestCombatScreen extends MellowGuiScreen {
         send(player, String.format("%s - mod %d, crit: %s", action.getTitle(), self.act.scorePlayerMod, self.act.critical.toString()));
 
         for (Effect e : self.act.action.self) {
-            if (e.shouldApply(Effect.Stage.PRE_SCORE, self.act, null)) {
+            if (e.shouldApply(Effect.Stage.PRE_SCORE, self, null)) {
                 final int scoreBefore = self.act.scoreAction;
                 e.apply(self, null);
                 final int scoreDiff = self.act.scoreAction - scoreBefore;
@@ -91,7 +91,7 @@ public class TestCombatScreen extends MellowGuiScreen {
         }
 
         for (Effect e : self.act.action.self) {
-            if (e.shouldApply(Effect.Stage.SCORE, self.act, null)) {
+            if (e.shouldApply(Effect.Stage.SCORE, self, null)) {
                 final int scoreBefore = self.act.scoreAction;
                 e.apply(self, null);
                 final int scoreDiff = self.act.scoreAction - scoreBefore;

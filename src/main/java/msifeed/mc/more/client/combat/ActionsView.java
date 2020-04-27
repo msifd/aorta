@@ -42,7 +42,9 @@ public class ActionsView extends Widget {
 
             final ActionTag incomingAttackType;
             if (defence) {
-                final Entity foe = entity.worldObj.getEntityByID(ctx.target);
+                if (ctx.targets.isEmpty())
+                    return;
+                final Entity foe = entity.worldObj.getEntityByID(ctx.targets.get(0));
                 if (foe == null)
                     return;
                 final ActionHeader action = CombatAttribute.require(foe).action;

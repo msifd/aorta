@@ -98,10 +98,12 @@ more.gui.combat.reset=Сброс хода
 
 more.gui.combat.tips.offence_action=Выберите атакующее действие
 more.gui.combat.tips.current_action=Текущее действие: %s
+more.gui.combat.tips.targets=Текущие цели:\n%s
 more.gui.combat.tips.confirm_action=Выберите действие снова чтобы подтвердить
 more.gui.combat.tips.change_action=Действие можно изменить
 more.gui.combat.tips.damage_target=Наносите урон цели
-more.gui.combat.tips.wait_defender=Ждите действия защищающегося
+more.gui.combat.tips.wait_defenders=Ждите действия защищающихся:\n%s
+more.gui.combat.tips.offender=Нападающий: %s
 more.gui.combat.tips.enemy_action=Действие противника: %s
 more.gui.combat.tips.defence_action=Выберите защитное действие
 more.gui.combat.tips.leaving=Вы покидаете бой

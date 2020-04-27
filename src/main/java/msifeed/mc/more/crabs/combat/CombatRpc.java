@@ -6,9 +6,12 @@ import msifeed.mc.more.crabs.action.Action;
 import msifeed.mc.more.crabs.action.ActionRegistry;
 import msifeed.mc.more.crabs.character.Character;
 import msifeed.mc.more.crabs.meta.MetaInfo;
+import msifeed.mc.more.crabs.utils.ActionAttribute;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
 import msifeed.mc.more.crabs.utils.MetaAttribute;
+import msifeed.mc.sys.attributes.MissingRequiredAttributeException;
+import msifeed.mc.sys.config.ConfigManager;
 import msifeed.mc.sys.rpc.Rpc;
 import msifeed.mc.sys.rpc.RpcMethod;
 import msifeed.mc.sys.rpc.RpcMethodException;
@@ -79,8 +82,7 @@ public enum CombatRpc {
         if (com.phase != CombatContext.Phase.ATTACK)
             throw new RpcMethodException(sender, "target is attacking!");
 
-        com.phase = CombatContext.Phase.WAIT;
-        CombatAttribute.INSTANCE.set(target, com);
+        CombatManager.INSTANCE.endAction(target, com);
     }
 
     // // // //
@@ -97,13 +99,13 @@ public enum CombatRpc {
         if (!(targetEntity instanceof EntityLivingBase))
             throw new RpcMethodException(sender, "target is not a living entity");
         final EntityLivingBase target = (EntityLivingBase) targetEntity;
+        final CombatContext com = CombatAttribute.get(target).orElse(null);
+        if (com == null)
+            throw new RpcMethodException(sender, "target is not a combatant");
+        if (com.phase.isInCombat())
+            throw new RpcMethodException(sender, "target is already in combat");
 
-        CombatAttribute.INSTANCE.update(target, context -> {
-            if (context.phase.isInCombat())
-                throw new RpcMethodException(sender, "target is already in combat");
-
-            context.phase = CombatContext.Phase.IDLE;
-        });
+        CombatManager.INSTANCE.joinCombat(target, com);
     }
 
     public static void leave(int entityId) {
@@ -124,10 +126,11 @@ public enum CombatRpc {
             if (context.phase != CombatContext.Phase.IDLE)
                 throw new RpcMethodException(sender, "target is not in " + CombatContext.Phase.IDLE.toString() + " stage");
 
-            if (targetEntity instanceof EntityPlayer)
-                context.phase = CombatContext.Phase.LEAVE;
-            else
-                CombatManager.removeFromCombat((EntityLivingBase) targetEntity, context);
+            CombatManager.INSTANCE.removeFromCombat(targetEntity, context);
+//            if (targetEntity instanceof EntityPlayer)
+//                context.phase = CombatContext.Phase.LEAVE;
+//            else
+//                CombatManager.INSTANCE.removeFromCombat((EntityLivingBase) targetEntity, context);
         });
     }
 
@@ -143,7 +146,7 @@ public enum CombatRpc {
         if (!(targetEntity instanceof EntityLivingBase))
             throw new RpcMethodException(sender, "target is not a living entity");
 
-        CombatAttribute.INSTANCE.update(targetEntity, context -> CombatManager.softReset(targetEntity, context));
+        CombatAttribute.INSTANCE.update(targetEntity, CombatManager::softReset);
     }
 
     // // // //

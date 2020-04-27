@@ -1,5 +1,6 @@
 package msifeed.mc.more.crabs.combat;
 
+import msifeed.mc.more.crabs.action.Action;
 import msifeed.mc.more.crabs.action.ActionHeader;
 import msifeed.mc.more.crabs.action.ActionRegistry;
 import msifeed.mc.more.crabs.action.effects.Buff;
@@ -9,9 +10,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class CombatContext {
     public int puppet;
@@ -21,8 +22,14 @@ public class CombatContext {
     public Stack<String> prevActions = new Stack<>();
 
     public Phase phase = Phase.NONE;
-    public int target = 0;
+    public Role role = Role.NONE;
+    public List<Integer> targets = Collections.emptyList();
     public ActionHeader action = null;
+
+    public void updateAction(Action action, Role role) {
+        this.action = action;
+        this.role = role;
+    }
 
     public void removeEndedEffects() {
         buffs.removeIf(Buff::ended);
@@ -50,7 +57,9 @@ public class CombatContext {
         c.setTag(Tags.prevActions, prevActionsNbt);
 
         c.setByte(Tags.phase, (byte) phase.ordinal());
-        c.setInteger(Tags.target, target);
+        c.setByte(Tags.role, (byte) role.ordinal());
+        c.setIntArray(Tags.targets, targets.stream().mapToInt(Integer::intValue).distinct().toArray());
+
         if (action != null)
             c.setString(Tags.action, action.id);
 
@@ -74,7 +83,12 @@ public class CombatContext {
         }
 
         phase = Phase.values()[c.getByte(Tags.phase)];
-        target = c.getInteger(Tags.target);
+        role = Role.values()[c.getByte(Tags.role)];
+        targets = IntStream.of(c.getIntArray(Tags.targets))
+                .distinct()
+                .boxed()
+                .collect(Collectors.toList());
+
         action = ActionRegistry.getHeader(c.getString(Tags.action));
     }
 
@@ -82,8 +96,8 @@ public class CombatContext {
         NONE, // Not in combat
         IDLE, // Wait for action
         ATTACK, // Apply damage
-        WAIT, // Wait defender's action
-        DEFEND, // Wait for defencive action
+        DEFEND, // Select defencive action
+        WAIT, // Wait for all defenders select action
         END, // Pass damage to entity
         LEAVE, // Try to leave combat
         ;
@@ -98,13 +112,19 @@ public class CombatContext {
         }
     }
 
+
+    public enum Role {
+        NONE, OFFENCE, DEFENCE
+    }
+
     private static final class Tags {
         static final String puppet = "puppet";
         static final String knocked = "knocked";
         static final String buffs = "buffs";
         static final String prevActions = "prevActions";
         static final String phase = "phase";
-        static final String target = "target";
+        static final String role = "role";
+        static final String targets = "targets";
         static final String action = "action";
     }
 }

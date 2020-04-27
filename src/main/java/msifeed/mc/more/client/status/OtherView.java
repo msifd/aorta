@@ -1,13 +1,10 @@
 package msifeed.mc.more.client.status;
 
 import msifeed.mc.mellow.layout.GridLayout;
-import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.text.Label;
 import msifeed.mc.mellow.widgets.text.TextInput;
-import msifeed.mc.more.crabs.character.Ability;
 import msifeed.mc.more.crabs.character.Character;
-import msifeed.mc.more.crabs.meta.MetaInfo;
 import msifeed.mc.sys.utils.L10n;
 
 class OtherView extends Widget {
