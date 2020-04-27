@@ -30,7 +30,7 @@ class ModsView extends Widget {
 
             addChild(new Label(L10n.tr("more.gui.combat.mods.roll")));
             final TextInput modInput = new TextInput();
-            modInput.getSizeHint().x = 16;
+            modInput.getSizeHint().x = 20;
             if (mods.roll != 0)
                 modInput.setText(Integer.toString(mods.roll));
             modInput.setFilter(s -> TextInput.isSignedIntBetween(s, -99, 99));
@@ -48,7 +48,7 @@ class ModsView extends Widget {
         addChild(pair);
 
         final Label label = new Label(a.trShort() + ":");
-        label.getSizeHint().x = 22;
+        label.getSizeHint().x = 25;
         label.getPos().y = 1;
         pair.addChild(label);
 

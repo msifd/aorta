@@ -29,8 +29,6 @@ public class ListLayout implements Layout {
         int maxSecondary = 0;
 
         for (Widget child : children) {
-            child.setDirty();
-
             final Geom childGeom = child.getGeometry();
             childGeom.reset();
             childGeom.setSize(LayoutUtils.getPreferredSize(child));
@@ -60,7 +58,7 @@ public class ListLayout implements Layout {
 
     @Override
     public void layoutRelativeParent(Widget parent, Collection<Widget> children) {
-        final Geom geometry = LayoutUtils.getGeomWithMargin(parent);
+        final Geom geometry = parent.getGeomWithMargin();
 
         for (Widget child : children) {
             final Geom childGeom = child.getGeometry();
@@ -68,9 +66,9 @@ public class ListLayout implements Layout {
             switch (fillPolicy) {
                 case EXTEND:
                     if (direction == Direction.VERTICAL)
-                        childGeom.setSize(LayoutUtils.getPreferredSize(geometry.w, child.getContentSize().y, child));
+                        childGeom.setSize(LayoutUtils.getPreferredSize(geometry.w, childGeom.h, child));
                     else
-                        childGeom.setSize(LayoutUtils.getPreferredSize(child.getContentSize().x, geometry.h, child));
+                        childGeom.setSize(LayoutUtils.getPreferredSize(childGeom.w, geometry.h, child));
                     break;
                 case CENTER:
                     // TODO:

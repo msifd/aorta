@@ -1,13 +1,17 @@
 package msifeed.mc.mellow.widgets.text;
 
 import msifeed.mc.mellow.Mellow;
+import msifeed.mc.mellow.render.RenderWidgets;
+import msifeed.mc.mellow.utils.Geom;
 import msifeed.mc.mellow.utils.SizePolicy;
+import msifeed.mc.mellow.widgets.Widget;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.entity.RenderManager;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Stream;
 
-public class MultilineLabel extends TextWall {
+public class MultilineLabel extends Widget {
     public int brightColor = Mellow.getColor("text_bright");
     public int darkColor = Mellow.getColor("text_dark");
 
@@ -22,44 +26,58 @@ public class MultilineLabel extends TextWall {
         setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.MINIMUM);
     }
 
-    @Override
     public int getColor() {
         return color;
     }
 
-    @Override
     public void setColor(int color) {
         this.color = color;
     }
 
-    @Override
     public int getLineSkip() {
         return lineSkip;
     }
 
-    @Override
-    public void setLineSkip(int skip) {
-        this.lineSkip = skip;
+    public void updateLineSkip(int delta) {
+        this.lineSkip += delta;
     }
 
-    @Override
     public void setLineLimit(int lineLimit) {
         this.lineLimit = lineLimit;
     }
 
-    @Override
-    public int getLineCount() {
-        return lines.size();
+    public List<String> getLines() {
+        return lines;
     }
 
-    @Override
-    public Stream<String> getLines() {
-        return lines.stream().skip(lineSkip).limit(lineLimit);
-    }
-
-    @Override
     public void setLines(List<String> lines) {
-        super.setLines(lines);
         this.lines = lines;
+
+        final FontRenderer fr = RenderManager.instance.getFontRenderer();
+        final int lineHeight = RenderWidgets.lineHeight();
+
+        int maxWidth = 0;
+        for (String l : lines) {
+            final int w = fr.getStringWidth(l);
+            if (w > maxWidth)
+                maxWidth = w;
+        }
+
+        setSizeHint(maxWidth, lines.size() * lineHeight);
+    }
+
+    @Override
+    protected void renderSelf() {
+        final Geom geom = this.getGeomWithMargin();
+        final int color = getColor();
+        final int lineHeight = RenderWidgets.lineHeight();
+
+        lines.stream()
+                .skip(lineSkip)
+                .limit(lineLimit)
+                .forEach(line -> {
+                    RenderWidgets.string(geom, line, color);
+                    geom.y += lineHeight;
+                });
     }
 }

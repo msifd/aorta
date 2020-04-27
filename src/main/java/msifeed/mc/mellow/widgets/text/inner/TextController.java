@@ -1,47 +1,78 @@
 package msifeed.mc.mellow.widgets.text.inner;
 
+import msifeed.mc.mellow.render.RenderWidgets;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class TextController {
     private FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
     private List<Line> lines = new ArrayList<>();
+
+    private List<String> stringCache;
+    private boolean cacheInvalid = true;
+    private int cacheCursorX = 0;
+
     private int curLine = 0;
     private int curColumn = 0;
 
-    private int maxWidth = 50;
-    private int maxLines = Integer.MAX_VALUE;
+    private int offsetLine = 0;
+    private int offsetColumn = 0;
 
-    private int skip = 0;
-    private int skipLimit = 10;
+    private int viewHeight = 50;
+    private int viewWidth = 50;
+    private int viewWidthReserve = 4;
+
+    private int maxLines = Integer.MAX_VALUE;
+    private int maxWidth = Integer.MAX_VALUE;
 
     public TextController() {
         clear();
     }
 
     public boolean isEmpty() {
-        return lines.size() == 1 && lines.get(0).width == 0;
+        return lines.size() == 1 && lines.get(0).sb.length() == 0;
     }
 
     public int getCurLine() {
         return curLine;
     }
 
-    public int getCurLineView() {
-        return curLine % skipLimit;
-    }
-
     public int getCurColumn() {
         return curColumn;
     }
 
-    public void setMaxWidth(int maxWidth) {
-        this.maxWidth = maxWidth;
+    public int getCursorXOffset() {
+        return cacheCursorX;
+    }
+
+    public int getOffsetColumn() {
+        return offsetColumn;
+    }
+
+    public void setViewHeight(int viewHeight) {
+        this.viewHeight = viewHeight;
+    }
+
+    public void setViewWidth(int viewWidth) {
+        this.viewWidth = viewWidth;
+    }
+
+    public void setViewWidthReserve(int viewWidthReserve) {
+        this.viewWidthReserve = viewWidthReserve;
+    }
+
+    public void setLinesPerView(int lines) {
+        viewHeight = lines * RenderWidgets.lineHeight();
+    }
+
+    public int getLinesPerView() {
+        return viewHeight / RenderWidgets.lineHeight();
     }
 
     public int getMaxLines() {
@@ -50,27 +81,20 @@ public class TextController {
 
     public void setMaxLines(int n) {
         this.maxLines = n;
-        setSkipLimit(n);
     }
 
-    public int getLineSkip() {
-        return skip;
+    public void setMaxWidth(int maxWidth) {
+        this.maxWidth = maxWidth;
     }
 
-    public void setLineSkip(int skip) {
-        this.skip = Math.max(0, Math.min(skip, getLineCount() - 1));
+    public void updateOffsetLine(int lineDelta) {
+        offsetLine = Math.max(0, offsetLine + lineDelta);
+        cacheInvalid = true;
+        refreshCursorPos();
     }
 
-    public void updateLineSkip(int delta) {
-        setLineSkip(skip + delta);
-    }
-
-    public int getSkipLimit() {
-        return skipLimit;
-    }
-
-    public void setSkipLimit(int limit) {
-        this.skipLimit = limit;
+    public int getOffsetLine() {
+        return offsetLine;
     }
 
     public Line getCurrentLine() {
@@ -95,10 +119,21 @@ public class TextController {
     }
 
     public Stream<String> toLineStream() {
-        return lines.stream()
-                .skip(skip)
-                .limit(skipLimit)
-                .map(l -> l.sb.toString());
+        if (cacheInvalid) {
+            stringCache = lines.stream()
+                    .skip(offsetLine)
+                    .limit(getLinesPerView())
+                    .map(ln -> {
+                        if (ln.columns > offsetColumn)
+                            return fontRenderer.trimStringToWidth(ln.sb.substring(offsetColumn), viewWidth);
+                        else
+                            return "";
+                    })
+                    .collect(Collectors.toList());
+            cacheInvalid = false;
+        }
+
+        return stringCache.stream();
     }
 
     public void setLines(List<String> lines) {
@@ -114,28 +149,60 @@ public class TextController {
         lines.add(new Line());
     }
 
-    public void moveCursor(int line, int column) {
+    public void setCursor(int line, int column) {
         line = Math.max(0, Math.min(line, lines.size() - 1));
-        final StringBuilder sb = lines.get(line).sb;
-        column = Math.max(0, Math.min(column, sb.length()));
+        final Line ln = lines.get(line);
+        column = Math.max(0, Math.min(column, ln.sb.length()));
 
         curLine = line;
         curColumn = column;
+        refreshOffsetColumn();
     }
 
     public void moveCursorLine(int delta) {
         final int target = Math.max(0, Math.min(curLine + delta, lines.size() - 1));
         if (target != curLine) {
             curLine = target;
-            curColumn = Math.min(curColumn, lines.get(curLine).sb.length());
+            final int targetCol = fontRenderer.trimStringToWidth(lines.get(curLine).sb.toString(), cacheCursorX).length();
+            curColumn = Math.min(targetCol, lines.get(curLine).sb.length());
+
+            refreshOffsetColumn();
         }
     }
 
     public void moveCursorColumn(boolean right) {
         final StringBuilder sb = lines.get(curLine).sb;
         final int target = getColumnTarget(sb, right);
-        if (target >= 0 && target <= sb.length())
+        if (target >= 0 && target <= sb.length()) {
             curColumn = target;
+            refreshOffsetColumn();
+        } else if (target < 0) {
+            if (curLine > 0)
+                setCursor(curLine - 1, lines.get(curLine - 1).columns);
+        } else {
+            if (curLine + 1 < lines.size())
+                setCursor(curLine + 1, 0);
+        }
+    }
+
+    private void refreshCursorPos() {
+        cacheCursorX = fontRenderer.getStringWidth(getCurrentLine().sb.substring(offsetColumn, curColumn));
+    }
+
+    private void refreshOffsetColumn() {
+        if (curColumn < offsetColumn) {
+            offsetColumn = curColumn;
+            cacheInvalid = true;
+            refreshCursorPos();
+        } else {
+            refreshCursorPos();
+            if (viewWidth - cacheCursorX < viewWidthReserve) {
+                final int overlap = cacheCursorX - viewWidth + viewWidthReserve;
+                offsetColumn += fontRenderer.trimStringToWidth(getCurrentLine().sb.toString(), overlap).length();
+                cacheInvalid = true;
+                refreshCursorPos();
+            }
+        }
     }
 
     public void remove(boolean right) {
@@ -153,17 +220,30 @@ public class TextController {
                 return;
             if (line.sb.length() == 0) {
                 lines.remove(curLine);
-                curLine--;
-                curColumn = getCurrentLine().sb.length();
+                setCursor(curLine - 1, getLine(curLine - 1).sb.length());
+                cacheInvalid = true;
+            } else {
+                final Line prevLn = lines.get(curLine - 1);
+                final int targetColumn = prevLn.columns;
+                curColumn = targetColumn;
+                final String leftover = prevLn.insert(line.sb.toString());
+                if (leftover.isEmpty())
+                    lines.remove(curLine);
+                else
+                    line.remove(0, line.columns - leftover.length());
+                setCursor(curLine, targetColumn);
+                cacheInvalid = true;
             }
         } else if (end > line.sb.length()) { // delete line
             if (curLine == lines.size() - 1)
                 return;
-            if (line.sb.length() == 0)
+            if (line.sb.length() == 0) {
                 lines.remove(curLine);
+                cacheInvalid = true;
+            }
         } else {
             if (line.remove(start, end) && !right)
-                curColumn = target;
+                setCursor(curLine, target);
         }
     }
 
@@ -192,8 +272,12 @@ public class TextController {
         if (!getCurrentLine().insert(c))
             if (breakLine())
                 getCurrentLine().insert(c);
+        final boolean inserted = lc != getLineCount() || lw != getCurrentLine().width;
 
-        return lc != getLineCount() || lw != getCurrentLine().width;
+        if (inserted)
+            refreshOffsetColumn();
+
+        return inserted;
     }
 
     public void insert(String str) {
@@ -204,6 +288,7 @@ public class TextController {
                 if (!breakLine())
                     break;
         }
+        cacheInvalid = true;
     }
 
     private void inputSolidLine(String str) {
@@ -216,6 +301,8 @@ public class TextController {
                 break;
             overflow = getCurrentLine().insert(overflow);
         }
+
+        refreshOffsetColumn();
     }
 
     public boolean breakLine() {
@@ -229,8 +316,13 @@ public class TextController {
             getCurrentLine().remove(curColumn, curColumn + ending.length());
             lines.add(curLine + 1, new Line(ending));
         }
+
         curLine++;
         curColumn = 0;
+        offsetColumn = 0;
+        cacheInvalid = true;
+        refreshCursorPos();
+
         return true;
     }
 
@@ -240,6 +332,7 @@ public class TextController {
 
     public class Line {
         public StringBuilder sb = new StringBuilder();
+        public int columns = 0;
         public int width = 0;
 
         public Line() {
@@ -247,6 +340,7 @@ public class TextController {
         }
         public Line(String s) {
             sb.append(s);
+            columns = s.length();
             width = fontRenderer.getStringWidth(s);
         }
 
@@ -254,9 +348,13 @@ public class TextController {
             final int cw = fontRenderer.getCharWidth(c);
             if (width + cw > maxWidth)
                 return false;
+
             sb.insert(curColumn, c);
+            columns++;
             width += cw;
             curColumn++;
+            cacheInvalid = true;
+
             return true;
         }
 
@@ -264,18 +362,26 @@ public class TextController {
             final String ts = fontRenderer.trimStringToWidth(s, maxWidth - width);
             if (ts.isEmpty())
                 return s;
+
             sb.insert(curColumn, ts);
+            columns += ts.length();
             width += fontRenderer.getStringWidth(ts);
             curColumn += ts.length();
+            cacheInvalid = true;
+
             return s.substring(ts.length());
         }
 
         public boolean remove(int start, int end) {
             if (sb.length() == 0)
                 return false;
+
             final int w = fontRenderer.getStringWidth(sb.substring(start, end));
             sb.delete(start, end);
+            columns -= end - start;
             width -= w;
+            cacheInvalid = true;
+
             return true;
         }
     }

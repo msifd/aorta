@@ -9,9 +9,7 @@ import net.minecraft.util.MathHelper;
 
 import java.util.Collection;
 
-public class ScrollAreaLayout implements Layout {
-    private int spacing = 1;
-
+class ScrollAreaLayout implements Layout {
     @Override
     public Point layoutIndependent(Widget parent, Collection<Widget> children) {
         final Point contentSize = new Point();
@@ -20,6 +18,7 @@ public class ScrollAreaLayout implements Layout {
 
         final ScrollArea scroll = (ScrollArea) parent;
         final Point scrollSize = scroll.getSizeHint();
+        final int spacing = scroll.spacing;
 
         final ScrollAreaThumb thumb = scroll.thumb;
         final Geom thumbGeom = thumb.getGeometry();
@@ -27,38 +26,15 @@ public class ScrollAreaLayout implements Layout {
         thumbGeom.setSize(thumb.getSizeHint());
         thumbGeom.translate(thumb.getPos(), thumb.getZLevel());
 
-        final int availableWidth = scrollSize.x - thumbGeom.w - 1;
-        contentSize.x = availableWidth;
-        thumbGeom.translate(availableWidth + 1, 0);
-
         for (Widget child : children) {
             final Geom childGeom = child.getGeometry();
             childGeom.reset();
-            childGeom.setSize(LayoutUtils.getPreferredSize(availableWidth, child.getContentSize().y, child));
+            childGeom.setSize(LayoutUtils.getPreferredSize(child));
             childGeom.translate(child.getPos(), child.getZLevel());
             childGeom.translate(0, contentSize.y);
-            childGeom.translate(0, spacing);
 
-            contentSize.y += childGeom.h;
-        }
-
-        final int scrollHeight = contentSize.y - scrollSize.y;
-        final double percent;
-
-        if (scrollHeight > 0) {
-            thumb.setVisible(true);
-            final double scrollWindowPercent = (double) scrollSize.y / contentSize.y;
-            thumbGeom.h = MathHelper.floor_double(scrollSize.y * scrollWindowPercent);
-
-            percent = thumb.getPos().y / (double) (scrollSize.y - thumbGeom.h);
-        } else {
-            thumb.setVisible(false);
-            percent = 0;
-        }
-
-        for (Widget child : children) {
-            final Geom childGeom = child.getGeometry();
-            childGeom.translate(0, -MathHelper.floor_double(scrollHeight * percent));
+            contentSize.x = Math.max(contentSize.x, childGeom.w);
+            contentSize.y += childGeom.h + spacing;
         }
 
         return contentSize;
@@ -69,17 +45,41 @@ public class ScrollAreaLayout implements Layout {
         if (!(parent instanceof ScrollArea))
             return;
 
+        final Geom geometry = parent.getGeomWithMargin();
+
         final ScrollArea scroll = (ScrollArea) parent;
+        final int spacing = scroll.spacing;
         final ScrollAreaThumb thumb = scroll.thumb;
+        final Geom thumbGeom = thumb.getGeometry();
+        final int thumbAreaWidth = thumbGeom.w + 1;
 
-        final Geom geometry = LayoutUtils.getGeomWithMargin(parent);
+        thumbGeom.translate(geometry);
+        thumbGeom.translate(geometry.w - thumbGeom.w + 1, 0);
 
+        int contentHeight = 0;
         for (Widget child : children) {
             final Geom childGeom = child.getGeometry();
+            childGeom.setSize(LayoutUtils.getPreferredSize(geometry.w - thumbAreaWidth, child.getContentSize().y, child));
             childGeom.translate(geometry);
+
+            contentHeight += childGeom.h + spacing;
         }
 
-        final Geom thumbGeom = thumb.getGeometry();
-        thumbGeom.translate(geometry);
+        final int scrollHeight = contentHeight - geometry.h;
+
+        if (scrollHeight > 0) {
+            thumb.setVisible(true);
+            final double scrollWindowPercent = (double) geometry.h / contentHeight;
+            thumbGeom.h = MathHelper.floor_double(geometry.h * scrollWindowPercent);
+
+            final double percent = thumb.getPos().y / (double) (geometry.h - thumbGeom.h);
+
+            for (Widget child : children) {
+                final Geom childGeom = child.getGeometry();
+                childGeom.translate(0, -MathHelper.floor_double(scrollHeight * percent));
+            }
+        } else {
+            thumb.setVisible(false);
+        }
     }
 }

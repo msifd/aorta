@@ -57,8 +57,6 @@ public abstract class LayoutFixture {
     }
 
     void update() {
-        for (Widget w : widgets)
-            w.setDirty();
         scene.update();
     }
 }

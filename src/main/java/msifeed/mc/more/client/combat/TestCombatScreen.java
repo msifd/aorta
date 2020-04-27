@@ -1,7 +1,9 @@
 package msifeed.mc.more.client.combat;
 
+import msifeed.mc.mellow.layout.FillLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
+import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.basic.Separator;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
@@ -23,7 +25,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 
 public class TestCombatScreen extends MellowGuiScreen {
-    final ScrollArea list = new ScrollArea();
+    final ScrollArea scroll = new ScrollArea();
 
     public TestCombatScreen() {
 
@@ -34,8 +36,9 @@ public class TestCombatScreen extends MellowGuiScreen {
         final Widget content = window.getContent();
         content.setLayout(ListLayout.VERTICAL);
 
-        list.setSizeHint(120, 150);
-        content.addChild(list);
+        scroll.setSizeHint(150, 150);
+        scroll.setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.MAXIMUM);
+        content.addChild(scroll);
 
         refill();
 
@@ -50,13 +53,13 @@ public class TestCombatScreen extends MellowGuiScreen {
     }
 
     private void refill() {
-        list.clearChildren();
+        scroll.clearChildren();
         ActionRegistry.getFullActions().stream()
                 .sorted(ActionHeader::compareTo)
                 .forEach(action -> {
                     final ButtonLabel btn = new ButtonLabel(action.getTitle());
                     btn.setClickCallback(() -> doAction(action));
-                    list.addChild(btn);
+                    scroll.addChild(btn);
                 });
     }
 

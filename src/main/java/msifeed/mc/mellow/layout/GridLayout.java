@@ -28,8 +28,6 @@ public class GridLayout implements Layout {
         int lineHeight = 0;
 
         for (Widget child : children) {
-            child.setDirty();
-
             final Geom childGeom = child.getGeometry();
             childGeom.reset();
             childGeom.setSize(LayoutUtils.getPreferredSize(child));
@@ -62,7 +60,7 @@ public class GridLayout implements Layout {
 
     @Override
     public void layoutRelativeParent(Widget parent, Collection<Widget> children) {
-        final Geom geometry = LayoutUtils.getGeomWithMargin(parent);
+        final Geom geometry = parent.getGeomWithMargin();
 
         int maxLeftWidth = 0;
         int maxRightWidth = 0;

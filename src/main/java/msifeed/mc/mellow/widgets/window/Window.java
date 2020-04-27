@@ -19,6 +19,7 @@ public class Window extends Widget {
 
         header.setVerSizePolicy(SizePolicy.Policy.FIXED);
         header.setSizeHint(0, 13);
+        header.setZLevel(20);
 
         content.getMargin().set(2, 3, 5, 3);
         content.setLayout(ListLayout.VERTICAL);

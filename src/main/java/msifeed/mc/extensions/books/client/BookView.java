@@ -1,18 +1,19 @@
 package msifeed.mc.extensions.books.client;
 
 import msifeed.mc.extensions.books.RemoteBook;
+import msifeed.mc.extensions.books.client.inner.TextWrap;
 import msifeed.mc.extensions.chat.Language;
 import msifeed.mc.extensions.chat.composer.SpeechComposer;
 import msifeed.mc.mellow.layout.AnchorLayout;
 import msifeed.mc.mellow.layout.FreeLayout;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.render.RenderParts;
+import msifeed.mc.mellow.render.RenderWidgets;
 import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.button.Button;
 import msifeed.mc.mellow.widgets.text.Label;
-import msifeed.mc.mellow.widgets.text.TextWall;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -30,35 +31,36 @@ public class BookView extends Widget {
     private static final int BOOK_LINES_PER_PAGE = 19;
 
     private BookParts bookStyle = BookParts.REGULAR;
-    private final TextWall textWall;
+    private final TextWrap textWrap;
     private final Controls controls;
 
     private final int defaultColor;
 
-    BookView(TextWall textWall) {
-        this.textWall = textWall;
+    BookView(TextWrap textWrap) {
+        this.textWrap = textWrap;
         this.controls = new Controls(this);
-        this.defaultColor = textWall.getColor();
+        this.defaultColor = textWrap.getColor();
 
         setLayout(FreeLayout.INSTANCE);
         setSizeHint(192, 192);
         setSizePolicy(SizePolicy.FIXED);
         getMargin().set(36, 14);
 
-        textWall.setLineLimit(BOOK_LINES_PER_PAGE);
-        textWall.setSizeHint(BOOK_TEXT_WIDTH, BOOK_LINES_PER_PAGE * textWall.lineHeight());
-        Widget.setFocused(textWall);
+        textWrap.setLineLimit(BOOK_LINES_PER_PAGE);
+        textWrap.setMaxLineWidth(BOOK_TEXT_WIDTH);
+        textWrap.setSizeHint(BOOK_TEXT_WIDTH, BOOK_LINES_PER_PAGE * RenderWidgets.lineHeight());
+        Widget.setFocused(textWrap);
 
         flipPage(0);
 
         controls.setPos(0, 138);
 
-        addChild(textWall);
+        addChild(textWrap);
         addChild(controls);
     }
 
     public void setLines(List<String> lines) {
-        textWall.setLines(lines);
+        textWrap.setLines(lines);
     }
 
     public void setBook(RemoteBook book) {
@@ -66,20 +68,17 @@ public class BookView extends Widget {
                 ? book.text
                 : SpeechComposer.obfuscateWith(book.lang.obfuscator, book.text);
         setStyle(book.style);
-        textWall.setLines(breakLines(text));
-        flipPage(0);
+        textWrap.setLines(breakLines(text));
     }
 
-    public void flipPage(int n) {
-        final int target = Math.max(0, textWall.getLineSkip() + BOOK_LINES_PER_PAGE * n);
-        textWall.setLineSkip(target);
-//        controls.updateControls(target / BOOK_LINES_PER_PAGE + 1, textWall.getLineCount() / BOOK_LINES_PER_PAGE + 1);
+    public void flipPage(int pageDelta) {
+        textWrap.updateLineSkip(BOOK_LINES_PER_PAGE * pageDelta);
     }
 
     @Override
     protected void renderSelf() {
         RenderParts.slice(bookStyle.bookBg, getGeometry());
-        controls.updateControls(textWall.getLineSkip() / BOOK_LINES_PER_PAGE + 1, (textWall.getLineCount() - 1) / BOOK_LINES_PER_PAGE + 1);
+        controls.updateControls(textWrap.getLineSkip() / BOOK_LINES_PER_PAGE + 1, (textWrap.getLineCount() - 1) / BOOK_LINES_PER_PAGE + 1);
     }
 
     public void setStyle(RemoteBook.Style style) {
@@ -97,8 +96,8 @@ public class BookView extends Widget {
         controls.rightButton.normal = bookStyle.rightBtn;
         controls.rightButton.hover = bookStyle.rightBtnHover;
 
-        textWall.setColor(style == RemoteBook.Style.PAD ? Color.green.getRGB() : defaultColor);
-        controls.setColor(textWall.getColor());
+        textWrap.setColor(style == RemoteBook.Style.PAD ? Color.green.getRGB() : defaultColor);
+        controls.setColor(textWrap.getColor());
     }
 
     private static boolean doIKnowLanguage(Language language) {
@@ -154,7 +153,7 @@ public class BookView extends Widget {
 
             pageNum.label.setText("1");
             pageNum.getSizeHint().x = BOOK_TEXT_WIDTH - view.bookStyle.leftBtn.size.x * 2;
-            pageNum.label.setColor(view.textWall.getColor());
+            pageNum.label.setColor(view.textWrap.getColor());
 
             addChild(leftButton);
             addChild(pageNum);

@@ -19,7 +19,6 @@ public class Widget {
     public static Widget focusedWidget = null;
 
     private boolean visible = true;
-    private boolean dirty = true;
 
     private int zLevel = 0;
     private Point pos = new Point();
@@ -43,22 +42,16 @@ public class Widget {
         this.visible = visible;
     }
 
-    public void setDirty() {
-        dirty = true;
-    }
-
     public Point getPos() {
         return pos;
     }
 
     public void setPos(Point pos) {
         this.pos.set(pos);
-        setDirty();
     }
 
     public void setPos(int x, int y) {
         this.pos.set(x, y);
-        setDirty();
     }
 
     public int getZLevel() {
@@ -75,12 +68,10 @@ public class Widget {
 
     public void setSizeHint(Point sizeHint) {
         this.sizeHint.set(sizeHint);
-        setDirty();
     }
 
     public void setSizeHint(int w, int h) {
         this.sizeHint.set(w, h);
-        setDirty();
     }
 
     public Point getContentSize() {
@@ -93,18 +84,15 @@ public class Widget {
 
     public void setSizePolicy(SizePolicy sizePolicy) {
         this.sizePolicy = sizePolicy;
-        setDirty();
     }
 
     public void setSizePolicy(SizePolicy.Policy h, SizePolicy.Policy v) {
         this.sizePolicy.horizontalPolicy = h;
         this.sizePolicy.verticalPolicy = v;
-        setDirty();
     }
 
     public void setVerSizePolicy(SizePolicy.Policy v) {
         this.sizePolicy.verticalPolicy = v;
-        setDirty();
     }
 
     public Margins getMargin() {
@@ -113,7 +101,6 @@ public class Widget {
 
     public void setMargin(Margins margin) {
         this.margin = margin;
-        setDirty();
     }
 
     public Geom getGeometry() {
@@ -122,6 +109,14 @@ public class Widget {
 
     public int getGeometryZ() {
         return getGeometry().z;
+    }
+
+    public Geom getGeomWithMargin() {
+        final Geom geometry = new Geom(getGeometry());
+        final Margins margin = getMargin();
+        geometry.offsetPos(margin);
+        geometry.offsetSize(margin);
+        return geometry;
     }
 
     public Widget getParent() {
@@ -143,7 +138,6 @@ public class Widget {
             this.parent = null;
 //            this.widgetTreeDepth = 0;
         }
-        setDirty();
     }
 
     public int getWidgetTreeDepth() {
@@ -152,36 +146,29 @@ public class Widget {
 
     public void setLayout(Layout layout) {
         this.layout = layout;
-        setDirty();
     }
 
     public void update() {
-        dirty = true;
-
         updateIndependentLayout();
         updateRelativeLayout();
-
-        dirty = false;
     }
 
     protected void updateIndependentLayout() {
-        for (Widget child : children)
+        for (Widget child : getChildren())
             child.updateIndependentLayout();
 
-        contentSize = layout.layoutIndependent(this, children);
+        contentSize = layout.layoutIndependent(this, getChildren());
     }
 
     protected void updateRelativeLayout() {
         updateWidgetTreeDepth();
 
-        layout.layoutRelativeParent(this, children);
+        layout.layoutRelativeParent(this, getChildren());
 
-        for (Widget child : children)
+        for (Widget child : getChildren())
             child.updateRelativeLayout();
 
         updateSelf();
-
-        dirty = false;
     }
 
     protected void updateWidgetTreeDepth() {
@@ -225,7 +212,6 @@ public class Widget {
 
     public void addChild(Widget widget) {
         children.add(widget);
-        setDirty();
         if (widget.parent == null) {
             widget.setParent(this);
         }
@@ -233,12 +219,10 @@ public class Widget {
 
     public void removeChild(Widget widget) {
         children.remove(widget);
-        setDirty();
     }
 
     public void clearChildren() {
         children.clear();
-        setDirty();
     }
 
     public Stream<Widget> getLookupChildren() {

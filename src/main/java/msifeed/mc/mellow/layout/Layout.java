@@ -10,7 +10,7 @@ public interface Layout {
     Point layoutIndependent(Widget parent, Collection<Widget> children);
 
     default void layoutRelativeParent(Widget parent, Collection<Widget> children) {
-        final Geom geometry = LayoutUtils.getGeomWithMargin(parent);
+        final Geom geometry = parent.getGeomWithMargin();
         for (Widget w : children)
             w.getGeometry().translate(geometry);
     }

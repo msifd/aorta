@@ -1,6 +1,6 @@
 package msifeed.mc.more.client.combat;
 
-import msifeed.mc.mellow.layout.GridLayout;
+import msifeed.mc.mellow.layout.FillLayout;
 import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.button.ButtonMultiLabel;
@@ -23,9 +23,9 @@ public class ActionsView extends Widget {
 
     public ActionsView(EntityLivingBase entity) {
         this.entity = entity;
-        setSizeHint(100, 100);
+        setSizeHint(100, 150);
         setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.MINIMUM);
-        setLayout(new GridLayout());
+        setLayout(FillLayout.INSTANCE);
 
         refill();
     }
@@ -36,7 +36,6 @@ public class ActionsView extends Widget {
                 return;
 
             final ScrollArea list = new ScrollArea();
-            list.setSizeHint(120, 150);
             addChild(list);
 
             final boolean defence = ctx.phase == CombatContext.Phase.DEFEND;

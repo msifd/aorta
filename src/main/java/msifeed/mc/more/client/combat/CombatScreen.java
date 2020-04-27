@@ -3,7 +3,6 @@ package msifeed.mc.more.client.combat;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
-import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.tabs.TabArea;
 import msifeed.mc.mellow.widgets.window.Window;
@@ -27,7 +26,7 @@ public class CombatScreen extends MellowGuiScreen {
         scene.addChild(window);
 
         content = window.getContent();
-        content.setLayout(ListLayout.HORIZONTAL);
+        content.setLayout(new ListLayout(ListLayout.Direction.HORIZONTAL, 2));
 
         refill();
 
@@ -40,9 +39,6 @@ public class CombatScreen extends MellowGuiScreen {
         content.addChild(new ActionsView(entity));
 
         final TabArea tabs = new TabArea();
-        tabs.getSizeHint().x = 150;
-        tabs.setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.PREFERRED);
-
         tabs.addTab(L10n.tr("more.gui.combat.progress"), new ProgressView(entity));
         tabs.addTab(L10n.tr("more.gui.combat.mods"), new ModsView(entity));
         tabs.addTab(L10n.tr("more.gui.combat.rolls"), new RollAbilityView(entity));

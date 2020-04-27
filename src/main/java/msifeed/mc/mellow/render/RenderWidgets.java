@@ -56,4 +56,8 @@ public final class RenderWidgets {
         GL11.glColor4f(1, 1, 1, 1);
         GL11.glPopMatrix();
     }
+
+    public static int lineHeight() {
+        return RenderManager.instance.getFontRenderer().FONT_HEIGHT - 2;
+    }
 }

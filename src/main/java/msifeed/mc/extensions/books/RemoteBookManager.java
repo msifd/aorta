@@ -122,7 +122,8 @@ public enum RemoteBookManager {
 
         loaderItem.stackSize--;
         player.inventory.addItemStackToInventory(makeBook(index, book.title, book.style, book.lang));
-        player.updateHeldItem();
+//        player.updateHeldItem();
+        player.inventory.markDirty();
     }
 
     public void publishBook(EntityPlayerMP player, String text, String title, RemoteBook.Style style, Language lang) {

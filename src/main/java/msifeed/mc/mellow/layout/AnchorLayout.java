@@ -33,7 +33,6 @@ public class AnchorLayout implements Layout {
             childGeom.reset();
             childGeom.setSize(LayoutUtils.getPreferredSize(child));
             childGeom.translate(child.getPos(), child.getZLevel());
-            child.setDirty();
 
             if (childGeom.x < topLeft.x)
                 topLeft.x = childGeom.x;
@@ -58,7 +57,7 @@ public class AnchorLayout implements Layout {
         if (children.isEmpty())
             return;
 
-        final Geom geometry = LayoutUtils.getGeomWithMargin(parent);
+        final Geom geometry = parent.getGeomWithMargin();
 
         for (Widget child : children) {
             final Geom childGeom = child.getGeometry();

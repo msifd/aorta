@@ -7,13 +7,6 @@ import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
 
 public class LayoutUtils {
-    public static Geom getGeomWithMargin(Widget widget) {
-        final Geom geometry = new Geom(widget.getGeometry());
-        final Margins margin = widget.getMargin();
-        geometry.offsetPos(margin);
-        geometry.offsetSize(margin);
-        return geometry;
-    }
 
     public static Point getPreferredSize(Widget widget) {
         return getPreferredSize(widget.getContentSize(), widget);

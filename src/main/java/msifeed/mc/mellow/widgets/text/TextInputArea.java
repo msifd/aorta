@@ -3,14 +3,13 @@ package msifeed.mc.mellow.widgets.text;
 import msifeed.mc.mellow.Mellow;
 import msifeed.mc.mellow.handlers.KeyHandler;
 import msifeed.mc.mellow.handlers.MouseHandler;
-import msifeed.mc.mellow.layout.LayoutUtils;
 import msifeed.mc.mellow.render.RenderParts;
 import msifeed.mc.mellow.render.RenderShapes;
 import msifeed.mc.mellow.render.RenderWidgets;
 import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.utils.Geom;
-import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.utils.SizePolicy;
+import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.text.inner.TextController;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
@@ -20,17 +19,20 @@ import org.lwjgl.input.Keyboard;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class TextInputArea extends TextWall implements KeyHandler, MouseHandler.Click {
+public class TextInputArea extends Widget implements KeyHandler, MouseHandler.Click {
     protected Part normalPart = Mellow.getPart("sunken");
     protected Part focusedPart = Mellow.getPart("sunken_focused");
 
+    protected final NavMode mode;
     protected TextController controller = new TextController();
     protected long lastTimePressed = 0;
 
     protected int color = Mellow.getColor("text_dark");
     protected boolean withBackground = true;
 
-    public TextInputArea() {
+    public TextInputArea(NavMode mode) {
+        this.mode = mode;
+
         setSizeHint(10, 13);
         setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.MINIMUM);
 
@@ -45,66 +47,49 @@ public class TextInputArea extends TextWall implements KeyHandler, MouseHandler.
         return controller.toJoinedString();
     }
 
-    public void setMaxLineWidth(int w) {
-        controller.setMaxWidth(w);
-        getContentSize().x = w;
-    }
-
-    @Override
-    public int getColor() {
-        return color;
-    }
-
-    @Override
-    public void setColor(int color) {
-        this.color = color;
-    }
-
     public void setWithBackground(boolean withBackground) {
         this.withBackground = withBackground;
     }
 
-    @Override
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
     public int getLineSkip() {
-        return controller.getLineSkip();
+        return controller.getOffsetLine();
     }
 
-    @Override
-    public void setLineSkip(int skip) {
-        controller.setLineSkip(skip);
+    public void updateLineSkip(int delta) {
+        controller.updateOffsetLine(delta);
     }
 
-    @Override
     public void setLineLimit(int limit) {
-        controller.setSkipLimit(limit);
+        controller.setLinesPerView(limit);
     }
 
-    @Override
+    public void setMaxLineWidth(int w) {
+        controller.setMaxWidth(w);
+    }
+
     public int getLineCount() {
         return controller.getLineCount();
     }
 
-    @Override
-    public Stream<String> getLines() {
+    public Stream<String> toLineStream() {
         return controller.toLineStream();
     }
 
-    @Override
     public void setLines(List<String> lines) {
-        super.setLines(lines);
         controller.setLines(lines);
     }
 
     @Override
-    public Point getContentSize() {
-        return super.getContentSize();
-    }
-
-    @Override
-    public Geom getTextGeom() {
-        final Geom g = LayoutUtils.getGeomWithMargin(this);
-        g.z += 1;
-        return g;
+    protected void updateSelf() {
+        controller.setViewWidth(getGeometry().w - getMargin().horizontal());
     }
 
     @Override
@@ -121,10 +106,13 @@ public class TextInputArea extends TextWall implements KeyHandler, MouseHandler.
     }
 
     protected void renderText() {
-        final Geom geom = getTextGeom();
+        final Geom geom = this.getGeomWithMargin();
+        geom.z += 1;
+
         final int color = getColor();
-        final int lineHeight = lineHeight();
-        getLines().forEach(line -> {
+        final int lineHeight = RenderWidgets.lineHeight();
+
+        controller.toLineStream().forEach(line -> {
             RenderWidgets.string(geom, line, color);
             geom.y += lineHeight;
         });
@@ -134,15 +122,11 @@ public class TextInputArea extends TextWall implements KeyHandler, MouseHandler.
         if ((System.currentTimeMillis() - lastTimePressed) % 1000 > 500)
             return;
 
-        final FontRenderer fr = RenderManager.instance.getFontRenderer();
-        final String subline = controller.getCurrentLine().sb.substring(0, controller.getCurColumn());
-        final int lineHeight = lineHeight();
+        final int lineHeight = RenderWidgets.lineHeight();
 
-        final Geom cursorGeom = getTextGeom();
-        cursorGeom.x += fr.getStringWidth(subline);
-        cursorGeom.y += 2 + lineHeight * controller.getCurLineView();
-        cursorGeom.w = 0;
-        cursorGeom.h = lineHeight - 1;
+        final Geom cursorGeom = this.getGeomWithMargin();
+        cursorGeom.translate(controller.getCursorXOffset(), 2 + lineHeight * getCursorLineInView());
+        cursorGeom.setSize(0, lineHeight - 1);
 
         RenderShapes.line(cursorGeom, 3, getColor());
     }
@@ -170,7 +154,7 @@ public class TextInputArea extends TextWall implements KeyHandler, MouseHandler.
 //                return true;
         }
 
-        final int curLine = controller.getCurLineView();
+        final int curLine = getCursorLineInView();
 
         switch (key) {
             case Keyboard.KEY_LEFT:
@@ -180,46 +164,68 @@ public class TextInputArea extends TextWall implements KeyHandler, MouseHandler.
                 controller.moveCursorColumn(true);
                 break;
             case Keyboard.KEY_UP:
-                if (curLine == 0 && controller.getLineSkip() > 0)
-                    controller.updateLineSkip(-controller.getSkipLimit());
+                if (curLine == 0 && controller.getOffsetLine() > 0)
+                    moveOffsetLine(-1);
                 controller.moveCursorLine(-1);
                 break;
             case Keyboard.KEY_DOWN:
                 controller.moveCursorLine(1);
-                if (curLine == controller.getSkipLimit() - 1 && controller.getCurLineView() == 0)
-                    controller.updateLineSkip(controller.getSkipLimit());
+                if (curLine == controller.getLinesPerView() - 1 && curLine + 1 < controller.getLineCount())
+                    moveOffsetLine(1);
                 break;
             case Keyboard.KEY_DELETE:
                 controller.remove(true);
                 break;
             case Keyboard.KEY_BACK:
                 controller.remove(false);
-                if (curLine == 0 && controller.getCurLineView() > 0 || getLineSkip() >= getLineCount())
-                    controller.updateLineSkip(-controller.getSkipLimit());
+                if (curLine == 0 && getCursorLineInView() > 0 || getLineSkip() >= getLineCount())
+                    moveOffsetLine(-1);
                 break;
             case Keyboard.KEY_RETURN:
-                if (controller.breakLine() && curLine == controller.getSkipLimit() - 1 && controller.getCurLineView() == 0)
-                    controller.updateLineSkip(controller.getSkipLimit());
+                if (controller.breakLine() && curLine == controller.getLinesPerView() - 1 && curLine + 1 < controller.getLineCount())
+                    moveOffsetLine(1);
                 break;
             default:
-                if (controller.insert(c) && curLine == controller.getSkipLimit() - 1 && controller.getCurLineView() == 0)
-                    controller.updateLineSkip(controller.getSkipLimit());
+                controller.insert(c);
+//                if (controller.insert(c) && curLine == controller.getLinesPerView() - 1 && curLine + 1 < controller.getLineCount())
+//                    moveOffsetLine(1);
                 break;
         }
 
         lastTimePressed = System.currentTimeMillis();
     }
 
+    private void moveOffsetLine(int units) {
+        if (mode == NavMode.PAGES)
+            units *= controller.getLinesPerView();
+        controller.updateOffsetLine(units);
+    }
+
     @Override
     public void onClick(int xMouse, int yMouse, int button) {
         final FontRenderer fr = RenderManager.instance.getFontRenderer();
-        final Geom geom = getTextGeom();
+        final Geom geom = this.getGeomWithMargin();
 
-        final int lineHeight = lineHeight();
-        final int line = controller.getLineSkip() + (yMouse - geom.y - lineHeight / 2) / lineHeight;
+        final int lineHeight = RenderWidgets.lineHeight();
+        final int line = controller.getOffsetLine() + (yMouse - geom.y - lineHeight / 2) / lineHeight;
         final int tune = -1;
         final int column = fr.trimStringToWidth(controller.getLine(line).toString(), xMouse - geom.x - tune).length();
 
-        controller.moveCursor(line, column);
+        controller.setCursor(line, column);
+    }
+
+    private int getCursorLineInView() {
+        if (mode == NavMode.LINES)
+            return controller.getCurLine() - controller.getOffsetLine();
+        else
+            return controller.getCurLine() % controller.getLinesPerView();
+//        int curLine = controller.getCurLine();
+//        if (mode == NavMode.PAGES)
+//            curLine %= controller.getLinesPerView();
+//        return curLine;
+    }
+
+    public enum NavMode {
+        LINES, PAGES
     }
 }

@@ -1,6 +1,7 @@
 package msifeed.mc.mellow.widgets.text;
 
 import msifeed.mc.mellow.render.RenderWidgets;
+import msifeed.mc.mellow.utils.Geom;
 import msifeed.mc.mellow.utils.SizePolicy;
 
 import java.util.Collections;
@@ -14,6 +15,8 @@ public class TextInput extends TextInputArea {
     private String placeholderText = "";
 
     public TextInput() {
+        super(NavMode.LINES);
+
         setSizeHint(10, 12);
         setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.MINIMUM);
         getMargin().set(2, 2, 0, 3);
@@ -51,16 +54,12 @@ public class TextInput extends TextInputArea {
     }
 
     @Override
-    protected void updateSelf() {
-        super.updateSelf();
-        controller.setMaxWidth(getGeometry().w - getMargin().horizontal());
-    }
-
-    @Override
     protected void renderText() {
-        if (isEmpty())
-            RenderWidgets.string(getTextGeom(), getPlaceholderText(), getColor());
-        else
+        if (isEmpty()) {
+            final Geom geom = this.getGeomWithMargin();
+            geom.z += 1;
+            RenderWidgets.string(geom, getPlaceholderText(), getColor() * 2);
+        } else
             super.renderText();
     }
 
@@ -74,7 +73,7 @@ public class TextInput extends TextInputArea {
             notifyChange();
         else {
             setText(before);
-            controller.moveCursor(0, cc);
+            controller.setCursor(0, cc);
         }
     }
 

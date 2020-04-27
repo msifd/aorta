@@ -2,11 +2,13 @@ package msifeed.mc.more.client.combat;
 
 import msifeed.mc.commons.traits.Trait;
 import msifeed.mc.mellow.layout.AnchorLayout;
-import msifeed.mc.mellow.layout.ListLayout;
+import msifeed.mc.mellow.layout.FillLayout;
 import msifeed.mc.mellow.render.RenderShapes;
+import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.basic.Separator;
 import msifeed.mc.mellow.widgets.button.FlatButtonLabel;
+import msifeed.mc.mellow.widgets.scroll.ScrollArea;
 import msifeed.mc.mellow.widgets.text.WordwrapLabel;
 import msifeed.mc.more.crabs.action.ActionHeader;
 import msifeed.mc.more.crabs.action.ActionRegistry;
@@ -27,21 +29,24 @@ import java.util.stream.Collectors;
 
 public class ProgressView extends Widget {
     private final EntityLivingBase entity;
+    private final ScrollArea scroll = new ScrollArea();
 
     ProgressView(EntityLivingBase entity) {
         this.entity = entity;
-//
-//        getSizeHint().x = 110;
-//        setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.PREFERRED);
 
-        getMargin().top = 1;
-        setLayout(new ListLayout(ListLayout.Direction.VERTICAL, 2));
+        setSizeHint(150, 150);
+        setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.PREFERRED);
+        setLayout(FillLayout.INSTANCE);
+
+        scroll.getMargin().set(1, 0, 0, 1);
+        scroll.setSpacing(2);
+        addChild(scroll);
 
         refill();
     }
 
     private void refill() {
-        clearChildren();
+        scroll.clearChildren();
 
         final Optional<CombatContext> optCom = CombatAttribute.get(entity);
         if (optCom.isPresent())
@@ -121,9 +126,9 @@ public class ProgressView extends Widget {
         }
 
         if (context.phase.isInCombat()) {
-            addChild(new Separator());
-            addButton("more.gui.combat.leave", () -> CombatRpc.leave(entity.getEntityId()));
+            scroll.addChild(new Separator());
             addButton("more.gui.combat.reset", () -> CombatRpc.reset(entity.getEntityId()));
+            addButton("more.gui.combat.leave", () -> CombatRpc.leave(entity.getEntityId()));
 
             final EntityPlayer self = Minecraft.getMinecraft().thePlayer;
             final boolean canControl = CharacterAttribute.hasAny(self, Trait.gm, Trait.__admin);
@@ -148,11 +153,11 @@ public class ProgressView extends Widget {
     private void addButton(String trKey, Runnable callback) {
         final FlatButtonLabel btn = new FlatButtonLabel(L10n.tr(trKey));
         btn.setClickCallback(callback);
-        addChild(btn);
+        scroll.addChild(btn);
     }
 
     private void addPane(String fmtKey, Object... args) {
-        addChild(new Pane(L10n.fmt(fmtKey, args), 140));
+        scroll.addChild(new Pane(L10n.fmt(fmtKey, args), 140));
     }
 
     private static class Pane extends Widget {
@@ -162,7 +167,7 @@ public class ProgressView extends Widget {
             setLayout(new AnchorLayout());
 
             final WordwrapLabel label = new WordwrapLabel();
-            label.getSizeHint().x = getSizeHint().x;
+            label.getSizeHint().x = getSizeHint().x - getMargin().horizontal();
             label.setText(text);
             addChild(label);
         }

@@ -2,7 +2,7 @@ package msifeed.mc.extensions.books.client;
 
 import msifeed.mc.extensions.books.RemoteBook;
 import msifeed.mc.extensions.books.RemoteBookRpc;
-import msifeed.mc.extensions.chat.LangAttribute;
+import msifeed.mc.extensions.books.client.inner.WriterTextWrap;
 import msifeed.mc.extensions.chat.Language;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
@@ -14,26 +14,21 @@ import msifeed.mc.mellow.widgets.tabs.TabArea;
 import msifeed.mc.mellow.widgets.text.TextInput;
 import msifeed.mc.mellow.widgets.text.TextInputArea;
 import msifeed.mc.mellow.widgets.window.Window;
-import msifeed.mc.more.crabs.character.Character;
-import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ScreenNoteEditor extends MellowGuiScreen {
     private final BookView bookView;
     private Window closeDialog = null;
 
     public ScreenNoteEditor(EntityPlayer player) {
-        final TextInputArea textArea = new TextInputArea();
+        final TextInputArea textArea = new TextInputArea(TextInputArea.NavMode.PAGES);
         textArea.setWithBackground(false);
         textArea.setMaxLineWidth(BookView.BOOK_TEXT_WIDTH);
         textArea.setLineLimit(Integer.MAX_VALUE);
 
-        this.bookView = new BookView(textArea);
+        this.bookView = new BookView(new WriterTextWrap(textArea));
 
         final TabArea tabs = new TabArea();
         scene.addChild(tabs);

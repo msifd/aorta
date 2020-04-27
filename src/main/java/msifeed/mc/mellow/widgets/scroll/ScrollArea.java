@@ -7,7 +7,6 @@ import msifeed.mc.mellow.render.RenderShapes;
 import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.utils.Geom;
 import msifeed.mc.mellow.utils.Point;
-import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
 import net.minecraftforge.client.MinecraftForgeClient;
 import org.lwjgl.opengl.GL11;
@@ -20,20 +19,31 @@ public class ScrollArea extends Widget implements MouseHandler.Wheel {
     private Geom scrollbarBgGeom = new Geom();
 
     ScrollAreaThumb thumb = new ScrollAreaThumb(this);
+    int spacing = 1;
 
     public ScrollArea() {
         setLayout(new ScrollAreaLayout());
-        setSizePolicy(SizePolicy.FIXED);
 
-        thumb.getSizeHint().x += 2;
-        setDirty();
+        thumb.getSizeHint().x = 8;
+    }
+
+    public int getSpacing() {
+        return spacing;
+    }
+
+    public void setSpacing(int spacing) {
+        this.spacing = spacing;
     }
 
     @Override
     protected void updateSelf() {
-        scrollbarBgGeom.set(thumb.getGeometry());
-        scrollbarBgGeom.y = getGeometry().y;
-        scrollbarBgGeom.h = getGeometry().h;
+        final Geom geom = getGeometry();
+
+        final Geom thumbGeom = thumb.getGeometry();
+
+        scrollbarBgGeom.set(thumbGeom);
+        scrollbarBgGeom.y = geom.y;
+        scrollbarBgGeom.h = geom.h;
     }
 
     @Override

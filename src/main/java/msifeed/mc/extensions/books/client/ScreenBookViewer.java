@@ -2,6 +2,7 @@ package msifeed.mc.extensions.books.client;
 
 import msifeed.mc.extensions.books.RemoteBook;
 import msifeed.mc.extensions.books.RemoteBookManager;
+import msifeed.mc.extensions.books.client.inner.ReaderTextWrap;
 import msifeed.mc.genesis.items.templates.BookTemplate;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.mellow.widgets.text.MultilineLabel;
@@ -14,7 +15,7 @@ import org.lwjgl.input.Keyboard;
 import java.util.Collections;
 
 public class ScreenBookViewer extends MellowGuiScreen {
-    private BookView bookView = new BookView(new MultilineLabel());
+    private BookView bookView = new BookView(new ReaderTextWrap(new MultilineLabel()));
 
     public ScreenBookViewer(EntityPlayer player) {
         ItemStack itemStack = player.getHeldItem();

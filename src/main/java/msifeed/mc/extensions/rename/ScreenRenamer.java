@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 public class ScreenRenamer extends MellowGuiScreen {
     private final TextInput titleInput = new TextInput();
-    private final TextInputArea descInput = new TextInputArea();
+    private final TextInputArea descInput = new TextInputArea(TextInputArea.NavMode.LINES);
     private Window addValueDialog = null;
 
     public ScreenRenamer(EntityPlayer player) {
@@ -53,17 +53,18 @@ public class ScreenRenamer extends MellowGuiScreen {
 
         renameTab.addChild(new Label(L10n.tr("more.gui.renamer.title")));
         renameTab.addChild(titleInput);
-        titleInput.setMaxLineWidth(400);
+        titleInput.setMaxLineWidth(200);
         titleInput.setText(RenameProvider.intoAmpersandFormatting(heldItem.getDisplayName()));
         titleInput.setFilter(s -> !s.startsWith(" "));
 
         renameTab.addChild(new Label(L10n.tr("more.gui.renamer.desc")));
         renameTab.addChild(descInput);
         descInput.setLines(getItemDesc(heldItem)); // first line has title
-        descInput.setSizeHint(400, 60);
+        descInput.setSizeHint(200, 60);
         descInput.setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.MINIMUM);
-        descInput.setMaxLineWidth(400);
-        descInput.setLineLimit(10);
+        descInput.setMaxLineWidth(300);
+//        descInput.getController().setViewHeight(60);
+//        descInput.setLineLimit(10);
         descInput.getController().setMaxLines(10);
         descInput.setColor(descInput.getColor());
 
@@ -72,9 +73,9 @@ public class ScreenRenamer extends MellowGuiScreen {
         renameTab.addChild(footer);
 
         final ButtonLabel applyBtn = new ButtonLabel(L10n.tr("more.gui.apply"));
-        applyBtn.getSizeHint().x = 200;
+//        applyBtn.getSizeHint().x = 200;
         applyBtn.setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.PREFERRED);
-        applyBtn.setClickCallback(() -> RenameRpc.rename(titleInput.getText(), descInput.getLines().collect(Collectors.toList())));
+        applyBtn.setClickCallback(() -> RenameRpc.rename(titleInput.getText(), descInput.toLineStream().collect(Collectors.toList())));
         footer.addChild(applyBtn);
 
         final ButtonLabel clearBtn = new ButtonLabel("Remove custom title & description");
@@ -155,7 +156,7 @@ public class ScreenRenamer extends MellowGuiScreen {
             return;
         addValueDialog = new Window();
         addValueDialog.setTitle("Add value");
-        addValueDialog.setZLevel(5);
+        addValueDialog.setZLevel(addValueDialog.getZLevel() * 2);
         addValueDialog.getSizeHint().x = 200;
         addValueDialog.setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.PREFERRED);
         scene.addChild(addValueDialog);

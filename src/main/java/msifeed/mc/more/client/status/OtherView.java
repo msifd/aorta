@@ -1,10 +1,13 @@
 package msifeed.mc.more.client.status;
 
 import msifeed.mc.mellow.layout.GridLayout;
+import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.text.Label;
 import msifeed.mc.mellow.widgets.text.TextInput;
+import msifeed.mc.more.crabs.character.Ability;
 import msifeed.mc.more.crabs.character.Character;
+import msifeed.mc.more.crabs.meta.MetaInfo;
 import msifeed.mc.sys.utils.L10n;
 
 class OtherView extends Widget {
@@ -32,7 +35,9 @@ class OtherView extends Widget {
 
         addChild(new Label(L10n.tr("more.gui.status.other.name")));
         final TextInput nameInput = new TextInput();
-        nameInput.getSizeHint().x = 300;
+//        nameInput.getSizeHint().x = 300;
+        nameInput.getSizeHint().x = 100;
+        nameInput.setMaxLineWidth(300);
         nameInput.setText(String.valueOf(character.name));
         nameInput.setFilter(TextInput::isValidName);
         nameInput.setCallback(s -> character.name = s);
@@ -40,7 +45,9 @@ class OtherView extends Widget {
 
         addChild(new Label(L10n.tr("more.gui.status.other.wiki")));
         final TextInput wikiInput = new TextInput();
-        wikiInput.getSizeHint().x = 300;
+        wikiInput.setPlaceholderText("Название страницы");
+        wikiInput.getSizeHint().x = 100;
+        wikiInput.setMaxLineWidth(300);
         wikiInput.setText(String.valueOf(character.wikiPage));
         wikiInput.setCallback(s -> character.wikiPage = s);
         addChild(wikiInput);

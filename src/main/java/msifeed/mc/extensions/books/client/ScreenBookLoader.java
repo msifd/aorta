@@ -29,7 +29,7 @@ public class ScreenBookLoader extends MellowGuiScreen {
 
         final TextInput input = new TextInput();
         input.setPlaceholderText("ITDB-ключ текста");
-        input.setFilter(TextInput::isJavaName);
+//        input.setFilter(TextInput::isJavaName);
         input.setCallback(s -> {
             status = CheckStatus.NONE;
             updateStatus("");

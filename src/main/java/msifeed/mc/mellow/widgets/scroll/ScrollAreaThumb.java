@@ -51,7 +51,7 @@ class ScrollAreaThumb extends Button implements MouseHandler.AllBasic {
 
     void clampYPos() {
         final Point pos = getPos();
-        final int maxY = scrollArea.getSizeHint().y - getGeometry().h;
+        final int maxY = scrollArea.getGeometry().h - getGeometry().h;
         pos.y = MathHelper.clamp_int(pos.y, 0, maxY);
     }
 }
