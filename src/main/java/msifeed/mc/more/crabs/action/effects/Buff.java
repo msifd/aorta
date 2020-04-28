@@ -31,17 +31,17 @@ public final class Buff extends DynamicEffect {
             return true;
     }
 
+    /// Call from action effects - add to buffs
     @Override
     public void apply(FighterInfo target, FighterInfo other) {
-        if (target.com.phase != CombatContext.Phase.END) {
-            // Call from buffs - apply effect
-            if (active())
-                effect.apply(target, null);
-            step();
-        } else {
-            // Call from action effects - add to buffs
-            target.act.buffsToReceive.add(this);
-        }
+        target.act.buffsToReceive.add(this);
+    }
+
+    /// Call from buffs - apply effect
+    public void applyEffect(FighterInfo target, FighterInfo other) {
+        if (active())
+            effect.apply(target, other);
+        step();
     }
 
     private boolean active() {

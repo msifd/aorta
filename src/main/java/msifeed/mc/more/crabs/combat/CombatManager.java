@@ -291,7 +291,7 @@ public enum CombatManager {
     private static void applyBuffs(List<Buff> buffs, Effect.Stage stage, FighterInfo self, FighterInfo other) {
         for (Buff b : buffs)
             if (b.shouldApply(stage, self, other))
-                b.apply(self, other);
+                b.applyEffect(self, other);
     }
 
     private static void applyEffects(List<Effect> effects, Effect.Stage stage, FighterInfo self, FighterInfo other) {
