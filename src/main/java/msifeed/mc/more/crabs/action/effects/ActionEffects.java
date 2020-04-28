@@ -240,4 +240,101 @@ public final class ActionEffects {
             return name() + ':' + value;
         }
     }
+
+    public static class OtherDamageMultiplier extends DynamicEffect {
+        private float value;
+
+        @Override
+        public String name() {
+            return "other damage*";
+        }
+
+        @Override
+        public boolean shouldApply(Stage stage, FighterInfo target, FighterInfo other) {
+            return stage == Stage.ACTION;
+        }
+
+        @Override
+        public void apply(FighterInfo target, FighterInfo other) {
+            for (DamageAmount da : other.act.damageToReceive)
+                da.amount *= value;
+        }
+
+        @Override
+        public boolean equals(Effect other) {
+            return other instanceof OtherDamageMultiplier && value == ((OtherDamageMultiplier) other).value;
+        }
+
+        @Override
+        public Effect clone() {
+            final OtherDamageMultiplier e = new OtherDamageMultiplier();
+            e.value = value;
+            return e;
+        }
+
+        @Override
+        public EffectArgs[] args() {
+            return new EffectArgs[]{FLOAT};
+        }
+
+        @Override
+        public DynamicEffect produce(Object[] args) {
+            final OtherDamageMultiplier e = new OtherDamageMultiplier();
+            e.value = (float) args[0];
+            return e;
+        }
+
+        @Override
+        public String toString() {
+            return name() + ':' + value;
+        }
+    }
+
+    public static class Heal extends DynamicEffect {
+        private int value;
+
+        @Override
+        public String name() {
+            return "heal";
+        }
+
+        @Override
+        public boolean shouldApply(Stage stage, FighterInfo target, FighterInfo other) {
+            return stage == Stage.ACTION;
+        }
+
+        @Override
+        public void apply(FighterInfo target, FighterInfo other) {
+            target.entity.heal(value);
+        }
+
+        @Override
+        public boolean equals(Effect other) {
+            return other instanceof Heal && value == ((Heal) other).value;
+        }
+
+        @Override
+        public Effect clone() {
+            final Heal e = new Heal();
+            e.value = value;
+            return e;
+        }
+
+        @Override
+        public EffectArgs[] args() {
+            return new EffectArgs[]{INT};
+        }
+
+        @Override
+        public DynamicEffect produce(Object[] args) {
+            final Heal e = new Heal();
+            e.value = (int) args[0];
+            return e;
+        }
+
+        @Override
+        public String toString() {
+            return name() + ':' + value;
+        }
+    }
 }
