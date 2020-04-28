@@ -18,7 +18,6 @@ import msifeed.mc.more.crabs.utils.GetUtils;
 import msifeed.mc.sys.attributes.MissingRequiredAttributeException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -262,7 +261,7 @@ public enum CombatManager {
         applyActionResults(winner);
         applyActionResults(looser);
 
-        CombatNotifications.moveResult(winner, looser);
+        CombatNotifications.actionResult(winner, looser);
     }
 
     private void finishSoloMove(FighterInfo self) {

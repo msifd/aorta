@@ -1,6 +1,5 @@
 package msifeed.mc.more.crabs.action.effects;
 
-import msifeed.mc.more.crabs.combat.ActionContext;
 import msifeed.mc.more.crabs.combat.CombatContext;
 import msifeed.mc.more.crabs.combat.FighterInfo;
 

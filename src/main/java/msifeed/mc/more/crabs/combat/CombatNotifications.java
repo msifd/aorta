@@ -28,7 +28,7 @@ public final class CombatNotifications {
         notify(entity, "is killed!");
     }
 
-    static void moveResult(FighterInfo winner, FighterInfo looser) {
+    static void actionResult(FighterInfo winner, FighterInfo looser) {
         // Chad - LUCK Punch + Stun [50] (+5 STR+99) > Virgin - Roll [10]
         final String text = formatAction(winner) + " > " + formatAction(looser);
         notify(winner.entity, text);
