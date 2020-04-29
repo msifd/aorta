@@ -112,7 +112,7 @@ public class TextInputArea extends Widget implements KeyHandler, MouseHandler.Cl
         final int color = getColor();
         final int lineHeight = RenderWidgets.lineHeight();
 
-        controller.toLineStream().forEach(line -> {
+        controller.viewLineStream().forEach(line -> {
             RenderWidgets.string(geom, line, color);
             geom.y += lineHeight;
         });

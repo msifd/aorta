@@ -43,17 +43,11 @@ public class ReaderTextWrap extends TextWrap {
 
     @Override
     public void setMaxLineWidth(int width) {
-
     }
 
     @Override
     public int getLineCount() {
         return label.getLines().size();
-    }
-
-    @Override
-    public Stream<String> getLines() {
-        return label.getLines().stream();
     }
 
     @Override

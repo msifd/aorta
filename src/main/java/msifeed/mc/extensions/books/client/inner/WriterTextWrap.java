@@ -56,11 +56,6 @@ public class WriterTextWrap extends TextWrap {
     }
 
     @Override
-    public Stream<String> getLines() {
-        return area.toLineStream();
-    }
-
-    @Override
     public void setLines(List<String> lines) {
         area.setLines(lines);
     }

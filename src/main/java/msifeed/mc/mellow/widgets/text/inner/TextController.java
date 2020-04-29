@@ -118,7 +118,7 @@ public class TextController {
         return sb.toString();
     }
 
-    public Stream<String> toLineStream() {
+    public Stream<String> viewLineStream() {
         if (cacheInvalid) {
             stringCache = lines.stream()
                     .skip(offsetLine)
@@ -134,6 +134,10 @@ public class TextController {
         }
 
         return stringCache.stream();
+    }
+
+    public Stream<String> toLineStream() {
+        return lines.stream().map(l -> l.sb.toString());
     }
 
     public void setLines(List<String> lines) {

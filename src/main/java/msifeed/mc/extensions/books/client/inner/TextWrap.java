@@ -15,6 +15,5 @@ public abstract class TextWrap extends Widget {
     public abstract void setMaxLineWidth(int width);
 
     public abstract int getLineCount();
-    public abstract Stream<String> getLines();
     public abstract void setLines(List<String> lines);
 }
