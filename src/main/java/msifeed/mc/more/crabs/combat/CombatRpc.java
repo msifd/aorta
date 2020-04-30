@@ -143,7 +143,7 @@ public enum CombatRpc {
         if (!(targetEntity instanceof EntityLivingBase))
             throw new RpcMethodException(sender, "target is not a living entity");
 
-        CombatAttribute.INSTANCE.update(targetEntity, CombatManager::softReset);
+        CombatManager.resetCombatantWithRelatives(targetEntity);
     }
 
     // // // //

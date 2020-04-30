@@ -3,6 +3,7 @@ package msifeed.mc.more.crabs.combat;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 import msifeed.mc.more.crabs.action.Action;
 import msifeed.mc.more.crabs.action.ActionRegistry;
 import msifeed.mc.more.crabs.action.ActionTag;
@@ -22,10 +23,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public enum CombatManager {
@@ -42,10 +40,8 @@ public enum CombatManager {
         if (ctx.phase == CombatContext.Phase.IDLE) {
             if (!action.isOffencive())
                 return false;
-
             if (actionChanged)
-                updateAction(self, action, CombatContext.Role.OFFENCE);
-
+                updateAction(self, action);
             return true;
         } else if (ctx.phase == CombatContext.Phase.DEFEND) {
             if (ctx.targets.isEmpty())
@@ -61,17 +57,13 @@ public enum CombatManager {
                 return false;
 
             if (actionChanged)
-                updateAction(self, action, CombatContext.Role.DEFENCE);
+                updateAction(self, action);
             else {
-                CombatAttribute.INSTANCE.update(self, com -> {
-                    com.phase = CombatContext.Phase.WAIT;
-                });
+                CombatAttribute.INSTANCE.update(self, com -> com.phase = CombatContext.Phase.WAIT);
                 tryFinishMove(offender, offenderCom);
             }
-
             return true;
         }
-
         return false;
     }
 
@@ -84,8 +76,8 @@ public enum CombatManager {
         }
     }
 
-    private static void updateAction(EntityLivingBase self, Action action, CombatContext.Role role) {
-        CombatAttribute.INSTANCE.update(self, com -> com.updateAction(action, role));
+    private static void updateAction(EntityLivingBase self, Action action) {
+        CombatAttribute.INSTANCE.update(self, com -> com.action = action);
 
         final ActionContext act = ActionAttribute.get(self).orElse(new ActionContext());
         act.updateAction(action);
@@ -154,6 +146,7 @@ public enum CombatManager {
 
         boolean shouldUpdateOffender = false;
         if (srcCom.phase != CombatContext.Phase.ATTACK) {
+            srcCom.role = CombatContext.Role.OFFENCE;
             srcCom.phase = CombatContext.Phase.ATTACK;
             srcCom.targets = new ArrayList<>();
             shouldUpdateOffender = true;
@@ -167,6 +160,7 @@ public enum CombatManager {
 
         if (vicCom.phase != CombatContext.Phase.DEFEND) {
             CombatAttribute.INSTANCE.update(vicEntity, context -> {
+                context.role = CombatContext.Role.DEFENCE;
                 context.phase = CombatContext.Phase.DEFEND;
                 context.targets = Collections.singletonList(srcEntity.getEntityId());
             });
@@ -283,7 +277,7 @@ public enum CombatManager {
 
     private static void cleanupMove(FighterInfo self) {
         self.com.removeEndedEffects();
-        softReset(self.com);
+        resetCombatant(self.com);
         self.act.reset();
     }
 
@@ -343,14 +337,18 @@ public enum CombatManager {
             return;
 
         final CombatContext com = CombatAttribute.get(event.entity).orElse(null);
-        if (com == null)
+        if (com != null && com.phase.isInCombat())
+            resetCombatantWithRelatives(event.entity);
+    }
+
+    @SubscribeEvent
+    public void onPlayerLogOut(PlayerEvent.PlayerLoggedOutEvent event) {
+        if (event.player.worldObj.isRemote)
             return;
 
-        softReset(com);
-        CombatAttribute.INSTANCE.set(event.entity, com);
-
+        final CombatContext com = CombatAttribute.require(event.player);
         if (com.phase.isInCombat())
-            ActionAttribute.INSTANCE.set(event.entity, new ActionContext());
+            resetCombatantWithRelatives(event.player);
     }
 
     public void joinCombat(EntityLivingBase target, CombatContext com) {
@@ -361,7 +359,8 @@ public enum CombatManager {
     }
 
     public void removeFromCombat(Entity entity, CombatContext com) {
-        softReset(com);
+        resetCombatantWithRelatives(entity);
+
         com.phase = CombatContext.Phase.NONE;
         com.knockedOut = false;
         com.prevActions.clear();
@@ -369,10 +368,47 @@ public enum CombatManager {
         ActionAttribute.remove(entity);
     }
 
-    public static void softReset(CombatContext com) {
+    public static void resetCombatant(CombatContext com) {
         com.phase = com.phase.isInCombat() ? CombatContext.Phase.IDLE : CombatContext.Phase.NONE;
         com.role = CombatContext.Role.NONE;
         com.targets = Collections.emptyList();
         com.action = null;
+    }
+
+    public static void resetCombatantWithRelatives(Entity entity) {
+        final CombatContext com = CombatAttribute.get(entity).orElse(null);
+        if (com == null)
+            return;
+
+        if (com.phase.isInCombat()) {
+            if (com.role == CombatContext.Role.OFFENCE) {
+                com.targets.stream()
+                        .map(id -> GetUtils.entityLiving(entity, id))
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .forEach(e -> CombatAttribute.get(e).ifPresent(c -> {
+                            resetCombatant(c);
+                            CombatAttribute.INSTANCE.set(e, c);
+                        }));
+            } else if (com.role == CombatContext.Role.DEFENCE) {
+                com.targets.stream()
+                        .map(id -> GetUtils.entityLiving(entity, id))
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .findFirst()
+                        .ifPresent(e -> CombatAttribute.get(e).ifPresent(c -> {
+                            c.targets.remove(Integer.valueOf(entity.getEntityId()));
+                            if (c.targets.isEmpty())
+                                resetCombatant(c);
+                            CombatAttribute.INSTANCE.set(e, c);
+                        }));
+            }
+            ActionAttribute.INSTANCE.set(entity, new ActionContext());
+        } else {
+            ActionAttribute.remove(entity);
+        }
+
+        resetCombatant(com);
+        CombatAttribute.INSTANCE.set(entity, com);
     }
 }

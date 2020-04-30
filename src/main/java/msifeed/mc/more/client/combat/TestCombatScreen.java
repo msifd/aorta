@@ -65,9 +65,11 @@ public class TestCombatScreen extends MellowGuiScreen {
     private static void doAction(Action action) {
         final EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 
-        final CombatContext.Role role = action.isOffencive() ? CombatContext.Role.OFFENCE : CombatContext.Role.DEFENCE;
-        CombatAttribute.INSTANCE.update(player, ctx -> ctx.updateAction(action, role));
-        ActionAttribute.INSTANCE.update(player, ctx -> ctx.updateAction(action));
+        CombatAttribute.INSTANCE.update(player, com -> {
+            com.role = action.isOffencive() ? CombatContext.Role.OFFENCE : CombatContext.Role.DEFENCE;
+            com.action = action;
+        });
+        ActionAttribute.INSTANCE.update(player, act -> act.updateAction(action));
         final FighterInfo self = new FighterInfo(player);
 
         // Apply scores

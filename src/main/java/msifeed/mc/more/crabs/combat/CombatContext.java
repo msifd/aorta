@@ -1,6 +1,5 @@
 package msifeed.mc.more.crabs.combat;
 
-import msifeed.mc.more.crabs.action.Action;
 import msifeed.mc.more.crabs.action.ActionHeader;
 import msifeed.mc.more.crabs.action.ActionRegistry;
 import msifeed.mc.more.crabs.action.effects.Buff;
@@ -28,11 +27,6 @@ public class CombatContext {
     public Role role = Role.NONE;
     public List<Integer> targets = Collections.emptyList();
     public ActionHeader action = null;
-
-    public void updateAction(Action action, Role role) {
-        this.action = action;
-        this.role = role;
-    }
 
     public void removeEndedEffects() {
         buffs.removeIf(Buff::ended);
