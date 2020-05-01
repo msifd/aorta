@@ -9,6 +9,7 @@ import msifeed.mc.extensions.chat.composer.SpeechType;
 import msifeed.mc.extensions.chat.gm.GmSpeech;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.event.ServerChatEvent;
 
 public class ChatHandler {
@@ -23,6 +24,11 @@ public class ChatHandler {
 
     public static void sendSystemChatMessage(Entity at, ChatMessage message) {
         final NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(at.dimension, at.posX, at.posY, at.posZ, message.radius);
+        Speechat.CHANNEL.sendToAllAround(message, point);
+    }
+
+    public static void sendSystemChatMessage(int dim, ChunkCoordinates at, ChatMessage message) {
+        final NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(dim, at.posX, at.posY, at.posZ, message.radius);
         Speechat.CHANNEL.sendToAllAround(message, point);
     }
 

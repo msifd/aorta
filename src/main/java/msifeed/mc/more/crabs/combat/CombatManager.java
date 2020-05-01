@@ -84,19 +84,23 @@ public enum CombatManager {
         ActionAttribute.INSTANCE.set(self, act);
     }
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onHurtDamage(LivingHurtEvent event) {
+        if (event.entityLiving.worldObj.isRemote)
+            return;
+        try {
+            handleDamage(event);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleDamage(LivingHurtEvent event) {
         final Entity damageSrcEntity = event.source.getEntity();
         final EntityLivingBase vicEntity = event.entityLiving;
 
         if (!(damageSrcEntity instanceof EntityLivingBase) || vicEntity == null)
             return;
-
-        if (vicEntity.worldObj.isRemote) {
-//            System.out.println("client effect");
-//            Minecraft.getMinecraft().effectRenderer.addEffect(new DamageParticle(vicEntity.worldObj, vicEntity.posX, vicEntity.posY, vicEntity.posZ, event.ammount));
-            return;
-        }
 
         if (((EntityLivingBase) damageSrcEntity).getHeldItem() == null) {
             CharacterAttribute.get(damageSrcEntity).ifPresent(character -> {
@@ -105,18 +109,28 @@ public enum CombatManager {
             });
         }
 
-        final CombatContext vicCom;
+        final CombatContext vicCom = CombatAttribute.get(vicEntity).orElse(null);
+        if (vicCom == null)
+            return;
+
+        if (vicCom.phase == CombatContext.Phase.END) {
+            // TODO: handle knockedOut here
+//            if (!vicCom.knockedOut) {
+//
+//            }
+
+            return; // Pass full damage
+        }
+
         final EntityLivingBase srcEntity;
         final CombatContext srcCom;
         try {
-            vicCom = CombatAttribute.require(vicEntity);
-
             final CombatContext directCom = CombatAttribute.require(damageSrcEntity);
             if (directCom.puppet != 0) {
-                final Entity puppet = damageSrcEntity.worldObj.getEntityByID(directCom.puppet);
-                if (!(puppet instanceof EntityLivingBase))
+                final EntityLivingBase puppet = GetUtils.entityLiving(damageSrcEntity, directCom.puppet).orElse(null);
+                if (puppet == null)
                     return;
-                srcEntity = (EntityLivingBase) puppet;
+                srcEntity = puppet;
                 srcCom = CombatAttribute.require(puppet);
             } else {
                 srcEntity = (EntityLivingBase) damageSrcEntity;
@@ -125,9 +139,6 @@ public enum CombatManager {
         } catch (MissingRequiredAttributeException e) {
             return;
         }
-
-        if (vicCom.phase == CombatContext.Phase.END) // Pass real damage
-            return;
 
         event.setCanceled(true);
 
@@ -142,7 +153,11 @@ public enum CombatManager {
 //        if (!ItemStack.areItemStackTagsEqual(srcEntity.getHeldItem(), srcCom.weapon))
 //            return;
 
-        final ActionContext vicAct = ActionAttribute.require(vicEntity);
+        final ActionContext vicAct = ActionAttribute.get(vicEntity).orElseGet(() -> {
+            final ActionContext a = new ActionContext();
+            ActionAttribute.INSTANCE.set(vicEntity, a);
+            return a;
+        });
 
         boolean shouldUpdateOffender = false;
         if (srcCom.phase != CombatContext.Phase.ATTACK) {
@@ -296,6 +311,7 @@ public enum CombatManager {
     private static void applyActionResults(FighterInfo self) {
         boolean resetCombo = false;
 
+        final boolean wasKnockedOut = self.com.knockedOut;
         for (DamageAmount da : self.act.damageToReceive) {
             if (self.entity.attackEntityFrom(da.source, da.amount))
                 resetCombo = true;
@@ -309,12 +325,12 @@ public enum CombatManager {
 
         if (self.entity.isDead || self.entity.getHealth() <= 0) {
             if (self.com.knockedOut) {
-                CombatNotifications.notifyKilled(self.entity);
+                CombatNotifications.notifyKilled(self);
             } else {
                 self.entity.setHealth(1);
                 self.entity.isDead = false;
                 self.com.knockedOut = true;
-                CombatNotifications.notifyKnockedOut(self.entity);
+                CombatNotifications.notifyKnockedOut(self);
             }
         }
     }
@@ -336,9 +352,13 @@ public enum CombatManager {
         if (event.entity.worldObj.isRemote || !(event.entity instanceof EntityLivingBase))
             return;
 
-        final CombatContext com = CombatAttribute.get(event.entity).orElse(null);
-        if (com != null && com.phase.isInCombat())
-            resetCombatantWithRelatives(event.entity);
+        CombatAttribute.get(event.entity)
+                .filter(com -> com.phase.isInCombat())
+                .ifPresent(com -> resetCombatantWithRelatives(event.entity));
+
+//        final CombatContext com = CombatAttribute.get(event.entity).orElse(null);
+//        if (com != null && com.phase.isInCombat())
+//            resetCombatantWithRelatives(event.entity);
     }
 
     @SubscribeEvent

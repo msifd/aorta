@@ -9,6 +9,7 @@ import msifeed.mc.Bootstrap;
 import msifeed.mc.extensions.chat.ChatMessage;
 import msifeed.mc.extensions.chat.composer.Composer;
 import msifeed.mc.extensions.chat.composer.SpeechType;
+import msifeed.mc.more.crabs.utils.GetUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,12 +25,11 @@ public class SpeechMessageHandler implements IMessageHandler<ChatMessage, IMessa
             player.addChatMessage(chatComponent);
 
             if (message.type == SpeechType.SPEECH || message.type == SpeechType.GM) {
-                final Entity speaker = player.worldObj.getEntityByID(message.senderId);
-                if (speaker != null) {
+                GetUtils.entityLiving(player, message.senderId).ifPresent(speaker -> {
                     final float distance = player.getDistanceToEntity(speaker);
                     final float volume = (1 - distance / message.radius) + 0.4f;
                     player.playSound(Bootstrap.MODID + ":speechat.message", volume, 0.7F);
-                }
+                });
             }
         }
         return null;

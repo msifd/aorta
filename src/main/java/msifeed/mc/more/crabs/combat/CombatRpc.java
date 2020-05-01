@@ -8,6 +8,7 @@ import msifeed.mc.more.crabs.character.Character;
 import msifeed.mc.more.crabs.meta.MetaInfo;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
+import msifeed.mc.more.crabs.utils.GetUtils;
 import msifeed.mc.more.crabs.utils.MetaAttribute;
 import msifeed.mc.sys.rpc.Rpc;
 import msifeed.mc.sys.rpc.RpcMethod;
@@ -41,11 +42,8 @@ public enum CombatRpc {
     @RpcMethod(doAction)
     public void onDoAction(MessageContext ctx, int entityId, String actionId) {
         final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
-        final Entity targetEntity = sender.worldObj.getEntityByID(entityId);
-
-        if (!(targetEntity instanceof EntityLivingBase))
-            throw new RpcMethodException(sender, "target is not a living entity");
-        final EntityLivingBase target = (EntityLivingBase) targetEntity;
+        final EntityLivingBase target = GetUtils.entityLiving(sender, entityId)
+                .orElseThrow(() -> new RpcMethodException(sender, "invalid target entity"));
 
         final Action action = ActionRegistry.getFullAction(actionId);
         if (action == null)
@@ -67,11 +65,8 @@ public enum CombatRpc {
     @RpcMethod(endAttack)
     public void onEndAttack(MessageContext ctx, int entityId) {
         final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
-        final Entity targetEntity = sender.worldObj.getEntityByID(entityId);
-
-        if (!(targetEntity instanceof EntityLivingBase))
-            throw new RpcMethodException(sender, "target is not a living entity");
-        final EntityLivingBase target = (EntityLivingBase) targetEntity;
+        final EntityLivingBase target = GetUtils.entityLiving(sender, entityId)
+                .orElseThrow(() -> new RpcMethodException(sender, "invalid target entity"));
 
         final CombatContext com = CombatAttribute.get(target)
                 .orElseThrow(() -> new RpcMethodException(sender, "target is not a combatant"));
@@ -91,11 +86,9 @@ public enum CombatRpc {
     @RpcMethod(join)
     public void onJoin(MessageContext ctx, int entityId) {
         final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
-        final Entity targetEntity = sender.worldObj.getEntityByID(entityId);
+        final EntityLivingBase target = GetUtils.entityLiving(sender, entityId)
+                .orElseThrow(() -> new RpcMethodException(sender, "invalid target entity"));
 
-        if (!(targetEntity instanceof EntityLivingBase))
-            throw new RpcMethodException(sender, "target is not a living entity");
-        final EntityLivingBase target = (EntityLivingBase) targetEntity;
         final CombatContext com = CombatAttribute.get(target).orElse(null);
         if (com == null)
             throw new RpcMethodException(sender, "target is not a combatant");
@@ -112,22 +105,16 @@ public enum CombatRpc {
     @RpcMethod(leave)
     public void onLeave(MessageContext ctx, int entityId) {
         final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
-        final Entity targetEntity = sender.worldObj.getEntityByID(entityId);
+        final EntityLivingBase target = GetUtils.entityLiving(sender, entityId)
+                .orElseThrow(() -> new RpcMethodException(sender, "invalid target entity"));
 
-        if (!(targetEntity instanceof EntityLivingBase))
-            throw new RpcMethodException(sender, "target is not a living entity");
-
-        CombatAttribute.INSTANCE.update(targetEntity, context -> {
+        CombatAttribute.INSTANCE.update(target, context -> {
             if (!context.phase.isInCombat())
                 throw new RpcMethodException(sender, "target is not in combat");
             if (context.phase != CombatContext.Phase.IDLE)
                 throw new RpcMethodException(sender, "target is not in " + CombatContext.Phase.IDLE.toString() + " stage");
 
-            CombatManager.INSTANCE.removeFromCombat(targetEntity, context);
-//            if (targetEntity instanceof EntityPlayer)
-//                context.phase = CombatContext.Phase.LEAVE;
-//            else
-//                CombatManager.INSTANCE.removeFromCombat((EntityLivingBase) targetEntity, context);
+            CombatManager.INSTANCE.removeFromCombat(target, context);
         });
     }
 
@@ -138,12 +125,10 @@ public enum CombatRpc {
     @RpcMethod(reset)
     public void onReset(MessageContext ctx, int entityId) {
         final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
-        final Entity targetEntity = sender.worldObj.getEntityByID(entityId);
+        final EntityLivingBase target = GetUtils.entityLiving(sender, entityId)
+                .orElseThrow(() -> new RpcMethodException(sender, "invalid target entity"));
 
-        if (!(targetEntity instanceof EntityLivingBase))
-            throw new RpcMethodException(sender, "target is not a living entity");
-
-        CombatManager.resetCombatantWithRelatives(targetEntity);
+        CombatManager.resetCombatantWithRelatives(target);
     }
 
     // // // //
@@ -159,27 +144,25 @@ public enum CombatRpc {
     @RpcMethod(addCombat)
     public void onAddCombatToEntity(MessageContext ctx, int entityId) {
         final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
-        final Entity targetEntity = sender.worldObj.getEntityByID(entityId);
+        final EntityLivingBase target = GetUtils.entityLiving(sender, entityId)
+                .filter(e -> !(e instanceof EntityPlayer))
+                .orElseThrow(() -> new RpcMethodException(sender, "invalid target entity"));
 
-        if (!(targetEntity instanceof EntityLivingBase) || targetEntity instanceof EntityPlayer)
-            throw new RpcMethodException(sender, "target is not a living entity");
-
-        CharacterAttribute.INSTANCE.set(targetEntity, new Character());
-        MetaAttribute.INSTANCE.set(targetEntity, new MetaInfo());
-        CombatAttribute.INSTANCE.set(targetEntity, new CombatContext());
+        CharacterAttribute.INSTANCE.set(target, new Character());
+        MetaAttribute.INSTANCE.set(target, new MetaInfo());
+        CombatAttribute.INSTANCE.set(target, new CombatContext());
     }
 
     @RpcMethod(removeCombat)
     public void onRemoveCombatFromEntity(MessageContext ctx, int entityId) {
         final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
-        final Entity targetEntity = sender.worldObj.getEntityByID(entityId);
+        final EntityLivingBase target = GetUtils.entityLiving(sender, entityId)
+                .filter(e -> !(e instanceof EntityPlayer))
+                .orElseThrow(() -> new RpcMethodException(sender, "invalid target entity"));
 
-        if (!(targetEntity instanceof EntityLivingBase) || targetEntity instanceof EntityPlayer)
-            throw new RpcMethodException(sender, "target is not a living entity");
-
-        CharacterAttribute.INSTANCE.set(targetEntity, null);
-        MetaAttribute.INSTANCE.set(targetEntity, null);
-        CombatAttribute.INSTANCE.set(targetEntity, null);
+        CharacterAttribute.INSTANCE.set(target, null);
+        MetaAttribute.INSTANCE.set(target, null);
+        CombatAttribute.INSTANCE.set(target, null);
     }
 
     // // // //
@@ -192,12 +175,12 @@ public enum CombatRpc {
     public void onSetPuppet(MessageContext ctx, int entityId) {
         final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
 
+        if (sender.getEntityId() == entityId)
+            throw new RpcMethodException(sender, "you can't puppet yourself, silly");
+
         if (entityId != 0) {
-            final Entity targetEntity = sender.worldObj.getEntityByID(entityId);
-            if (!(targetEntity instanceof EntityLivingBase))
-                throw new RpcMethodException(sender, "target not found");
-            if (targetEntity == sender)
-                throw new RpcMethodException(sender, "you can't puppet yourself, silly");
+            GetUtils.entityLiving(sender, entityId)
+                    .orElseThrow(() -> new RpcMethodException(sender, "puppet target is not found"));
         }
 
         CombatAttribute.INSTANCE.update(sender, context -> context.puppet = entityId);

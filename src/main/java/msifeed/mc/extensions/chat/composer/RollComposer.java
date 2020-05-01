@@ -14,7 +14,7 @@ public class RollComposer implements ChatComposer {
         final ChatMessage message = new ChatMessage();
         message.type = SpeechType.ROLL;
         message.language = Language.VANILLA;
-        message.radius = More.DEFINES.get().chat.logRadius;
+        message.radius = More.DEFINES.get().chat.rollRadius;
         message.speaker = "";
         message.text = text;
         return message;

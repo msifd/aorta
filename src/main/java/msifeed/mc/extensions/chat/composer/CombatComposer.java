@@ -14,7 +14,7 @@ public class CombatComposer implements ChatComposer {
         final ChatMessage message = new ChatMessage();
         message.type = SpeechType.COMBAT;
         message.language = Language.VANILLA;
-        message.radius = More.DEFINES.get().chat.logRadius;
+        message.radius = More.DEFINES.get().chat.combatRadius;
         message.speaker = "";
         message.text = text;
         return message;

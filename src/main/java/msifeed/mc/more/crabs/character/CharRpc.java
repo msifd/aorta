@@ -15,10 +15,12 @@ import msifeed.mc.more.crabs.rolls.Modifiers;
 import msifeed.mc.more.crabs.rolls.Rolls;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.more.crabs.utils.Differ;
+import msifeed.mc.more.crabs.utils.GetUtils;
 import msifeed.mc.more.crabs.utils.MetaAttribute;
 import msifeed.mc.sys.attributes.MissingRequiredAttributeException;
 import msifeed.mc.sys.rpc.Rpc;
 import msifeed.mc.sys.rpc.RpcMethod;
+import msifeed.mc.sys.rpc.RpcMethodException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -49,19 +51,15 @@ public enum CharRpc {
 
     @RpcMethod(setLang)
     public void onSetLang(MessageContext ctx, int entityId, int langIdx) {
-        final World world = ctx.getServerHandler().playerEntity.worldObj;
-        final Entity target = world.getEntityByID(entityId);
-        if (!(target instanceof EntityPlayer))
-            return;
-
-        LangAttribute.INSTANCE.set(target, Language.values()[langIdx]);
+        GetUtils.entityLiving(ctx.getServerHandler().playerEntity, entityId)
+                .ifPresent(e -> LangAttribute.INSTANCE.set(e, Language.values()[langIdx]));
     }
 
     @RpcMethod(updateChar)
     public void onUpdateChar(MessageContext ctx, int entityId, NBTTagCompound charNbt) {
         final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
-        final Entity target = sender.worldObj.getEntityByID(entityId);
-        if (!(target instanceof EntityLivingBase))
+        final EntityLivingBase target = GetUtils.entityLiving(sender, entityId).orElse(null);
+        if (target == null)
             return;
 
         final boolean senderIsGm = CharacterAttribute.has(sender, Trait.gm);
@@ -108,9 +106,9 @@ public enum CharRpc {
     @RpcMethod(clearEntity)
     public void onClearEntity(MessageContext ctx, int entityId) {
         final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
-        final Entity target = sender.worldObj.getEntityByID(entityId);
-        if (!(target instanceof EntityLivingBase) || target instanceof EntityPlayer)
-            return;
+        final EntityLivingBase target = GetUtils.entityLiving(sender, entityId)
+                .filter(e -> !(e instanceof EntityPlayer))
+                .orElseThrow(() -> new RpcMethodException(sender, "invalid target entity"));
 
         if (CharacterAttribute.require(sender).has(Trait.gm)) {
             CharacterAttribute.INSTANCE.set(target, null);
@@ -125,26 +123,25 @@ public enum CharRpc {
     @RpcMethod(rollAbility)
     public void onRollAbility(MessageContext ctx, int entityId, int abilityOrd) {
         final EntityPlayer sender = ctx.getServerHandler().playerEntity;
-        final World world = sender.worldObj;
-        final Entity entity = world.getEntityByID(entityId);
+        final EntityLivingBase target = GetUtils.entityLiving(sender, entityId)
+                .orElseThrow(() -> new RpcMethodException(sender, "invalid target entity"));
 
         final Ability[] abilityValues = Ability.values();
         if (abilityOrd >= abilityValues.length)
             return;
 
         try {
-            final Character c = CharacterAttribute.require(entity);
-            final Modifiers m = MetaAttribute.require(entity).modifiers;
+            final Character c = CharacterAttribute.require(target);
+            final Modifiers m = MetaAttribute.require(target).modifiers;
             final Ability a = abilityValues[abilityOrd];
 
             final Rolls.Result roll = Rolls.rollAbility(c, m, a);
             final String fmtRoll = roll.format(m.roll, m.toAbility(a), a);
-            final String name = entity instanceof EntityPlayer ? ((EntityPlayer) entity).getDisplayName() : entity.getCommandSenderName();
+            final String name = target instanceof EntityPlayer ? ((EntityPlayer) target).getDisplayName() : target.getCommandSenderName();
             final String text = String.format("%s: %s %s", name, a.trShort(), fmtRoll);
 
-            ChatHandler.sendSystemChatMessage(entity, Composer.makeMessage(SpeechType.ROLL, sender, text));
+            ChatHandler.sendSystemChatMessage(target, Composer.makeMessage(SpeechType.ROLL, sender, text));
             ExternalLogs.log(sender, "roll", text);
-
         } catch (MissingRequiredAttributeException e) {
         }
     }

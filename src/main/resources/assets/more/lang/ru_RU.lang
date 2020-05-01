@@ -175,6 +175,7 @@ more.diff.status.illness.7=пациент настолько здоров, чт�
 
 more.crabs.action_changed=Выбрано действие: %s
 more.crabs.knocked_out=%s теперь без сознания!
+more.crabs.killed=%s убит в бою!
 
 more.lock.locked=§7Закрыто
 more.lock.unlocked=§7Открыто

@@ -7,10 +7,13 @@ import msifeed.mc.more.crabs.action.effects.Buff;
 import msifeed.mc.more.crabs.action.parser.BuffJsonAdapter;
 import msifeed.mc.more.crabs.utils.ActionAttribute;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
+import msifeed.mc.more.crabs.utils.GetUtils;
 import msifeed.mc.sys.config.ConfigBuilder;
 import msifeed.mc.sys.config.JsonConfig;
+import msifeed.mc.sys.rpc.RpcMethodException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
@@ -55,14 +58,11 @@ public enum PotionsHandler {
     private void handleDefender(EntityLivingBase entity, CombatContext com) {
         if (com.targets.isEmpty())
             return;
-        final Entity offenderEntity = entity.worldObj.getEntityByID(com.targets.get(0));
-        if (offenderEntity == null)
-            return;
-        final CombatContext offenderCom = CombatAttribute.get(offenderEntity).orElse(null);
-        if (offenderCom == null || offenderCom.phase != CombatContext.Phase.ATTACK)
-            return;
-        if (!offenderCom.action.hasAnyTag(ActionTag.apply))
-            return;
+
+        final CombatContext offenderCom = GetUtils.entityLiving(entity, com.targets.get(0))
+                .flatMap(CombatAttribute::get)
+                .filter(c -> c.phase == CombatContext.Phase.ATTACK)
+                .orElse(null);
 
         final ActionContext act = ActionAttribute.require(entity);
         final List<Buff> buffs = convertPotionEffects(entity, com);

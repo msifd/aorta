@@ -12,10 +12,12 @@ import msifeed.mc.more.crabs.action.Combo;
 import msifeed.mc.more.crabs.combat.CombatContext;
 import msifeed.mc.more.crabs.combat.CombatRpc;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
+import msifeed.mc.more.crabs.utils.GetUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 public class ActionsView extends Widget {
     private final EntityLivingBase entity;
@@ -44,13 +46,13 @@ public class ActionsView extends Widget {
             if (defence) {
                 if (ctx.targets.isEmpty())
                     return;
-                final Entity foe = entity.worldObj.getEntityByID(ctx.targets.get(0));
-                if (foe == null)
+                incomingAttackType = GetUtils.entityLiving(entity, ctx.targets.get(0))
+                        .flatMap(CombatAttribute::get)
+                        .map(act -> act.action)
+                        .map(ActionHeader::getType)
+                        .orElse(null);
+                if (incomingAttackType == null)
                     return;
-                final ActionHeader action = CombatAttribute.require(foe).action;
-                if (action == null)
-                    return;
-                incomingAttackType = action.getType();
             } else {
                 incomingAttackType = null;
             }
