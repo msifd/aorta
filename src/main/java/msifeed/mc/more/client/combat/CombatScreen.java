@@ -18,8 +18,17 @@ public class CombatScreen extends MellowGuiScreen {
     private final EntityLivingBase entity;
     private final Widget content;
 
+    private final ActionsView actionsView;
+    private final ProgressView progressView;
+    private final ModsView modsView;
+    private final RollAbilityView rollAbilityView;
+
     public CombatScreen(EntityLivingBase entity) {
         this.entity = entity;
+        this.actionsView = new ActionsView(entity);
+        this.progressView = new ProgressView(entity);
+        this.modsView = new ModsView(entity);
+        this.rollAbilityView = new RollAbilityView(entity);
 
         final Window window = new Window();
         window.setTitle(L10n.fmt("more.gui.combat", entity.getCommandSenderName()));
@@ -28,21 +37,21 @@ public class CombatScreen extends MellowGuiScreen {
         content = window.getContent();
         content.setLayout(new ListLayout(ListLayout.Direction.HORIZONTAL, 2));
 
-        refill();
+        content.addChild(actionsView);
+
+        final TabArea tabs = new TabArea();
+        tabs.addTab(L10n.tr("more.gui.combat.progress"), progressView);
+        tabs.addTab(L10n.tr("more.gui.combat.mods"), modsView);
+        tabs.addTab(L10n.tr("more.gui.combat.rolls"), rollAbilityView);
+        content.addChild(tabs);
 
         MinecraftForge.EVENT_BUS.register(this);
     }
 
     private void refill() {
-        content.clearChildren();
-
-        content.addChild(new ActionsView(entity));
-
-        final TabArea tabs = new TabArea();
-        tabs.addTab(L10n.tr("more.gui.combat.progress"), new ProgressView(entity));
-        tabs.addTab(L10n.tr("more.gui.combat.mods"), new ModsView(entity));
-        tabs.addTab(L10n.tr("more.gui.combat.rolls"), new RollAbilityView(entity));
-        content.addChild(tabs);
+        actionsView.refill();
+        progressView.refill();
+        modsView.refill();
     }
 
     @Override

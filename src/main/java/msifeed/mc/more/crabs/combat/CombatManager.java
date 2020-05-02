@@ -61,8 +61,9 @@ public enum CombatManager {
             if (actionChanged)
                 updateAction(self, action);
             else {
-                CombatAttribute.INSTANCE.update(self, com -> com.phase = CombatContext.Phase.WAIT);
-                tryFinishMove(offender, offenderCom);
+                ctx.phase = CombatContext.Phase.WAIT;
+                if (!tryFinishMove(offender, offenderCom))
+                    CombatAttribute.INSTANCE.set(self, ctx);
             }
             return true;
         }
@@ -116,11 +117,6 @@ public enum CombatManager {
             return;
 
         if (vicCom.phase == CombatContext.Phase.END) {
-            // TODO: handle knockedOut here
-//            if (!vicCom.knockedOut) {
-//
-//            }
-
             return; // Pass full damage
         }
 
@@ -188,7 +184,7 @@ public enum CombatManager {
         vicAct.damageDealt.add(new DamageAmount(event.source, event.ammount));
     }
 
-    private void tryFinishMove(EntityLivingBase offender, CombatContext offenderCom) {
+    private boolean tryFinishMove(EntityLivingBase offender, CombatContext offenderCom) {
         final List<EntityLivingBase> defenderEntities =  offenderCom.targets.stream()
                 .map(id -> GetUtils.entityLiving(offender, id).orElse(null))
                 .filter(Objects::nonNull)
@@ -200,8 +196,11 @@ public enum CombatManager {
                 .allMatch(ctx -> ctx.phase == CombatContext.Phase.WAIT);
 
         final boolean everyoneIsReady = defenderEntities.size() == defenderComs.size() && allDefendersAreWaiting;
-        if (everyoneIsReady)
-            finishMove(offender, defenderEntities);
+        if (!everyoneIsReady)
+            return false;
+
+        finishMove(offender, defenderEntities);
+        return true;
     }
 
     private void finishMove(EntityLivingBase offenderEntity, List<EntityLivingBase> defenderEntities) {
@@ -280,13 +279,13 @@ public enum CombatManager {
     private void finishSoloMove(FighterInfo self) {
         self.com.phase = CombatContext.Phase.END;
 
+        if (self.act.action.hasAnyTag(ActionTag.apply)) {
+            self.act.buffsToReceive.addAll(PotionsHandler.convertPotionEffects(self.entity));
+        }
+
         applyEffects(self.act.action.self, Effect.Stage.ACTION, self, null);
         applyBuffs(self.com.buffs, Effect.Stage.ACTION, self, null);
         applyActionResults(self);
-
-        if (self.act.action.hasAnyTag(ActionTag.apply)) {
-            PotionsHandler.convertPotionEffects(self.entity, self.com);
-        }
 
         CombatNotifications.soloMoveResult(self);
 
@@ -315,10 +314,10 @@ public enum CombatManager {
     private static void applyActionResults(FighterInfo self) {
         boolean resetCombo = false;
 
-        final boolean wasKnockedOut = self.com.knockedOut;
         for (DamageAmount da : self.act.damageToReceive) {
             if (self.entity.attackEntityFrom(da.source, da.amount))
                 resetCombo = true;
+            self.entity.hurtResistantTime = 0;
         }
 
         for (Buff buff : self.act.buffsToReceive)
@@ -344,18 +343,6 @@ public enum CombatManager {
         }
     }
 
-//    @SubscribeEvent
-//    public void onPlayerTick(TickEvent.PlayerTickEvent event) {
-//        if (event.phase != TickEvent.Phase.END) return;
-//        if (event.player.worldObj.getTotalWorldTime() % 20 != 0) return;
-//
-//        final CombatContext com = CombatAttribute.get(event.player).orElse(null);
-//        if (com == null) return;
-//
-//        if (com.phase == CombatContext.Phase.LEAVE)
-//            removeFromCombat(event.player, com);
-//    }
-
     @SubscribeEvent
     public void onLivingJoinWorld(EntityJoinWorldEvent event) {
         if (event.entity.worldObj.isRemote || !(event.entity instanceof EntityLivingBase))
@@ -364,10 +351,6 @@ public enum CombatManager {
         CombatAttribute.get(event.entity)
                 .filter(com -> com.phase.isInCombat())
                 .ifPresent(com -> resetCombatantWithRelatives(event.entity));
-
-//        final CombatContext com = CombatAttribute.get(event.entity).orElse(null);
-//        if (com != null && com.phase.isInCombat())
-//            resetCombatantWithRelatives(event.entity);
     }
 
     @SubscribeEvent

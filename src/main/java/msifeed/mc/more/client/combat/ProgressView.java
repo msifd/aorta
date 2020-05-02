@@ -46,7 +46,7 @@ public class ProgressView extends Widget {
         refill();
     }
 
-    private void refill() {
+    public void refill() {
         scroll.clearChildren();
 
         final Optional<CombatContext> optCom = CombatAttribute.get(entity);

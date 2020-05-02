@@ -57,9 +57,11 @@ public final class ActionEffects {
 
         @Override
         public void apply(FighterInfo target, FighterInfo other) {
-            final DamageSource ds = other.entity instanceof EntityPlayer
-                    ? DamageSource.causePlayerDamage((EntityPlayer) other.entity)
-                    : DamageSource.causeMobDamage(other.entity);
+            final DamageSource ds = other == null
+                    ? new DamageSource("crabs")
+                    : other.entity instanceof EntityPlayer
+                        ? DamageSource.causePlayerDamage((EntityPlayer) other.entity)
+                        : DamageSource.causeMobDamage(other.entity);
             target.act.damageToReceive.add(new DamageAmount(ds, value));
         }
 

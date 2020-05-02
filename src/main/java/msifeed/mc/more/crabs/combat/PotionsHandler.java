@@ -38,19 +38,8 @@ public enum PotionsHandler {
         if (com == null)
             return;
 
-        if (com.phase == CombatContext.Phase.IDLE)
-            handleSelfApply(event.entityLiving, com);
-        else if (com.phase == CombatContext.Phase.DEFEND)
+        if (com.phase == CombatContext.Phase.DEFEND)
             handleDefender(event.entityLiving, com);
-    }
-
-    private void handleSelfApply(EntityLivingBase entity, CombatContext com) {
-        if (com.action == null || !com.action.hasAnyTag(ActionTag.apply))
-            return;
-
-        final ActionContext act = ActionAttribute.require(entity);
-        final List<Buff> buffs = convertPotionEffects(entity, com);
-        act.buffsToReceive.addAll(buffs);
     }
 
     private void handleDefender(EntityLivingBase entity, CombatContext com) {
@@ -66,11 +55,11 @@ public enum PotionsHandler {
             return;
 
         final ActionContext act = ActionAttribute.require(entity);
-        final List<Buff> buffs = convertPotionEffects(entity, com);
+        final List<Buff> buffs = convertPotionEffects(entity);
         act.buffsToReceive.addAll(buffs);
     }
 
-    public static List<Buff> convertPotionEffects(EntityLivingBase entity, CombatContext com) {
+    public static List<Buff> convertPotionEffects(EntityLivingBase entity) {
         final Collection<PotionEffect> effects = entity.getActivePotionEffects();
         if (effects.isEmpty())
             return Collections.emptyList();

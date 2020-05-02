@@ -13,15 +13,16 @@ import msifeed.mc.more.crabs.combat.CombatContext;
 import msifeed.mc.more.crabs.combat.CombatRpc;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
 import msifeed.mc.more.crabs.utils.GetUtils;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 public class ActionsView extends Widget {
     private final EntityLivingBase entity;
     private long prevActionTime = 0;
+    private double prevScrollPercent = 0;
+
+    private final ScrollArea scroll = new ScrollArea();
 
     public ActionsView(EntityLivingBase entity) {
         this.entity = entity;
@@ -29,16 +30,17 @@ public class ActionsView extends Widget {
         setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.MINIMUM);
         setLayout(FillLayout.INSTANCE);
 
+        addChild(scroll);
+
         refill();
     }
 
     public void refill() {
+        scroll.clearChildren();
+
         CombatAttribute.get(entity).ifPresent(ctx -> {
             if (!ctx.phase.isInCombat())
                 return;
-
-            final ScrollArea list = new ScrollArea();
-            addChild(list);
 
             final boolean defence = ctx.phase == CombatContext.Phase.DEFEND;
 
@@ -77,7 +79,7 @@ public class ActionsView extends Widget {
 
                         btn.setDisabled(ctx.phase != CombatContext.Phase.IDLE && ctx.phase != CombatContext.Phase.DEFEND);
                         btn.setClickCallback(() -> doAction(action));
-                        list.addChild(btn);
+                        scroll.addChild(btn);
                     });
         });
     }
@@ -85,9 +87,6 @@ public class ActionsView extends Widget {
     private void doAction(ActionHeader action) {
         if (System.currentTimeMillis() - prevActionTime < 1000)
             return;
-
-//        final String target = action.canTarget() ? targetView.getTarget() : "";
-//        RollRpc.rollAction(entity.getEntityId(), action, target);
 
         CombatRpc.doAction(entity.getEntityId(), action.id);
         prevActionTime = System.currentTimeMillis();

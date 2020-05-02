@@ -24,7 +24,9 @@ class ModsView extends Widget {
         refill();
     }
 
-    private void refill() {
+    public void refill() {
+        clearChildren();
+
         MetaAttribute.get(entity).ifPresent(meta -> {
             final Modifiers mods = meta.modifiers;
 
