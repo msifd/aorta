@@ -25,7 +25,8 @@ public final class EffectsRegistry {
                 new ActionEffects.Heal(),
                 // Buffs
                 new Buff(),
-                new Buff.OnRole()
+                new Buff.OnRole(),
+                new Buff.OnTag()
         ).forEach(s -> EFFECTS.put(s.name(), s));
     }
 

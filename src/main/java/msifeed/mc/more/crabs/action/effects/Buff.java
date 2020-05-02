@@ -1,5 +1,6 @@
 package msifeed.mc.more.crabs.action.effects;
 
+import msifeed.mc.more.crabs.action.ActionTag;
 import msifeed.mc.more.crabs.combat.CombatContext;
 import msifeed.mc.more.crabs.combat.FighterInfo;
 
@@ -129,8 +130,7 @@ public final class Buff extends DynamicEffect {
 
         @Override
         public boolean shouldApply(Stage stage, FighterInfo target, FighterInfo other) {
-            return stage == Stage.ACTION
-                    && role == target.com.role
+            return role == target.com.role
                     && effect.shouldApply(stage, target, other);
         }
 
@@ -141,7 +141,9 @@ public final class Buff extends DynamicEffect {
 
         @Override
         public boolean equals(Effect other) {
-            return other instanceof OnRole && ((OnRole) other).effect.equals(this.effect);
+            return other instanceof OnRole
+                    && ((OnRole) other).role == this.role
+                    && ((OnRole) other).effect.equals(this.effect);
         }
 
         @Override
@@ -166,6 +168,60 @@ public final class Buff extends DynamicEffect {
         public DynamicEffect produce(Object[] args) {
             final OnRole e = new OnRole();
             e.role = CombatContext.Role.valueOf(((String) args[0]).toUpperCase());
+            e.effect = (Effect) args[1];
+            return e;
+        }
+    }
+
+    public static class OnTag extends DynamicEffect {
+        private ActionTag tag;
+        private Effect effect;
+
+        @Override
+        public String name() {
+            return "tag";
+        }
+
+        @Override
+        public boolean shouldApply(Stage stage, FighterInfo target, FighterInfo other) {
+            return target.com.action.hasAnyTag(tag)
+                    && effect.shouldApply(stage, target, other);
+        }
+
+        @Override
+        public void apply(FighterInfo target, FighterInfo other) {
+            this.effect.apply(target, other);
+        }
+
+        @Override
+        public boolean equals(Effect other) {
+            return other instanceof OnTag
+                    && ((OnTag) other).tag == this.tag
+                    && ((OnTag) other).effect.equals(this.effect);
+        }
+
+        @Override
+        public Effect clone() {
+            final OnTag e = new OnTag();
+            e.tag = tag;
+            e.effect = effect.clone();
+            return e;
+        }
+
+        @Override
+        public String toString() {
+            return name() + ':' + tag.toString().toLowerCase() + ':' + effect.toString();
+        }
+
+        @Override
+        public EffectArgs[] args() {
+            return new EffectArgs[]{STRING, EFFECT};
+        }
+
+        @Override
+        public DynamicEffect produce(Object[] args) {
+            final OnTag e = new OnTag();
+            e.tag = ActionTag.valueOf(((String) args[0]).toLowerCase());
             e.effect = (Effect) args[1];
             return e;
         }
