@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ScreenRenamer extends MellowGuiScreen {
     private final TextInput titleInput = new TextInput();
@@ -63,8 +64,6 @@ public class ScreenRenamer extends MellowGuiScreen {
         descInput.setSizeHint(200, 60);
         descInput.setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.MINIMUM);
         descInput.setMaxLineWidth(300);
-//        descInput.getController().setViewHeight(60);
-//        descInput.setLineLimit(10);
         descInput.getController().setMaxLines(10);
         descInput.setColor(descInput.getColor());
 
@@ -73,9 +72,13 @@ public class ScreenRenamer extends MellowGuiScreen {
         renameTab.addChild(footer);
 
         final ButtonLabel applyBtn = new ButtonLabel(L10n.tr("more.gui.apply"));
-//        applyBtn.getSizeHint().x = 200;
         applyBtn.setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.PREFERRED);
-        applyBtn.setClickCallback(() -> RenameRpc.rename(titleInput.getText(), descInput.toLineStream().collect(Collectors.toList())));
+        applyBtn.setClickCallback(() -> RenameRpc.rename(
+                titleInput.getText(),
+                descInput.toLineStream()
+                        .map(RenameProvider::fromAmpersandFormatting)
+                        .collect(Collectors.toList())
+        ));
         footer.addChild(applyBtn);
 
         final ButtonLabel clearBtn = new ButtonLabel("Remove custom title & description");
@@ -99,19 +102,20 @@ public class ScreenRenamer extends MellowGuiScreen {
     private List<String> getItemDesc(ItemStack itemStack) {
         final List<String> customDesc = RenameProvider.getDescription(itemStack);
         if (!customDesc.isEmpty())
-            return customDesc;
+            return customDesc.stream()
+                    .map(s -> s.substring(2)) // Remove &r prefix on each line
+                    .map(RenameProvider::intoAmpersandFormatting)
+                    .collect(Collectors.toList());
 
         if ((itemStack.getItem() instanceof IItemTemplate)) {
             final String[] desc = ((IItemTemplate) itemStack.getItem()).getUnit().desc;
-            if (desc == null)
-                return Collections.emptyList();
-            final ArrayList<String> res = new ArrayList<>(desc.length);
-            for (String s : desc)
-                res.add(RenameProvider.intoAmpersandFormatting(s));
-            return res;
+            if (desc != null)
+                return Stream.of(desc)
+                        .map(RenameProvider::intoAmpersandFormatting)
+                        .collect(Collectors.toList());
         }
-        else
-            return Collections.emptyList();
+
+        return Collections.emptyList();
     }
 
     private void refillValues(Widget valuesTab, EntityPlayer player) {

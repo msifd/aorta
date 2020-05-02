@@ -170,6 +170,12 @@ public class TextController {
             final int targetCol = fontRenderer.trimStringToWidth(lines.get(curLine).sb.toString(), cacheCursorX).length();
             curColumn = Math.min(targetCol, lines.get(curLine).sb.length());
 
+            final int currOffsetDiff = curLine - offsetLine;
+            if (currOffsetDiff < 0 || currOffsetDiff >= getLinesPerView()) {
+                offsetLine = curLine;
+                cacheInvalid = true;
+            }
+
             refreshOffsetColumn();
         }
     }

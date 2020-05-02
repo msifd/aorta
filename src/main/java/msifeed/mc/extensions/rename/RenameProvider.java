@@ -8,7 +8,6 @@ import net.minecraft.nbt.NBTTagList;
 import java.util.*;
 
 public class RenameProvider {
-
     public static boolean hasTitle(ItemStack itemStack) {
         return itemStack.hasTagCompound()
                 && itemStack.stackTagCompound.hasKey("display", 10)
@@ -38,7 +37,7 @@ public class RenameProvider {
                 .getTagList(getDescKey(itemStack), 8);
         final ArrayList<String> lines = new ArrayList<>();
         for (int i = 0; i < tags.tagCount(); i++)
-            lines.add(intoAmpersandFormatting(tags.getStringTagAt(i).substring(2)));
+            lines.add(tags.getStringTagAt(i));
         return lines;
     }
 
@@ -113,7 +112,7 @@ public class RenameProvider {
         return str.replace('&', '\u00A7');
     }
 
-    public static String intoAmpersandFormatting(String str) {
+    static String intoAmpersandFormatting(String str) {
         return str.replace('\u00A7', '&');
     }
 

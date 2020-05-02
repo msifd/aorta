@@ -5,6 +5,7 @@ import msifeed.mc.mellow.handlers.KeyHandler;
 import msifeed.mc.mellow.handlers.MouseHandler;
 import msifeed.mc.mellow.render.RenderParts;
 import msifeed.mc.mellow.render.RenderShapes;
+import msifeed.mc.mellow.render.RenderUtils;
 import msifeed.mc.mellow.render.RenderWidgets;
 import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.utils.Geom;
@@ -13,8 +14,10 @@ import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.text.inner.TextController;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.entity.RenderManager;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -90,6 +93,7 @@ public class TextInputArea extends Widget implements KeyHandler, MouseHandler.Cl
     @Override
     protected void updateSelf() {
         controller.setViewWidth(getGeometry().w - getMargin().horizontal());
+        controller.setViewHeight(getGeometry().h - getMargin().vertical());
     }
 
     @Override
@@ -185,6 +189,24 @@ public class TextInputArea extends Widget implements KeyHandler, MouseHandler.Cl
                 if (controller.breakLine() && curLine == controller.getLinesPerView() - 1 && curLine + 1 < controller.getLineCount())
                     moveOffsetLine(1);
                 break;
+            case Keyboard.KEY_HOME:
+                controller.setCursor(controller.getCurLine(), 0);
+                break;
+            case Keyboard.KEY_END:
+                controller.setCursor(controller.getCurLine(), controller.getCurrentLine().columns);
+                break;
+            case Keyboard.KEY_PRIOR: // Page Up
+                if (mode == NavMode.PAGES)
+                    controller.moveCursorLine(-(controller.getLinesPerView() + getCursorLineInView()));
+                else
+                    controller.moveCursorLine(-controller.getLinesPerView());
+                break;
+            case Keyboard.KEY_NEXT: // Page Down
+                if (mode == NavMode.PAGES)
+                    controller.moveCursorLine(controller.getLinesPerView() - getCursorLineInView());
+                else
+                    controller.moveCursorLine(controller.getLinesPerView());
+                break;
             default:
                 controller.insert(c);
 //                if (controller.insert(c) && curLine == controller.getLinesPerView() - 1 && curLine + 1 < controller.getLineCount())
@@ -206,10 +228,14 @@ public class TextInputArea extends Widget implements KeyHandler, MouseHandler.Cl
         final FontRenderer fr = RenderManager.instance.getFontRenderer();
         final Geom geom = this.getGeomWithMargin();
 
-        final int lineHeight = RenderWidgets.lineHeight();
-        final int line = controller.getOffsetLine() + (yMouse - geom.y - lineHeight / 2) / lineHeight;
-        final int tune = -1;
-        final int column = fr.trimStringToWidth(controller.getLine(line).toString(), xMouse - geom.x - tune).length();
+        final int inAreaXPos = xMouse - geom.x;
+        final int inAreaYPos = yMouse - geom.y;
+        final int tune = 1;
+
+        final int line = controller.getOffsetLine() + inAreaYPos / RenderWidgets.lineHeight();
+
+        final String visibleLine = controller.getLine(line).sb.substring(controller.getOffsetColumn());
+        final int column = controller.getOffsetColumn() + fr.trimStringToWidth(visibleLine, inAreaXPos + tune).length();
 
         controller.setCursor(line, column);
     }
@@ -219,10 +245,6 @@ public class TextInputArea extends Widget implements KeyHandler, MouseHandler.Cl
             return controller.getCurLine() - controller.getOffsetLine();
         else
             return controller.getCurLine() % controller.getLinesPerView();
-//        int curLine = controller.getCurLine();
-//        if (mode == NavMode.PAGES)
-//            curLine %= controller.getLinesPerView();
-//        return curLine;
     }
 
     public enum NavMode {
