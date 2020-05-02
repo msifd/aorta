@@ -29,7 +29,7 @@ public class ActionHeader {
     }
 
     public boolean requiresNoRoll() {
-        return hasAnyTag(ActionTag.none, ActionTag.apply, ActionTag.equip, ActionTag.reload);
+        return !hasAnyTag(ActionTag.melee, ActionTag.ranged, ActionTag.magical, ActionTag.intellectual);
     }
 
     public boolean hasAnyTag(ActionTag... tags) {

@@ -97,6 +97,7 @@ more.gui.combat.rem_combat=Выкл. боевку
 more.gui.combat.end_attack=Завершить атаку
 more.gui.combat.reset=Сброс хода
 
+more.gui.combat.tips.training=Режим тренировки
 more.gui.combat.tips.offence_action=Выберите атакующее действие
 more.gui.combat.tips.current_action=Текущее действие: %s
 more.gui.combat.tips.targets=Текущие цели:\n%s

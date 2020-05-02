@@ -10,11 +10,9 @@ import msifeed.mc.more.crabs.utils.CombatAttribute;
 import msifeed.mc.more.crabs.utils.GetUtils;
 import msifeed.mc.sys.config.ConfigBuilder;
 import msifeed.mc.sys.config.JsonConfig;
-import msifeed.mc.sys.rpc.RpcMethodException;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 import java.util.*;
@@ -28,7 +26,7 @@ public enum PotionsHandler {
             .create();
 
     public void init() {
-//        MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     @SubscribeEvent
@@ -40,14 +38,14 @@ public enum PotionsHandler {
         if (com == null)
             return;
 
-        if (com.phase == CombatContext.Phase.ATTACK)
+        if (com.phase == CombatContext.Phase.IDLE)
             handleSelfApply(event.entityLiving, com);
         else if (com.phase == CombatContext.Phase.DEFEND)
             handleDefender(event.entityLiving, com);
     }
 
     private void handleSelfApply(EntityLivingBase entity, CombatContext com) {
-        if (!com.action.hasAnyTag(ActionTag.apply))
+        if (com.action == null || !com.action.hasAnyTag(ActionTag.apply))
             return;
 
         final ActionContext act = ActionAttribute.require(entity);
@@ -59,10 +57,13 @@ public enum PotionsHandler {
         if (com.targets.isEmpty())
             return;
 
-        final CombatContext offenderCom = GetUtils.entityLiving(entity, com.targets.get(0))
+        final boolean offenceActionHasApply = GetUtils.entityLiving(entity, com.targets.get(0))
                 .flatMap(CombatAttribute::get)
                 .filter(c -> c.phase == CombatContext.Phase.ATTACK)
-                .orElse(null);
+                .map(c -> c.action != null && c.action.hasAnyTag(ActionTag.apply))
+                .orElse(false);
+        if (!offenceActionHasApply)
+            return;
 
         final ActionContext act = ActionAttribute.require(entity);
         final List<Buff> buffs = convertPotionEffects(entity, com);
@@ -85,8 +86,6 @@ public enum PotionsHandler {
             for (PotionRule pr : rules) {
                 if (e.getDuration() <= pr.maxDuration && e.getAmplifier() <= pr.maxAmplifier) {
                     for (Buff b : pr.buffs) {
-//                        System.out.println(String.format("Add buff '%s' to %s", b.toString(), event.entityLiving.getCommandSenderName()));
-//                        Buff.mergeBuff(com.buffs, b);
                         convertedBuffs.add(b);
                         toRemove.add(e.getPotionID());
                     }

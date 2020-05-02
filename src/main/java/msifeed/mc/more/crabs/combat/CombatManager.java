@@ -42,6 +42,8 @@ public enum CombatManager {
                 return false;
             if (actionChanged)
                 updateAction(self, action);
+            else if (action.requiresNoRoll())
+                endAction(self, ctx);
             return true;
         } else if (ctx.phase == CombatContext.Phase.DEFEND) {
             if (ctx.targets.isEmpty())

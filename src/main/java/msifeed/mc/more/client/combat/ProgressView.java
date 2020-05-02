@@ -61,6 +61,9 @@ public class ProgressView extends Widget {
     }
 
     private void refillHasContext(CombatContext context) {
+        if (context.healthBeforeTraining > 0)
+            addPane("more.gui.combat.tips.training");
+
         switch (context.phase) {
             case NONE:
                 addButton("more.gui.combat.join", () -> CombatRpc.join(entity.getEntityId()));
