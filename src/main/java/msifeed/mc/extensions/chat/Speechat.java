@@ -30,5 +30,6 @@ public class Speechat {
         handler.registerCommand(new GmsayCommand());
         handler.registerCommand(new GmGlobalCommand());
         handler.registerCommand(new SusayCommand());
+        handler.registerCommand(new GmPmCommand());
     }
 }

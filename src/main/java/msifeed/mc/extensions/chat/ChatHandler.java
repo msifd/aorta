@@ -9,6 +9,7 @@ import msifeed.mc.extensions.chat.composer.SpeechType;
 import msifeed.mc.extensions.chat.gm.GmSpeech;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.event.ServerChatEvent;
 
@@ -39,6 +40,11 @@ public class ChatHandler {
 //        final String langPrefix = message.language == Language.VANILLA || message.language == Language.COMMON
 //                ? "" : String.format("[%s] ", message.language.shortTr());
         ExternalLogs.log(sender, message.type.toString().toLowerCase(), langPrefix + message.text);
+    }
+
+    public static void sendMessageTo(EntityPlayerMP sender, EntityPlayerMP receiver, ChatMessage message) {
+        Speechat.CHANNEL.sendTo(message, receiver);
+        ExternalLogs.log(sender, message.type.toString().toLowerCase(), receiver.getCommandSenderName() + " >> " + message.text);
     }
 
     public static void sendGlobalChatMessage(EntityPlayer sender, ChatMessage message) {
