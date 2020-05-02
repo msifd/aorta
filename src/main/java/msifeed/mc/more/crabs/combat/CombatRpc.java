@@ -25,6 +25,7 @@ public enum CombatRpc {
     private final static String endAttack = Bootstrap.MODID + ":combat.endAttack";
 
     private final static String join = Bootstrap.MODID + ":combat.join";
+    private final static String training = Bootstrap.MODID + ":combat.training";
     private final static String leave = Bootstrap.MODID + ":combat.leave";
     private final static String reset = Bootstrap.MODID + ":combat.reset";
 
@@ -95,6 +96,27 @@ public enum CombatRpc {
         if (com.phase.isInCombat())
             throw new RpcMethodException(sender, "target is already in combat");
 
+        com.healthBeforeTraining = 0;
+        CombatManager.INSTANCE.joinCombat(target, com);
+    }
+
+    public static void training(int entityId) {
+        Rpc.sendToServer(training, entityId);
+    }
+
+    @RpcMethod(training)
+    public void onTraining(MessageContext ctx, int entityId) {
+        final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
+        final EntityLivingBase target = GetUtils.entityLiving(sender, entityId)
+                .orElseThrow(() -> new RpcMethodException(sender, "invalid target entity"));
+
+        final CombatContext com = CombatAttribute.get(target).orElse(null);
+        if (com == null)
+            throw new RpcMethodException(sender, "target is not a combatant");
+        if (com.phase.isInCombat())
+            throw new RpcMethodException(sender, "target is already in combat");
+
+        com.healthBeforeTraining = target.getHealth();
         CombatManager.INSTANCE.joinCombat(target, com);
     }
 

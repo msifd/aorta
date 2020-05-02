@@ -46,6 +46,7 @@ public enum CombatOverlay {
 
         comOpt.ifPresent(com -> {
             lines.add("Combat");
+            lines.add("  Training health: " + com.healthBeforeTraining);
             lines.add("  Puppet: " + com.puppet);
             lines.add("  Knocked out: " + com.knockedOut);
             lines.add("  Buffs: " + com.buffs.stream().map(Buff::toString).collect(Collectors.joining(", ")));

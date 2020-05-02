@@ -142,6 +142,8 @@ public enum CombatManager {
 
         event.setCanceled(true);
 
+        if (srcCom.healthBeforeTraining > 0 != vicCom.healthBeforeTraining > 0)
+            return; // Ignore if someone is not in training
         if (srcCom.phase != CombatContext.Phase.IDLE && srcCom.phase != CombatContext.Phase.ATTACK)
             return;
         if (srcCom.action == null)
@@ -326,6 +328,11 @@ public enum CombatManager {
         if (self.entity.isDead || self.entity.getHealth() <= 0) {
             if (self.com.knockedOut) {
                 CombatNotifications.notifyKilled(self);
+                if (self.com.healthBeforeTraining > 0) {
+                    self.entity.setHealth(self.com.healthBeforeTraining);
+                    self.entity.isDead = false;
+                    self.com.knockedOut = false;
+                }
             } else {
                 self.entity.setHealth(1);
                 self.entity.isDead = false;
@@ -378,9 +385,13 @@ public enum CombatManager {
         ActionAttribute.INSTANCE.set(target, new ActionContext());
     }
 
-    public void removeFromCombat(Entity entity, CombatContext com) {
+    public void removeFromCombat(EntityLivingBase entity, CombatContext com) {
         resetCombatantWithRelatives(entity);
 
+        if (com.healthBeforeTraining > 0)
+            entity.setHealth(com.healthBeforeTraining);
+
+        com.healthBeforeTraining = 0;
         com.phase = CombatContext.Phase.NONE;
         com.knockedOut = false;
         com.prevActions.clear();

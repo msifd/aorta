@@ -88,6 +88,7 @@ more.gui.combat.mods=Моды
 more.gui.combat.rolls=Роллы
 
 more.gui.combat.join=Войти в бой
+more.gui.combat.training=Войти в бой-тренировку
 more.gui.combat.leave=Покинуть бой
 more.gui.combat.control=Контролировать
 more.gui.combat.end_control=Прекратить контроль

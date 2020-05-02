@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class CombatContext {
+    public float healthBeforeTraining = 0;
     public int puppet;
 
     public boolean knockedOut;
@@ -40,6 +41,7 @@ public class CombatContext {
     public NBTTagCompound toNBT() {
         final NBTTagCompound c = new NBTTagCompound();
 
+        c.setFloat(Tags.training, healthBeforeTraining);
         c.setInteger(Tags.puppet, puppet);
         c.setBoolean(Tags.knocked, knockedOut);
 
@@ -64,6 +66,7 @@ public class CombatContext {
     }
 
     public void fromNBT(NBTTagCompound c) {
+        healthBeforeTraining = c.getFloat(Tags.training);
         puppet = c.getInteger(Tags.puppet);
         knockedOut = c.getBoolean(Tags.knocked);
 
@@ -115,6 +118,7 @@ public class CombatContext {
     }
 
     private static final class Tags {
+        static final String training = "training";
         static final String puppet = "puppet";
         static final String knocked = "knocked";
         static final String buffs = "buffs";

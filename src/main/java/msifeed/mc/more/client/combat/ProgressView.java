@@ -64,6 +64,7 @@ public class ProgressView extends Widget {
         switch (context.phase) {
             case NONE:
                 addButton("more.gui.combat.join", () -> CombatRpc.join(entity.getEntityId()));
+                addButton("more.gui.combat.training", () -> CombatRpc.training(entity.getEntityId()));
                 break;
             case IDLE:
                 if (context.action == null)
