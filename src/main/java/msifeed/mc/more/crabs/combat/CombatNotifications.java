@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 public final class CombatNotifications {
     public static void actionChanged(EntityPlayer sender, EntityLivingBase target, ActionHeader action) {
-        notify(sender, "§f выбрано действие " + action.getTitle());
+        notify(sender, "§fВыбрано действие " + action.getTitle());
     }
 
     static void notifyKnockedOut(FighterInfo self) {

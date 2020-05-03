@@ -67,6 +67,7 @@ public class ActionsView extends Widget {
             }
 
             ActionRegistry.getActionHeaders().stream()
+                    .filter(a -> !a.hasAnyTag(ActionTag.hidden))
                     .filter(action -> defence
                             ? action.isValidDefencive(incomingAttackType)
                             : action.isOffencive())
@@ -85,7 +86,7 @@ public class ActionsView extends Widget {
     }
 
     private void doAction(ActionHeader action) {
-        if (System.currentTimeMillis() - prevActionTime < 1000)
+        if (System.currentTimeMillis() - prevActionTime < 500)
             return;
 
         CombatRpc.doAction(entity.getEntityId(), action.id);

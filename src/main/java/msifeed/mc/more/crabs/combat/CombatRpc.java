@@ -4,6 +4,7 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.Bootstrap;
 import msifeed.mc.more.crabs.action.Action;
 import msifeed.mc.more.crabs.action.ActionRegistry;
+import msifeed.mc.more.crabs.action.ActionTag;
 import msifeed.mc.more.crabs.character.Character;
 import msifeed.mc.more.crabs.meta.MetaInfo;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
@@ -47,7 +48,7 @@ public enum CombatRpc {
                 .orElseThrow(() -> new RpcMethodException(sender, "invalid target entity"));
 
         final Action action = ActionRegistry.getFullAction(actionId);
-        if (action == null)
+        if (action == null || action.hasAnyTag(ActionTag.hidden))
             throw new RpcMethodException(sender, "unknown action: " + actionId);
 
         final CombatContext com = CombatAttribute.get(target)
