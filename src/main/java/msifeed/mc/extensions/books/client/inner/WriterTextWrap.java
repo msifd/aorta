@@ -4,7 +4,6 @@ import msifeed.mc.mellow.layout.FillLayout;
 import msifeed.mc.mellow.widgets.text.TextInputArea;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 public class WriterTextWrap extends TextWrap {
     private final TextInputArea area;

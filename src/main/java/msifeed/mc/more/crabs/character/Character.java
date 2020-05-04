@@ -1,11 +1,11 @@
 package msifeed.mc.more.crabs.character;
 
 import msifeed.mc.commons.traits.Trait;
-import msifeed.mc.commons.traits.TraitRegistry;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.EnumMap;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class Character {
@@ -58,7 +58,7 @@ public class Character {
 
         c.setString(Tags.name, name);
         c.setString(Tags.wiki, wikiPage);
-        c.setIntArray(Tags.traits, traits.stream().mapToInt(t -> t.code).toArray());
+        c.setIntArray(Tags.traits, traits.stream().filter(Objects::nonNull).mapToInt(t -> t.code).toArray());
 
         final int[] abilitiesArr = new int[Ability.values().length];
         for (Ability f : Ability.values())
@@ -77,7 +77,7 @@ public class Character {
     public void fromNBT(NBTTagCompound c) {
         name = c.getString(Tags.name);
         wikiPage = c.getString(Tags.wiki);
-        traits = TraitRegistry.decode(c.getIntArray(Tags.traits));
+        traits = Trait.decode(c.getIntArray(Tags.traits));
 
         final int[] abilitiesArr = c.getIntArray(Tags.abilities);
         for (Ability f : Ability.values())

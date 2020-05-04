@@ -3,7 +3,6 @@ package msifeed.mc.extensions.books.client;
 import msifeed.mc.extensions.books.RemoteBook;
 import msifeed.mc.extensions.books.RemoteBookRpc;
 import msifeed.mc.extensions.books.client.inner.WriterTextWrap;
-import msifeed.mc.extensions.chat.Language;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.mellow.utils.SizePolicy;
@@ -56,7 +55,7 @@ public class ScreenNoteEditor extends MellowGuiScreen {
             final String text = textArea.getText();
             if (text.length() < 3 || title.getText().length() < 3)
                 return;
-            RemoteBookRpc.publish(text, title.getText(), style.getSelectedItem(), Language.VANILLA);
+            RemoteBookRpc.publish(text, title.getText(), style.getSelectedItem());
 //            textArea.getController().clear();
 //            closeGui();
         });

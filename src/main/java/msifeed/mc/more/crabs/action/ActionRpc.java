@@ -1,5 +1,6 @@
 package msifeed.mc.more.crabs.action;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.Bootstrap;
 import msifeed.mc.sys.rpc.Rpc;
@@ -7,6 +8,7 @@ import msifeed.mc.sys.rpc.RpcMethod;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.server.MinecraftServer;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,11 +18,12 @@ public enum ActionRpc {
 
     private static final String actionsUpdate = Bootstrap.MODID + ":actions.upd";
     public static void broadcastToAll(Collection<Action> actions) {
-        Rpc.sendToAll(actionsUpdate, wrapHeaders(actions));
+        if (serverStarted())
+            Rpc.sendToAll(actionsUpdate, wrapHeaders(actions));
     }
 
     public static void broadcastTo(EntityPlayerMP player, Collection<Action> actions) {
-        Rpc.sendTo(player, actionsUpdate, wrapHeaders(actions));
+        Rpc.sendTo(actionsUpdate, player, wrapHeaders(actions));
     }
 
     @RpcMethod(actionsUpdate)
@@ -46,5 +49,10 @@ public enum ActionRpc {
             actions.add(new ActionHeader(list.getCompoundTagAt(i)));
 
         return actions;
+    }
+
+    private static boolean serverStarted() {
+        final MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+        return server != null && server.getConfigurationManager() != null;
     }
 }

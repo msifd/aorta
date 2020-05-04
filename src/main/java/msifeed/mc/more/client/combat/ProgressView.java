@@ -14,11 +14,11 @@ import msifeed.mc.more.crabs.action.ActionHeader;
 import msifeed.mc.more.crabs.action.ActionRegistry;
 import msifeed.mc.more.crabs.action.effects.Buff;
 import msifeed.mc.more.crabs.combat.CombatContext;
-import msifeed.mc.more.crabs.combat.CombatNotifications;
 import msifeed.mc.more.crabs.combat.CombatRpc;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
 import msifeed.mc.more.crabs.utils.GetUtils;
+import msifeed.mc.sys.utils.ChatUtils;
 import msifeed.mc.sys.utils.L10n;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
@@ -88,7 +88,7 @@ public class ProgressView extends Widget {
                         context.targets.stream()
                             .map(id -> GetUtils.entityLiving(entity, id).orElse(null))
                             .filter(Objects::nonNull)
-                            .map(CombatNotifications::getName)
+                            .map(ChatUtils::getPrettyName)
                             .collect(Collectors.joining("\n"))
                 );
 
@@ -109,7 +109,7 @@ public class ProgressView extends Widget {
                         offenderCom.targets.stream()
                                 .map(id -> GetUtils.entityLiving(entity, id).orElse(null))
                                 .filter(Objects::nonNull)
-                                .map(CombatNotifications::getName)
+                                .map(ChatUtils::getPrettyName)
                                 .collect(Collectors.joining("\n"))
                 );
                 break;
@@ -122,7 +122,7 @@ public class ProgressView extends Widget {
                         .map(c -> c.action)
                         .orElseThrow(RuntimeException::new);
 
-                addPane("more.gui.combat.tips.offender", CombatNotifications.getName(foe));
+                addPane("more.gui.combat.tips.offender", ChatUtils.getPrettyName(foe));
                 addPane("more.gui.combat.tips.enemy_action", action.getTitle());
                 if (context.action == null)
                     addPane("more.gui.combat.tips.defence_action");

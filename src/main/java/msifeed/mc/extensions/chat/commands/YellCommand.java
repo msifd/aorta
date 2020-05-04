@@ -2,20 +2,21 @@ package msifeed.mc.extensions.chat.commands;
 
 import msifeed.mc.commons.logs.ExternalLogs;
 import msifeed.mc.extensions.chat.SpeechatRpc;
-import msifeed.mc.extensions.chat.formatter.MiscFormatter;
-import msifeed.mc.sys.cmd.GmExtCommand;
+import msifeed.mc.more.More;
+import msifeed.mc.sys.cmd.PlayerExtCommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.ChatComponentText;
 
-public class GmGlobalCommand extends GmExtCommand {
+public class YellCommand extends PlayerExtCommand {
     @Override
     public String getCommandName() {
-        return "s";
+        return "yell";
     }
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "/s <text>";
+        return "/yell <text>";
     }
 
     @Override
@@ -23,10 +24,12 @@ public class GmGlobalCommand extends GmExtCommand {
         if (args.length == 0 || !(sender instanceof EntityPlayerMP))
             return;
 
+        final int[] ranges = More.DEFINES.get().chat.speechRadius;
+        final int range = ranges[(ranges.length - 1) / 2 + 1];
+
         final EntityPlayerMP player = (EntityPlayerMP) sender;
         final String text = String.join(" ", args);
-
-        SpeechatRpc.sendGmGlobal(MiscFormatter.formatGmGlobal(player.getCommandSenderName(), text));
-        ExternalLogs.log(player, "gm", "[GLOB] " + text);
+        SpeechatRpc.sendSpeech(player, range, new ChatComponentText(text));
+        ExternalLogs.log(sender, "speech",  text);
     }
 }

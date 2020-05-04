@@ -1,11 +1,11 @@
 package msifeed.mc.extensions.chat.commands;
 
 import msifeed.mc.commons.logs.ExternalLogs;
-import msifeed.mc.extensions.chat.GmSpeech;
 import msifeed.mc.extensions.chat.SpeechatRpc;
-import msifeed.mc.extensions.chat.formatter.MiscFormatter;
+import msifeed.mc.extensions.chat.formatter.SpeechFormatter;
 import msifeed.mc.sys.cmd.GmExtCommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
@@ -14,15 +14,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class GmPmCommand extends GmExtCommand {
+public class SuSayCommand extends GmExtCommand {
     @Override
     public String getCommandName() {
-        return "gmpm";
+        return "susay";
     }
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "/gmpm <player> <text>";
+        return "/susay <player> <text>";
     }
 
     public List addTabCompletionOptions(ICommandSender sender, String[] args) {
@@ -33,42 +33,26 @@ public class GmPmCommand extends GmExtCommand {
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
-        if (!(sender instanceof EntityPlayerMP)) {
-            error(sender, "You should be at least player!");
+        if (!(sender instanceof EntityPlayer))
             return;
-        }
-        if (!isGm(sender)) {
-            error(sender, "You are not GM!");
-            return;
-        }
+
         if (args.length < 2) {
-            error(sender, getCommandUsage(sender));
+            info(sender, getCommandUsage(sender));
             return;
         }
 
         final EntityPlayerMP target = getPlayer(sender, args[0]);
-        if (target == null) {
-            error(sender, "Player '%s' is not found.", args[0]);
+        if (target == null)
             return;
-        }
 
         final EntityPlayerMP player = (EntityPlayerMP) sender;
-        final GmSpeech.Preferences prefs = GmSpeech.get(player.getCommandSenderName());
         final String text = Stream.of(args).skip(1).collect(Collectors.joining(" "));
-        final String senderText = "gmpm " + target.getDisplayName() + ": " + text;
+        final int range = SpeechFormatter.getSpeechRange(text);
+        final String senderText = "susay " + target.getDisplayName() + ": " + text;
 
         SpeechatRpc.sendRawTo(player, new ChatComponentText(senderText));
-        SpeechatRpc.sendRawTo(target, MiscFormatter.formatGmSay(prefs, new ChatComponentText(text)));
+        SpeechatRpc.sendSpeech(target, range, new ChatComponentText(text));
         ExternalLogs.log(sender, "gm", senderText);
-
-//        final ChatMessage message = Composer.makeMessage(SpeechType.GM, player, text);
-//
-//        if (player instanceof EntityPlayerMP) {
-//            ChatHandler.sendMessageTo((EntityPlayerMP) player, target, message);
-//            message.text = target.getDisplayName() + " << " + message.text;
-//            player.addChatMessage(Composer.formatMessage(player, message));
-//        } else {
-//            player.addChatMessage(Composer.formatMessage(player, message));
-//        }
+        ExternalLogs.log(sender, "speech", text);
     }
 }

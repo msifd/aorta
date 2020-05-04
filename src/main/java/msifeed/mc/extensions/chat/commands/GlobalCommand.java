@@ -1,20 +1,21 @@
 package msifeed.mc.extensions.chat.commands;
 
-import msifeed.mc.extensions.chat.ChatHandler;
-import msifeed.mc.extensions.chat.composer.Composer;
-import msifeed.mc.extensions.chat.composer.SpeechType;
+import msifeed.mc.commons.logs.ExternalLogs;
+import msifeed.mc.extensions.chat.SpeechatRpc;
+import msifeed.mc.extensions.chat.formatter.MiscFormatter;
 import msifeed.mc.more.crabs.meta.MetaInfo;
 import msifeed.mc.more.crabs.utils.MetaAttribute;
-import msifeed.mc.sys.cmd.ExtCommand;
+import msifeed.mc.sys.cmd.PlayerExtCommand;
+import msifeed.mc.sys.utils.ChatUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentText;
 
 import java.util.Collections;
 import java.util.List;
 
-public class GlobalCommand extends ExtCommand {
+public class GlobalCommand extends PlayerExtCommand {
     @Override
     public String getCommandName() {
         return "global";
@@ -32,12 +33,11 @@ public class GlobalCommand extends ExtCommand {
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
-        if (!(sender instanceof EntityPlayer)) {
-            error(sender, "You should be at least player!");
+        if (!(sender instanceof EntityPlayerMP))
             return;
-        }
 
-        final MetaInfo meta = MetaAttribute.require((Entity) sender);
+        final EntityPlayerMP player = (EntityPlayerMP) sender;
+        final MetaInfo meta = MetaAttribute.require(player);
         if (args.length == 0) {
             meta.receiveGlobal = !meta.receiveGlobal;
             MetaAttribute.INSTANCE.set((Entity) sender, meta);
@@ -48,8 +48,9 @@ public class GlobalCommand extends ExtCommand {
         if (!meta.receiveGlobal)
             return;
 
-        final EntityPlayer player = (EntityPlayer) sender;
+        final String name = ChatUtils.getPrettyName(player);
         final String text = String.join(" ", args);
-        ChatHandler.sendGlobalChatMessage(player, Composer.makeMessage(SpeechType.GLOBAL, player, text));
+        SpeechatRpc.sendGlobal(MiscFormatter.formatGlobal(name, text));
+        ExternalLogs.log(sender, "global",  text);
     }
 }

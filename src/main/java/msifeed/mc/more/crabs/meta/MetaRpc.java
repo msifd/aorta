@@ -2,14 +2,11 @@ package msifeed.mc.more.crabs.meta;
 
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.Bootstrap;
-import msifeed.mc.more.crabs.combat.CombatContext;
-import msifeed.mc.more.crabs.utils.CombatAttribute;
 import msifeed.mc.more.crabs.utils.GetUtils;
 import msifeed.mc.more.crabs.utils.MetaAttribute;
 import msifeed.mc.sys.rpc.Rpc;
 import msifeed.mc.sys.rpc.RpcMethod;
 import msifeed.mc.sys.rpc.RpcMethodException;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;

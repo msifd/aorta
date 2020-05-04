@@ -3,6 +3,7 @@ package msifeed.mc.sys.rpc;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IChatComponent;
 
 final class RpcSerializer {
     static void encode(ByteBuf buf, Object[] args) {
@@ -36,6 +37,9 @@ final class RpcSerializer {
                     break;
                 case NBT:
                     ByteBufUtils.writeTag(buf, (NBTTagCompound) o);
+                    break;
+                case CHAT:
+                    ByteBufUtils.writeUTF8String(buf, IChatComponent.Serializer.func_150696_a((IChatComponent) o));
                     break;
             }
         }
@@ -77,6 +81,9 @@ final class RpcSerializer {
                 case NBT:
                     args[i] = ByteBufUtils.readTag(buf);
                     break;
+                case CHAT:
+                    args[i] = IChatComponent.Serializer.func_150699_a(ByteBufUtils.readUTF8String(buf));
+                    break;
             }
         }
 
@@ -85,7 +92,7 @@ final class RpcSerializer {
 
     static TypeId getTypeId(Class<?> c) {
         for (TypeId t : TypeId.values()) {
-            if (c == t.type || c == t.boxed)
+            if (t.type.isAssignableFrom(c) || c == t.boxed)
                 return t;
         }
         return null;
@@ -97,6 +104,7 @@ final class RpcSerializer {
         FLOAT(Float.TYPE, Float.class), DOUBLE(Double.TYPE, Double.class),
         STRING(String.class),
         NBT(NBTTagCompound.class),
+        CHAT(IChatComponent.class)
         ;
 
         final Class<?> type;

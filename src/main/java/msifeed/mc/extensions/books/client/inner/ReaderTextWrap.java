@@ -4,7 +4,6 @@ import msifeed.mc.mellow.layout.FillLayout;
 import msifeed.mc.mellow.widgets.text.MultilineLabel;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 public class ReaderTextWrap extends TextWrap {
     private final MultilineLabel label;

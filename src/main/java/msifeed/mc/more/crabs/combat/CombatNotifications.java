@@ -1,21 +1,18 @@
 package msifeed.mc.more.crabs.combat;
 
+import cpw.mods.fml.common.network.NetworkRegistry;
 import msifeed.mc.commons.logs.ExternalLogs;
-import msifeed.mc.extensions.chat.ChatHandler;
-import msifeed.mc.extensions.chat.ChatMessage;
-import msifeed.mc.extensions.chat.Language;
-import msifeed.mc.extensions.chat.composer.SpeechType;
+import msifeed.mc.extensions.chat.SpeechatRpc;
+import msifeed.mc.extensions.chat.formatter.MiscFormatter;
 import msifeed.mc.more.More;
 import msifeed.mc.more.crabs.action.ActionHeader;
-import msifeed.mc.more.crabs.character.Character;
 import msifeed.mc.more.crabs.rolls.Criticalness;
-import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
 import msifeed.mc.more.crabs.utils.GetUtils;
+import msifeed.mc.sys.utils.ChatUtils;
 import msifeed.mc.sys.utils.L10n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MathHelper;
 
 import java.util.HashSet;
@@ -23,16 +20,16 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public final class CombatNotifications {
-    public static void actionChanged(EntityPlayer sender, EntityLivingBase target, ActionHeader action) {
+    public static void actionChanged(EntityPlayer sender, ActionHeader action) {
         notify(sender, "§fВыбрано действие " + action.getTitle());
     }
 
     static void notifyKnockedOut(FighterInfo self) {
-        notifyAroundRelatives(self, L10n.fmt("more.crabs.knocked_out", getName(self.entity)));
+        notifyAroundRelatives(self, L10n.fmt("more.crabs.knocked_out", ChatUtils.getPrettyName(self.entity, self.chr)));
     }
 
     static void notifyKilled(FighterInfo self) {
-        notifyAroundRelatives(self, L10n.fmt("more.crabs.killed", getName(self.entity)));
+        notifyAroundRelatives(self, L10n.fmt("more.crabs.killed", ChatUtils.getPrettyName(self.entity, self.chr)));
     }
 
     static void actionResult(FighterInfo winner, FighterInfo looser) {
@@ -42,9 +39,6 @@ public final class CombatNotifications {
     }
 
     static void soloMoveResult(FighterInfo info) {
-        final String name = info.entity instanceof EntityPlayer
-                ? ((EntityPlayer) info.entity).getDisplayName() : info.entity.getCommandSenderName();
-
         // Virgin - FAIL Punch
         final String text = formatAction(info);
 
@@ -52,7 +46,7 @@ public final class CombatNotifications {
     }
 
     private static String formatAction(FighterInfo info) {
-        return getName(info.entity) + " - " + formatScores(info);
+        return ChatUtils.getPrettyName(info.entity) + " - " + formatScores(info);
     }
 
     private static String formatScores(FighterInfo info) {
@@ -100,39 +94,13 @@ public final class CombatNotifications {
         return String.format("%+d", i);
     }
 
-    public static String getName(EntityLivingBase entity) {
-        if (entity instanceof EntityPlayer)
-            return ((EntityPlayer) entity).getDisplayName();
-
-        final Character chr = CharacterAttribute.get(entity).orElse(null);
-        if (chr != null && !chr.name.isEmpty())
-            return chr.name;
-
-        return entity.getCommandSenderName();
-    }
-
-    static void notify(EntityLivingBase entity, String text) {
-        final ChatMessage message = new ChatMessage();
-        message.type = SpeechType.COMBAT;
-        message.language = Language.VANILLA;
-        message.radius = More.DEFINES.get().chat.combatRadius;
-        message.senderId = entity.getEntityId();
-        message.speaker = "";
-        message.text = text;
-
-        ChatHandler.sendSystemChatMessage(entity, message);
+    private static void notify(EntityLivingBase entity, String text) {
+        final int range = More.DEFINES.get().chat.combatRadius;
+        SpeechatRpc.sendRaw(entity, range, MiscFormatter.formatCombat(text));
         ExternalLogs.logEntity(entity, "combat", text);
     }
 
     private static void notifyAroundRelatives(FighterInfo cause, String text) {
-        final ChatMessage message = new ChatMessage();
-        message.type = SpeechType.COMBAT;
-        message.language = Language.VANILLA;
-        message.radius = More.DEFINES.get().chat.combatRadius;
-        message.senderId = cause.entity.getEntityId();
-        message.speaker = "";
-        message.text = text;
-
         final HashSet<EntityLivingBase> relatives = new HashSet<>();
         final CombatContext offenderCom;
 
@@ -167,14 +135,16 @@ public final class CombatNotifications {
         avgX /= relatives.size();
         avgY /= relatives.size();
         avgZ /= relatives.size();
-        final ChunkCoordinates center = new ChunkCoordinates((int) avgX, (int) avgY, (int) avgZ);
 
+        int range = More.DEFINES.get().chat.combatRadius;
         for (EntityLivingBase e : relatives) {
-            final double dist = e.getDistance(avgX, avgY, avgZ);
-            message.radius = Math.max(message.radius, MathHelper.ceiling_double_int(dist) + 5);
+            final int dist = MathHelper.ceiling_double_int(e.getDistance(avgX, avgY, avgZ)) + 5;
+            if (dist > range)
+                range = dist;
         }
 
-        ChatHandler.sendSystemChatMessage(cause.entity.dimension, center, message);
+        final NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(cause.entity.dimension, avgX, avgY, avgZ, range);
+        SpeechatRpc.sendRaw(point, MiscFormatter.formatCombat(text));
         ExternalLogs.logEntity(cause.entity, "combat", text);
     }
 }

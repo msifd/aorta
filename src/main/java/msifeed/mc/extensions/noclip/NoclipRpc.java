@@ -20,7 +20,7 @@ public enum NoclipRpc {
 
     public static void toggle(EntityPlayer player) {
         player.noClip = !player.noClip;
-        Rpc.sendTo((EntityPlayerMP) player, toggle);
+        Rpc.sendTo(toggle, (EntityPlayerMP) player);
     }
 
     @RpcMethod(toggle)

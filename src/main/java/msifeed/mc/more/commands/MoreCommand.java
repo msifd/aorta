@@ -34,9 +34,12 @@ public class MoreCommand extends ExtCommand {
 
         switch (args[0]) {
             case "reload":
-                ConfigManager.reload();
-                ConfigManager.broadcast();
-                sender.addChatMessage(new ChatComponentText("More reloaded"));
+                if (ConfigManager.reload()) {
+                    ConfigManager.broadcast();
+                    success(sender, "More reloaded");
+                } else {
+                    error(sender, "More reload failed!");
+                }
                 break;
         }
     }

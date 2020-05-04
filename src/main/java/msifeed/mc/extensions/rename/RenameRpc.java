@@ -88,7 +88,7 @@ public enum RenameRpc {
     }
 
     public static void openRenameGui(EntityPlayerMP player) {
-        Rpc.sendTo(player, openRenameGui);
+        Rpc.sendTo(openRenameGui, player);
     }
 
     @RpcMethod(openRenameGui)

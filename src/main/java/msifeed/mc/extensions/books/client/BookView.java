@@ -2,8 +2,6 @@ package msifeed.mc.extensions.books.client;
 
 import msifeed.mc.extensions.books.RemoteBook;
 import msifeed.mc.extensions.books.client.inner.TextWrap;
-import msifeed.mc.extensions.chat.Language;
-import msifeed.mc.extensions.chat.composer.SpeechComposer;
 import msifeed.mc.mellow.layout.AnchorLayout;
 import msifeed.mc.mellow.layout.FreeLayout;
 import msifeed.mc.mellow.layout.ListLayout;
@@ -14,7 +12,6 @@ import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.button.Button;
 import msifeed.mc.mellow.widgets.text.Label;
-import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 
@@ -64,11 +61,11 @@ public class BookView extends Widget {
     }
 
     public void setBook(RemoteBook book) {
-        final String text = doIKnowLanguage(book.lang)
-                ? book.text
-                : SpeechComposer.obfuscateWith(book.lang.obfuscator, book.text);
+//        final String text = doIKnowLanguage(book.lang)
+//                ? book.text
+//                : SpeechFormatter.obfuscateWith(book.lang.obfuscator, book.text);
         setStyle(book.style);
-        textWrap.setLines(breakLines(text));
+        textWrap.setLines(breakLines(book.text));
     }
 
     public void flipPage(int pageDelta) {
@@ -100,9 +97,9 @@ public class BookView extends Widget {
         controls.setColor(textWrap.getColor());
     }
 
-    private static boolean doIKnowLanguage(Language language) {
-        return language == Language.VANILLA || CharacterAttribute.has(Minecraft.getMinecraft().thePlayer, language.trait);
-    }
+//    private static boolean doIKnowLanguage(Language language) {
+//        return language == Language.VANILLA || CharacterAttribute.has(Minecraft.getMinecraft().thePlayer, language.trait);
+//    }
 
     private static List<String> breakLines(String text) {
         if (text.trim().isEmpty())

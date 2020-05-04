@@ -1,22 +1,23 @@
 package msifeed.mc.genesis.items.templates;
 
 import msifeed.mc.commons.logs.ExternalLogs;
-import msifeed.mc.extensions.chat.ChatHandler;
-import msifeed.mc.extensions.chat.ChatMessage;
-import msifeed.mc.extensions.chat.composer.Composer;
-import msifeed.mc.extensions.chat.composer.SpeechType;
+import msifeed.mc.extensions.chat.SpeechatRpc;
+import msifeed.mc.extensions.chat.formatter.MiscFormatter;
 import msifeed.mc.genesis.GenesisTrait;
 import msifeed.mc.genesis.items.IItemTemplate;
 import msifeed.mc.genesis.items.ItemCommons;
 import msifeed.mc.genesis.items.ItemGenesisUnit;
+import msifeed.mc.more.More;
 import msifeed.mc.more.crabs.action.Action;
 import msifeed.mc.more.crabs.action.ActionRegistry;
 import msifeed.mc.more.crabs.combat.CombatContext;
 import msifeed.mc.more.crabs.combat.CombatManager;
 import msifeed.mc.more.crabs.combat.CombatNotifications;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
+import msifeed.mc.sys.utils.ChatUtils;
 import msifeed.mc.sys.utils.L10n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -110,7 +111,7 @@ public class ItemTemplate extends Item implements IItemTemplate {
                 final CombatContext com = CombatAttribute.require(player);
                 final Action newAction = ActionRegistry.getFullAction(unit.crabsData.action);
                 if (CombatManager.INSTANCE.doAction(player, com, newAction))
-                    CombatNotifications.actionChanged(player, player, newAction);
+                    CombatNotifications.actionChanged(player, newAction);
             }
         }
     }
@@ -168,14 +169,14 @@ public class ItemTemplate extends Item implements IItemTemplate {
                         itemStack.getTagCompound().setInteger("usages", unit.maxUsages);
                 }
             }
-            if (!world.isRemote) {
-                final ChatMessage m = Composer.makeMessage(SpeechType.LOG, player, L10n.fmt(getUseText(player, itemStack, special), itemStack.getDisplayName()));
-                m.speaker = player.getDisplayName();
-                ChatHandler.sendSystemChatMessage(player, m);
-                ExternalLogs.log(player, "log", m.text);
+            if (!world.isRemote && player instanceof EntityPlayerMP) {
+                final String name = ChatUtils.getPrettyName(player);
+                final String text = L10n.fmt(getUseText(player, itemStack, special), itemStack.getDisplayName());
+                SpeechatRpc.sendRaw(player, More.DEFINES.get().chat.logRadius, MiscFormatter.formatLog(name, text));
+                ExternalLogs.log(player, "log", text);
 
                 if (unit.maxUsages > 0 && itemStack.getTagCompound().getInteger("usages") == 0)
-                    player.addChatMessage(new ChatComponentText("§f" + L10n.fmt("more.gen.needs_reload")));
+                    SpeechatRpc.sendRawTo((EntityPlayerMP) player, MiscFormatter.formatLog(name, L10n.tr("more.gen.needs_reload")));
             }
         }
         return itemStack;

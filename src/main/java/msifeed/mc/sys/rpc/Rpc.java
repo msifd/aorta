@@ -1,22 +1,22 @@
 package msifeed.mc.sys.rpc;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import msifeed.mc.Bootstrap;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Rpc {
     private static final Rpc INSTANCE = new Rpc();
 
-    private final SimpleNetworkWrapper CHANNEL = NetworkRegistry.INSTANCE.newSimpleChannel(Bootstrap.MODID + ".rpc");
+    private final SimpleNetworkWrapper CHANNEL = NetworkRegistry.INSTANCE.newSimpleChannel(Bootstrap.MODID + ":rpc");
     private final HashMap<String, Handler> handlers = new HashMap<>();
 
     private Rpc() {}
@@ -49,24 +49,16 @@ public class Rpc {
         INSTANCE.CHANNEL.sendToServer(new RpcMessage(method, args));
     }
 
-    public static void sendTo(EntityPlayerMP player, String method, Object... args) {
-        if (serverStarted())
-            INSTANCE.CHANNEL.sendTo(new RpcMessage(method, args), player);
+    public static void sendTo(String method, EntityPlayerMP player, Object... args) {
+        INSTANCE.CHANNEL.sendTo(new RpcMessage(method, args), player);
     }
 
     public static void sendToAll(String method, Object... args) {
-        if (serverStarted())
-            INSTANCE.CHANNEL.sendToAll(new RpcMessage(method, args));
+        INSTANCE.CHANNEL.sendToAll(new RpcMessage(method, args));
     }
 
     public static void sendToAllAround(String method, NetworkRegistry.TargetPoint point, Object... args) {
-        if (serverStarted())
-            INSTANCE.CHANNEL.sendToAllAround(new RpcMessage(method, args), point);
-    }
-
-    private static boolean serverStarted() {
-        final MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
-        return server != null && server.getConfigurationManager() != null;
+        INSTANCE.CHANNEL.sendToAllAround(new RpcMessage(method, args), point);
     }
 
     static void onMessage(RpcMessage message, MessageContext ctx) {
@@ -108,18 +100,9 @@ public class Rpc {
     }
 
     private static String buildTypesString(Class<?>[] types) {
-        final StringBuilder sb = new StringBuilder();
-
-        for (Class<?> c : types) {
-            if (c == MessageContext.class)
-                sb.append("MessageContext,");
-            else {
-                sb.append(RpcSerializer.getTypeId(c));
-                sb.append(',');
-            }
-        }
-
-        return sb.toString();
+        return Stream.of(types)
+                .map(c -> c == MessageContext.class ? "MessageContext" : RpcSerializer.getTypeId(c).toString())
+                .collect(Collectors.joining(", "));
     }
 
     private static class Handler {

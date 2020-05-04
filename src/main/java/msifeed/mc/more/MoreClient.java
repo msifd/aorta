@@ -3,7 +3,6 @@ package msifeed.mc.more;
 import com.google.common.io.CharStreams;
 import cpw.mods.fml.client.FMLClientHandler;
 import msifeed.mc.Bootstrap;
-import msifeed.mc.extensions.chat.Speechat;
 import msifeed.mc.extensions.itemmeta.ItemMetaClient;
 import msifeed.mc.extensions.noclip.NoclipRenderHandler;
 import msifeed.mc.extensions.tweaks.GameWindowOptions;
@@ -38,7 +37,6 @@ public class MoreClient extends More {
         Keybinds.INSTANCE.init();
         ResponsiveEntityStatus.init();
 //        BattleMarkRender.init();
-        Speechat.initClient();
         itemMeta.init();
         NoclipRenderHandler.init();
     }

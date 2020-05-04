@@ -1,6 +1,6 @@
 package msifeed.mc.extensions.chat;
 
-public class ChatDefines {
+public class SpeechatDefines {
     public int offtopRadius = 15;
     public int rollRadius = 20;
     public int combatRadius = 20;

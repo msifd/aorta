@@ -14,7 +14,6 @@ import msifeed.mc.more.crabs.utils.MetaAttribute;
 import msifeed.mc.sys.rpc.Rpc;
 import msifeed.mc.sys.rpc.RpcMethod;
 import msifeed.mc.sys.rpc.RpcMethodException;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;

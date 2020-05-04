@@ -28,7 +28,7 @@ public enum ConfigManager {
         Rpc.register(ConfigRpc.INSTANCE);
     }
 
-    public static void reload() {
+    public static boolean reload() {
         final HashMap<String, String> backup = INSTANCE.collectConfigs();
         try {
             MinecraftForge.EVENT_BUS.post(new ConfigEvent.BeforeUpdate());
@@ -40,7 +40,10 @@ public enum ConfigManager {
             e.printStackTrace();
             for (JsonConfig c : INSTANCE.handlers)
                 c.fromJson(backup.get(c.getFilename()));
+            return false;
         }
+
+        return true;
     }
 
     public static void save() {

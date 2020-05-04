@@ -3,7 +3,6 @@ package msifeed.mc.extensions.books;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
 import msifeed.mc.Bootstrap;
-import msifeed.mc.extensions.chat.Language;
 import msifeed.mc.sys.rpc.Rpc;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -121,21 +120,22 @@ public enum RemoteBookManager {
         }
 
         loaderItem.stackSize--;
-        player.inventory.addItemStackToInventory(makeBook(index, book.title, book.style, book.lang));
+        player.inventory.addItemStackToInventory(makeBook(index, book.title, book.style));
 //        player.updateHeldItem();
         player.inventory.markDirty();
     }
 
-    public void publishBook(EntityPlayerMP player, String text, String title, RemoteBook.Style style, Language lang) {
+    public void publishBook(EntityPlayerMP player, String text, String title, RemoteBook.Style style) {
         final ItemStack heldItem = player.getHeldItem();
         if (!(heldItem.getItem() instanceof ItemRemoteBookEditor)) return;
 
+        final String compatibilityLang = "VANILLA";
 //        final String index = player.getCommandSenderName() + "-" + UUID.randomUUID();
         String safeTitle = title.replaceAll("\\s", "-");
         safeTitle = safeTitle.substring(0, Math.min(safeTitle.length(), 16));
 
         final String index = player.getCommandSenderName() + "-" + safeTitle + "-" + random.nextInt();
-        final String header = String.format("#! %s %s\n%s\n", style.name(), lang.name(), title);
+        final String header = String.format("#! %s %s\n%s\n", style.name(), compatibilityLang, title);
         final String finalText = header + text;
 
         try {
@@ -147,11 +147,11 @@ public enum RemoteBookManager {
         }
 
         heldItem.stackSize--;
-        player.inventory.addItemStackToInventory(makeBook(index, title, style, lang));
+        player.inventory.addItemStackToInventory(makeBook(index, title, style));
         player.updateHeldItem();
     }
 
-    private static ItemStack makeBook(String index, String title, RemoteBook.Style style, Language lang) {
+    private static ItemStack makeBook(String index, String title, RemoteBook.Style style) {
         final ItemStack book = GameRegistry.findItemStack(Bootstrap.MODID, ItemRemoteBook.ID, 1);
         book.setItemDamage(style.ordinal());
 
@@ -159,7 +159,6 @@ public enum RemoteBookManager {
         tag.setString("value", index);
         tag.setString("title", title);
         tag.setString("style", style.name());
-        tag.setString("lang", lang.name());
         book.setTagCompound(tag);
 
         return book;

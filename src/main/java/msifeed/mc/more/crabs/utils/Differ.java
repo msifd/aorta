@@ -1,14 +1,14 @@
 package msifeed.mc.more.crabs.utils;
 
 import msifeed.mc.commons.logs.ExternalLogs;
-import msifeed.mc.extensions.chat.ChatHandler;
-import msifeed.mc.extensions.chat.ChatMessage;
-import msifeed.mc.extensions.chat.composer.Composer;
-import msifeed.mc.extensions.chat.composer.SpeechType;
+import msifeed.mc.extensions.chat.SpeechatRpc;
+import msifeed.mc.extensions.chat.formatter.MiscFormatter;
+import msifeed.mc.more.More;
 import msifeed.mc.more.crabs.character.Ability;
 import msifeed.mc.more.crabs.character.Character;
+import msifeed.mc.sys.utils.ChatUtils;
 import msifeed.mc.sys.utils.L10n;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.util.ArrayList;
@@ -123,8 +123,8 @@ public class Differ {
         return String.join(", ", diffs);
     }
 
-    public static void printDiffs(EntityPlayerMP sender, Entity entity, Character before, Character after) {
-        final String speaker = before.name.isEmpty() ? entity.getCommandSenderName() : before.name;
+    public static void printDiffs(EntityPlayerMP sender, EntityLivingBase entity, Character before, Character after) {
+        final String speaker = ChatUtils.getPrettyName(entity, before);
         final String logPrefix = sender == entity ? "" : "(" + sender.getDisplayName() + ") ";
         sendLogs(sender, speaker, logPrefix, diff(before, after));
         sendLogs(sender, speaker, logPrefix, diffResults(before, after));
@@ -134,10 +134,10 @@ public class Differ {
         if (message.isEmpty())
             return;
 
-        final ChatMessage m = Composer.makeMessage(SpeechType.LOG, sender, prefix + message);
-        m.speaker = speaker;
-        ChatHandler.sendSystemChatMessage(sender, m);
+        final int range = More.DEFINES.get().chat.logRadius;
+        final String text = prefix + message;
 
-        ExternalLogs.log(sender, "log", message);
+        SpeechatRpc.sendRaw(sender, range, MiscFormatter.formatLog(speaker, text));
+        ExternalLogs.log(sender, "log", text);
     }
 }

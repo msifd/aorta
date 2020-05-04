@@ -5,12 +5,10 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.Bootstrap;
 import msifeed.mc.commons.logs.ExternalLogs;
 import msifeed.mc.commons.traits.Trait;
-import msifeed.mc.extensions.chat.ChatHandler;
-import msifeed.mc.extensions.chat.LangAttribute;
-import msifeed.mc.extensions.chat.Language;
-import msifeed.mc.extensions.chat.composer.Composer;
-import msifeed.mc.extensions.chat.composer.SpeechType;
+import msifeed.mc.extensions.chat.SpeechatRpc;
+import msifeed.mc.extensions.chat.formatter.MiscFormatter;
 import msifeed.mc.extensions.tweaks.EsitenceHealthModifier;
+import msifeed.mc.more.More;
 import msifeed.mc.more.crabs.rolls.Modifiers;
 import msifeed.mc.more.crabs.rolls.Rolls;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
@@ -21,25 +19,21 @@ import msifeed.mc.sys.attributes.MissingRequiredAttributeException;
 import msifeed.mc.sys.rpc.Rpc;
 import msifeed.mc.sys.rpc.RpcMethod;
 import msifeed.mc.sys.rpc.RpcMethodException;
+import msifeed.mc.sys.utils.ChatUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
+import net.minecraft.util.IChatComponent;
 
 public enum CharRpc {
     INSTANCE;
 
-    private static final String setLang = Bootstrap.MODID + ":lang";
     private static final String updateChar = Bootstrap.MODID + ":char.update";
     private static final String refreshName = Bootstrap.MODID + ":char.refreshName";
     private static final String clearEntity = Bootstrap.MODID + ":char.clear";
     private static final String rollAbility = Bootstrap.MODID + ":char.roll";
-
-    public static void setLang(int entityId, Language lang) {
-        Rpc.sendToServer(setLang, entityId, lang.ordinal());
-    }
 
     public static void updateChar(int entityId, Character character) {
         Rpc.sendToServer(updateChar, entityId, character.toNBT());
@@ -47,12 +41,6 @@ public enum CharRpc {
 
     public static void clearEntity(int entityId) {
         Rpc.sendToServer(clearEntity, entityId);
-    }
-
-    @RpcMethod(setLang)
-    public void onSetLang(MessageContext ctx, int entityId, int langIdx) {
-        GetUtils.entityLiving(ctx.getServerHandler().playerEntity, entityId)
-                .ifPresent(e -> LangAttribute.INSTANCE.set(e, Language.values()[langIdx]));
     }
 
     @RpcMethod(updateChar)
@@ -136,13 +124,13 @@ public enum CharRpc {
             final Ability a = abilityValues[abilityOrd];
 
             final Rolls.Result roll = Rolls.rollAbility(c, m, a);
-            final String fmtRoll = roll.format(m.roll, m.toAbility(a), a);
-            final String name = target instanceof EntityPlayer ? ((EntityPlayer) target).getDisplayName() : target.getCommandSenderName();
-            final String text = String.format("%s: %s %s", name, a.trShort(), fmtRoll);
-
-            ChatHandler.sendSystemChatMessage(target, Composer.makeMessage(SpeechType.ROLL, sender, text));
-            ExternalLogs.log(sender, "roll", text);
+            final String name = ChatUtils.getPrettyName(target);
+            final int range = More.DEFINES.get().chat.rollRadius;
+            final IChatComponent cc = MiscFormatter.formatAbilityRoll(name, a, m, roll);
+            SpeechatRpc.sendRaw(target, range, cc);
+            ExternalLogs.log(sender, "roll", cc.getUnformattedText());
         } catch (MissingRequiredAttributeException e) {
+            throw new RpcMethodException(sender, "target has no character property");
         }
     }
 }

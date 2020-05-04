@@ -5,7 +5,6 @@ import msifeed.mc.mellow.handlers.KeyHandler;
 import msifeed.mc.mellow.handlers.MouseHandler;
 import msifeed.mc.mellow.render.RenderParts;
 import msifeed.mc.mellow.render.RenderShapes;
-import msifeed.mc.mellow.render.RenderUtils;
 import msifeed.mc.mellow.render.RenderWidgets;
 import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.utils.Geom;
@@ -14,10 +13,8 @@ import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.text.inner.TextController;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.entity.RenderManager;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 
 import java.util.List;
 import java.util.stream.Stream;

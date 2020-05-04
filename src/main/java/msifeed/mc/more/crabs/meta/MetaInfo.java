@@ -1,21 +1,19 @@
 package msifeed.mc.more.crabs.meta;
 
-import com.google.common.collect.EvictingQueue;
 import msifeed.mc.more.crabs.character.Ability;
 import msifeed.mc.more.crabs.rolls.Modifiers;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
 
 public class MetaInfo {
     public Modifiers modifiers = new Modifiers();
     public boolean receiveGlobal = true;
-    public EvictingQueue<DamageSource> lastDamage = EvictingQueue.create(5);
 
     public MetaInfo() {
     }
 
     public MetaInfo(MetaInfo m) {
-        fromNBT(m.toNBT());
+        this.modifiers = new Modifiers(m.modifiers);
+        this.receiveGlobal = m.receiveGlobal;
     }
 
     public NBTTagCompound toNBT() {

@@ -3,10 +3,8 @@ package msifeed.mc.genesis.blocks;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import msifeed.mc.commons.logs.ExternalLogs;
-import msifeed.mc.extensions.chat.ChatHandler;
-import msifeed.mc.extensions.chat.ChatMessage;
-import msifeed.mc.extensions.chat.composer.Composer;
-import msifeed.mc.extensions.chat.composer.SpeechType;
+import msifeed.mc.extensions.chat.SpeechatRpc;
+import msifeed.mc.extensions.chat.formatter.MiscFormatter;
 import msifeed.mc.genesis.GenesisTrait;
 import msifeed.mc.genesis.blocks.client.GenesisBlockRenderer;
 import net.minecraft.block.Block;
@@ -140,10 +138,8 @@ public class BlockTraitCommons {
         }
     }
 
-    private void sendEnvMessage(EntityPlayer center, String text, int radius) {
-        final ChatMessage msg = Composer.makeMessage(SpeechType.ENV, null, text);
-        msg.radius = radius;
-        ChatHandler.sendSystemChatMessage(center, msg);
+    private void sendEnvMessage(EntityPlayer center, String text, int range) {
+        SpeechatRpc.sendRaw(center, range, MiscFormatter.formatEnv(text));
         ExternalLogs.log(center, "log", text);
     }
 

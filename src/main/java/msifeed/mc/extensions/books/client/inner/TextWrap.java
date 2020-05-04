@@ -3,7 +3,6 @@ package msifeed.mc.extensions.books.client.inner;
 import msifeed.mc.mellow.widgets.Widget;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 public abstract class TextWrap extends Widget {
     public abstract int getColor();

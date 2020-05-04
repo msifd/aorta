@@ -1,35 +1,69 @@
 package msifeed.mc.extensions.chat;
 
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.relauncher.Side;
-import msifeed.mc.Bootstrap;
-import msifeed.mc.extensions.chat.client.SpeechMessageHandler;
+import cpw.mods.fml.common.eventhandler.EventPriority;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import msifeed.mc.commons.logs.ExternalLogs;
 import msifeed.mc.extensions.chat.commands.*;
-import msifeed.mc.sys.attributes.AttributeHandler;
+import msifeed.mc.extensions.chat.formatter.MiscFormatter;
+import msifeed.mc.extensions.chat.formatter.SpeechFormatter;
+import msifeed.mc.sys.rpc.Rpc;
 import net.minecraft.command.CommandHandler;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.ServerChatEvent;
 
 public class Speechat {
-    static final SimpleNetworkWrapper CHANNEL = NetworkRegistry.INSTANCE.newSimpleChannel(Bootstrap.MODID + ".chat");
+    private final SpeechatRpc speechatRpc = new SpeechatRpc();
 
     public void preInit() {
-        MinecraftForge.EVENT_BUS.register(new ChatHandler());
-        AttributeHandler.registerAttribute(LangAttribute.INSTANCE);
-        CHANNEL.registerMessage(SpeechMessageHandler.class, ChatMessage.class, 0x01, Side.CLIENT);
-    }
-
-    public static void initClient() {
-        MinecraftForge.EVENT_BUS.register(new SpeechMessageHandler());
+        Rpc.register(speechatRpc);
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     public static void registerCommands(CommandHandler handler) {
-        handler.registerCommand(new LangCommand());
+        handler.registerCommand(new WhisperCommand());
+        handler.registerCommand(new YellCommand());
         handler.registerCommand(new OfftopCommand());
         handler.registerCommand(new GlobalCommand());
-        handler.registerCommand(new GmsayCommand());
-        handler.registerCommand(new GmGlobalCommand());
-        handler.registerCommand(new SusayCommand());
+        handler.registerCommand(new GmSayCommand());
         handler.registerCommand(new GmPmCommand());
+        handler.registerCommand(new GmGlobalCommand());
+        handler.registerCommand(new SuSayCommand());
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onChatMessageSent(ServerChatEvent event) {
+        final IChatComponent text = extractTextFromTranslation(event.component);
+        if (text != null) {
+            if (GmSpeech.shouldUseGmsay(event.player)) {
+                final GmSpeech.Preferences prefs = GmSpeech.get(event.player.getCommandSenderName());
+                SpeechatRpc.sendRaw(event.player, prefs.range, MiscFormatter.formatGmSay(prefs, text));
+                ExternalLogs.log(event.player, "gm", text.getUnformattedText());
+            } else {
+                final int range = SpeechFormatter.getSpeechRange(text.getUnformattedText());
+                SpeechatRpc.sendSpeech(event.player, range, text);
+                ExternalLogs.log(event.player, "speech", text.getUnformattedText());
+            }
+        }
+
+        event.component = null;
+        event.setCanceled(true);
+    }
+
+    private static IChatComponent extractTextFromTranslation(ChatComponentTranslation cc) {
+        if (cc.getKey().equals("chat.type.text")) {
+            final Object[] args = cc.getFormatArgs();
+            if (args.length != 2)
+                return null;
+            final Object textArg = args[1]; // Pick "text" arg
+            if (textArg instanceof IChatComponent)
+                return (IChatComponent) textArg;
+            else
+                return new ChatComponentText(textArg.toString());
+        } else {
+            return cc;
+        }
     }
 }
