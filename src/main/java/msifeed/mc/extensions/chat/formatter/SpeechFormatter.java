@@ -3,7 +3,6 @@ package msifeed.mc.extensions.chat.formatter;
 import msifeed.mc.extensions.chat.SpeechatDefines;
 import msifeed.mc.more.More;
 import msifeed.mc.sys.utils.ChatUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.*;
 
@@ -12,8 +11,7 @@ import java.util.List;
 import java.util.Random;
 
 public final class SpeechFormatter {
-    public static IChatComponent format(EntityPlayer sender, IChatComponent cc, int range) {
-        final EntityPlayer self = Minecraft.getMinecraft().thePlayer;
+    public static IChatComponent format(EntityPlayer self, EntityPlayer sender, IChatComponent cc, int range) {
         final boolean isMyMessage = self.getEntityId() == sender.getEntityId();
 
         final IChatComponent textCC;
@@ -68,8 +66,6 @@ public final class SpeechFormatter {
                 args[i] = garbleficateText((ChatComponentText) arg, garblness);
             else if (arg instanceof ChatComponentTranslation)
                 args[i] = garbleficateTranslation((ChatComponentTranslation) arg, garblness);
-//            else if (arg instanceof String)
-//                args[i] = garbleficateString((String) arg, garblness);
         }
         final List<IChatComponent> newSiblings = garbleficateSiblings(cc, garblness);
         cc.getSiblings().clear();

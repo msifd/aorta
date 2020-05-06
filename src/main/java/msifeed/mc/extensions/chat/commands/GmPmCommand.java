@@ -60,15 +60,5 @@ public class GmPmCommand extends GmExtCommand {
         SpeechatRpc.sendRawTo(player, new ChatComponentText(senderText));
         SpeechatRpc.sendRawTo(target, MiscFormatter.formatGmSay(prefs, new ChatComponentText(text)));
         ExternalLogs.log(sender, "gm", senderText);
-
-//        final ChatMessage message = Composer.makeMessage(SpeechType.GM, player, text);
-//
-//        if (player instanceof EntityPlayerMP) {
-//            ChatHandler.sendMessageTo((EntityPlayerMP) player, target, message);
-//            message.text = target.getDisplayName() + " << " + message.text;
-//            player.addChatMessage(Composer.formatMessage(player, message));
-//        } else {
-//            player.addChatMessage(Composer.formatMessage(player, message));
-//        }
     }
 }

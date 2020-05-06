@@ -27,13 +27,14 @@ public abstract class ExtCommand extends CommandBase {
     protected static boolean isAdmin(ICommandSender sender) {
         return FMLCommonHandler.instance().getSide().isClient()
             || sender instanceof MinecraftServer
-            || sender instanceof EntityPlayer && CharacterAttribute.has((EntityPlayer)sender, Trait.__admin);
+            || (sender instanceof EntityPlayer && CharacterAttribute.has((EntityPlayer)sender, Trait.__admin))
+            ;
     }
 
     protected static boolean isGm(ICommandSender sender) {
         return FMLCommonHandler.instance().getSide().isClient()
             || sender instanceof MinecraftServer
-            || sender instanceof EntityPlayer && CharacterAttribute.hasAny((EntityPlayer) sender, Trait.__admin, Trait.gm)
+            || (sender instanceof EntityPlayer && CharacterAttribute.hasAny((EntityPlayer) sender, Trait.__admin, Trait.gm))
             ;
     }
 

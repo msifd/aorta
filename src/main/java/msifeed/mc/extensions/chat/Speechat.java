@@ -1,5 +1,6 @@
 package msifeed.mc.extensions.chat;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.commons.logs.ExternalLogs;
@@ -18,7 +19,8 @@ public class Speechat {
     private final SpeechatRpc speechatRpc = new SpeechatRpc();
 
     public void preInit() {
-        Rpc.register(speechatRpc);
+        if (FMLCommonHandler.instance().getSide().isClient())
+            Rpc.register(speechatRpc);
         MinecraftForge.EVENT_BUS.register(this);
     }
 

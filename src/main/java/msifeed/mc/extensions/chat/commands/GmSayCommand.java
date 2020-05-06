@@ -78,7 +78,7 @@ public class GmSayCommand extends GmExtCommand {
                     final String colorNames = Stream.of(EnumChatFormatting.values())
                             .filter(EnumChatFormatting::isColor)
                             .map(e -> "\u00a7" + e.getFormattingCode() + e.getFriendlyName())
-                            .collect(Collectors.joining(", "));
+                            .collect(Collectors.joining(" "));
                     title(player, "GmSay - Color");
                     info(player, "Color names: " + colorNames);
                 }
@@ -114,7 +114,8 @@ public class GmSayCommand extends GmExtCommand {
         info(player, "  Range: %d", pref.range);
         info(player, "  Color: \u00a7%c%s", pref.color.getFormattingCode(), pref.color.getFriendlyName());
         info(player, "  Prefix: \u00a7r%s", pref.prefix);
-        info(player, "  \u00a7r%s", makeExample(pref));
+//        info(player, "  \u00a7r%s", makeExample(pref));
+        player.addChatMessage(MiscFormatter.formatGmSay(pref, new ChatComponentText("Such prety example! Wow!")));
     }
 
     private static String makeExample(GmSpeech.Preferences prefs) {

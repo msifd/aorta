@@ -15,9 +15,6 @@ public class ChatUtils {
     }
 
     public static String getPrettyName(EntityLivingBase entity) {
-        if (entity instanceof EntityPlayer)
-            return ((EntityPlayer) entity).getDisplayName();
-
         final Character chr = CharacterAttribute.get(entity).orElse(null);
         if (chr != null && !chr.name.isEmpty())
             return chr.name;

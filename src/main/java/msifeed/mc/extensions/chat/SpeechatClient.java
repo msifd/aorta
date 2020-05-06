@@ -1,5 +1,6 @@
 package msifeed.mc.extensions.chat;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import msifeed.mc.Bootstrap;
@@ -9,6 +10,7 @@ import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.more.crabs.utils.GetUtils;
 import msifeed.mc.more.crabs.utils.MetaAttribute;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.IChatComponent;
 
@@ -19,7 +21,9 @@ final class SpeechatClient {
         final EntityPlayer sender = GetUtils.entityPlayer(self, senderId).orElse(null);
         if (sender == null)
             return;
-        displayMessage(self, SpeechFormatter.format(sender, cc, range));
+
+        self.addChatMessage(SpeechFormatter.format(self, sender, cc, range));
+        playNotificationSound(sender);
     }
 
     static void receiveGlobal(IChatComponent cc) {
@@ -39,20 +43,13 @@ final class SpeechatClient {
         displayMessage(self, cc);
     }
 
-    private static void displayMessage(EntityPlayer self, IChatComponent cc) {
-        self.addChatMessage(cc);
-        playNotificationSound(self, 1);
+    private static void displayMessage(EntityPlayer player, IChatComponent cc) {
+        player.addChatMessage(cc);
+        playNotificationSound(player);
     }
 
-//    private static void playNotificationSound(EntityPlayer self) {
-//        GetUtils.entityLiving(self, message.senderId).ifPresent(speaker -> {
-//            final float distance = self.getDistanceToEntity(speaker);
-//            final float volume = (1 - distance / message.radius) + 0.4f;
-//            self.playSound(Bootstrap.MODID + ":speechat.message", volume, 0.7F);
-//        });
-//    }
-
-    private static void playNotificationSound(EntityPlayer self, float volume) {
-        self.playSound(Bootstrap.MODID + ":speechat.message", volume, 0.7F);
+    private static void playNotificationSound(EntityPlayer p) {
+        final WorldClient w = FMLClientHandler.instance().getWorldClient();
+        w.playSound(p.posX, p.posY, p.posZ, Bootstrap.MODID + ":speechat.message", 1.0F, 0.7F, true);
     }
 }

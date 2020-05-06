@@ -54,10 +54,8 @@ public class Nametag {
     }
 
     protected String getPreferredName(EntityPlayer player) {
-        final Character c = CharacterAttribute.get(player).orElse(null);
-        return c == null || c.name.isEmpty()
-                ? player.getCommandSenderName()
-                : c.name;
+        final Character c = CharacterAttribute.require(player);
+        return c.name.isEmpty() ? player.getCommandSenderName() : c.name;
     }
 
     static int getSpeechRadius() {
