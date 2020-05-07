@@ -62,7 +62,7 @@ public class RemoteBookRpc {
     }
 
     @RpcMethod(publishRequest)
-    public void publishRequest(MessageContext ctx, String text, String title, int style, int lang) {
+    public void publishRequest(MessageContext ctx, String text, String title, int style) {
         final EntityPlayerMP player = ctx.getServerHandler().playerEntity;
         RemoteBookManager.INSTANCE.publishBook(player, text, title, RemoteBook.Style.values()[style]);
     }
