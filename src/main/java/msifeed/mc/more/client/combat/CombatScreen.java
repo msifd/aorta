@@ -12,6 +12,7 @@ import msifeed.mc.sys.attributes.AttributeUpdateEvent;
 import msifeed.mc.sys.utils.L10n;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 
 public class CombatScreen extends MellowGuiScreen {
@@ -66,7 +67,7 @@ public class CombatScreen extends MellowGuiScreen {
             if (event.entity != entity && event.entity != Minecraft.getMinecraft().thePlayer)
                 return;
 
-            final boolean hasLeft = CombatAttribute.get(event.entity)
+            final boolean hasLeft = CombatAttribute.get((EntityLivingBase) event.entity)
                     .map(context -> context.phase == CombatContext.Phase.LEAVE)
                     .orElse(false);
             if (hasLeft)

@@ -10,6 +10,7 @@ import msifeed.mc.more.crabs.action.ActionTag;
 import msifeed.mc.more.crabs.action.Combo;
 import msifeed.mc.more.crabs.action.effects.Buff;
 import msifeed.mc.more.crabs.action.effects.Effect;
+import msifeed.mc.more.crabs.character.Character;
 import msifeed.mc.more.crabs.rolls.Criticalness;
 import msifeed.mc.more.crabs.rolls.Dices;
 import msifeed.mc.more.crabs.utils.ActionAttribute;
@@ -92,36 +93,64 @@ public enum CombatManager {
         if (event.entityLiving.worldObj.isRemote)
             return;
         try {
-            handleDamage(event);
+            final Entity srcEntity = event.source.getEntity();
+            if (srcEntity instanceof EntityLivingBase)
+                handleEntityDamage(event, (EntityLivingBase) srcEntity);
+            else
+                handleNeutralDamage(event);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void handleDamage(LivingHurtEvent event) {
-        final Entity damageSrcEntity = event.source.getEntity();
+    private void handleNeutralDamage(LivingHurtEvent event) {
         final EntityLivingBase vicEntity = event.entityLiving;
 
-        if (!(damageSrcEntity instanceof EntityLivingBase) || vicEntity == null)
+        final CombatContext vicCom = CombatAttribute.get(vicEntity).orElse(null);
+        if (vicCom == null)
+            return;
+        if (vicCom.phase == CombatContext.Phase.END)
+            return; // Pass full damage
+        if (vicCom.targets.size() != 1)
             return;
 
-        if (((EntityLivingBase) damageSrcEntity).getHeldItem() == null) {
-            CharacterAttribute.get(damageSrcEntity).ifPresent(character -> {
-                if (character.fistsDamage > 0)
-                    event.ammount = character.fistsDamage;
-            });
+        final EntityLivingBase srcEntity;
+        final CombatContext srcCom;
+        try {
+            final int targetId = vicCom.targets.get(0);
+            final EntityLivingBase targetEntity = GetUtils.entityLiving(vicEntity, targetId).orElse(null);
+            if (targetEntity == null)
+                return;
+
+            srcEntity = targetEntity;
+            srcCom = CombatAttribute.require(targetEntity);
+        } catch (MissingRequiredAttributeException e) {
+            return;
         }
+
+        event.setCanceled(true);
+
+        if (srcEntity == vicEntity) // Do not attack your puppet
+            return;
+        if (!canDealDamage(srcCom, vicCom))
+            return;
+
+        addDealtDamage(vicEntity, new DamageAmount(event.source, event.ammount));
+    }
+
+    private void handleEntityDamage(LivingHurtEvent event, EntityLivingBase damageSrcEntity) {
+        final EntityLivingBase vicEntity = event.entityLiving;
 
         final CombatContext vicCom = CombatAttribute.get(vicEntity).orElse(null);
         if (vicCom == null)
             return;
 
-        if (vicCom.phase == CombatContext.Phase.END) {
+        if (vicCom.phase == CombatContext.Phase.END)
             return; // Pass full damage
-        }
 
         final EntityLivingBase srcEntity;
         final CombatContext srcCom;
+        final Character srcChar;
         try {
             final CombatContext directCom = CombatAttribute.require(damageSrcEntity);
             if (directCom.puppet != 0) {
@@ -130,9 +159,11 @@ public enum CombatManager {
                     return;
                 srcEntity = puppet;
                 srcCom = CombatAttribute.require(puppet);
+                srcChar = CharacterAttribute.require(puppet);
             } else {
-                srcEntity = (EntityLivingBase) damageSrcEntity;
+                srcEntity = damageSrcEntity;
                 srcCom = directCom;
+                srcChar = CharacterAttribute.require(damageSrcEntity);
             }
         } catch (MissingRequiredAttributeException e) {
             return;
@@ -140,24 +171,10 @@ public enum CombatManager {
 
         event.setCanceled(true);
 
-        if (srcCom.healthBeforeTraining > 0 != vicCom.healthBeforeTraining > 0)
-            return; // Ignore if someone is not in training
-        if (srcCom.phase != CombatContext.Phase.IDLE && srcCom.phase != CombatContext.Phase.ATTACK)
-            return;
-        if (srcCom.action == null)
-            return;
-        if (vicCom.phase != CombatContext.Phase.IDLE && vicCom.phase != CombatContext.Phase.DEFEND)
-            return;
         if (srcEntity == vicEntity) // Do not attack your puppet
             return;
-//        if (!ItemStack.areItemStackTagsEqual(srcEntity.getHeldItem(), srcCom.weapon))
-//            return;
-
-        final ActionContext vicAct = ActionAttribute.get(vicEntity).orElseGet(() -> {
-            final ActionContext a = new ActionContext();
-            ActionAttribute.INSTANCE.set(vicEntity, a);
-            return a;
-        });
+        if (!canDealDamage(srcCom, vicCom))
+            return;
 
         boolean shouldUpdateOffender = false;
         if (srcCom.phase != CombatContext.Phase.ATTACK) {
@@ -181,7 +198,31 @@ public enum CombatManager {
             });
         }
 
-        vicAct.damageDealt.add(new DamageAmount(event.source, event.ammount));
+        addDealtDamage(vicEntity, new DamageAmount(event.source, event.ammount + srcChar.fistsDamage));
+    }
+
+    private boolean canDealDamage(CombatContext srcCom, CombatContext vicCom) {
+        if (srcCom.healthBeforeTraining > 0 != vicCom.healthBeforeTraining > 0)
+            return false; // Ignore if someone is not in training
+        if (srcCom.phase != CombatContext.Phase.IDLE && srcCom.phase != CombatContext.Phase.ATTACK)
+            return false;
+        if (srcCom.action == null)
+            return false;
+        if (vicCom.phase != CombatContext.Phase.IDLE && vicCom.phase != CombatContext.Phase.DEFEND)
+            return false;
+
+        return true;
+    }
+
+    private void addDealtDamage(EntityLivingBase vicEntity, DamageAmount amount) {
+
+        final ActionContext act = ActionAttribute.get(vicEntity).orElseGet(() -> {
+            final ActionContext a = new ActionContext();
+            ActionAttribute.INSTANCE.set(vicEntity, a);
+            return a;
+        });
+
+        act.damageDealt.add(amount);
     }
 
     private boolean tryFinishMove(EntityLivingBase offender, CombatContext offenderCom) {
@@ -348,9 +389,9 @@ public enum CombatManager {
         if (event.entity.worldObj.isRemote || !(event.entity instanceof EntityLivingBase))
             return;
 
-        CombatAttribute.get(event.entity)
+        CombatAttribute.get((EntityLivingBase) event.entity)
                 .filter(com -> com.phase.isInCombat())
-                .ifPresent(com -> resetCombatantWithRelatives(event.entity));
+                .ifPresent(com -> resetCombatantWithRelatives((EntityLivingBase) event.entity));
     }
 
     @SubscribeEvent
@@ -391,7 +432,7 @@ public enum CombatManager {
         com.action = null;
     }
 
-    public static void resetCombatantWithRelatives(Entity entity) {
+    public static void resetCombatantWithRelatives(EntityLivingBase entity) {
         final CombatContext com = CombatAttribute.get(entity).orElse(null);
         if (com == null)
             return;

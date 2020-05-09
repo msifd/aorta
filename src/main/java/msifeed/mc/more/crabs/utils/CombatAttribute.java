@@ -5,6 +5,7 @@ import msifeed.mc.more.crabs.combat.CombatContext;
 import msifeed.mc.sys.attributes.EntityLivingAttribute;
 import msifeed.mc.sys.attributes.MissingRequiredAttributeException;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -15,11 +16,11 @@ public final class CombatAttribute extends EntityLivingAttribute<CombatContext> 
     public static final CombatAttribute INSTANCE = new CombatAttribute();
     private static final String PROP_NAME = Bootstrap.MODID + ".crabs.ctx";
 
-    public static Optional<CombatContext> get(Entity e) {
+    public static Optional<CombatContext> get(EntityLivingBase e) {
         return INSTANCE.getValue(e);
     }
 
-    public static CombatContext require(Entity e) {
+    public static CombatContext require(EntityLivingBase e) {
         return INSTANCE.getValue(e).orElseThrow(() -> new MissingRequiredAttributeException(INSTANCE, e));
     }
 
