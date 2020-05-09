@@ -21,10 +21,7 @@ import msifeed.mc.extensions.noclip.NoclipCommand;
 import msifeed.mc.extensions.noclip.NoclipRpc;
 import msifeed.mc.extensions.rename.RenameCommand;
 import msifeed.mc.extensions.rename.RenameRpc;
-import msifeed.mc.extensions.tweaks.EntityControl;
-import msifeed.mc.extensions.tweaks.EsitenceHealthModifier;
-import msifeed.mc.extensions.tweaks.MakeFoodEdible;
-import msifeed.mc.extensions.tweaks.UnstuckCommand;
+import msifeed.mc.extensions.tweaks.*;
 import msifeed.mc.genesis.Genesis;
 import msifeed.mc.more.client.common.GuiHandler;
 import msifeed.mc.more.commands.ItemAttrCommand;
@@ -70,6 +67,7 @@ public class More {
         Nametag.preInit();
         EnvironmentManager.preInit();
         MiningNerf.preInit();
+        DisableSomeCraftingTables.preInit();
     }
 
     public void init() {
