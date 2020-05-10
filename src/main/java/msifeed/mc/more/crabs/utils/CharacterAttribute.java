@@ -18,11 +18,11 @@ public class CharacterAttribute extends EntityLivingAttribute<Character> {
     public static final CharacterAttribute INSTANCE = new CharacterAttribute();
     private static final String PROP_NAME = Bootstrap.MODID + ".crabs.char";
 
-    public static Optional<Character> get(Entity e) {
+    public static Optional<Character> get(EntityLivingBase e) {
         return INSTANCE.getValue(e);
     }
 
-    public static Character require(Entity e) {
+    public static Character require(EntityLivingBase e) {
         return INSTANCE.getValue(e).orElseThrow(() -> new MissingRequiredAttributeException(INSTANCE, e));
     }
 

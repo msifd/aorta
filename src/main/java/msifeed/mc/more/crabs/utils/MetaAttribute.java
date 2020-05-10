@@ -5,6 +5,7 @@ import msifeed.mc.more.crabs.meta.MetaInfo;
 import msifeed.mc.sys.attributes.EntityLivingAttribute;
 import msifeed.mc.sys.attributes.MissingRequiredAttributeException;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -15,11 +16,11 @@ public class MetaAttribute extends EntityLivingAttribute<MetaInfo> {
     public static final MetaAttribute INSTANCE = new MetaAttribute();
     private static final String PROP_NAME = Bootstrap.MODID + ".crabs.meta";
 
-    public static Optional<MetaInfo> get(Entity e) {
+    public static Optional<MetaInfo> get(EntityLivingBase e) {
         return INSTANCE.getValue(e);
     }
 
-    public static MetaInfo require(Entity e) {
+    public static MetaInfo require(EntityLivingBase e) {
         return INSTANCE.getValue(e).orElseThrow(() -> new MissingRequiredAttributeException(INSTANCE, e));
     }
 

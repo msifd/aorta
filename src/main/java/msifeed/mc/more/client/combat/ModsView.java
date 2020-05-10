@@ -30,6 +30,15 @@ class ModsView extends Widget {
         MetaAttribute.get(entity).ifPresent(meta -> {
             final Modifiers mods = meta.modifiers;
 
+            addChild(new Label(L10n.tr("more.gui.combat.mods.damage")));
+            final TextInput dmgInput = new TextInput();
+            dmgInput.getSizeHint().x = 20;
+            if (mods.roll != 0)
+                dmgInput.setText(Integer.toString(mods.damage));
+            dmgInput.setFilter(s -> TextInput.isSignedIntBetween(s, -99, 99));
+            dmgInput.setCallback(s -> updateDamageMod(meta, s));
+            addChild(dmgInput);
+
             addChild(new Label(L10n.tr("more.gui.combat.mods.roll")));
             final TextInput modInput = new TextInput();
             modInput.getSizeHint().x = 20;
@@ -63,6 +72,11 @@ class ModsView extends Widget {
         input.setFilter(s -> TextInput.isSignedIntBetween(s, -99, 99));
         input.setCallback(s -> updateFeatMods(meta, a, s));
         pair.addChild(input);
+    }
+
+    private void updateDamageMod(MetaInfo meta, String s) {
+        meta.modifiers.damage = (s.isEmpty() || s.equals("-")) ? 0 : Integer.parseInt(s);
+        MetaRpc.updateMeta(entity.getEntityId(), meta);
     }
 
     private void updateRollMod(MetaInfo meta, String s) {

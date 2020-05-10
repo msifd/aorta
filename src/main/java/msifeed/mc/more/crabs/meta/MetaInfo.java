@@ -19,6 +19,7 @@ public class MetaInfo {
     public NBTTagCompound toNBT() {
         final NBTTagCompound c = new NBTTagCompound();
 
+        c.setInteger("dmod", modifiers.damage);
         c.setInteger("rmod", modifiers.roll);
 
         final Ability[] feats = Ability.values();
@@ -33,6 +34,7 @@ public class MetaInfo {
     }
 
     public void fromNBT(NBTTagCompound c) {
+        modifiers.damage = c.getInteger("dmod");
         modifiers.roll = c.getInteger("rmod");
 
         modifiers.abilities.clear();

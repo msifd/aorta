@@ -115,6 +115,7 @@ more.gui.combat.tips.leaving=Вы покидаете бой
 more.gui.combat.tips.buffs=Баффы:\n%s
 more.gui.combat.tips.prev_actions=Прошлые действия:\n%s
 
+more.gui.combat.mods.damage=Урон:
 more.gui.combat.mods.roll=Бросок:
 
 more.ability.str=Тренированность

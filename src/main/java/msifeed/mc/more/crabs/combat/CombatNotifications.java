@@ -73,15 +73,22 @@ public final class CombatNotifications {
 
             if (!info.mod.isZeroed()) {
                 sb.append(" (");
+                final int len = sb.length();
                 if (info.mod.roll != 0)
                     sb.append(explicitSignInt(info.mod.roll));
                 if (info.mod.hasAbilityMods()) {
-                    if (info.mod.roll != 0)
+                    if (len != sb.length())
                         sb.append(' ');
                     sb.append(info.mod.abilities.entrySet().stream()
                             .filter(e -> e.getValue() != 0)
                             .map(e -> e.getKey().trShort() + explicitSignInt(e.getValue()))
                             .collect(Collectors.joining(" ")));
+                }
+                if (info.mod.roll != 0) {
+                    if (len != sb.length())
+                        sb.append(' ');
+                    sb.append("DMG");
+                    sb.append(explicitSignInt(info.mod.roll));
                 }
                 sb.append(')');
             }

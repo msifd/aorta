@@ -5,6 +5,7 @@ import msifeed.mc.more.crabs.combat.ActionContext;
 import msifeed.mc.sys.attributes.EntityLivingAttribute;
 import msifeed.mc.sys.attributes.MissingRequiredAttributeException;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
@@ -14,15 +15,15 @@ public final class ActionAttribute extends EntityLivingAttribute<ActionContext> 
     public static final ActionAttribute INSTANCE = new ActionAttribute();
     private static final String PROP_NAME = Bootstrap.MODID + ".crabs.act";
 
-    public static Optional<ActionContext> get(Entity e) {
+    public static Optional<ActionContext> get(EntityLivingBase e) {
         return INSTANCE.getValue(e);
     }
 
-    public static ActionContext require(Entity e) {
+    public static ActionContext require(EntityLivingBase e) {
         return INSTANCE.getValue(e).orElseThrow(() -> new MissingRequiredAttributeException(INSTANCE, e));
     }
 
-    public static void remove(Entity e) {
+    public static void remove(EntityLivingBase e) {
         INSTANCE.set(e, null);
     }
 

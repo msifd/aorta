@@ -18,7 +18,7 @@ public enum ResponsiveEntityStatus {
     public void onEntityClick(EntityInteractEvent event) {
         if (event.entityPlayer.getHeldItem() == null
                 && event.target instanceof EntityLivingBase
-                && CharacterAttribute.get(event.target).isPresent())
+                && CharacterAttribute.get((EntityLivingBase) event.target).isPresent())
             More.GUI_HANDLER.toggleStatus((EntityLivingBase) event.target);
     }
 }

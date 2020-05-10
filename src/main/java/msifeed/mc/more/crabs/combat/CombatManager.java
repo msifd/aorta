@@ -10,13 +10,9 @@ import msifeed.mc.more.crabs.action.ActionTag;
 import msifeed.mc.more.crabs.action.Combo;
 import msifeed.mc.more.crabs.action.effects.Buff;
 import msifeed.mc.more.crabs.action.effects.Effect;
-import msifeed.mc.more.crabs.character.Character;
 import msifeed.mc.more.crabs.rolls.Criticalness;
 import msifeed.mc.more.crabs.rolls.Dices;
-import msifeed.mc.more.crabs.utils.ActionAttribute;
-import msifeed.mc.more.crabs.utils.CharacterAttribute;
-import msifeed.mc.more.crabs.utils.CombatAttribute;
-import msifeed.mc.more.crabs.utils.GetUtils;
+import msifeed.mc.more.crabs.utils.*;
 import msifeed.mc.sys.attributes.MissingRequiredAttributeException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -132,7 +128,7 @@ public enum CombatManager {
 
         if (srcEntity == vicEntity) // Do not attack your puppet
             return;
-        if (!canDealDamage(srcCom, vicCom))
+        if (cantDealDamage(srcCom, vicCom))
             return;
 
         addDealtDamage(vicEntity, new DamageAmount(event.source, event.ammount));
@@ -150,7 +146,6 @@ public enum CombatManager {
 
         final EntityLivingBase srcEntity;
         final CombatContext srcCom;
-        final Character srcChar;
         try {
             final CombatContext directCom = CombatAttribute.require(damageSrcEntity);
             if (directCom.puppet != 0) {
@@ -159,11 +154,9 @@ public enum CombatManager {
                     return;
                 srcEntity = puppet;
                 srcCom = CombatAttribute.require(puppet);
-                srcChar = CharacterAttribute.require(puppet);
             } else {
                 srcEntity = damageSrcEntity;
                 srcCom = directCom;
-                srcChar = CharacterAttribute.require(damageSrcEntity);
             }
         } catch (MissingRequiredAttributeException e) {
             return;
@@ -173,7 +166,7 @@ public enum CombatManager {
 
         if (srcEntity == vicEntity) // Do not attack your puppet
             return;
-        if (!canDealDamage(srcCom, vicCom))
+        if (cantDealDamage(srcCom, vicCom))
             return;
 
         boolean shouldUpdateOffender = false;
@@ -198,20 +191,29 @@ public enum CombatManager {
             });
         }
 
-        addDealtDamage(vicEntity, new DamageAmount(event.source, event.ammount + srcChar.fistsDamage));
+        final float fistsMod;
+        if (srcEntity.getHeldItem() == null)
+            fistsMod = CharacterAttribute.get(srcEntity).map(c -> c.fistsDamage).orElse(0);
+        else
+            fistsMod = 0;
+        final float modMod = MetaAttribute.get(srcEntity).map(m -> m.modifiers.damage).orElse(0);
+
+        final float finalDamage = event.ammount + fistsMod + modMod;
+        if (finalDamage > 0)
+            addDealtDamage(vicEntity, new DamageAmount(event.source, finalDamage));
     }
 
-    private boolean canDealDamage(CombatContext srcCom, CombatContext vicCom) {
+    private boolean cantDealDamage(CombatContext srcCom, CombatContext vicCom) {
         if (srcCom.healthBeforeTraining > 0 != vicCom.healthBeforeTraining > 0)
-            return false; // Ignore if someone is not in training
+            return true; // Ignore if someone is not in training
         if (srcCom.phase != CombatContext.Phase.IDLE && srcCom.phase != CombatContext.Phase.ATTACK)
-            return false;
+            return true;
         if (srcCom.action == null)
-            return false;
+            return true;
         if (vicCom.phase != CombatContext.Phase.IDLE && vicCom.phase != CombatContext.Phase.DEFEND)
-            return false;
+            return true;
 
-        return true;
+        return false;
     }
 
     private void addDealtDamage(EntityLivingBase vicEntity, DamageAmount amount) {
