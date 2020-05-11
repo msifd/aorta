@@ -4,6 +4,9 @@ import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.sys.cmd.ExtCommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.server.MinecraftServer;
+
+import java.util.List;
 
 public class TraitSetCommand extends ExtCommand {
     @Override
@@ -14,6 +17,14 @@ public class TraitSetCommand extends ExtCommand {
     @Override
     public String getCommandUsage(ICommandSender sender) {
         return "/trait <trait> [player]";
+    }
+
+    @Override
+    public List addTabCompletionOptions(ICommandSender sender, String[] args) {
+        if (args.length == 2 && isGm(sender))
+            return getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames());
+        else
+            return null;
     }
 
     @Override

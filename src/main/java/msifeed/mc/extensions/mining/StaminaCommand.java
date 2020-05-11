@@ -4,7 +4,10 @@ import msifeed.mc.sys.cmd.ExtCommand;
 import msifeed.mc.sys.utils.L10n;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
+
+import java.util.List;
 
 public class StaminaCommand extends ExtCommand {
     @Override
@@ -15,6 +18,14 @@ public class StaminaCommand extends ExtCommand {
     @Override
     public String getCommandUsage(ICommandSender sender) {
         return isGm(sender) ? "/stamina [player [percents]]" : "/stamina";
+    }
+
+    @Override
+    public List addTabCompletionOptions(ICommandSender sender, String[] args) {
+        if (args.length == 1 && isGm(sender))
+            return getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames());
+        else
+            return null;
     }
 
     @Override
