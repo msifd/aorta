@@ -82,7 +82,6 @@ public class More {
 
     public void postInit() {
         MakeFoodEdible.apply();
-        MiningNerf.onPostInit();
     }
 
     public void serverStarting(FMLServerStartingEvent event) {
