@@ -34,7 +34,7 @@ public final class Buff extends DynamicEffect {
     /// Call from action effects - add to buffs
     @Override
     public void apply(FighterInfo target, FighterInfo other) {
-        target.act.buffsToReceive.add(this);
+        target.act.buffsToReceive.add((Buff) this.clone());
     }
 
     /// Call from buffs - apply effect

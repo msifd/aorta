@@ -162,12 +162,13 @@ public class ProgressView extends Widget {
 
             final EntityPlayer self = Minecraft.getMinecraft().thePlayer;
             final boolean canControl = CharacterAttribute.hasAny(self, Trait.gm, Trait.__admin);
-            if (self.getEntityId() != entity.getEntityId() && canControl) {
+            if (canControl) {
                 final CombatContext selfCom = CombatAttribute.require(self);
-                if (selfCom.puppet == entity.getEntityId())
-                    addButton("more.gui.combat.end_control", () -> CombatRpc.setPuppet(0));
-                else
+                if (selfCom.puppet != entity.getEntityId() && self.getEntityId() != entity.getEntityId()) {
                     addButton("more.gui.combat.control", () -> CombatRpc.setPuppet(entity.getEntityId()));
+                } else if (selfCom.puppet != 0) {
+                    addButton("more.gui.combat.end_control", () -> CombatRpc.setPuppet(0));
+                }
             }
 
             if (!(entity instanceof EntityPlayer))
