@@ -84,11 +84,11 @@ public final class CombatNotifications {
                             .map(e -> e.getKey().trShort() + explicitSignInt(e.getValue()))
                             .collect(Collectors.joining(" ")));
                 }
-                if (info.mod.roll != 0) {
+                if (info.mod.damage != 0) {
                     if (len != sb.length())
                         sb.append(' ');
                     sb.append("DMG");
-                    sb.append(explicitSignInt(info.mod.roll));
+                    sb.append(explicitSignInt(info.mod.damage));
                 }
                 sb.append(')');
             }
