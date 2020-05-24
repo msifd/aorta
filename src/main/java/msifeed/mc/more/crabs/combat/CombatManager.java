@@ -345,13 +345,13 @@ public enum CombatManager {
     private static void applyBuffs(List<Buff> buffs, Effect.Stage stage, FighterInfo self, FighterInfo other) {
         for (Buff b : buffs)
             if (b.shouldApply(stage, self, other))
-                b.applyEffect(self, other);
+                b.applyEffect(stage, self, other);
     }
 
     private static void applyEffects(List<Effect> effects, Effect.Stage stage, FighterInfo self, FighterInfo other) {
         for (Effect e : effects)
             if (e.shouldApply(stage, self, other))
-                e.apply(self, other);
+                e.apply(stage, self, other);
     }
 
     private static void applyActionResults(FighterInfo self) {

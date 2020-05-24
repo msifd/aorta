@@ -25,7 +25,7 @@ public final class Buff extends DynamicEffect {
     }
 
     public boolean shouldApply(Stage stage, FighterInfo target, FighterInfo other) {
-        if (other == null)
+        if (other == null) // From applyScores
             return effect.shouldApply(stage, target, null);
         else
             return true;
@@ -33,14 +33,15 @@ public final class Buff extends DynamicEffect {
 
     /// Call from action effects - add to buffs
     @Override
-    public void apply(FighterInfo target, FighterInfo other) {
-        target.act.buffsToReceive.add((Buff) this.clone());
+    public void apply(Stage stage, FighterInfo target, FighterInfo other) {
+        if (stage == Stage.ACTION) // From applyEffectsAndResults
+            target.act.buffsToReceive.add((Buff) this.clone());
     }
 
     /// Call from buffs - apply effect
-    public void applyEffect(FighterInfo target, FighterInfo other) {
+    public void applyEffect(Stage stage, FighterInfo target, FighterInfo other) {
         if (active())
-            effect.apply(target, other);
+            effect.apply(stage, target, other);
         step();
     }
 
@@ -135,8 +136,8 @@ public final class Buff extends DynamicEffect {
         }
 
         @Override
-        public void apply(FighterInfo target, FighterInfo other) {
-            this.effect.apply(target, other);
+        public void apply(Stage stage, FighterInfo target, FighterInfo other) {
+            this.effect.apply(stage, target, other);
         }
 
         @Override
@@ -189,8 +190,8 @@ public final class Buff extends DynamicEffect {
         }
 
         @Override
-        public void apply(FighterInfo target, FighterInfo other) {
-            this.effect.apply(target, other);
+        public void apply(Stage stage, FighterInfo target, FighterInfo other) {
+            this.effect.apply(stage, target, other);
         }
 
         @Override

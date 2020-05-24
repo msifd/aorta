@@ -21,7 +21,7 @@ public final class ActionEffects {
         }
 
         @Override
-        public void apply(FighterInfo target, FighterInfo other) {
+        public void apply(Stage stage, FighterInfo target, FighterInfo other) {
             if (other != null)
                 target.act.damageToReceive.addAll(target.act.damageDealt);
         }
@@ -56,7 +56,7 @@ public final class ActionEffects {
         }
 
         @Override
-        public void apply(FighterInfo target, FighterInfo other) {
+        public void apply(Stage stage, FighterInfo target, FighterInfo other) {
             final DamageSource ds = other == null
                     ? new DamageSource("crabs")
                     : other.entity instanceof EntityPlayer
@@ -109,7 +109,7 @@ public final class ActionEffects {
         }
 
         @Override
-        public void apply(FighterInfo target, FighterInfo other) {
+        public void apply(Stage stage, FighterInfo target, FighterInfo other) {
             target.act.damageToReceive.add(new DamageAmount(DamageSource.generic, value));
         }
 
@@ -157,7 +157,7 @@ public final class ActionEffects {
         }
 
         @Override
-        public void apply(FighterInfo target, FighterInfo other) {
+        public void apply(Stage stage, FighterInfo target, FighterInfo other) {
             for (DamageAmount da : target.act.damageToReceive)
                 da.amount *= value;
         }
@@ -206,7 +206,7 @@ public final class ActionEffects {
         }
 
         @Override
-        public void apply(FighterInfo target, FighterInfo other) {
+        public void apply(Stage stage, FighterInfo target, FighterInfo other) {
             final DamageSource ds = target.entity instanceof EntityPlayer
                     ? DamageSource.causePlayerDamage((EntityPlayer) target.entity)
                     : DamageSource.causeMobDamage(target.entity);
@@ -257,7 +257,7 @@ public final class ActionEffects {
         }
 
         @Override
-        public void apply(FighterInfo target, FighterInfo other) {
+        public void apply(Stage stage, FighterInfo target, FighterInfo other) {
             for (DamageAmount da : other.act.damageToReceive)
                 da.amount *= value;
         }
@@ -306,7 +306,7 @@ public final class ActionEffects {
         }
 
         @Override
-        public void apply(FighterInfo target, FighterInfo other) {
+        public void apply(Stage stage, FighterInfo target, FighterInfo other) {
             target.entity.heal(value);
         }
 

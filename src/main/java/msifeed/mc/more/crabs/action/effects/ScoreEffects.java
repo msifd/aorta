@@ -21,7 +21,7 @@ public final class ScoreEffects {
         }
 
         @Override
-        public void apply(FighterInfo target, FighterInfo other) {
+        public void apply(Stage stage, FighterInfo target, FighterInfo other) {
             final float penaltyRate = More.DEFINES.combat().armorPenalty.onRoll;
             final float penalty = penaltyRate * target.entity.getTotalArmorValue();
             target.act.scoreAction += Dices.n3d7m3() - penalty;
@@ -58,7 +58,7 @@ public final class ScoreEffects {
         }
 
         @Override
-        public void apply(FighterInfo target, FighterInfo other) {
+        public void apply(Stage stage, FighterInfo target, FighterInfo other) {
             final float mod = target.mod.toAbility(ability) + target.act.effectAbilityMods.getOrDefault(ability, 0);
             final float value = target.chr.abilities.getOrDefault(ability, 0);
             final float penaltyRate = More.DEFINES.combat().armorPenalty.onStats.getOrDefault(ability, 0f);
@@ -115,7 +115,7 @@ public final class ScoreEffects {
         }
 
         @Override
-        public void apply(FighterInfo target, FighterInfo other) {
+        public void apply(Stage stage, FighterInfo target, FighterInfo other) {
             target.act.scoreAction += value;
         }
 
@@ -187,7 +187,7 @@ public final class ScoreEffects {
         }
 
         @Override
-        public void apply(FighterInfo target, FighterInfo other) {
+        public void apply(Stage stage, FighterInfo target, FighterInfo other) {
             target.act.scoreAction = MathHelper.floor_float(target.act.scoreAction * value);
         }
 
@@ -211,7 +211,7 @@ public final class ScoreEffects {
         }
 
         @Override
-        public void apply(FighterInfo target, FighterInfo other) {
+        public void apply(Stage stage, FighterInfo target, FighterInfo other) {
             target.act.successful = target.act.score() >= value;
         }
 
@@ -260,7 +260,7 @@ public final class ScoreEffects {
         }
 
         @Override
-        public void apply(FighterInfo target, FighterInfo other) {
+        public void apply(Stage stage, FighterInfo target, FighterInfo other) {
             target.act.effectAbilityMods.compute(ability, (k, v) -> (v == null) ? modifier : v + modifier);
         }
 
