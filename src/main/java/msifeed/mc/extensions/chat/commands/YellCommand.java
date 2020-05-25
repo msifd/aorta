@@ -25,7 +25,8 @@ public class YellCommand extends PlayerExtCommand {
             return;
 
         final int[] ranges = More.DEFINES.get().chat.speechRadius;
-        final int range = ranges[(ranges.length - 1) / 2 + 1];
+        final int rangeLevel = +1;
+        final int range = ranges[(ranges.length - 1) / 2 + rangeLevel];
 
         final EntityPlayerMP player = (EntityPlayerMP) sender;
         final String text = String.join(" ", args);

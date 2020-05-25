@@ -14,6 +14,12 @@ public final class SpeechFormatter {
     public static IChatComponent format(EntityPlayer self, EntityPlayer sender, IChatComponent cc, int range) {
         final boolean isMyMessage = self.getEntityId() == sender.getEntityId();
 
+        final int[] speechRanges = More.DEFINES.get().chat.speechRadius;
+        final int normalRange = speechRanges[(speechRanges.length - 1) / 2];
+        if (range < normalRange) {
+            cc.getChatStyle().setColor(EnumChatFormatting.GRAY);
+        }
+
         final IChatComponent textCC;
         if (isMyMessage) {
             textCC = cc;

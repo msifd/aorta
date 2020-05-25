@@ -25,10 +25,11 @@ public class WhisperCommand extends PlayerExtCommand {
             return;
 
         final int[] ranges = More.DEFINES.get().chat.speechRadius;
-        final int range = ranges[(ranges.length - 1) / 2 - 1];
+        final int rangeLevel = -2;
+        final int range = ranges[(ranges.length - 1) / 2 + rangeLevel];
 
         final EntityPlayerMP player = (EntityPlayerMP) sender;
-        final String text = String.join(" ", args);
+        final String text = "((" + String.join(" ", args) + "))";
         SpeechatRpc.sendSpeech(player, range, new ChatComponentText(text));
         ExternalLogs.log(sender, "speech",  text);
     }
