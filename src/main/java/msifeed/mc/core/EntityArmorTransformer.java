@@ -21,6 +21,8 @@ public class EntityArmorTransformer implements IClassTransformer, Opcodes {
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if ("net.minecraft.entity.EntityLivingBase".equals(transformedName))
             return transformEntityLivingBase(basicClass);
+        else if ("net.minecraftforge.common.ISpecialArmor$ArmorProperties".equals(transformedName))
+            return transformArmorProperties(basicClass);
         return basicClass;
     }
 
@@ -42,9 +44,24 @@ public class EntityArmorTransformer implements IClassTransformer, Opcodes {
         return cw.toByteArray();
     }
 
+    private static byte[] transformArmorProperties(byte[] basicClass) {
+        final ClassNode cnode = new ClassNode();
+        final ClassReader reader = new ClassReader(basicClass);
+        reader.accept(cnode, ClassReader.EXPAND_FRAMES);
+
+        final MethodNode mn = cnode.methods.stream()
+                .filter(m -> m.name.equals("ApplyArmor"))
+                .findAny()
+                .orElseThrow(() -> new RuntimeException("Cant find method ApplyArmor"));
+        patchArmorRating(mn);
+
+        final ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+        cnode.accept(cw);
+        return cw.toByteArray();
+    }
+
     private static void patchArmorRating(MethodNode mn) {
         final ListIterator<AbstractInsnNode> it = mn.instructions.iterator();
-
         while (it.hasNext()) {
             final AbstractInsnNode an = it.next();
             if (an instanceof IntInsnNode) {
@@ -53,16 +70,20 @@ public class EntityArmorTransformer implements IClassTransformer, Opcodes {
                     in.operand = ARMOR_DIVIDER;
                     break;
                 }
-            }
-        }
-
-        while (it.hasNext()) {
-            final AbstractInsnNode an = it.next();
-            if (an instanceof LdcInsnNode) {
-                final LdcInsnNode ldc = (LdcInsnNode) an;
-                if (ldc.cst instanceof Float && ((Float) ldc.cst).intValue() == VANILLA_ARMOR_DIVIDER) {
-                    ldc.cst = new Float(ARMOR_DIVIDER);
-                    break;
+            } else if (an instanceof LdcInsnNode) {
+                final LdcInsnNode in = (LdcInsnNode) an;
+                if (in.cst instanceof Float) {
+                    final Float f = (Float) in.cst;
+                    if (f == VANILLA_ARMOR_DIVIDER) {
+                        in.cst = (float) ARMOR_DIVIDER;
+                        break;
+                    }
+                } else if (in.cst instanceof Double) {
+                    final Double d = (Double) in.cst;
+                    if (d == VANILLA_ARMOR_DIVIDER) {
+                        in.cst = (double) ARMOR_DIVIDER;
+                        break;
+                    }
                 }
             }
         }
