@@ -355,18 +355,16 @@ public enum CombatManager {
     }
 
     private static void applyActionResults(FighterInfo self) {
-        boolean resetCombo = false;
-
+        final float healthBefore = self.entity.getHealth();
         for (DamageAmount da : self.act.damageToReceive) {
-            if (self.entity.attackEntityFrom(da.source, da.amount))
-                resetCombo = true;
+            self.entity.attackEntityFrom(da.source, da.amount);
             self.entity.hurtResistantTime = 0;
         }
 
         for (Buff buff : self.act.buffsToReceive)
             Buff.mergeBuff(self.com.buffs, buff);
 
-        if (resetCombo && !self.com.prevActions.isEmpty())
+        if (healthBefore - self.entity.getHealth() > 1)
             self.com.prevActions.clear();
 
         if (self.entity.isDead || self.entity.getHealth() <= 0) {
