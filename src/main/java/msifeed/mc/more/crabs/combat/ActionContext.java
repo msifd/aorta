@@ -23,6 +23,13 @@ public class ActionContext implements Comparable<ActionContext> {
     public Criticalness critical;
     public boolean successful;
 
+    public ActionContext() {
+    }
+
+    public ActionContext(Action action) {
+        updateAction(action);
+    }
+
     public void updateAction(Action action) {
         this.action = action;
         resetScore();

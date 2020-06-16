@@ -61,7 +61,7 @@ public class ProgressView extends Widget {
     }
 
     private void refillHasContext(CombatContext context) {
-        if (context.healthBeforeTraining > 0)
+        if (context.isTraining())
             addPane("more.gui.combat.tips.training");
 
         switch (context.phase) {

@@ -27,6 +27,12 @@ public class Differ {
             if (b != a)
                 diffs.add(L10n.fmt("more.diff.char.ability", e.getKey().toString(), b, a));
         }
+        if (before.armor != after.armor) {
+            diffs.add(L10n.fmt("more.diff.char.mod_armor", after.armor, trGenPoints(after.armor)));
+        }
+        if (before.damageThreshold != after.damageThreshold) {
+            diffs.add(L10n.fmt("more.diff.char.mod_damage_threshold", after.damageThreshold, trGenPoints(after.damageThreshold)));
+        }
 
         // Illness
         if (before.illness.illness < after.illness.illness)

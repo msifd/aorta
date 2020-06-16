@@ -85,7 +85,8 @@ more.gui.status.other.name=Имя
 more.gui.status.other.wiki=Вики
 
 
-more.gui.combat=Боевка: %s
+more.gui.combat=Боевка
+more.gui.combat.title=Боевка: %s
 more.gui.combat.progress=Прогресс
 more.gui.combat.mods=Моды
 more.gui.combat.rolls=Роллы
@@ -151,6 +152,8 @@ more.diff.g=очка
 more.diff.m=очков
 
 more.diff.char.ability=изменил стату %s с %d на %d
+more.diff.char.mod_armor=устанавливает броню в %d %s
+more.diff.char.mod_damage_threshold=устанавливает сопротивление урону в %d %s
 
 more.diff.status.name=сменил имя на '%s'
 more.diff.status.add_estitence=получает %d %s эститенции

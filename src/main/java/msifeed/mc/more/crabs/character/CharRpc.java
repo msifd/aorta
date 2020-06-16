@@ -56,7 +56,6 @@ public enum CharRpc {
 
         if (!senderIsGm && !senderIsTarget && targetIsPlayer) {
             ExternalLogs.log(sender, "warning", String.format("%s tried to change character %s while not GM!", sender.getCommandSenderName(), target.getCommandSenderName()));
-            ctx.getServerHandler().kickPlayerFromServer("Forbidden!");
             return;
         }
 

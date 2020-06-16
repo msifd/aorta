@@ -29,6 +29,10 @@ public class CombatContext {
     public List<Integer> targets = Collections.emptyList();
     public ActionHeader action = null;
 
+    public boolean isTraining() {
+        return healthBeforeTraining > 0;
+    }
+
     public void removeEndedEffects() {
         buffs.removeIf(Buff::ended);
     }

@@ -31,7 +31,7 @@ public class CombatScreen extends MellowGuiScreen {
         this.rollAbilityView = new RollAbilityView(entity);
 
         final Window window = new Window();
-        window.setTitle(L10n.fmt("more.gui.combat", entity.getCommandSenderName()));
+        window.setTitle(L10n.fmt("more.gui.combat.title", entity.getCommandSenderName()));
         scene.addChild(window);
 
         content = window.getContent();

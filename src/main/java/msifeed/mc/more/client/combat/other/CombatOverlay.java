@@ -2,7 +2,7 @@ package msifeed.mc.more.client.combat.other;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.more.crabs.action.effects.Buff;
-import msifeed.mc.more.crabs.combat.CombatContext;
+import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
 import msifeed.mc.more.tools.ItemCombatTool;
 import net.minecraft.client.Minecraft;
@@ -16,7 +16,6 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public enum CombatOverlay {
@@ -35,16 +34,19 @@ public enum CombatOverlay {
             return;
 
         final EntityLivingBase entity = getEntity();
-        final Optional<CombatContext> comOpt = CombatAttribute.get(entity);
-
-        if (!comOpt.isPresent())
-            return;
 
         final ArrayList<String> lines = new ArrayList<>();
         lines.add(String.format("Entity: %s (%d)", entity.getCommandSenderName(), entity.getEntityId()));
         lines.add(String.format("  HP: %f/%f", entity.getHealth(), entity.getMaxHealth()));
+        lines.add(String.format("  Armor: %d", entity.getTotalArmorValue()));
 
-        comOpt.ifPresent(com -> {
+        CharacterAttribute.get(entity).ifPresent(chr -> {
+            lines.add("Character");
+            lines.add("  Armor override: " + chr.armor);
+            lines.add("  Damage threshold: " + chr.damageThreshold);
+        });
+
+        CombatAttribute.get(entity).ifPresent(com -> {
             lines.add("Combat");
             lines.add("  Training health: " + com.healthBeforeTraining);
             lines.add("  Puppet: " + com.puppet);

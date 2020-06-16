@@ -4,6 +4,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
+import msifeed.mc.more.More;
 import msifeed.mc.more.crabs.action.Action;
 import msifeed.mc.more.crabs.action.ActionRegistry;
 import msifeed.mc.more.crabs.action.ActionTag;
@@ -16,6 +17,8 @@ import msifeed.mc.more.crabs.utils.*;
 import msifeed.mc.sys.attributes.MissingRequiredAttributeException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -204,7 +207,7 @@ public enum CombatManager {
     }
 
     private boolean cantDealDamage(CombatContext srcCom, CombatContext vicCom) {
-        if (srcCom.healthBeforeTraining > 0 != vicCom.healthBeforeTraining > 0)
+        if (srcCom.isTraining() != vicCom.isTraining())
             return true; // Ignore if someone is not in training
         if (srcCom.phase != CombatContext.Phase.IDLE && srcCom.phase != CombatContext.Phase.ATTACK)
             return true;
@@ -355,32 +358,41 @@ public enum CombatManager {
     }
 
     private static void applyActionResults(FighterInfo self) {
-        final float healthBefore = self.entity.getHealth();
+        final CombatDefines.DamageSettings damageSettings = More.DEFINES.combat().damageSettings;
+        final int armorAmount = self.chr.armor > 0 ? self.chr.armor : self.entity.getTotalArmorValue();
+
+        float rawTotalDamage = 0;
+        float totalDamage = 0;
         for (DamageAmount da : self.act.damageToReceive) {
-            self.entity.attackEntityFrom(da.source, da.amount);
-            self.entity.hurtResistantTime = 0;
+            rawTotalDamage += da.amount;
+            totalDamage += da.source.isUnblockable()
+                    ? da.amount
+                    : damageSettings.applyArmor(da.amount, armorAmount, self.chr.damageThreshold);
         }
+
+        if (self.entity instanceof EntityPlayer)
+            ((EntityPlayer) self.entity).inventory.damageArmor(totalDamage);
+
+        if (totalDamage > 1)
+            self.com.prevActions.clear();
 
         for (Buff buff : self.act.buffsToReceive)
             Buff.mergeBuff(self.com.buffs, buff);
 
-        if (healthBefore - self.entity.getHealth() > 1)
-            self.com.prevActions.clear();
-
-        if (self.entity.isDead || self.entity.getHealth() <= 0) {
+        final boolean deadlyAttack = self.entity.getHealth() - totalDamage <= 0;
+        if (deadlyAttack) {
             if (self.com.knockedOut) {
+                self.entity.setHealth(0);
                 CombatNotifications.notifyKilled(self);
-                if (self.com.healthBeforeTraining > 0) {
-                    self.entity.setHealth(self.com.healthBeforeTraining);
-                    self.entity.isDead = false;
-                    self.com.knockedOut = false;
-                }
             } else {
-                self.entity.setHealth(1);
-                self.entity.isDead = false;
                 self.com.knockedOut = true;
+                self.entity.setHealth(0.1f);
                 CombatNotifications.notifyKnockedOut(self);
             }
+        } else if (totalDamage > 0) {
+            self.entity.setHealth(self.entity.getHealth() - totalDamage);
+            self.entity.attackEntityFrom(DamageSource.generic, 0); // Visual damage
+//            CombatNotifications.notifyAroundRelatives(self, "Received " + totalDamage + "/" + rawTotalDamage);
         }
     }
 
@@ -414,7 +426,7 @@ public enum CombatManager {
     public void removeFromCombat(EntityLivingBase entity, CombatContext com) {
         resetCombatantWithRelatives(entity);
 
-        if (com.healthBeforeTraining > 0)
+        if (com.isTraining())
             entity.setHealth(com.healthBeforeTraining);
 
         com.healthBeforeTraining = 0;

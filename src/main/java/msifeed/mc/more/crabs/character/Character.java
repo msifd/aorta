@@ -17,6 +17,9 @@ public class Character {
     public Illness illness = new Illness();
 
     public int fistsDamage = 0;
+    public int armor = 0;
+    public int damageThreshold = 0;
+
     public int estitence = 60;
     public int sin = 0;
 
@@ -33,6 +36,8 @@ public class Character {
             abilities.put(e.getKey(), e.getValue());
         illness.unpack(c.illness.pack());
         fistsDamage = c.fistsDamage;
+        armor = c.armor;
+        damageThreshold = c.damageThreshold;
         estitence = c.estitence;
         sin = c.sin;
     }
@@ -68,6 +73,9 @@ public class Character {
         c.setInteger(Tags.illness, illness.pack());
 
         c.setInteger(Tags.fistsDmg, fistsDamage);
+        c.setInteger(Tags.armor, armor);
+        c.setInteger(Tags.damageThreshold, damageThreshold);
+
         c.setInteger(Tags.estitence, estitence);
         c.setInteger(Tags.sin, sin);
 
@@ -86,6 +94,9 @@ public class Character {
         illness.unpack(c.getInteger(Tags.illness));
 
         fistsDamage = c.getInteger(Tags.fistsDmg);
+        armor = c.getInteger(Tags.armor);
+        damageThreshold = c.getInteger(Tags.damageThreshold);
+
         estitence = c.getInteger(Tags.estitence);
         sin = c.getInteger(Tags.sin);
     }
@@ -97,6 +108,8 @@ public class Character {
         static final String abilities = "abs";
         static final String illness = "illness";
         static final String fistsDmg = "fistsDmg";
+        static final String armor = "armor";
+        static final String damageThreshold = "dmgThr";
         static final String estitence = "estitence";
         static final String sin = "sin";
     }

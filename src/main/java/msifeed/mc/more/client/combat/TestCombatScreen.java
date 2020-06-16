@@ -12,6 +12,7 @@ import msifeed.mc.more.crabs.action.Action;
 import msifeed.mc.more.crabs.action.ActionHeader;
 import msifeed.mc.more.crabs.action.ActionRegistry;
 import msifeed.mc.more.crabs.action.effects.Effect;
+import msifeed.mc.more.crabs.combat.ActionContext;
 import msifeed.mc.more.crabs.combat.CombatContext;
 import msifeed.mc.more.crabs.combat.FighterInfo;
 import msifeed.mc.more.crabs.rolls.Criticalness;
@@ -69,7 +70,7 @@ public class TestCombatScreen extends MellowGuiScreen {
             com.role = action.isOffencive() ? CombatContext.Role.OFFENCE : CombatContext.Role.DEFENCE;
             com.action = action;
         });
-        ActionAttribute.INSTANCE.update(player, act -> act.updateAction(action));
+        ActionAttribute.INSTANCE.set(player, new ActionContext(action));
         final FighterInfo self = new FighterInfo(player);
 
         // Apply scores

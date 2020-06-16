@@ -107,7 +107,7 @@ public final class CombatNotifications {
         ExternalLogs.logEntity(entity, "combat", text);
     }
 
-    private static void notifyAroundRelatives(FighterInfo cause, String text) {
+    public static void notifyAroundRelatives(FighterInfo cause, String text) {
         final HashSet<EntityLivingBase> relatives = new HashSet<>();
         final CombatContext offenderCom;
 
