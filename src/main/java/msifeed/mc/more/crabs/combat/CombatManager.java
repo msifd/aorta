@@ -364,10 +364,15 @@ public enum CombatManager {
         float rawTotalDamage = 0;
         float totalDamage = 0;
         for (DamageAmount da : self.act.damageToReceive) {
-            rawTotalDamage += da.amount;
-            totalDamage += da.source.isUnblockable()
-                    ? da.amount
-                    : damageSettings.applyArmor(da.amount, armorAmount, self.chr.damageThreshold);
+            if (da.amount > 0) {
+                rawTotalDamage += da.amount;
+                totalDamage += da.source.isUnblockable()
+                        ? da.amount
+                        : damageSettings.applyArmor(da.amount, armorAmount, self.chr.damageThreshold);
+            } else {
+                self.entity.hurtResistantTime = 0;
+                self.entity.attackEntityFrom(da.source, da.amount);
+            }
         }
 
         if (self.entity instanceof EntityPlayer)
@@ -380,19 +385,30 @@ public enum CombatManager {
             Buff.mergeBuff(self.com.buffs, buff);
 
         final boolean deadlyAttack = self.entity.getHealth() - totalDamage <= 0;
+        final float currentHealth = self.entity.getHealth();
+        final float newHealth;
         if (deadlyAttack) {
             if (self.com.knockedOut) {
-                self.entity.setHealth(0);
+                newHealth = self.com.isTraining()
+                        ? self.com.healthBeforeTraining
+                        : 0;
+                self.com.knockedOut = false;
                 CombatNotifications.notifyKilled(self);
             } else {
+                newHealth = 1;
                 self.com.knockedOut = true;
-                self.entity.setHealth(0.1f);
                 CombatNotifications.notifyKnockedOut(self);
             }
         } else if (totalDamage > 0) {
-            self.entity.setHealth(self.entity.getHealth() - totalDamage);
-            self.entity.attackEntityFrom(DamageSource.generic, 0); // Visual damage
+            newHealth = currentHealth - totalDamage;
 //            CombatNotifications.notifyAroundRelatives(self, "Received " + totalDamage + "/" + rawTotalDamage);
+        } else {
+            newHealth = currentHealth;
+        }
+
+        if (newHealth != currentHealth) {
+            self.entity.setHealth(newHealth);
+            self.entity.attackEntityFrom(DamageSource.generic, 0); // Visual damage
         }
     }
 

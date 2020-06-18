@@ -33,7 +33,7 @@ class ModsView extends Widget {
             addChild(new Label(L10n.tr("more.gui.combat.mods.damage")));
             final TextInput dmgInput = new TextInput();
             dmgInput.getSizeHint().x = 20;
-            if (mods.roll != 0)
+            if (mods.damage != 0)
                 dmgInput.setText(Integer.toString(mods.damage));
             dmgInput.setFilter(s -> TextInput.isSignedIntBetween(s, -99, 99));
             dmgInput.setCallback(s -> updateDamageMod(meta, s));
