@@ -13,7 +13,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "0.98.1"
+version = "0.98.2"
 group = "msifeed.mc.more"
 archivesBaseName = "more"
 
@@ -47,11 +47,6 @@ jar {
         from(project.zipTree(dep)){
             exclude 'META-INF', 'META-INF/**'
         }
-    }
-
-    manifest {
-        attributes 'FMLCorePlugin': 'msifeed.mc.core.MoreCorePlugin'
-        attributes 'FMLCorePluginContainsFMLMod': 'true'
     }
 }
 
