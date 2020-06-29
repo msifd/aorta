@@ -120,18 +120,15 @@ public final class CombatNotifications {
             relatives.add(off);
             offenderCom = CombatAttribute.get(off).orElse(cause.com);
         } else {
-            relatives.add(cause.entity);
             offenderCom = cause.com;
         }
 
+        relatives.add(cause.entity);
         offenderCom.targets.stream()
                 .map(id -> GetUtils.entityLiving(cause.entity, id))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .forEach(relatives::add);
-
-        if (relatives.isEmpty())
-            return;
 
         long avgX = 0, avgY = 0, avgZ = 0;
         for (EntityLivingBase e : relatives) {
