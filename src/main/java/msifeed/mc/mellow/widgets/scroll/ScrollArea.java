@@ -8,15 +8,16 @@ import msifeed.mc.mellow.theme.Part;
 import msifeed.mc.mellow.utils.Geom;
 import msifeed.mc.mellow.utils.Point;
 import msifeed.mc.mellow.widgets.Widget;
-import net.minecraftforge.client.MinecraftForgeClient;
+import openmods.stencil.StencilBitAllocation;
+import openmods.stencil.StencilPoolManager;
 import org.lwjgl.opengl.GL11;
 
 import java.util.stream.Stream;
 
 public class ScrollArea extends Widget implements MouseHandler.Wheel {
-    private static final int STENCIL_REF = 1 << MinecraftForgeClient.reserveStencilBit();
-    private Part scrollbarBgPart = Mellow.getPart("scrollbar_bg");
-    private Geom scrollbarBgGeom = new Geom();
+    private static final StencilBitAllocation STENCIL_ALLOC = StencilPoolManager.pool().acquire();
+    private final Part scrollbarBgPart = Mellow.getPart("scrollbar_bg");
+    private final Geom scrollbarBgGeom = new Geom();
 
     ScrollAreaThumb thumb = new ScrollAreaThumb(this);
     int spacing = 1;
@@ -60,13 +61,13 @@ public class ScrollArea extends Widget implements MouseHandler.Wheel {
 
         GL11.glColorMask(false, false, false, false);
         GL11.glStencilMask(0xff);
-        GL11.glStencilFunc(GL11.GL_ALWAYS, STENCIL_REF, 0xff);
+        GL11.glStencilFunc(GL11.GL_ALWAYS, STENCIL_ALLOC.mask, 0xff);
         GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
         RenderShapes.rect(getGeometry(), 0, 0xff);
 
         GL11.glColorMask(true, true, true, true);
         GL11.glStencilMask(0x00);
-        GL11.glStencilFunc(GL11.GL_EQUAL, STENCIL_REF, 0xff);
+        GL11.glStencilFunc(GL11.GL_EQUAL, STENCIL_ALLOC.mask, 0xff);
         GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
 
         super.renderChildren();

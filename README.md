@@ -1,5 +1,5 @@
 # Aorta: Morgana Edition
 
 ## Requirements
-- JDK 8
-- ScrollArea requires Minecraft to be launched with stencil support on. To do so add `-Dforge.forceDisplayStencil=true` flag to VM parameters.
+- [AdoptOpenJDK 8](https://adoptopenjdk.net/releases.html?variant=openjdk8&jvmVariant=hotspot) (or any other JDK 8)
+

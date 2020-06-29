@@ -13,6 +13,7 @@ public class Bootstrap {
     public static final String MODID = "more";
     public static final String NAME = "More";
     public static final String VERSION = "@VERSION@";
+    public static final String DEPENDENCIES = "required-after:openmods";
 
     @Mod.Instance
     public static Bootstrap INSTANCE;
