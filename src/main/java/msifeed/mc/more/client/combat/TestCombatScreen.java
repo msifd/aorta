@@ -74,8 +74,6 @@ public class TestCombatScreen extends MellowGuiScreen {
         final FighterInfo self = new FighterInfo(player);
 
         // Apply scores
-        self.act.resetScore();
-
         self.act.scorePlayerMod = self.mod.roll;
         self.act.critical = Dices.critical();
         if (self.act.critical == Criticalness.FAIL)

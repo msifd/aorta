@@ -42,7 +42,7 @@ public abstract class EntityAttribute<T> {
 
     public final void update(Entity entity, Consumer<T> fn) {
         final AttrProp<T> attr = getProp(entity);
-        if (attr != null) {
+        if (attr != null && attr.value != null) {
             fn.accept(attr.value);
             if (shouldSync(attr.value))
                 broadcast(entity.worldObj, entity);

@@ -46,9 +46,7 @@ public class ActionsView extends Widget {
 
             final ActionTag incomingAttackType;
             if (defence) {
-                if (ctx.targets.isEmpty())
-                    return;
-                incomingAttackType = GetUtils.entityLiving(entity, ctx.targets.get(0))
+                incomingAttackType = GetUtils.entityLiving(entity, ctx.offender)
                         .flatMap(CombatAttribute::get)
                         .map(act -> act.action)
                         .map(ActionHeader::getType)

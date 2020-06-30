@@ -84,8 +84,8 @@ public class ProgressView extends Widget {
             case ATTACK:
                 addPane("more.gui.combat.tips.current_action", context.action.getTitle());
                 addPane("more.gui.combat.tips.damage_target");
-                addPane("more.gui.combat.tips.targets",
-                        context.targets.stream()
+                addPane("more.gui.combat.tips.defenders",
+                        context.defenders.stream()
                             .map(id -> GetUtils.entityLiving(entity, id).orElse(null))
                             .filter(Objects::nonNull)
                             .map(ChatUtils::getPrettyName)
@@ -97,16 +97,14 @@ public class ProgressView extends Widget {
             case WAIT:
                 final CombatContext offenderCom;
                 if (context.role == CombatContext.Role.DEFENCE) {
-                    if (context.targets.isEmpty())
-                        throw new RuntimeException();
-                    offenderCom = GetUtils.entityLiving(entity, context.targets.get(0))
+                    offenderCom = GetUtils.entityLiving(entity, context.offender)
                             .flatMap(CombatAttribute::get)
                             .orElseThrow(RuntimeException::new);
                 } else {
                     offenderCom = context;
                 }
                 addPane("more.gui.combat.tips.wait_defenders",
-                        offenderCom.targets.stream()
+                        offenderCom.defenders.stream()
                                 .map(id -> GetUtils.entityLiving(entity, id).orElse(null))
                                 .filter(Objects::nonNull)
                                 .map(ChatUtils::getPrettyName)
@@ -114,15 +112,13 @@ public class ProgressView extends Widget {
                 );
                 break;
             case DEFEND:
-                if (context.targets.isEmpty())
-                    throw new RuntimeException();
-                final EntityLivingBase foe = GetUtils.entityLiving(entity, context.targets.get(0))
+                final EntityLivingBase offender = GetUtils.entityLiving(entity, context.offender)
                         .orElseThrow(RuntimeException::new);
-                final ActionHeader action = CombatAttribute.get(foe)
+                final ActionHeader action = CombatAttribute.get(offender)
                         .map(c -> c.action)
                         .orElseThrow(RuntimeException::new);
 
-                addPane("more.gui.combat.tips.offender", ChatUtils.getPrettyName(foe));
+                addPane("more.gui.combat.tips.offender", ChatUtils.getPrettyName(offender));
                 addPane("more.gui.combat.tips.enemy_action", action.getTitle());
                 if (context.action == null)
                     addPane("more.gui.combat.tips.defence_action");

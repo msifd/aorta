@@ -25,7 +25,6 @@ public enum CombatRpc {
     private final static String endAttack = Bootstrap.MODID + ":combat.endAttack";
 
     private final static String join = Bootstrap.MODID + ":combat.join";
-    private final static String training = Bootstrap.MODID + ":combat.training";
     private final static String leave = Bootstrap.MODID + ":combat.leave";
     private final static String reset = Bootstrap.MODID + ":combat.reset";
 
@@ -81,11 +80,14 @@ public enum CombatRpc {
     // // // //
 
     public static void join(int entityId) {
-        Rpc.sendToServer(join, entityId);
+        Rpc.sendToServer(join, entityId, false);
+    }
+    public static void training(int entityId) {
+        Rpc.sendToServer(join, entityId, true);
     }
 
     @RpcMethod(join)
-    public void onJoin(MessageContext ctx, int entityId) {
+    public void onJoin(MessageContext ctx, int entityId, boolean training) {
         final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
         final EntityLivingBase target = GetUtils.entityLiving(sender, entityId)
                 .orElseThrow(() -> new RpcMethodException(sender, "invalid target entity"));
@@ -96,27 +98,8 @@ public enum CombatRpc {
         if (com.phase.isInCombat())
             throw new RpcMethodException(sender, "target is already in combat");
 
-        com.healthBeforeTraining = 0;
-        CombatManager.INSTANCE.joinCombat(target, com);
-    }
-
-    public static void training(int entityId) {
-        Rpc.sendToServer(training, entityId);
-    }
-
-    @RpcMethod(training)
-    public void onTraining(MessageContext ctx, int entityId) {
-        final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
-        final EntityLivingBase target = GetUtils.entityLiving(sender, entityId)
-                .orElseThrow(() -> new RpcMethodException(sender, "invalid target entity"));
-
-        final CombatContext com = CombatAttribute.get(target).orElse(null);
-        if (com == null)
-            throw new RpcMethodException(sender, "target is not a combatant");
-        if (com.phase.isInCombat())
-            throw new RpcMethodException(sender, "target is already in combat");
-
-        com.healthBeforeTraining = target.getHealth();
+        com.hardReset();
+        com.healthBeforeJoin = training ? target.getHealth() : 0;
         CombatManager.INSTANCE.joinCombat(target, com);
     }
 
@@ -130,14 +113,15 @@ public enum CombatRpc {
         final EntityLivingBase target = GetUtils.entityLiving(sender, entityId)
                 .orElseThrow(() -> new RpcMethodException(sender, "invalid target entity"));
 
-        CombatAttribute.INSTANCE.update(target, context -> {
-            if (!context.phase.isInCombat())
-                throw new RpcMethodException(sender, "target is not in combat");
-            if (context.phase != CombatContext.Phase.IDLE)
-                throw new RpcMethodException(sender, "target is not in " + CombatContext.Phase.IDLE.toString() + " stage");
+        final CombatContext com = CombatAttribute.get(target).orElse(null);
+        if (com == null)
+            throw new RpcMethodException(sender, "target is not a combatant");
+        if (!com.phase.isInCombat())
+            throw new RpcMethodException(sender, "target is not in combat");
+        if (com.phase != CombatContext.Phase.IDLE)
+            throw new RpcMethodException(sender, "target is not in " + CombatContext.Phase.IDLE.toString() + " stage");
 
-            CombatManager.INSTANCE.removeFromCombat(target, context);
-        });
+        CombatManager.INSTANCE.removeFromCombat(target, com);
     }
 
     public static void reset(int entityId) {
@@ -150,6 +134,9 @@ public enum CombatRpc {
         final EntityLivingBase target = GetUtils.entityLiving(sender, entityId)
                 .orElseThrow(() -> new RpcMethodException(sender, "invalid target entity"));
 
+        final CombatContext com = CombatAttribute.get(target).orElse(null);
+        if (com == null)
+            throw new RpcMethodException(sender, "target is not a combatant");
         CombatManager.resetCombatantWithRelatives(target);
     }
 

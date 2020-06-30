@@ -43,10 +43,7 @@ public enum PotionsHandler {
     }
 
     private void handleDefender(EntityLivingBase entity, CombatContext com) {
-        if (com.targets.isEmpty())
-            return;
-
-        final boolean offenceActionHasApply = GetUtils.entityLiving(entity, com.targets.get(0))
+        final boolean offenceActionHasApply = GetUtils.entityLiving(entity, com.offender)
                 .flatMap(CombatAttribute::get)
                 .filter(c -> c.phase == CombatContext.Phase.ATTACK)
                 .map(c -> c.action != null && c.action.hasAnyTag(ActionTag.apply))

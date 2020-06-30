@@ -7,16 +7,13 @@ import msifeed.mc.extensions.chat.formatter.MiscFormatter;
 import msifeed.mc.more.More;
 import msifeed.mc.more.crabs.action.ActionHeader;
 import msifeed.mc.more.crabs.rolls.Criticalness;
-import msifeed.mc.more.crabs.utils.CombatAttribute;
-import msifeed.mc.more.crabs.utils.GetUtils;
 import msifeed.mc.sys.utils.ChatUtils;
 import msifeed.mc.sys.utils.L10n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public final class CombatNotifications {
@@ -108,27 +105,7 @@ public final class CombatNotifications {
     }
 
     public static void notifyAroundRelatives(FighterInfo cause, String text) {
-        final HashSet<EntityLivingBase> relatives = new HashSet<>();
-        final CombatContext offenderCom;
-
-        if (cause.com.role == CombatContext.Role.DEFENCE) {
-            if (cause.com.targets.isEmpty())
-                return;
-            final EntityLivingBase off = GetUtils.entityLiving(cause.entity, cause.com.targets.get(0)).orElse(null);
-            if (off == null)
-                return;
-            relatives.add(off);
-            offenderCom = CombatAttribute.get(off).orElse(cause.com);
-        } else {
-            offenderCom = cause.com;
-        }
-
-        relatives.add(cause.entity);
-        offenderCom.targets.stream()
-                .map(id -> GetUtils.entityLiving(cause.entity, id))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .forEach(relatives::add);
+        final Set<EntityLivingBase> relatives = CombatUtils.relativeEntites(cause.entity, cause.com);
 
         long avgX = 0, avgY = 0, avgZ = 0;
         for (EntityLivingBase e : relatives) {

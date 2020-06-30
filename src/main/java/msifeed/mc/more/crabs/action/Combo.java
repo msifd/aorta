@@ -1,6 +1,9 @@
 package msifeed.mc.more.crabs.action;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Stack;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -23,7 +26,7 @@ public class Combo {
         return null;
     }
 
-    public static ComboLookup find(List<Combo> combos, List<String> prevActions, String incoming) {
+    public static ComboLookup find(Collection<Combo> combos, Collection<String> prevActions, String incoming) {
         // NOTE: Works only for 2-element rules
 
         final Stack<String> stack = new Stack<>();

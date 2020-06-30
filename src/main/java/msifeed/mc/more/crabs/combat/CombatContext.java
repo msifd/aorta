@@ -9,28 +9,26 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class CombatContext {
-    public float healthBeforeTraining = 0;
+    public float healthBeforeJoin = 0;
     public int puppet;
 
     public boolean knockedOut;
     public List<Buff> buffs = new ArrayList<>();
-    public Stack<String> prevActions = new Stack<>();
+    public Set<String> prevActions = new HashSet<>();
 
     public Phase phase = Phase.NONE;
     public Role role = Role.NONE;
-    public List<Integer> targets = Collections.emptyList();
+    public int offender = 0;
+    public List<Integer> defenders = Collections.emptyList();
     public ActionHeader action = null;
 
     public boolean isTraining() {
-        return healthBeforeTraining > 0;
+        return healthBeforeJoin > 0;
     }
 
     public void removeEndedEffects() {
@@ -38,14 +36,36 @@ public class CombatContext {
     }
 
     public void addPrevAction(String id) {
-        prevActions.remove(id);
-        prevActions.push(id);
+        prevActions.add(id);
+    }
+
+    public void softReset() {
+        phase = phase.isInCombat() ? CombatContext.Phase.IDLE : CombatContext.Phase.NONE;
+        role = CombatContext.Role.NONE;
+        offender = 0;
+        defenders = Collections.emptyList();
+        action = null;
+    }
+
+    public void hardReset() {
+        healthBeforeJoin = 0;
+        puppet = 0;
+
+        knockedOut = false;
+        buffs.clear();
+        prevActions.clear();
+
+        phase = CombatContext.Phase.NONE;
+        role = CombatContext.Role.NONE;
+        offender = 0;
+        defenders = Collections.emptyList();
+        action = null;
     }
 
     public NBTTagCompound toNBT() {
         final NBTTagCompound c = new NBTTagCompound();
 
-        c.setFloat(Tags.training, healthBeforeTraining);
+        c.setFloat(Tags.training, healthBeforeJoin);
         c.setInteger(Tags.puppet, puppet);
         c.setBoolean(Tags.knocked, knockedOut);
 
@@ -61,7 +81,8 @@ public class CombatContext {
 
         c.setByte(Tags.phase, (byte) phase.ordinal());
         c.setByte(Tags.role, (byte) role.ordinal());
-        c.setIntArray(Tags.targets, targets.stream().mapToInt(Integer::intValue).distinct().toArray());
+        c.setInteger(Tags.offender, offender);
+        c.setIntArray(Tags.defenders, defenders.stream().mapToInt(Integer::intValue).distinct().toArray());
 
         if (action != null)
             c.setString(Tags.action, action.id);
@@ -70,7 +91,7 @@ public class CombatContext {
     }
 
     public void fromNBT(NBTTagCompound c) {
-        healthBeforeTraining = c.getFloat(Tags.training);
+        healthBeforeJoin = c.getFloat(Tags.training);
         puppet = c.getInteger(Tags.puppet);
         knockedOut = c.getBoolean(Tags.knocked);
 
@@ -88,7 +109,8 @@ public class CombatContext {
 
         phase = Phase.values()[c.getByte(Tags.phase)];
         role = Role.values()[c.getByte(Tags.role)];
-        targets = IntStream.of(c.getIntArray(Tags.targets))
+        offender = c.getInteger(Tags.offender);
+        defenders = IntStream.of(c.getIntArray(Tags.defenders))
                 .distinct()
                 .boxed()
                 .collect(Collectors.toList());
@@ -129,7 +151,8 @@ public class CombatContext {
         static final String prevActions = "prevActions";
         static final String phase = "phase";
         static final String role = "role";
-        static final String targets = "targets";
+        static final String offender = "offender";
+        static final String defenders = "defenders";
         static final String action = "action";
     }
 }

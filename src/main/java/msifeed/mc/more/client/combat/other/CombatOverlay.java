@@ -48,13 +48,14 @@ public enum CombatOverlay {
 
         CombatAttribute.get(entity).ifPresent(com -> {
             lines.add("Combat");
-            lines.add("  Training health: " + com.healthBeforeTraining);
+            lines.add("  Training health: " + com.healthBeforeJoin);
             lines.add("  Puppet: " + com.puppet);
             lines.add("  Knocked out: " + com.knockedOut);
             lines.add("  Buffs: " + com.buffs.stream().map(Buff::toString).collect(Collectors.joining(", ")));
             lines.add("  Prev actions: " + String.join(", ", com.prevActions));
             lines.add("  Stage: " + com.phase);
-            lines.add("  Targets: " + com.targets.stream().map(String::valueOf).collect(Collectors.joining(", ")));
+            lines.add("  Offender: " + com.offender);
+            lines.add("  Defenders: " + com.defenders.stream().map(String::valueOf).collect(Collectors.joining(", ")));
             lines.add("  Action: " + (com.action != null ? com.action.getTitle() : "null"));
         });
 

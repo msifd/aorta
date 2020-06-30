@@ -18,38 +18,13 @@ public class ActionContext implements Comparable<ActionContext> {
 
     public EnumMap<Ability, Integer> effectAbilityMods = new EnumMap<>(Ability.class);
 
-    public int scorePlayerMod;
-    public int scoreAction;
-    public Criticalness critical;
-    public boolean successful;
-
-    public ActionContext() {
-    }
+    public int scorePlayerMod = 0;
+    public int scoreAction = 0;
+    public Criticalness critical = Criticalness.NONE;
+    public boolean successful = true;
 
     public ActionContext(Action action) {
-        updateAction(action);
-    }
-
-    public void updateAction(Action action) {
         this.action = action;
-        resetScore();
-    }
-
-    public void reset() {
-        action = null;
-        damageDealt.clear();
-        damageToReceive.clear();
-        buffsToReceive.clear();
-        effectAbilityMods.clear();
-
-        resetScore();
-    }
-
-    public void resetScore() {
-        scorePlayerMod = 0;
-        scoreAction = 0;
-        critical = Criticalness.NONE;
-        successful = true;
     }
 
     public int score() {
