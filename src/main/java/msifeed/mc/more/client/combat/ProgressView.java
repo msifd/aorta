@@ -120,6 +120,10 @@ public class ProgressView extends Widget {
 
                 addPane("more.gui.combat.tips.offender", ChatUtils.getPrettyName(offender));
                 addPane("more.gui.combat.tips.enemy_action", action.getTitle());
+
+                final double damageDealt = context.damageDealt.stream().mapToDouble(da -> da.amount).sum();
+                if (damageDealt > 0)
+                    addPane("more.gui.combat.tips.damage_dealt", damageDealt);
                 if (context.action == null)
                     addPane("more.gui.combat.tips.defence_action");
                 else {

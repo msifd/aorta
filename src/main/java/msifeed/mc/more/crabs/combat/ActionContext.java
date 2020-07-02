@@ -12,8 +12,6 @@ import java.util.EnumMap;
 public class ActionContext implements Comparable<ActionContext> {
     public Action action;
 
-    public ArrayList<DamageAmount> damageDealt = new ArrayList<>();
-    public ArrayList<DamageAmount> damageToReceive = new ArrayList<>();
     public ArrayList<Buff> buffsToReceive = new ArrayList<>();
 
     public EnumMap<Ability, Integer> effectAbilityMods = new EnumMap<>(Ability.class);

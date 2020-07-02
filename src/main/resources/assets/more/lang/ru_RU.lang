@@ -112,6 +112,7 @@ more.gui.combat.tips.damage_target=Наносите урон цели
 more.gui.combat.tips.wait_defenders=Ждите действия защищающихся:\n%s
 more.gui.combat.tips.offender=Нападающий: %s
 more.gui.combat.tips.enemy_action=Действие противника: %s
+more.gui.combat.tips.damage_dealt=Вам нанесено урона: %f
 more.gui.combat.tips.defence_action=Выберите защитное действие
 more.gui.combat.tips.leaving=Вы покидаете бой
 more.gui.combat.tips.buffs=Баффы:\n%s

@@ -25,6 +25,10 @@ public class CombatContext {
     public Role role = Role.NONE;
     public int offender = 0;
     public List<Integer> defenders = Collections.emptyList();
+
+    public ArrayList<DamageAmount> damageDealt = new ArrayList<>();
+    public ArrayList<DamageAmount> damageToReceive = new ArrayList<>();
+
     public ActionHeader action = null;
 
     public boolean isTraining() {
@@ -44,6 +48,8 @@ public class CombatContext {
         role = CombatContext.Role.NONE;
         offender = 0;
         defenders = Collections.emptyList();
+        damageDealt.clear();
+        damageToReceive.clear();
         action = null;
     }
 
@@ -59,6 +65,9 @@ public class CombatContext {
         role = CombatContext.Role.NONE;
         offender = 0;
         defenders = Collections.emptyList();
+
+        damageDealt.clear();
+        damageToReceive.clear();
         action = null;
     }
 
@@ -84,6 +93,16 @@ public class CombatContext {
         c.setInteger(Tags.offender, offender);
         c.setIntArray(Tags.defenders, defenders.stream().mapToInt(Integer::intValue).distinct().toArray());
 
+        final NBTTagList dmgDealtNbt = new NBTTagList();
+        for (DamageAmount da : damageDealt)
+            dmgDealtNbt.appendTag(da.toNBT());
+        c.setTag(Tags.dmgDealt, dmgDealtNbt);
+
+        final NBTTagList dmgToReceiveNbt = new NBTTagList();
+        for (DamageAmount da : damageToReceive)
+            dmgToReceiveNbt.appendTag(da.toNBT());
+        c.setTag(Tags.dmgToReceive, dmgToReceiveNbt);
+
         if (action != null)
             c.setString(Tags.action, action.id);
 
@@ -103,6 +122,7 @@ public class CombatContext {
         }
 
         final NBTTagList prevActionsNbt = c.getTagList(Tags.prevActions, 8); // 8 - NBTTagString
+        prevActions.clear();
         for (int i = 0; i < prevActionsNbt.tagCount(); i++) {
             prevActions.add(prevActionsNbt.getStringTagAt(i));
         }
@@ -114,6 +134,18 @@ public class CombatContext {
                 .distinct()
                 .boxed()
                 .collect(Collectors.toList());
+
+        final NBTTagList dmgDealtNbt = c.getTagList(Tags.dmgDealt, 10); // 10 - NBTTagCompound
+        damageDealt.clear();
+        for (int i = 0; i < dmgDealtNbt.tagCount(); i++) {
+            damageDealt.add(new DamageAmount(dmgDealtNbt.getCompoundTagAt(i)));
+        }
+
+        final NBTTagList dmgToReceiveNbt = c.getTagList(Tags.dmgToReceive, 10); // 10 - NBTTagCompound
+        damageToReceive.clear();
+        for (int i = 0; i < dmgToReceiveNbt.tagCount(); i++) {
+            damageToReceive.add(new DamageAmount(dmgToReceiveNbt.getCompoundTagAt(i)));
+        }
 
         action = ActionRegistry.getHeader(c.getString(Tags.action));
     }
@@ -153,6 +185,8 @@ public class CombatContext {
         static final String role = "role";
         static final String offender = "offender";
         static final String defenders = "defenders";
+        static final String dmgDealt = "dmgDealt";
+        static final String dmgToReceive = "dmgToReceive";
         static final String action = "action";
     }
 }

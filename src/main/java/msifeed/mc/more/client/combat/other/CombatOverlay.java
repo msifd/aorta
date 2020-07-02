@@ -56,6 +56,8 @@ public enum CombatOverlay {
             lines.add("  Stage: " + com.phase);
             lines.add("  Offender: " + com.offender);
             lines.add("  Defenders: " + com.defenders.stream().map(String::valueOf).collect(Collectors.joining(", ")));
+            lines.add("  Dmg dealt: " + com.damageDealt.stream().mapToDouble(da -> da.amount).sum() + " in " + com.damageDealt.size() + " parts");
+            lines.add("  Dmg to receive: " + com.damageToReceive.stream().mapToDouble(da -> da.amount).sum() + " in " + com.damageToReceive.size() + " parts");
             lines.add("  Action: " + (com.action != null ? com.action.getTitle() : "null"));
         });
 

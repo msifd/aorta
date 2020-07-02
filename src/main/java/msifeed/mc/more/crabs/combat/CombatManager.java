@@ -132,8 +132,8 @@ public enum CombatManager {
         if (canNotDealDamage(srcCom, vicCom))
             return;
 
-        ActionAttribute.get(vicEntity)
-                .ifPresent(act -> act.damageDealt.add(new DamageAmount(event.source, event.ammount)));
+        vicCom.damageDealt.add(new DamageAmount(event.source, event.ammount));
+        CombatAttribute.INSTANCE.set(vicEntity, vicCom);
     }
 
     private void handleEntityDamage(LivingHurtEvent event, EntityLivingBase damageSrcEntity) {
@@ -204,8 +204,8 @@ public enum CombatManager {
         if (finalDamage <= 0)
             return;
 
-        ActionAttribute.get(vicEntity)
-                .ifPresent(act -> act.damageDealt.add(new DamageAmount(event.source, finalDamage)));
+        vicCom.damageDealt.add(new DamageAmount(event.source, finalDamage));
+        CombatAttribute.INSTANCE.set(vicEntity, vicCom);
     }
 
     private boolean canNotDealDamage(CombatContext srcCom, CombatContext vicCom) {
@@ -352,15 +352,10 @@ public enum CombatManager {
         final int MIN_DAMAGE = 1;
 
         float totalDamage = 0;
-        for (DamageAmount da : self.act.damageToReceive) {
-            if (da.amount > 0) {
-                totalDamage += da.source.isUnblockable()
-                        ? da.amount
-                        : damageSettings.applyArmor(da.amount, armorAmount, self.chr.damageThreshold);
-            } else {
-                self.entity.hurtResistantTime = 0;
-                self.entity.attackEntityFrom(da.source, da.amount);
-            }
+        for (DamageAmount da : self.com.damageToReceive) {
+            totalDamage += da.piecing
+                    ? da.amount
+                    : damageSettings.applyArmor(da.amount, armorAmount, self.chr.damageThreshold);
         }
 
         if (self.entity instanceof EntityPlayer)

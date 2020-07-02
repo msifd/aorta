@@ -23,7 +23,7 @@ public final class ActionEffects {
         @Override
         public void apply(Stage stage, FighterInfo target, FighterInfo other) {
             if (other != null)
-                target.act.damageToReceive.addAll(target.act.damageDealt);
+                target.com.damageToReceive.addAll(target.com.damageDealt);
         }
 
         @Override
@@ -62,7 +62,7 @@ public final class ActionEffects {
                     : other.entity instanceof EntityPlayer
                         ? DamageSource.causePlayerDamage((EntityPlayer) other.entity)
                         : DamageSource.causeMobDamage(other.entity);
-            target.act.damageToReceive.add(new DamageAmount(ds, value));
+            target.com.damageToReceive.add(new DamageAmount(ds, value));
         }
 
         @Override
@@ -110,7 +110,7 @@ public final class ActionEffects {
 
         @Override
         public void apply(Stage stage, FighterInfo target, FighterInfo other) {
-            target.act.damageToReceive.add(new DamageAmount(DamageSource.generic, value));
+            target.com.damageToReceive.add(new DamageAmount(DamageSource.generic, value));
         }
 
         @Override
@@ -158,7 +158,7 @@ public final class ActionEffects {
 
         @Override
         public void apply(Stage stage, FighterInfo target, FighterInfo other) {
-            for (DamageAmount da : target.act.damageToReceive)
+            for (DamageAmount da : target.com.damageToReceive)
                 da.amount *= value;
         }
 
@@ -210,7 +210,7 @@ public final class ActionEffects {
             final DamageSource ds = target.entity instanceof EntityPlayer
                     ? DamageSource.causePlayerDamage((EntityPlayer) target.entity)
                     : DamageSource.causeMobDamage(target.entity);
-            other.act.damageToReceive.add(new DamageAmount(ds, value));
+            other.com.damageToReceive.add(new DamageAmount(ds, value));
         }
 
         @Override
@@ -258,7 +258,7 @@ public final class ActionEffects {
 
         @Override
         public void apply(Stage stage, FighterInfo target, FighterInfo other) {
-            for (DamageAmount da : other.act.damageToReceive)
+            for (DamageAmount da : other.com.damageToReceive)
                 da.amount *= value;
         }
 
