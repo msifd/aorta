@@ -32,11 +32,10 @@ public class MoreClient extends More {
     public void init() {
         super.init();
 
-        DRM.apply();
+//        DRM.apply();
         GUI_HANDLER.init();
         Keybinds.INSTANCE.init();
         ResponsiveEntityStatus.init();
-//        BattleMarkRender.init();
         itemMeta.init();
         NoclipRenderHandler.init();
     }
