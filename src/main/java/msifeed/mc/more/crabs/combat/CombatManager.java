@@ -275,6 +275,7 @@ public enum CombatManager {
         if (self.act.action.requiresNoRoll())
             return;
 
+        self.act.resetScore();
         self.act.scorePlayerMod = self.mod.roll;
         self.act.critical = Dices.critical();
         if (self.act.critical == Criticalness.FAIL)

@@ -29,6 +29,13 @@ public class ActionContext implements Comparable<ActionContext> {
         return scoreAction + scorePlayerMod;
     }
 
+    public void resetScore() {
+        scorePlayerMod = 0;
+        scoreAction = 0;
+        critical = Criticalness.NONE;
+        successful = true;
+    }
+
     @Override
     public int compareTo(ActionContext o) {
         if (this == o) return 0;
