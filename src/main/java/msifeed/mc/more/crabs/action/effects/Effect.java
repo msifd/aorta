@@ -2,15 +2,18 @@ package msifeed.mc.more.crabs.action.effects;
 
 import msifeed.mc.more.crabs.combat.FighterInfo;
 
-public abstract class Effect {
-    public abstract String name();
-    public abstract boolean shouldApply(Stage stage, FighterInfo target, FighterInfo other);
-    public abstract void apply(Stage stage, FighterInfo target, FighterInfo other);
-    public abstract boolean equals(Effect other);
-    public abstract Effect clone();
-    public abstract String toString();
+public interface Effect {
+    String name();
+    boolean shouldApply(Stage stage, FighterInfo target, FighterInfo other);
+    void apply(Stage stage, FighterInfo target, FighterInfo other);
 
-    public enum Stage {
+    boolean same(Effect other);
+    boolean stronger(Effect lesser);
+
+    Effect copy();
+    String encode();
+
+    enum Stage {
         PRE_SCORE, SCORE, ACTION
     }
 }

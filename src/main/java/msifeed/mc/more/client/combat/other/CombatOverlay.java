@@ -51,7 +51,7 @@ public enum CombatOverlay {
             lines.add("  Training health: " + com.healthBeforeJoin);
             lines.add("  Puppet: " + com.puppet);
             lines.add("  Knocked out: " + com.knockedOut);
-            lines.add("  Buffs: " + com.buffs.stream().map(Buff::toString).collect(Collectors.joining(", ")));
+            lines.add("  Buffs: " + com.buffs.stream().map(Buff::encode).collect(Collectors.joining(", ")));
             lines.add("  Prev actions: " + String.join(", ", com.prevActions));
             lines.add("  Stage: " + com.phase);
             lines.add("  Offender: " + com.offender);

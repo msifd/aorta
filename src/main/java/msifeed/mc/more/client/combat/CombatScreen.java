@@ -1,17 +1,20 @@
 package msifeed.mc.more.client.combat;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import msifeed.mc.commons.traits.Trait;
 import msifeed.mc.mellow.layout.ListLayout;
 import msifeed.mc.mellow.mc.MellowGuiScreen;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.tabs.TabArea;
 import msifeed.mc.mellow.widgets.window.Window;
 import msifeed.mc.more.crabs.combat.CombatContext;
+import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
 import msifeed.mc.sys.attributes.AttributeUpdateEvent;
 import msifeed.mc.sys.utils.L10n;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 
 public class CombatScreen extends MellowGuiScreen {
@@ -22,6 +25,7 @@ public class CombatScreen extends MellowGuiScreen {
     private final ProgressView progressView;
     private final ModsView modsView;
     private final RollAbilityView rollAbilityView;
+    private final BuffView buffView;
 
     public CombatScreen(EntityLivingBase entity) {
         this.entity = entity;
@@ -29,6 +33,7 @@ public class CombatScreen extends MellowGuiScreen {
         this.progressView = new ProgressView(entity);
         this.modsView = new ModsView(entity);
         this.rollAbilityView = new RollAbilityView(entity);
+        this.buffView = new BuffView(entity);
 
         final Window window = new Window();
         window.setTitle(L10n.fmt("more.gui.combat.title", entity.getCommandSenderName()));
@@ -43,6 +48,11 @@ public class CombatScreen extends MellowGuiScreen {
         tabs.addTab(L10n.tr("more.gui.combat.progress"), progressView);
         tabs.addTab(L10n.tr("more.gui.combat.mods"), modsView);
         tabs.addTab(L10n.tr("more.gui.combat.rolls"), rollAbilityView);
+
+        final EntityPlayer self = Minecraft.getMinecraft().thePlayer;
+        if (CharacterAttribute.has(self, Trait.gm))
+            tabs.addTab("Buffs", buffView);
+
         content.addChild(tabs);
 
         MinecraftForge.EVENT_BUS.register(this);
@@ -52,6 +62,7 @@ public class CombatScreen extends MellowGuiScreen {
         actionsView.refill();
         progressView.refill();
         modsView.refill();
+        buffView.refill();
     }
 
     @Override

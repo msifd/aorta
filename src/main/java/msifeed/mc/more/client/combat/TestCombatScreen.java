@@ -86,7 +86,7 @@ public class TestCombatScreen extends MellowGuiScreen {
                 final int scoreBefore = self.act.scoreAction;
                 e.apply(Effect.Stage.PRE_SCORE, self, null);
                 final int scoreDiff = self.act.scoreAction - scoreBefore;
-                send(player, String.format("  %s -> %d (%+d)", e.toString(), self.act.scoreAction, scoreDiff));
+                send(player, String.format("  %s -> %d (%+d)", e.encode(), self.act.scoreAction, scoreDiff));
             }
         }
 
@@ -95,7 +95,7 @@ public class TestCombatScreen extends MellowGuiScreen {
                 final int scoreBefore = self.act.scoreAction;
                 e.apply(Effect.Stage.SCORE, self, null);
                 final int scoreDiff = self.act.scoreAction - scoreBefore;
-                send(player, String.format("  %s -> %d (%+d)", e.toString(), self.act.scoreAction, scoreDiff));
+                send(player, String.format("  %s -> %d (%+d)", e.encode(), self.act.scoreAction, scoreDiff));
             }
         }
 

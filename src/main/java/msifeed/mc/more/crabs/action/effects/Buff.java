@@ -5,23 +5,19 @@ import msifeed.mc.more.crabs.combat.CombatContext;
 import msifeed.mc.more.crabs.combat.FighterInfo;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static msifeed.mc.more.crabs.action.effects.DynamicEffect.EffectArgs.*;
+import static msifeed.mc.more.crabs.action.effects.DynamicEffect.EffectArg.*;
 
-public final class Buff extends DynamicEffect {
-    private int pause;
-    private int steps;
-    private RepeatMode repeatMode;
-    private Effect effect;
+public final class Buff implements DynamicEffect {
+    public int pause = 0;
+    public int steps = 1;
+    public MergeMode mergeMode = MergeMode.replace;
+    public Effect effect;
 
     @Override
     public String name() {
         return "buff";
-    }
-
-    @Override
-    public String toString() {
-        return name() + ':' + pause + ':' + steps + ':' + repeatMode + ':' + effect.toString();
     }
 
     public boolean shouldApply(Stage stage, FighterInfo target, FighterInfo other) {
@@ -35,7 +31,7 @@ public final class Buff extends DynamicEffect {
     @Override
     public void apply(Stage stage, FighterInfo target, FighterInfo other) {
         if (stage == Stage.ACTION) // From applyEffectsAndResults
-            target.act.buffsToReceive.add((Buff) this.clone());
+            target.act.buffsToReceive.add((Buff) this.copy());
     }
 
     /// Call from buffs - apply effect
@@ -43,6 +39,49 @@ public final class Buff extends DynamicEffect {
         if (active())
             effect.apply(stage, target, other);
         step();
+    }
+
+    @Override
+    public boolean same(Effect other) {
+        return other instanceof Buff && ((Buff) other).effect.same(effect);
+    }
+
+    @Override
+    public boolean stronger(Effect lesser) {
+        return lesser instanceof Buff && ((Buff) lesser).effect.stronger(effect);
+    }
+
+    @Override
+    public Effect copy() {
+        final Buff b = new Buff();
+        b.pause = pause;
+        b.steps = steps;
+        b.mergeMode = mergeMode;
+        b.effect = effect.copy();
+        return b;
+    }
+
+    @Override
+    public String encode() {
+        return name() + ':' + pause + ':' + steps + ':' + mergeMode + ':' + effect.encode();
+    }
+
+    /**
+     * [pause before activation]:[number of time the effect is applied]:[repeat mode]:[effect]
+     */
+    @Override
+    public EffectArg[] args() {
+        return new EffectArg[]{INT, INT, STRING, EFFECT};
+    }
+
+    @Override
+    public DynamicEffect create(Object[] args) {
+        final Buff b = new Buff();
+        b.pause = (int) args[0];
+        b.steps = (int) args[1];
+        b.mergeMode = MergeMode.valueOf(((String) args[2]).toLowerCase());
+        b.effect = ((Effect) args[3]).copy();
+        return b;
     }
 
     private boolean active() {
@@ -64,63 +103,46 @@ public final class Buff extends DynamicEffect {
             pause--;
     }
 
-    @Override
-    public boolean equals(Effect other) {
-        return other instanceof Buff && effect.equals(((Buff) other).effect);
-    }
-
-    @Override
-    public Effect clone() {
-        final Buff b = new Buff();
-        b.pause = pause;
-        b.steps = steps;
-        b.repeatMode = repeatMode;
-        b.effect = effect.clone();
-        return b;
-    }
-
-    /**
-     * [pause before activation]:[number of time the effect is applied]:[repeat mode]:[effect]
-     */
-    @Override
-    public EffectArgs[] args() {
-        return new EffectArgs[]{INT, INT, STRING, EFFECT};
-    }
-
-    @Override
-    public DynamicEffect produce(Object[] args) {
-        final Buff b = new Buff();
-        b.pause = (int) args[0];
-        b.steps = (int) args[1];
-        b.repeatMode = RepeatMode.valueOf(((String) args[2]).toLowerCase());
-        b.effect = ((Effect) args[3]).clone();
-        return b;
-    }
-
-    public static void mergeBuff(List<Buff> current, Buff buff) {
-        final Buff cur = current.stream()
-                .filter(b -> b.effect.equals(buff.effect))
-                .findAny().orElse(null);
-        if (cur != null) {
-            switch (buff.repeatMode) {
-                case extend:
-                    cur.steps += buff.steps;
-                    return;
-                case replace:
-                    cur.pause = buff.pause;
-                    cur.steps = buff.steps;
-                    return;
-            }
-        }
-        // If there are no current buffs with this effect or it have stack mode
-        current.add(buff);
-    }
-
-    private enum RepeatMode {
+    public enum MergeMode {
         extend, replace, stack
     }
 
-    public static class OnRole extends DynamicEffect {
+    public static void mergeBuff(List<Buff> current, Buff buff) {
+        final List<Buff> sameBuffs = current.stream()
+                .filter(buff::same)
+                .collect(Collectors.toList());
+
+        if (sameBuffs.isEmpty()) {
+            current.add(buff);
+            return;
+        }
+
+        switch (buff.mergeMode) {
+            case extend: {
+                final Buff b = sameBuffs.get(0);
+                b.steps = Math.max(b.steps, buff.steps);
+                break;
+            }
+            case replace:
+                final List<Buff> strongerBuffs = current.stream().filter(buff::same).collect(Collectors.toList());
+                if (!strongerBuffs.isEmpty()) {
+                    final Buff b = strongerBuffs.get(0);
+                    b.pause = Math.min(b.pause, buff.pause);
+                    b.steps = buff.steps;
+                    b.effect = buff.effect;
+                } else {
+                    // If no stronger buffs where found, extend same one
+                    final Buff b = sameBuffs.get(0);
+                    b.steps = Math.max(b.steps, buff.steps);
+                }
+                break;
+            case stack:
+                current.add(buff);
+                break;
+        }
+    }
+
+    public static class OnRole implements DynamicEffect {
         private CombatContext.Role role;
         private Effect effect;
 
@@ -141,32 +163,39 @@ public final class Buff extends DynamicEffect {
         }
 
         @Override
-        public boolean equals(Effect other) {
+        public boolean same(Effect other) {
             return other instanceof OnRole
-                    && ((OnRole) other).role == this.role
-                    && ((OnRole) other).effect.equals(this.effect);
+                    && ((OnRole) other).role == role
+                    && ((OnRole) other).effect.same(effect);
         }
 
         @Override
-        public Effect clone() {
+        public boolean stronger(Effect lesser) {
+            return lesser instanceof OnRole
+                    && ((OnRole) lesser).role == role
+                    && ((OnRole) lesser).effect.stronger(effect);
+        }
+
+        @Override
+        public Effect copy() {
             final OnRole e = new OnRole();
             e.role = role;
-            e.effect = effect.clone();
+            e.effect = effect.copy();
             return e;
         }
 
         @Override
-        public String toString() {
-            return name() + ':' + role.toString().toLowerCase() + ':' + effect.toString();
+        public String encode() {
+            return name() + ':' + role.toString().toLowerCase() + ':' + effect.encode();
         }
 
         @Override
-        public EffectArgs[] args() {
-            return new EffectArgs[]{STRING, EFFECT};
+        public EffectArg[] args() {
+            return new EffectArg[]{STRING, EFFECT};
         }
 
         @Override
-        public DynamicEffect produce(Object[] args) {
+        public DynamicEffect create(Object[] args) {
             final OnRole e = new OnRole();
             e.role = CombatContext.Role.valueOf(((String) args[0]).toUpperCase());
             e.effect = (Effect) args[1];
@@ -174,7 +203,7 @@ public final class Buff extends DynamicEffect {
         }
     }
 
-    public static class OnTag extends DynamicEffect {
+    public static class OnTag implements DynamicEffect {
         private ActionTag tag;
         private Effect effect;
 
@@ -195,32 +224,39 @@ public final class Buff extends DynamicEffect {
         }
 
         @Override
-        public boolean equals(Effect other) {
+        public boolean same(Effect other) {
             return other instanceof OnTag
-                    && ((OnTag) other).tag == this.tag
-                    && ((OnTag) other).effect.equals(this.effect);
+                    && ((OnTag) other).tag == tag
+                    && ((OnTag) other).effect.same(effect);
         }
 
         @Override
-        public Effect clone() {
+        public boolean stronger(Effect lesser) {
+            return lesser instanceof OnTag
+                    && ((OnTag) lesser).tag == tag
+                    && ((OnTag) lesser).effect.stronger(effect);
+        }
+
+        @Override
+        public Effect copy() {
             final OnTag e = new OnTag();
             e.tag = tag;
-            e.effect = effect.clone();
+            e.effect = effect.copy();
             return e;
         }
 
         @Override
-        public String toString() {
-            return name() + ':' + tag.toString().toLowerCase() + ':' + effect.toString();
+        public String encode() {
+            return name() + ':' + tag.toString().toLowerCase() + ':' + effect.encode();
         }
 
         @Override
-        public EffectArgs[] args() {
-            return new EffectArgs[]{STRING, EFFECT};
+        public EffectArg[] args() {
+            return new EffectArg[]{STRING, EFFECT};
         }
 
         @Override
-        public DynamicEffect produce(Object[] args) {
+        public DynamicEffect create(Object[] args) {
             final OnTag e = new OnTag();
             e.tag = ActionTag.valueOf(((String) args[0]).toLowerCase());
             e.effect = (Effect) args[1];

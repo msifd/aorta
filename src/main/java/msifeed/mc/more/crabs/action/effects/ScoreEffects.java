@@ -6,10 +6,10 @@ import msifeed.mc.more.crabs.combat.FighterInfo;
 import msifeed.mc.more.crabs.rolls.Dices;
 import net.minecraft.util.MathHelper;
 
-import static msifeed.mc.more.crabs.action.effects.DynamicEffect.EffectArgs.*;
+import static msifeed.mc.more.crabs.action.effects.DynamicEffect.EffectArg.*;
 
 public final class ScoreEffects {
-    public static class Roll3d7m3 extends Effect {
+    public static class Roll3d7m3 implements Effect {
         @Override
         public String name() {
             return "3d7-3";
@@ -28,22 +28,27 @@ public final class ScoreEffects {
         }
 
         @Override
-        public boolean equals(Effect other) {
+        public boolean same(Effect other) {
             return other instanceof Roll3d7m3;
         }
 
         @Override
-        public Effect clone() {
+        public boolean stronger(Effect lesser) {
+            return false;
+        }
+
+        @Override
+        public Effect copy() {
             return new Roll3d7m3();
         }
 
         @Override
-        public String toString() {
+        public String encode() {
             return name();
         }
     }
 
-    public static class ScoreAbility extends DynamicEffect {
+    public static class ScoreAbility implements DynamicEffect {
         private Ability ability;
         private float multiplier;
 
@@ -68,14 +73,19 @@ public final class ScoreEffects {
         }
 
         @Override
-        public boolean equals(Effect other) {
-            return other instanceof ScoreAbility
-                    && ability == ((ScoreAbility) other).ability
-                    && multiplier == ((ScoreAbility) other).multiplier;
+        public boolean same(Effect other) {
+            return other instanceof ScoreAbility;
         }
 
         @Override
-        public Effect clone() {
+        public boolean stronger(Effect lesser) {
+            return lesser instanceof ScoreAbility
+                    && ability == ((ScoreAbility) lesser).ability
+                    && multiplier > ((ScoreAbility) lesser).multiplier;
+        }
+
+        @Override
+        public Effect copy() {
             final ScoreAbility e = new ScoreAbility();
             e.ability = ability;
             e.multiplier = multiplier;
@@ -83,25 +93,25 @@ public final class ScoreEffects {
         }
 
         @Override
-        public EffectArgs[] args() {
-            return new EffectArgs[]{STRING, FLOAT};
+        public String encode() {
+            return name() + ':' + ability + ':' + multiplier;
         }
 
         @Override
-        public DynamicEffect produce(Object[] args) {
+        public EffectArg[] args() {
+            return new EffectArg[]{STRING, FLOAT};
+        }
+
+        @Override
+        public DynamicEffect create(Object[] args) {
             final ScoreAbility e = new ScoreAbility();
             e.ability = Ability.valueOf(((String) args[0]).toUpperCase());
             e.multiplier = (float) args[1];
             return e;
         }
-
-        @Override
-        public String toString() {
-            return name() + ':' + ability + ':' + multiplier;
-        }
     }
 
-    public static class ScoreAdder extends DynamicEffect {
+    public static class ScoreAdder implements DynamicEffect {
         private int value;
 
         @Override
@@ -120,36 +130,41 @@ public final class ScoreEffects {
         }
 
         @Override
-        public boolean equals(Effect other) {
-            return other instanceof ScoreAdder && value == ((ScoreAdder) other).value;
+        public boolean same(Effect other) {
+            return other instanceof ScoreAdder;
         }
 
         @Override
-        public Effect clone() {
+        public boolean stronger(Effect lesser) {
+            return lesser instanceof ScoreAdder && value > ((ScoreAdder) lesser).value;
+        }
+
+        @Override
+        public Effect copy() {
             final ScoreAdder e = new ScoreAdder();
             e.value = value;
             return e;
         }
 
         @Override
-        public EffectArgs[] args() {
-            return new EffectArgs[]{INT};
+        public String encode() {
+            return name() + ':' + value;
         }
 
         @Override
-        public DynamicEffect produce(Object[] args) {
+        public EffectArg[] args() {
+            return new EffectArg[]{INT};
+        }
+
+        @Override
+        public DynamicEffect create(Object[] args) {
             final ScoreAdder e = new ScoreAdder();
             e.value = (int) args[0];
             return e;
         }
-
-        @Override
-        public String toString() {
-            return name() + ':' + value;
-        }
     }
 
-    public static class ScoreMultiplier extends DynamicEffect {
+    public static class ScoreMultiplier implements DynamicEffect {
         private float value;
 
         @Override
@@ -163,41 +178,46 @@ public final class ScoreEffects {
         }
 
         @Override
-        public EffectArgs[] args() {
-            return new EffectArgs[]{FLOAT};
+        public void apply(Stage stage, FighterInfo target, FighterInfo other) {
+            target.act.scoreAction = MathHelper.floor_float(target.act.scoreAction * value);
         }
 
         @Override
-        public boolean equals(Effect other) {
-            return other instanceof ScoreMultiplier && value == ((ScoreMultiplier) other).value;
+        public boolean same(Effect other) {
+            return other instanceof ScoreMultiplier;
         }
 
         @Override
-        public Effect clone() {
+        public boolean stronger(Effect lesser) {
+            return lesser instanceof ScoreMultiplier && value > ((ScoreMultiplier) lesser).value;
+        }
+
+        @Override
+        public Effect copy() {
             final ScoreMultiplier e = new ScoreMultiplier();
             e.value = value;
             return e;
         }
 
         @Override
-        public DynamicEffect produce(Object[] args) {
+        public String encode() {
+            return name() + ':' + value;
+        }
+
+        @Override
+        public EffectArg[] args() {
+            return new EffectArg[]{FLOAT};
+        }
+
+        @Override
+        public DynamicEffect create(Object[] args) {
             final ScoreMultiplier e = new ScoreMultiplier();
             e.value = (float) args[0];
             return e;
         }
-
-        @Override
-        public void apply(Stage stage, FighterInfo target, FighterInfo other) {
-            target.act.scoreAction = MathHelper.floor_float(target.act.scoreAction * value);
-        }
-
-        @Override
-        public String toString() {
-            return name() + ':' + value;
-        }
     }
 
-    public static class MinScore extends DynamicEffect {
+    public static class MinScore implements DynamicEffect {
         private int value;
 
         @Override
@@ -216,36 +236,42 @@ public final class ScoreEffects {
         }
 
         @Override
-        public boolean equals(Effect other) {
-            return other instanceof MinScore && value == ((MinScore) other).value;
+        public boolean same(Effect other) {
+            return other instanceof MinScore;
         }
 
         @Override
-        public Effect clone() {
+        public boolean stronger(Effect lesser) {
+            // Inverted!
+            return lesser instanceof MinScore && value < ((MinScore) lesser).value;
+        }
+
+        @Override
+        public Effect copy() {
             final MinScore e = new MinScore();
             e.value = value;
             return e;
         }
 
         @Override
-        public EffectArgs[] args() {
-            return new EffectArgs[]{INT};
+        public String encode() {
+            return name() + ':' + value;
         }
 
         @Override
-        public DynamicEffect produce(Object[] args) {
+        public EffectArg[] args() {
+            return new EffectArg[]{INT};
+        }
+
+        @Override
+        public DynamicEffect create(Object[] args) {
             final MinScore e = new MinScore();
             e.value = (int) args[0];
             return e;
         }
-
-        @Override
-        public String toString() {
-            return name() + ':' + value;
-        }
     }
 
-    public static class ModAbility extends DynamicEffect {
+    public static class ModAbility implements DynamicEffect {
         private Ability ability;
         private int modifier;
 
@@ -265,14 +291,19 @@ public final class ScoreEffects {
         }
 
         @Override
-        public boolean equals(Effect other) {
-            return other instanceof ModAbility
-                    && ability == ((ModAbility) other).ability
-                    && modifier == ((ModAbility) other).modifier;
+        public boolean same(Effect other) {
+            return other instanceof ModAbility;
         }
 
         @Override
-        public Effect clone() {
+        public boolean stronger(Effect lesser) {
+            return lesser instanceof ModAbility
+                    && ability == ((ModAbility) lesser).ability
+                    && modifier > ((ModAbility) lesser).modifier;
+        }
+
+        @Override
+        public Effect copy() {
             final ModAbility e = new ModAbility();
             e.ability = ability;
             e.modifier = modifier;
@@ -280,21 +311,21 @@ public final class ScoreEffects {
         }
 
         @Override
-        public EffectArgs[] args() {
-            return new EffectArgs[]{STRING, INT};
+        public String encode() {
+            return name() + ':' + ability + ':' + modifier;
         }
 
         @Override
-        public DynamicEffect produce(Object[] args) {
+        public EffectArg[] args() {
+            return new EffectArg[]{STRING, INT};
+        }
+
+        @Override
+        public DynamicEffect create(Object[] args) {
             final ModAbility e = new ModAbility();
             e.ability = Ability.valueOf(((String) args[0]).toUpperCase());
             e.modifier = (int) args[1];
             return e;
-        }
-
-        @Override
-        public String toString() {
-            return name() + ':' + ability + ':' + modifier;
         }
     }
 }

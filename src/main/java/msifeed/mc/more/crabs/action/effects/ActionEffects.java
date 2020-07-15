@@ -5,11 +5,11 @@ import msifeed.mc.more.crabs.combat.FighterInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
 
-import static msifeed.mc.more.crabs.action.effects.DynamicEffect.EffectArgs.FLOAT;
-import static msifeed.mc.more.crabs.action.effects.DynamicEffect.EffectArgs.INT;
+import static msifeed.mc.more.crabs.action.effects.DynamicEffect.EffectArg.FLOAT;
+import static msifeed.mc.more.crabs.action.effects.DynamicEffect.EffectArg.INT;
 
 public final class ActionEffects {
-    public static class Damage extends Effect {
+    public static class Damage implements Effect {
         @Override
         public String name() {
             return "damage";
@@ -27,22 +27,27 @@ public final class ActionEffects {
         }
 
         @Override
-        public boolean equals(Effect other) {
+        public boolean same(Effect other) {
             return other instanceof Damage;
         }
 
         @Override
-        public Effect clone() {
+        public boolean stronger(Effect lesser) {
+            return false;
+        }
+
+        @Override
+        public Effect copy() {
             return new Damage();
         }
 
         @Override
-        public String toString() {
+        public String encode() {
             return name();
         }
     }
 
-    public static class DamageAdder extends DynamicEffect {
+    public static class DamageAdder implements DynamicEffect {
         private int value;
 
         @Override
@@ -66,36 +71,41 @@ public final class ActionEffects {
         }
 
         @Override
-        public boolean equals(Effect other) {
-            return other instanceof DamageAdder && value == ((DamageAdder) other).value;
+        public boolean same(Effect other) {
+            return other instanceof DamageAdder;
         }
 
         @Override
-        public Effect clone() {
+        public boolean stronger(Effect lesser) {
+            return lesser instanceof DamageAdder && value > ((DamageAdder) lesser).value;
+        }
+
+        @Override
+        public Effect copy() {
             final DamageAdder e = new DamageAdder();
             e.value = value;
             return e;
         }
 
         @Override
-        public EffectArgs[] args() {
-            return new EffectArgs[]{INT};
+        public String encode() {
+            return name() + ':' + value;
         }
 
         @Override
-        public DynamicEffect produce(Object[] args) {
+        public EffectArg[] args() {
+            return new EffectArg[]{INT};
+        }
+
+        @Override
+        public DynamicEffect create(Object[] args) {
             final DamageAdder e = new DamageAdder();
             e.value = (int) args[0];
             return e;
         }
-
-        @Override
-        public String toString() {
-            return name() + ':' + value;
-        }
     }
 
-    public static class RawDamageAdder extends DynamicEffect {
+    public static class RawDamageAdder implements DynamicEffect {
         private int value;
 
         @Override
@@ -114,36 +124,41 @@ public final class ActionEffects {
         }
 
         @Override
-        public boolean equals(Effect other) {
-            return other instanceof RawDamageAdder && value == ((RawDamageAdder) other).value;
+        public boolean same(Effect other) {
+            return other instanceof RawDamageAdder;
         }
 
         @Override
-        public Effect clone() {
+        public boolean stronger(Effect lesser) {
+            return lesser instanceof RawDamageAdder && value > ((RawDamageAdder) lesser).value;
+        }
+
+        @Override
+        public Effect copy() {
             final RawDamageAdder e = new RawDamageAdder();
             e.value = value;
             return e;
         }
 
         @Override
-        public EffectArgs[] args() {
-            return new EffectArgs[]{INT};
+        public String encode() {
+            return name() + ':' + value;
         }
 
         @Override
-        public DynamicEffect produce(Object[] args) {
+        public EffectArg[] args() {
+            return new EffectArg[]{INT};
+        }
+
+        @Override
+        public DynamicEffect create(Object[] args) {
             final RawDamageAdder e = new RawDamageAdder();
             e.value = (int) args[0];
             return e;
         }
-
-        @Override
-        public String toString() {
-            return name() + ':' + value;
-        }
     }
 
-    public static class DamageMultiplier extends DynamicEffect {
+    public static class DamageMultiplier implements DynamicEffect {
         private float value;
 
         @Override
@@ -163,36 +178,41 @@ public final class ActionEffects {
         }
 
         @Override
-        public boolean equals(Effect other) {
-            return other instanceof DamageMultiplier && value == ((DamageMultiplier) other).value;
+        public boolean same(Effect other) {
+            return other instanceof DamageMultiplier;
         }
 
         @Override
-        public Effect clone() {
+        public boolean stronger(Effect lesser) {
+            return lesser instanceof DamageMultiplier && value > ((DamageMultiplier) lesser).value;
+        }
+
+        @Override
+        public Effect copy() {
             final DamageMultiplier e = new DamageMultiplier();
             e.value = value;
             return e;
         }
 
         @Override
-        public EffectArgs[] args() {
-            return new EffectArgs[]{FLOAT};
+        public String encode() {
+            return name() + ':' + value;
         }
 
         @Override
-        public DynamicEffect produce(Object[] args) {
+        public EffectArg[] args() {
+            return new EffectArg[]{FLOAT};
+        }
+
+        @Override
+        public DynamicEffect create(Object[] args) {
             final DamageMultiplier e = new DamageMultiplier();
             e.value = (float) args[0];
             return e;
         }
-
-        @Override
-        public String toString() {
-            return name() + ':' + value;
-        }
     }
 
-    public static class OtherDamageAdder extends DynamicEffect {
+    public static class OtherDamageAdder implements DynamicEffect {
         private int value;
 
         @Override
@@ -214,36 +234,41 @@ public final class ActionEffects {
         }
 
         @Override
-        public boolean equals(Effect other) {
-            return other instanceof OtherDamageAdder && value == ((OtherDamageAdder) other).value;
+        public boolean same(Effect other) {
+            return other instanceof OtherDamageAdder;
         }
 
         @Override
-        public Effect clone() {
+        public boolean stronger(Effect lesser) {
+            return lesser instanceof OtherDamageAdder && value > ((OtherDamageAdder) lesser).value;
+        }
+
+        @Override
+        public Effect copy() {
             final OtherDamageAdder e = new OtherDamageAdder();
             e.value = value;
             return e;
         }
 
         @Override
-        public EffectArgs[] args() {
-            return new EffectArgs[]{INT};
+        public String encode() {
+            return name() + ':' + value;
         }
 
         @Override
-        public DynamicEffect produce(Object[] args) {
+        public EffectArg[] args() {
+            return new EffectArg[]{INT};
+        }
+
+        @Override
+        public DynamicEffect create(Object[] args) {
             final OtherDamageAdder e = new OtherDamageAdder();
             e.value = (int) args[0];
             return e;
         }
-
-        @Override
-        public String toString() {
-            return name() + ':' + value;
-        }
     }
 
-    public static class OtherDamageMultiplier extends DynamicEffect {
+    public static class OtherDamageMultiplier implements DynamicEffect {
         private float value;
 
         @Override
@@ -263,36 +288,41 @@ public final class ActionEffects {
         }
 
         @Override
-        public boolean equals(Effect other) {
-            return other instanceof OtherDamageMultiplier && value == ((OtherDamageMultiplier) other).value;
+        public boolean same(Effect other) {
+            return other instanceof OtherDamageMultiplier;
         }
 
         @Override
-        public Effect clone() {
+        public boolean stronger(Effect lesser) {
+            return lesser instanceof OtherDamageMultiplier && value > ((OtherDamageMultiplier) lesser).value;
+        }
+
+        @Override
+        public Effect copy() {
             final OtherDamageMultiplier e = new OtherDamageMultiplier();
             e.value = value;
             return e;
         }
 
         @Override
-        public EffectArgs[] args() {
-            return new EffectArgs[]{FLOAT};
+        public String encode() {
+            return name() + ':' + value;
         }
 
         @Override
-        public DynamicEffect produce(Object[] args) {
+        public EffectArg[] args() {
+            return new EffectArg[]{FLOAT};
+        }
+
+        @Override
+        public DynamicEffect create(Object[] args) {
             final OtherDamageMultiplier e = new OtherDamageMultiplier();
             e.value = (float) args[0];
             return e;
         }
-
-        @Override
-        public String toString() {
-            return name() + ':' + value;
-        }
     }
 
-    public static class Heal extends DynamicEffect {
+    public static class Heal implements DynamicEffect {
         private int value;
 
         @Override
@@ -311,32 +341,37 @@ public final class ActionEffects {
         }
 
         @Override
-        public boolean equals(Effect other) {
-            return other instanceof Heal && value == ((Heal) other).value;
+        public boolean same(Effect other) {
+            return other instanceof Heal;
         }
 
         @Override
-        public Effect clone() {
+        public boolean stronger(Effect lesser) {
+            return lesser instanceof Heal && value > ((Heal) lesser).value;
+        }
+
+        @Override
+        public Effect copy() {
             final Heal e = new Heal();
             e.value = value;
             return e;
         }
 
         @Override
-        public EffectArgs[] args() {
-            return new EffectArgs[]{INT};
+        public String encode() {
+            return name() + ':' + value;
         }
 
         @Override
-        public DynamicEffect produce(Object[] args) {
+        public EffectArg[] args() {
+            return new EffectArg[]{INT};
+        }
+
+        @Override
+        public DynamicEffect create(Object[] args) {
             final Heal e = new Heal();
             e.value = (int) args[0];
             return e;
-        }
-
-        @Override
-        public String toString() {
-            return name() + ':' + value;
         }
     }
 }

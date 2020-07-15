@@ -31,7 +31,7 @@ public final class EffectStringParser {
             throw new RuntimeException("unknown dynamic effect name `" + tokens[0] + "`.");
 
         final DynamicEffect producer = (DynamicEffect) effect;
-        final DynamicEffect.EffectArgs[] argTypes = producer.args();
+        final DynamicEffect.EffectArg[] argTypes = producer.args();
         if (tokens.length - 1 < argTypes.length)
             throw new RuntimeException("required " + argTypes.length + " args, provided " + (tokens.length - 1) + ".");
 
@@ -57,6 +57,6 @@ public final class EffectStringParser {
             }
         }
 
-        return producer.produce(args);
+        return producer.create(args);
     }
 }

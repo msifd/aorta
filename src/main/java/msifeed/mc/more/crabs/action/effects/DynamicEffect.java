@@ -1,11 +1,10 @@
 package msifeed.mc.more.crabs.action.effects;
 
-public abstract class DynamicEffect extends Effect {
-    public abstract EffectArgs[] args();
-    public abstract DynamicEffect produce(Object[] args);
-    public abstract boolean equals(Effect other);
+public interface DynamicEffect extends Effect {
+    EffectArg[] args();
+    DynamicEffect create(Object[] args);
 
-    public enum EffectArgs {
+    enum EffectArg {
         INT, FLOAT, STRING, EFFECT
     }
 }

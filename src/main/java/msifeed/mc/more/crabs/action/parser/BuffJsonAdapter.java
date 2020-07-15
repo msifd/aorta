@@ -9,7 +9,7 @@ import java.lang.reflect.Type;
 public class BuffJsonAdapter implements JsonSerializer<Buff>, JsonDeserializer<Buff> {
     @Override
     public JsonElement serialize(Buff src, Type typeOfSrc, JsonSerializationContext context) {
-        return new JsonPrimitive(src.toString());
+        return new JsonPrimitive(src.encode());
     }
 
     @Override

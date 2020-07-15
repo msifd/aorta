@@ -141,7 +141,7 @@ public class ProgressView extends Widget {
 
         if (!context.buffs.isEmpty()) {
             final String buffs = context.buffs.stream()
-                    .map(Buff::toString)
+                    .map(Buff::encode)
                     .collect(Collectors.joining("\n"));
             addPane("more.gui.combat.tips.buffs", buffs);
         }

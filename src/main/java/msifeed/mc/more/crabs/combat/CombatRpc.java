@@ -2,9 +2,13 @@ package msifeed.mc.more.crabs.combat;
 
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.Bootstrap;
+import msifeed.mc.commons.traits.Trait;
 import msifeed.mc.more.crabs.action.Action;
 import msifeed.mc.more.crabs.action.ActionRegistry;
 import msifeed.mc.more.crabs.action.ActionTag;
+import msifeed.mc.more.crabs.action.effects.Buff;
+import msifeed.mc.more.crabs.action.effects.Effect;
+import msifeed.mc.more.crabs.action.parser.EffectStringParser;
 import msifeed.mc.more.crabs.character.Character;
 import msifeed.mc.more.crabs.meta.MetaInfo;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
@@ -32,6 +36,9 @@ public enum CombatRpc {
     private final static String removeCombat = Bootstrap.MODID + ":combat.remove";
 
     private final static String setPuppet = Bootstrap.MODID + ":combat.set.puppet";
+
+    private final static String addBuff = Bootstrap.MODID + ":combat.buff.add";
+    private final static String removeBuff = Bootstrap.MODID + ":combat.buff.remove";
 
     // // // //
 
@@ -193,5 +200,65 @@ public enum CombatRpc {
         }
 
         CombatAttribute.INSTANCE.update(sender, context -> context.puppet = entityId);
+    }
+
+    // // // //
+
+    public static void addBuff(int entityId, Buff buff) {
+        Rpc.sendToServer(addBuff, entityId, buff.encode());
+    }
+
+    public static void removeBuff(int entityId, int index) {
+        Rpc.sendToServer(removeBuff, entityId, index);
+    }
+
+    @RpcMethod(addBuff)
+    public void onAddBuff(MessageContext ctx, int entityId, String buffLine) {
+        final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
+        if (!CharacterAttribute.has(sender, Trait.gm))
+            throw new RpcMethodException(sender, "you are not GM");
+
+        final EntityLivingBase target = GetUtils.entityLiving(sender, entityId)
+                .orElseThrow(() -> new RpcMethodException(sender, "invalid target entity"));
+
+        final CombatContext com = CombatAttribute.get(target).orElse(null);
+        if (com == null)
+            throw new RpcMethodException(sender, "target is not a combatant");
+
+        final Buff buff;
+        try {
+            final Effect effect = EffectStringParser.parseEffect(buffLine);
+            if (effect instanceof Buff)
+                buff = (Buff) effect;
+            else
+                throw new RpcMethodException(sender, "provided effect is not a buff");
+        } catch (RpcMethodException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RpcMethodException(sender, "can't decode buff");
+        }
+
+        com.buffs.add(buff);
+        CombatAttribute.INSTANCE.set(target, com);
+    }
+
+    @RpcMethod(removeBuff)
+    public void onRemoveBuff(MessageContext ctx, int entityId, int index) {
+        final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
+        if (!CharacterAttribute.has(sender, Trait.gm))
+            throw new RpcMethodException(sender, "you are not GM");
+
+        final EntityLivingBase target = GetUtils.entityLiving(sender, entityId)
+                .orElseThrow(() -> new RpcMethodException(sender, "invalid target entity"));
+
+        final CombatContext com = CombatAttribute.get(target).orElse(null);
+        if (com == null)
+            throw new RpcMethodException(sender, "target is not a combatant");
+
+        if (index < 0 || index >= com.buffs.size())
+            throw new RpcMethodException(sender, "invalid index");
+
+        com.buffs.remove(index);
+        CombatAttribute.INSTANCE.set(target, com);
     }
 }

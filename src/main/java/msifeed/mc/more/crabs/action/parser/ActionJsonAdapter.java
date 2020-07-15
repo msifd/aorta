@@ -19,9 +19,9 @@ public class ActionJsonAdapter implements JsonSerializer<Action>, JsonDeserializ
         raw.tags = src.tags.stream().map(Enum::toString).collect(Collectors.toCollection(ArrayList::new));
 
         if (!src.target.isEmpty())
-            raw.target = src.target.stream().map(Effect::toString).collect(Collectors.toCollection(ArrayList::new));
+            raw.target = src.target.stream().map(Effect::encode).collect(Collectors.toCollection(ArrayList::new));
         if (!src.self.isEmpty())
-            raw.self = src.self.stream().map(Effect::toString).collect(Collectors.toCollection(ArrayList::new));
+            raw.self = src.self.stream().map(Effect::encode).collect(Collectors.toCollection(ArrayList::new));
 
         return context.serialize(raw);
     }

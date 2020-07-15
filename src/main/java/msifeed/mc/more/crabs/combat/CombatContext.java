@@ -80,7 +80,7 @@ public class CombatContext {
 
         final NBTTagList buffsNbt = new NBTTagList();
         for (Buff b : buffs)
-            buffsNbt.appendTag(new NBTTagString(b.toString()));
+            buffsNbt.appendTag(new NBTTagString(b.encode()));
         c.setTag(Tags.buffs, buffsNbt);
 
         final NBTTagList prevActionsNbt = new NBTTagList();
