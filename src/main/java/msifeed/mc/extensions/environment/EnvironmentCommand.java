@@ -1,12 +1,11 @@
 package msifeed.mc.extensions.environment;
 
-import msifeed.mc.sys.cmd.ExtCommand;
+import msifeed.mc.sys.cmd.GmExtCommand;
 import msifeed.mc.sys.config.ConfigManager;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
 
-public class EnvironmentCommand extends ExtCommand {
+public class EnvironmentCommand extends GmExtCommand {
     @Override
     public String getCommandName() {
         return "aenv";
@@ -20,10 +19,6 @@ public class EnvironmentCommand extends ExtCommand {
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
         final EntityPlayer player = (EntityPlayer) sender;
-        if (!isAdmin(sender)) {
-            error(sender, "You are not admin!");
-            return;
-        }
 
         if (args.length < 1) {
             printHelp(sender);
@@ -33,8 +28,6 @@ public class EnvironmentCommand extends ExtCommand {
         final int dim = player.worldObj.provider.dimensionId;
         final WorldEnv worldEnv = EnvironmentManager.getEnv(dim);
         switch (args[0].toLowerCase()) {
-            case "help":
-                break;
             case "rain":
                 final WorldEnv.Rain r = worldEnv.rain;
                 title(sender, "Rain info");
@@ -43,29 +36,33 @@ public class EnvironmentCommand extends ExtCommand {
                 info(sender, "  thunder: %d", r.thunderThreshold);
                 info(sender, "  dice: %d", r.rainfallDice);
                 break;
-            case "snow":
-                worldEnv.snow = !worldEnv.snow;
-                sender.addChatMessage(new ChatComponentText("snow: " + worldEnv.snow));
+            case "add":
+                final int mod = parseInt(sender, args[1]);
+                worldEnv.rain.accumulated += mod;
+                info(sender, "Added %d to the rain acc (current: %d)", mod, worldEnv.rain.accumulated);
                 break;
-            case "melt":
-                worldEnv.meltSnow = !worldEnv.meltSnow;
-                sender.addChatMessage(new ChatComponentText("meltSnow: " + worldEnv.meltSnow));
-                break;
-            case "stacksnow":
-                worldEnv.stackSnow = !worldEnv.stackSnow;
-                sender.addChatMessage(new ChatComponentText("stackSnow: " + worldEnv.stackSnow));
-                break;
+//            case "snow":
+//                worldEnv.snow = !worldEnv.snow;
+//                sender.addChatMessage(new ChatComponentText("snow: " + worldEnv.snow));
+//                break;
+//            case "melt":
+//                worldEnv.meltSnow = !worldEnv.meltSnow;
+//                sender.addChatMessage(new ChatComponentText("meltSnow: " + worldEnv.meltSnow));
+//                break;
+//            case "stacksnow":
+//                worldEnv.stackSnow = !worldEnv.stackSnow;
+//                sender.addChatMessage(new ChatComponentText("stackSnow: " + worldEnv.stackSnow));
+//                break;
         }
-
-        ConfigManager.broadcast();
     }
 
     private void printHelp(ICommandSender sender) {
         title(sender, "AEnv help");
         info(sender, "current dim: %d", sender.getEntityWorld().provider.dimensionId);
         info(sender, "  rain - show rain info");
-        info(sender, "  snow - toggle drop random snow");
-        info(sender, "  melt - toggle melt random snow");
-        info(sender, "  stacksnow - toggle snow stack");
+        info(sender, "  add - modify rain accumulator");
+//        info(sender, "  snow - toggle drop random snow");
+//        info(sender, "  melt - toggle melt random snow");
+//        info(sender, "  stacksnow - toggle snow stack");
     }
 }
