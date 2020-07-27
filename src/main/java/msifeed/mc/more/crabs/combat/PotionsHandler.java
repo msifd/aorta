@@ -70,7 +70,8 @@ public enum PotionsHandler {
             if (rules == null)
                 continue;
             for (PotionRule pr : rules) {
-                if (e.getDuration() <= pr.maxDuration && e.getAmplifier() <= pr.maxAmplifier) {
+                // Subtract 1 from maxAmplifier so in config starting value was 1
+                if (e.getDuration() <= pr.maxDuration && e.getAmplifier() <= pr.maxAmplifier - 1) {
                     for (Buff b : pr.buffs) {
                         convertedBuffs.add(b);
                         toRemove.add(e.getPotionID());
