@@ -23,6 +23,8 @@ public class Character {
     public int estitence = 60;
     public int sin = 0;
 
+    public boolean visibleOnMap = true;
+
     public Character() {
         for (Ability f : Ability.values())
             abilities.put(f, 7);
@@ -40,6 +42,7 @@ public class Character {
         damageThreshold = c.damageThreshold;
         estitence = c.estitence;
         sin = c.sin;
+        visibleOnMap = c.visibleOnMap;
     }
 
     public Set<Trait> traits() {
@@ -79,6 +82,8 @@ public class Character {
         c.setInteger(Tags.estitence, estitence);
         c.setInteger(Tags.sin, sin);
 
+        c.setBoolean(Tags.visibleOnMap, visibleOnMap);
+
         return c;
     }
 
@@ -99,6 +104,11 @@ public class Character {
 
         estitence = c.getInteger(Tags.estitence);
         sin = c.getInteger(Tags.sin);
+
+        if (c.hasKey(Tags.visibleOnMap))
+            visibleOnMap = c.getBoolean(Tags.visibleOnMap);
+        else
+            visibleOnMap = true;
     }
 
     private static class Tags {
@@ -112,5 +122,6 @@ public class Character {
         static final String damageThreshold = "dmgThr";
         static final String estitence = "estitence";
         static final String sin = "sin";
+        static final String visibleOnMap = "visibleOnMap";
     }
 }

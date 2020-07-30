@@ -2,6 +2,7 @@ package msifeed.mc.more.client.status;
 
 import msifeed.mc.mellow.layout.GridLayout;
 import msifeed.mc.mellow.widgets.Widget;
+import msifeed.mc.mellow.widgets.button.Checkbox;
 import msifeed.mc.mellow.widgets.text.Label;
 import msifeed.mc.mellow.widgets.text.TextInput;
 import msifeed.mc.more.crabs.character.Character;
@@ -16,6 +17,7 @@ class OtherView extends Widget {
         this.editable = editable;
 
         setLayout(new GridLayout());
+        getMargin().set(2, 0);
         refill();
     }
 
@@ -48,6 +50,11 @@ class OtherView extends Widget {
         wikiInput.setText(String.valueOf(character.wikiPage));
         wikiInput.setCallback(s -> character.wikiPage = s);
         addChild(wikiInput);
+
+        addChild(new Label(L10n.tr("more.gui.status.other.visibleOnMap")));
+        final Checkbox visibleOnMap = new Checkbox(character.visibleOnMap);
+        visibleOnMap.setCallback(b -> character.visibleOnMap = b);
+        addChild(visibleOnMap);
     }
 
     private void fillNonEditable() {

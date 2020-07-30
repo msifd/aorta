@@ -30,6 +30,12 @@ public class StatusScreen extends MellowGuiScreen {
 
         updateCharacter();
 
+        if (character == null) {
+            content = null;
+            closeGui();
+            return;
+        }
+
         final Window window = new Window();
         window.setTitle(L10n.fmt("more.gui.status.title", character.name.isEmpty() ? entity.getCommandSenderName() : character.name));
         scene.addChild(window);

@@ -14,7 +14,7 @@ buildscript {
 apply plugin: 'forge'
 apply plugin: 'idea'
 
-version = "1.1.1"
+version = "1.2.0"
 group = "msifeed.mc.more"
 archivesBaseName = "more"
 
@@ -26,10 +26,6 @@ minecraft {
     replace "@VERSION@", project.version
 
     srgExtra "PK: com/zaxxer/HikariCP com/zaxxer/HikariCP"
-}
-
-sourceSets {
-    main { output.setResourcesDir(java.outputDir) }
 }
 
 configurations {
@@ -48,6 +44,11 @@ jar {
         from(project.zipTree(dep)){
             exclude 'META-INF', 'META-INF/**'
         }
+    }
+
+    manifest {
+        attributes 'FMLCorePlugin': 'msifeed.mc.core.MoreCorePlugin'
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
     }
 }
 

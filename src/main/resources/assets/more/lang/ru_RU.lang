@@ -83,6 +83,7 @@ more.gui.status.abilities=Хар-ки
 more.gui.status.other=Прочее
 more.gui.status.other.name=Имя
 more.gui.status.other.wiki=Вики
+more.gui.status.other.visibleOnMap=Видимость на карте
 
 
 more.gui.combat=Боевка
