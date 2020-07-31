@@ -1,7 +1,6 @@
 package msifeed.mc.extensions.environment;
 
 import msifeed.mc.sys.cmd.GmExtCommand;
-import msifeed.mc.sys.config.ConfigManager;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 

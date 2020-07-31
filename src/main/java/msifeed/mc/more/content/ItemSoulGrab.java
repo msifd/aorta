@@ -71,7 +71,7 @@ public class ItemSoulGrab extends Item {
             EsitenceHealthModifier.applyModifier(player, playerAfter);
 
         CharacterAttribute.INSTANCE.set(target, targetAfter);
-        Differ.printDiffs((EntityPlayerMP)player, target, targetBefore, targetAfter);
+        Differ.printDiffs((EntityPlayerMP)target, target, targetBefore, targetAfter);
         if (targetBefore.countMaxHealth() != targetAfter.countMaxHealth())
             EsitenceHealthModifier.applyModifier(target, targetAfter);
 
