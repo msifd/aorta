@@ -266,9 +266,9 @@ public enum CombatManager {
         for (FighterInfo defender : defenders)
             cleanupMove(defender);
 
-        CombatAttribute.INSTANCE.set(offender.entity, offender.com);
+        CombatAttribute.INSTANCE.set(offender.entity(), offender.com);
         for (FighterInfo defender : defenders)
-            CombatAttribute.INSTANCE.set(defender.entity, defender.com);
+            CombatAttribute.INSTANCE.set(defender.entity(), defender.com);
     }
 
     private static void applyScores(FighterInfo self) {
@@ -316,7 +316,7 @@ public enum CombatManager {
         self.com.phase = CombatContext.Phase.END;
 
         if (self.act.action.hasAnyTag(ActionTag.apply)) {
-            self.act.buffsToReceive.addAll(PotionsHandler.convertPotionEffects(self.entity));
+            self.act.buffsToReceive.addAll(PotionsHandler.convertPotionEffects(self.entity()));
         }
 
         applyEffects(self.act.action.self, Effect.Stage.ACTION, self, null);
@@ -326,13 +326,13 @@ public enum CombatManager {
         CombatNotifications.soloMoveResult(self);
 
         cleanupMove(self);
-        CombatAttribute.INSTANCE.set(self.entity, self.com);
+        CombatAttribute.INSTANCE.set(self.entity(), self.com);
     }
 
     private static void cleanupMove(FighterInfo self) {
         self.com.removeEndedEffects();
         self.com.softReset();
-        ActionAttribute.remove(self.entity);
+        ActionAttribute.remove(self.entity());
     }
 
     private static void applyBuffs(List<Buff> buffs, Effect.Stage stage, FighterInfo self, FighterInfo other) {
@@ -348,8 +348,10 @@ public enum CombatManager {
     }
 
     private static void applyActionResults(FighterInfo self) {
+        final EntityLivingBase selfEntity = self.entity();
+
         final CombatDefines.DamageSettings damageSettings = More.DEFINES.combat().damageSettings;
-        final int armorAmount = self.chr.armor > 0 ? self.chr.armor : self.entity.getTotalArmorValue();
+        final int armorAmount = self.chr.armor > 0 ? self.chr.armor : selfEntity.getTotalArmorValue();
         final int MIN_DAMAGE = 1;
 
         float totalDamage = 0;
@@ -359,8 +361,8 @@ public enum CombatManager {
                     : damageSettings.applyArmor(da.amount, armorAmount, self.chr.damageThreshold);
         }
 
-        if (self.entity instanceof EntityPlayer)
-            ((EntityPlayer) self.entity).inventory.damageArmor(totalDamage);
+        if (selfEntity instanceof EntityPlayer)
+            ((EntityPlayer) selfEntity).inventory.damageArmor(totalDamage);
 
         if (totalDamage > MIN_DAMAGE)
             self.com.prevActions.clear();
@@ -368,8 +370,8 @@ public enum CombatManager {
         for (Buff buff : self.act.buffsToReceive)
             Buff.mergeBuff(self.com.buffs, buff);
 
-        final boolean deadlyAttack = self.entity.getHealth() - totalDamage <= MIN_DAMAGE;
-        final float currentHealth = self.entity.getHealth();
+        final boolean deadlyAttack = totalDamage > 0 && selfEntity.getHealth() - totalDamage <= MIN_DAMAGE;
+        final float currentHealth = selfEntity.getHealth();
         final float newHealth;
 
         if (deadlyAttack) {
@@ -391,8 +393,11 @@ public enum CombatManager {
         }
 
         if (newHealth != currentHealth) {
-            self.entity.setHealth(newHealth);
-            self.entity.attackEntityFrom(DamageSource.generic, 0); // Visual damage
+            selfEntity.setHealth(newHealth);
+            selfEntity.attackEntityFrom(DamageSource.generic, 0); // Visual damage
+
+            if (newHealth <= 0)
+                selfEntity.onDeath(new DamageSource("CRAbS"));
         }
     }
 

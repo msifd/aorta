@@ -64,9 +64,9 @@ public final class ActionEffects {
         public void apply(Stage stage, FighterInfo target, FighterInfo other) {
             final DamageSource ds = other == null
                     ? new DamageSource("crabs")
-                    : other.entity instanceof EntityPlayer
-                        ? DamageSource.causePlayerDamage((EntityPlayer) other.entity)
-                        : DamageSource.causeMobDamage(other.entity);
+                    : other.entity() instanceof EntityPlayer
+                        ? DamageSource.causePlayerDamage((EntityPlayer) other.entity())
+                        : DamageSource.causeMobDamage(other.entity());
             target.com.damageToReceive.add(new DamageAmount(ds, value));
         }
 
@@ -227,9 +227,9 @@ public final class ActionEffects {
 
         @Override
         public void apply(Stage stage, FighterInfo target, FighterInfo other) {
-            final DamageSource ds = target.entity instanceof EntityPlayer
-                    ? DamageSource.causePlayerDamage((EntityPlayer) target.entity)
-                    : DamageSource.causeMobDamage(target.entity);
+            final DamageSource ds = target.entity() instanceof EntityPlayer
+                    ? DamageSource.causePlayerDamage((EntityPlayer) target.entity())
+                    : DamageSource.causeMobDamage(target.entity());
             other.com.damageToReceive.add(new DamageAmount(ds, value));
         }
 
@@ -337,7 +337,7 @@ public final class ActionEffects {
 
         @Override
         public void apply(Stage stage, FighterInfo target, FighterInfo other) {
-            target.entity.heal(value);
+            target.entity().heal(value);
         }
 
         @Override

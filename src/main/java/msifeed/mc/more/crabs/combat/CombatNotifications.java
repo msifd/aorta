@@ -22,11 +22,11 @@ public final class CombatNotifications {
     }
 
     static void notifyKnockedOut(FighterInfo self) {
-        notifyAroundRelatives(self, L10n.fmt("more.crabs.knocked_out", ChatUtils.getPrettyName(self.entity, self.chr)));
+        notifyAroundRelatives(self, L10n.fmt("more.crabs.knocked_out", ChatUtils.getPrettyName(self.entity(), self.chr)));
     }
 
     static void notifyKilled(FighterInfo self) {
-        notifyAroundRelatives(self, L10n.fmt("more.crabs.killed", ChatUtils.getPrettyName(self.entity, self.chr)));
+        notifyAroundRelatives(self, L10n.fmt("more.crabs.killed", ChatUtils.getPrettyName(self.entity(), self.chr)));
     }
 
     static void actionResult(FighterInfo winner, FighterInfo looser) {
@@ -39,11 +39,11 @@ public final class CombatNotifications {
         // Virgin - FAIL Punch
         final String text = formatAction(info);
 
-        notify(info.entity, text);
+        notify(info.entity(), text);
     }
 
     private static String formatAction(FighterInfo info) {
-        return ChatUtils.getPrettyName(info.entity) + " - " + formatScores(info);
+        return ChatUtils.getPrettyName(info.entity()) + " - " + formatScores(info);
     }
 
     private static String formatScores(FighterInfo info) {
@@ -105,7 +105,8 @@ public final class CombatNotifications {
     }
 
     public static void notifyAroundRelatives(FighterInfo cause, String text) {
-        final Set<EntityLivingBase> relatives = CombatUtils.relativeEntites(cause.entity, cause.com);
+        final EntityLivingBase causeEntity = cause.entity();
+        final Set<EntityLivingBase> relatives = CombatUtils.relativeEntites(causeEntity, cause.com);
 
         long avgX = 0, avgY = 0, avgZ = 0;
         for (EntityLivingBase e : relatives) {
@@ -124,8 +125,8 @@ public final class CombatNotifications {
                 range = dist;
         }
 
-        final NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(cause.entity.dimension, avgX, avgY, avgZ, range);
+        final NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(causeEntity.dimension, avgX, avgY, avgZ, range);
         SpeechatRpc.sendRaw(point, MiscFormatter.formatCombat(text));
-        ExternalLogs.logEntity(cause.entity, "combat", text);
+        ExternalLogs.logEntity(causeEntity, "combat", text);
     }
 }
