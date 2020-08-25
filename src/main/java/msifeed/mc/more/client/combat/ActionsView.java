@@ -14,6 +14,8 @@ import msifeed.mc.more.crabs.combat.CombatRpc;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
 import msifeed.mc.more.crabs.utils.GetUtils;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.EnumAction;
+import net.minecraft.item.ItemStack;
 
 import java.util.HashMap;
 
@@ -69,6 +71,7 @@ public class ActionsView extends Widget {
                     .filter(action -> defence
                             ? action.isValidDefencive(incomingAttackType)
                             : action.isOffencive())
+                    .filter(this::actionSelfCheck)
                     .sorted(ActionHeader::compareTo)
                     .forEach(action -> {
                         final ButtonMultiLabel btn = new ButtonMultiLabel(action.getTitle());
@@ -81,6 +84,17 @@ public class ActionsView extends Widget {
                         scroll.addChild(btn);
                     });
         });
+    }
+
+    private boolean actionSelfCheck(ActionHeader action) {
+        if (action.requiresNoRoll() && action.hasAnyTag(ActionTag.apply)) {
+            // Solo apply actions requires eatable or drinkable item in hand
+            final ItemStack held = entity.getHeldItem();
+            if (held == null || !(held.getItemUseAction() == EnumAction.eat || held.getItemUseAction() == EnumAction.drink))
+                return false;
+        }
+
+        return true;
     }
 
     private void doAction(ActionHeader action) {

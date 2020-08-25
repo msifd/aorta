@@ -21,10 +21,6 @@ public class ActionContext implements Comparable<ActionContext> {
     public Criticalness critical = Criticalness.NONE;
     public boolean successful = true;
 
-    public ActionContext(Action action) {
-        this.action = action;
-    }
-
     public int score() {
         return scoreAction + scorePlayerMod;
     }

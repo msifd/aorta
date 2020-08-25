@@ -11,6 +11,8 @@ import msifeed.mc.more.crabs.utils.GetUtils;
 import msifeed.mc.sys.config.ConfigBuilder;
 import msifeed.mc.sys.config.JsonConfig;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -20,7 +22,8 @@ import java.util.*;
 public enum PotionsHandler {
     INSTANCE;
 
-    private TypeToken<HashMap<Integer, ArrayList<PotionRule>>> potionRulesType = new TypeToken<HashMap<Integer, ArrayList<PotionRule>>>() {};
+    private TypeToken<HashMap<Integer, ArrayList<PotionRule>>> potionRulesType = new TypeToken<HashMap<Integer, ArrayList<PotionRule>>>() {
+    };
     private JsonConfig<HashMap<Integer, ArrayList<PotionRule>>> rulesConfig = ConfigBuilder.of(potionRulesType, "potion_rules.json")
             .addAdapter(Buff.class, new BuffJsonAdapter())
             .create();
@@ -51,12 +54,12 @@ public enum PotionsHandler {
         if (!offenceActionHasApply)
             return;
 
-        final ActionContext act = ActionAttribute.require(entity);
-        final List<Buff> buffs = convertPotionEffects(entity);
-        act.buffsToReceive.addAll(buffs);
+        final ActionContext act = ActionAttribute.get(entity).orElse(new ActionContext());
+        act.buffsToReceive.addAll(convertEntityEffects(entity));
+        ActionAttribute.INSTANCE.set(entity, act);
     }
 
-    public static List<Buff> convertPotionEffects(EntityLivingBase entity) {
+    public static List<Buff> convertEntityEffects(EntityLivingBase entity) {
         final Collection<PotionEffect> effects = entity.getActivePotionEffects();
         if (effects.isEmpty())
             return Collections.emptyList();
@@ -83,6 +86,30 @@ public enum PotionsHandler {
 
         for (int id : toRemove)
             entity.removePotionEffect(id);
+
+        return convertedBuffs;
+    }
+
+    public static List<Buff> convertItemStack(EntityLivingBase entity, ItemStack stack) {
+        final List<PotionEffect> effects = Items.potionitem.getEffects(stack);
+        if (effects == null || effects.isEmpty())
+            return Collections.emptyList();
+
+        final HashMap<Integer, ArrayList<PotionRule>> ruleLists = INSTANCE.rulesConfig.get();
+        final List<Buff> convertedBuffs = new ArrayList<>();
+
+        for (PotionEffect e : effects) {
+            final ArrayList<PotionRule> rules = ruleLists.get(e.getPotionID());
+            if (rules == null)
+                continue;
+            for (PotionRule pr : rules) {
+                // Subtract 1 from maxAmplifier so in config starting value was 1
+                if (e.getDuration() <= pr.maxDuration && e.getAmplifier() <= pr.maxAmplifier - 1) {
+                    convertedBuffs.addAll(pr.buffs);
+                    break;
+                }
+            }
+        }
 
         return convertedBuffs;
     }

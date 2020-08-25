@@ -18,10 +18,12 @@ import msifeed.mc.sys.attributes.MissingRequiredAttributeException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +78,10 @@ public enum CombatManager {
 
     private static void updateAction(EntityLivingBase self, Action action) {
         CombatAttribute.INSTANCE.update(self, com -> com.action = action);
-        ActionAttribute.INSTANCE.set(self, new ActionContext(action));
+
+        final ActionContext act = ActionAttribute.get(self).orElse(new ActionContext());
+        act.action = action;
+        ActionAttribute.INSTANCE.set(self, act);
     }
 
     public void endAction(EntityLivingBase self, CombatContext com) {
@@ -316,7 +321,19 @@ public enum CombatManager {
         self.com.phase = CombatContext.Phase.END;
 
         if (self.act.action.hasAnyTag(ActionTag.apply)) {
-            self.act.buffsToReceive.addAll(PotionsHandler.convertPotionEffects(self.entity()));
+            final EntityLivingBase entity = self.entity();
+            final ItemStack heldItem = entity.getHeldItem();
+            if (heldItem != null && heldItem.stackSize > 0) {
+                self.act.buffsToReceive.addAll(PotionsHandler.convertItemStack(self.entity(), heldItem));
+                heldItem.stackSize--;
+
+                if (heldItem.stackSize == 0 && entity instanceof EntityPlayer) {
+                    final EntityPlayer player = ((EntityPlayer) entity);
+                    player.inventory.mainInventory[player.inventory.currentItem] = null;
+                    player.inventory.markDirty();
+                    MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(player, heldItem));
+                }
+            }
         }
 
         applyEffects(self.act.action.self, Effect.Stage.ACTION, self, null);

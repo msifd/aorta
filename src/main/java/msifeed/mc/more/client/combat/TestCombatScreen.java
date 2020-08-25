@@ -70,7 +70,7 @@ public class TestCombatScreen extends MellowGuiScreen {
             com.role = action.isOffencive() ? CombatContext.Role.OFFENCE : CombatContext.Role.DEFENCE;
             com.action = action;
         });
-        ActionAttribute.INSTANCE.set(player, new ActionContext(action));
+        ActionAttribute.INSTANCE.update(player, act -> act.action = action);
         final FighterInfo self = new FighterInfo(player);
 
         // Apply scores
