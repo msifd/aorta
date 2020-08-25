@@ -18,8 +18,7 @@ public class DisableSomeCraftingTables {
             return;
 
         final Block block = event.world.getBlock(event.x, event.y, event.z);
-        if (block instanceof BlockEnchantmentTable ||
-            block instanceof BlockBed)
+        if (block instanceof BlockBed)
             event.setCanceled(true);
     }
 }
