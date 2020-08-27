@@ -98,7 +98,7 @@ more.gui.combat.leave=Покинуть бой
 more.gui.combat.control=Контролировать
 more.gui.combat.end_control=Прекратить контроль
 more.gui.combat.add_combat=Вкл. боевку
-more.gui.combat.rem_combat=Выкл. боевку
+more.gui.combat.rem_combat=Очистить энтитю
 more.gui.combat.end_attack=Завершить атаку
 more.gui.combat.reset=Сброс хода
 
