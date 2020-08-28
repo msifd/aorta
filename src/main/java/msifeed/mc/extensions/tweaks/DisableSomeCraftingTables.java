@@ -26,7 +26,7 @@ public class DisableSomeCraftingTables {
 
     @SubscribeEvent
     public void onAnvilUpdate(AnvilUpdateEvent event) {
-        if (event.left.getItem() instanceof ItemEnchantedBook || event.right.getItem() instanceof ItemEnchantedBook)
+        if (event.left.getItem() instanceof ItemEnchantedBook && event.right.getItem() instanceof ItemEnchantedBook)
             event.setCanceled(true);
     }
 }
