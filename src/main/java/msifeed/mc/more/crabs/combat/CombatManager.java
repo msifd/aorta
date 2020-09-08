@@ -287,8 +287,10 @@ public enum CombatManager {
             self.act.successful = false;
 
         applyBuffs(self.com.buffs, Effect.Stage.PRE_SCORE, self, null);
+        applyEffects(self.passiveEffects(), Effect.Stage.PRE_SCORE, self, null);
         applyEffects(self.act.action.self, Effect.Stage.SCORE, self, null);
         applyBuffs(self.com.buffs, Effect.Stage.SCORE, self, null);
+        applyEffects(self.passiveEffects(), Effect.Stage.SCORE, self, null);
     }
 
     private static void applyEffectsAndResults(FighterInfo winner, FighterInfo looser) {
@@ -297,6 +299,8 @@ public enum CombatManager {
 
         applyBuffs(winner.com.buffs, Effect.Stage.ACTION, winner, looser);
         applyBuffs(looser.com.buffs, Effect.Stage.ACTION, looser, winner);
+        applyEffects(winner.passiveEffects(), Effect.Stage.ACTION, winner, looser);
+        applyEffects(looser.passiveEffects(), Effect.Stage.ACTION, looser, winner);
 
         if (winner.act.action.isOffencive() && !winner.act.action.requiresNoRoll()) {
             final Combo.ComboLookup combo = Combo.find(ActionRegistry.getCombos(), winner.com.prevActions, winner.act.action.id);
@@ -338,6 +342,7 @@ public enum CombatManager {
 
         applyEffects(self.act.action.self, Effect.Stage.ACTION, self, null);
         applyBuffs(self.com.buffs, Effect.Stage.ACTION, self, null);
+        applyEffects(self.passiveEffects(), Effect.Stage.ACTION, self, null);
         applyActionResults(self);
 
         CombatNotifications.soloMoveResult(self);

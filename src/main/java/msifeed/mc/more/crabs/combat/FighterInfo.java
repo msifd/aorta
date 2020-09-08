@@ -1,6 +1,7 @@
 package msifeed.mc.more.crabs.combat;
 
 import msifeed.mc.more.crabs.action.Action;
+import msifeed.mc.more.crabs.action.effects.Effect;
 import msifeed.mc.more.crabs.character.Character;
 import msifeed.mc.more.crabs.rolls.Modifiers;
 import msifeed.mc.more.crabs.utils.ActionAttribute;
@@ -10,6 +11,7 @@ import msifeed.mc.more.crabs.utils.MetaAttribute;
 import net.minecraft.entity.EntityLivingBase;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 public class FighterInfo {
     public final WeakReference<EntityLivingBase> weakEntity;
@@ -29,5 +31,9 @@ public class FighterInfo {
 
     public EntityLivingBase entity() {
         return this.weakEntity.get();
+    }
+
+    public List<Effect> passiveEffects() {
+        return PotionsHandler.convertPassiveEffects(entity());
     }
 }

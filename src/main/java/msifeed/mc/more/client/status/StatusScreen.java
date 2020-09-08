@@ -59,7 +59,7 @@ public class StatusScreen extends MellowGuiScreen {
         content.clearChildren();
 
         final TabArea tabs = new TabArea();
-        final ParamsView paramsView = new ParamsView(character, editable);
+        final ParamsView paramsView = new ParamsView(entity, character, editable);
         final IllnessView illnessView = new IllnessView(character, editable, isGm);
         final EditAbilitiesView abilitiesView = new EditAbilitiesView(character);
         final OtherView otherView = new OtherView(character, editable);

@@ -13,8 +13,10 @@ import msifeed.mc.mellow.widgets.text.WordwrapLabel;
 import msifeed.mc.more.crabs.action.ActionHeader;
 import msifeed.mc.more.crabs.action.ActionRegistry;
 import msifeed.mc.more.crabs.action.effects.Buff;
+import msifeed.mc.more.crabs.action.effects.Effect;
 import msifeed.mc.more.crabs.combat.CombatContext;
 import msifeed.mc.more.crabs.combat.CombatRpc;
+import msifeed.mc.more.crabs.combat.PotionsHandler;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
 import msifeed.mc.more.crabs.utils.GetUtils;
@@ -24,9 +26,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ProgressView extends Widget {
     private final EntityLivingBase entity;
@@ -68,7 +72,7 @@ public class ProgressView extends Widget {
             case NONE:
                 addButton("more.gui.combat.join", () -> CombatRpc.join(entity.getEntityId()));
                 addButton("more.gui.combat.training", () -> CombatRpc.training(entity.getEntityId()));
-                break;
+                return; // Stop here
             case IDLE:
                 if (context.action == null)
                     addPane("more.gui.combat.tips.offence_action");
@@ -86,10 +90,10 @@ public class ProgressView extends Widget {
                 addPane("more.gui.combat.tips.damage_target");
                 addPane("more.gui.combat.tips.defenders",
                         context.defenders.stream()
-                            .map(id -> GetUtils.entityLiving(entity, id).orElse(null))
-                            .filter(Objects::nonNull)
-                            .map(ChatUtils::getPrettyName)
-                            .collect(Collectors.joining("\n"))
+                                .map(id -> GetUtils.entityLiving(entity, id).orElse(null))
+                                .filter(Objects::nonNull)
+                                .map(ChatUtils::getPrettyName)
+                                .collect(Collectors.joining("\n"))
                 );
 
                 addButton("more.gui.combat.end_attack", () -> CombatRpc.endAttack(entity.getEntityId()));
@@ -139,12 +143,13 @@ public class ProgressView extends Widget {
                 break;
         }
 
-        if (!context.buffs.isEmpty()) {
-            final String buffs = context.buffs.stream()
-                    .map(Buff::encode)
-                    .collect(Collectors.joining("\n"));
-            addPane("more.gui.combat.tips.buffs", buffs);
-        }
+        final List<Effect> passiveBuffs = PotionsHandler.convertPassiveEffects(entity);
+        final String buffList = Stream.concat(
+                    context.buffs.stream().map(ProgressView::formatBuff),
+                    passiveBuffs.stream().map(ProgressView::formatPassiveBuff))
+                .collect(Collectors.joining("\n"));
+        if (!buffList.isEmpty())
+            addPane("more.gui.combat.tips.buffs", buffList);
 
         if (!context.prevActions.isEmpty()) {
             final String actions = context.prevActions.stream()
@@ -189,6 +194,15 @@ public class ProgressView extends Widget {
 
     private void addPane(String fmtKey, Object... args) {
         scroll.addChild(new Pane(L10n.fmt(fmtKey, args), 140));
+    }
+
+    private static String formatBuff(Buff b) {
+        final int counter = b.pause > 0 ? -b.pause : b.steps;
+        return String.format(" %2d - %s", counter, b.effect.encode());
+    }
+
+    private static String formatPassiveBuff(Effect e) {
+        return " ** - " + e.encode();
     }
 
     private static class Pane extends Widget {
