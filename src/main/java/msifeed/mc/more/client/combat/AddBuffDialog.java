@@ -36,12 +36,14 @@ class AddBuffDialog extends Window {
         final TextInput pauseInput = new TextInput();
         pauseInput.setText(String.valueOf(buff.pause));
         pauseInput.setFilter(TextInput::isUnsignedInt);
+        pauseInput.setCallback(s -> buff.pause = Integer.parseInt(s));
         content.addChild(pauseInput);
 
         content.addChild(new Label("Steps"));
         final TextInput stepsInput = new TextInput();
         stepsInput.setText(String.valueOf(buff.steps));
         stepsInput.setFilter(TextInput::isUnsignedInt);
+        stepsInput.setCallback(s -> buff.steps = Integer.parseInt(s));
         content.addChild(stepsInput);
 
         content.addChild(new Label("Merge"));
