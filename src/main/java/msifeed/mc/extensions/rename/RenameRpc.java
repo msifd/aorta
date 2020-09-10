@@ -3,7 +3,6 @@ package msifeed.mc.extensions.rename;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.Bootstrap;
 import msifeed.mc.more.More;
-import msifeed.mc.sys.rpc.Rpc;
 import msifeed.mc.sys.rpc.RpcMethod;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -23,7 +22,7 @@ public enum RenameRpc {
     private static final String openRenameGui = Bootstrap.MODID + ":rename.gui";
 
     public static void preInit() {
-        Rpc.register(INSTANCE);
+        More.RPC.register(INSTANCE);
     }
 
     public static void rename(String title, List<String> desc) {
@@ -36,7 +35,7 @@ public enum RenameRpc {
             descNbt.appendTag(new NBTTagString(RenameProvider.fromAmpersandFormatting("\u00A7r" + l)));
         nbt.setTag("d", descNbt);
 
-        Rpc.sendToServer(rename, nbt);
+        More.RPC.sendToServer(rename, nbt);
     }
 
     @RpcMethod(rename)
@@ -55,7 +54,7 @@ public enum RenameRpc {
     }
 
     public static void clear() {
-        Rpc.sendToServer(clear);
+        More.RPC.sendToServer(clear);
     }
 
     @RpcMethod(clear)
@@ -72,7 +71,7 @@ public enum RenameRpc {
 
     public static void setValue(String key, String value) {
         if (!key.isEmpty())
-            Rpc.sendToServer(setValue, key, value == null ? "[del]" : value);
+            More.RPC.sendToServer(setValue, key, value == null ? "[del]" : value);
     }
 
     @RpcMethod(setValue)
@@ -88,7 +87,7 @@ public enum RenameRpc {
     }
 
     public static void openRenameGui(EntityPlayerMP player) {
-        Rpc.sendTo(openRenameGui, player);
+        More.RPC.sendTo(player, openRenameGui);
     }
 
     @RpcMethod(openRenameGui)

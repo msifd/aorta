@@ -7,7 +7,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import msifeed.mc.Bootstrap;
 import msifeed.mc.extensions.locks.items.*;
 import msifeed.mc.genesis.GenesisCreativeTab;
-import msifeed.mc.sys.rpc.Rpc;
+import msifeed.mc.more.More;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
@@ -22,7 +22,7 @@ public class Locks {
 
     public void preInit() {
         MinecraftForge.EVENT_BUS.register(this);
-        Rpc.register(rpcHandler);
+        More.RPC.register(rpcHandler);
     }
 
     public void init() {

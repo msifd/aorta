@@ -3,6 +3,7 @@ package msifeed.mc.more.crabs.combat;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.Bootstrap;
 import msifeed.mc.commons.traits.Trait;
+import msifeed.mc.more.More;
 import msifeed.mc.more.crabs.action.Action;
 import msifeed.mc.more.crabs.action.ActionRegistry;
 import msifeed.mc.more.crabs.action.ActionTag;
@@ -15,7 +16,6 @@ import msifeed.mc.more.crabs.utils.CharacterAttribute;
 import msifeed.mc.more.crabs.utils.CombatAttribute;
 import msifeed.mc.more.crabs.utils.GetUtils;
 import msifeed.mc.more.crabs.utils.MetaAttribute;
-import msifeed.mc.sys.rpc.Rpc;
 import msifeed.mc.sys.rpc.RpcMethod;
 import msifeed.mc.sys.rpc.RpcMethodException;
 import net.minecraft.entity.EntityLivingBase;
@@ -43,7 +43,7 @@ public enum CombatRpc {
     // // // //
 
     public static void doAction(int entityId, String actionId) {
-        Rpc.sendToServer(doAction, entityId, actionId);
+        More.RPC.sendToServer(doAction, entityId, actionId);
     }
 
     @RpcMethod(doAction)
@@ -66,7 +66,7 @@ public enum CombatRpc {
     }
 
     public static void endAttack(int entityId) {
-        Rpc.sendToServer(endAttack, entityId);
+        More.RPC.sendToServer(endAttack, entityId);
     }
 
     @RpcMethod(endAttack)
@@ -87,10 +87,10 @@ public enum CombatRpc {
     // // // //
 
     public static void join(int entityId) {
-        Rpc.sendToServer(join, entityId, false);
+        More.RPC.sendToServer(join, entityId, false);
     }
     public static void training(int entityId) {
-        Rpc.sendToServer(join, entityId, true);
+        More.RPC.sendToServer(join, entityId, true);
     }
 
     @RpcMethod(join)
@@ -111,7 +111,7 @@ public enum CombatRpc {
     }
 
     public static void leave(int entityId) {
-        Rpc.sendToServer(leave, entityId);
+        More.RPC.sendToServer(leave, entityId);
     }
 
     @RpcMethod(leave)
@@ -132,7 +132,7 @@ public enum CombatRpc {
     }
 
     public static void reset(int entityId) {
-        Rpc.sendToServer(reset, entityId);
+        More.RPC.sendToServer(reset, entityId);
     }
 
     @RpcMethod(reset)
@@ -150,11 +150,11 @@ public enum CombatRpc {
     // // // //
 
     public static void addCombatToEntity(int entityId) {
-        Rpc.sendToServer(addCombat, entityId);
+        More.RPC.sendToServer(addCombat, entityId);
     }
 
     public static void removeCombatFromEntity(int entityId) {
-        Rpc.sendToServer(removeCombat, entityId);
+        More.RPC.sendToServer(removeCombat, entityId);
     }
 
     @RpcMethod(addCombat)
@@ -184,7 +184,7 @@ public enum CombatRpc {
     // // // //
 
     public static void setPuppet(int entityId) {
-        Rpc.sendToServer(setPuppet, entityId);
+        More.RPC.sendToServer(setPuppet, entityId);
     }
 
     @RpcMethod(setPuppet)
@@ -205,11 +205,11 @@ public enum CombatRpc {
     // // // //
 
     public static void addBuff(int entityId, Buff buff) {
-        Rpc.sendToServer(addBuff, entityId, buff.encode());
+        More.RPC.sendToServer(addBuff, entityId, buff.encode());
     }
 
     public static void removeBuff(int entityId, int index) {
-        Rpc.sendToServer(removeBuff, entityId, index);
+        More.RPC.sendToServer(removeBuff, entityId, index);
     }
 
     @RpcMethod(addBuff)

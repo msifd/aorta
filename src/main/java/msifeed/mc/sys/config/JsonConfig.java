@@ -11,10 +11,10 @@ import java.lang.reflect.Constructor;
 public class JsonConfig<T> {
     private static final Logger LOGGER = LogManager.getLogger("Aorta.Config");
 
-    private TypeToken<T> type;
-    private String filename;
+    private final TypeToken<T> type;
+    private final String filename;
     private final Gson gson;
-    private boolean sync;
+    private final boolean sync;
 
     private T value;
 
@@ -59,33 +59,28 @@ public class JsonConfig<T> {
         }
     }
 
-    void reload() {
-        read();
-        if (value == null)
-            value = getDefaultConfig();
-        write();
+    void load() {
+        value = read();
     }
 
     void save() {
-        if (value == null)
-            value = getDefaultConfig();
-        write();
+        write(value != null ? value : getDefaultConfig());
     }
 
-    private void read() {
+    public T read() {
         final File filepath = ConfigManager.getConfigFile(filename);
         if (!filepath.exists())
-            return;
+            return getDefaultConfig();
 
         try {
-            value = gson.fromJson(new FileReader(filepath), type.getType());
+            return gson.fromJson(new FileReader(filepath), type.getType());
         } catch (IOException e) {
             LOGGER.error("Error while reading '{}' config: {}", filename, e.getMessage());
             throw new RuntimeException("Failed to read config file: '" + filename  + "'");
         }
     }
 
-    private void write() {
+    private void write(T value) {
         try (Writer writer = new FileWriter(ConfigManager.getConfigFile(filename))) {
             gson.toJson(value, writer);
         } catch (IOException e) {

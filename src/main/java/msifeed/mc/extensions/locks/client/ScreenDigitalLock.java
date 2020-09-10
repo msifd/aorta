@@ -8,7 +8,7 @@ import msifeed.mc.mellow.utils.SizePolicy;
 import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
 import msifeed.mc.mellow.widgets.window.Window;
-import msifeed.mc.sys.rpc.Rpc;
+import msifeed.mc.more.More;
 import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.input.Keyboard;
 
@@ -127,7 +127,7 @@ public class ScreenDigitalLock extends MellowGuiScreen {
                 break;
             case RESET_INPUT:
                 final TileEntity te = lock.getTileEntity();
-                Rpc.sendToServer(LocksRpc.resetDigital, te.xCoord, te.yCoord, te.zCoord, input);
+                More.RPC.sendToServer(LocksRpc.resetDigital, te.xCoord, te.yCoord, te.zCoord, input);
                 lock.setSecret(input); // Update client side early
                 clear();
                 break;
@@ -143,7 +143,7 @@ public class ScreenDigitalLock extends MellowGuiScreen {
     private void unlock() {
         if (lock.canUnlockWith(input)) {
             final TileEntity te = lock.getTileEntity();
-            Rpc.sendToServer(LocksRpc.toggleDigital, te.xCoord, te.yCoord, te.zCoord, input);
+            More.RPC.sendToServer(LocksRpc.toggleDigital, te.xCoord, te.yCoord, te.zCoord, input);
             closeGui();
         }
     }

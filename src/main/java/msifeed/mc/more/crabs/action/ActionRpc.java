@@ -3,7 +3,7 @@ package msifeed.mc.more.crabs.action;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.Bootstrap;
-import msifeed.mc.sys.rpc.Rpc;
+import msifeed.mc.more.More;
 import msifeed.mc.sys.rpc.RpcMethod;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,11 +19,11 @@ public enum ActionRpc {
     private static final String actionsUpdate = Bootstrap.MODID + ":actions.upd";
     public static void broadcastToAll(Collection<Action> actions) {
         if (serverStarted())
-            Rpc.sendToAll(actionsUpdate, wrapHeaders(actions));
+            More.RPC.sendToAll(actionsUpdate, wrapHeaders(actions));
     }
 
     public static void broadcastTo(EntityPlayerMP player, Collection<Action> actions) {
-        Rpc.sendTo(actionsUpdate, player, wrapHeaders(actions));
+        More.RPC.sendTo(player, actionsUpdate, wrapHeaders(actions));
     }
 
     @RpcMethod(actionsUpdate)

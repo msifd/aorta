@@ -16,7 +16,6 @@ import msifeed.mc.more.crabs.utils.Differ;
 import msifeed.mc.more.crabs.utils.GetUtils;
 import msifeed.mc.more.crabs.utils.MetaAttribute;
 import msifeed.mc.sys.attributes.MissingRequiredAttributeException;
-import msifeed.mc.sys.rpc.Rpc;
 import msifeed.mc.sys.rpc.RpcMethod;
 import msifeed.mc.sys.rpc.RpcMethodException;
 import msifeed.mc.sys.utils.ChatUtils;
@@ -36,11 +35,11 @@ public enum CharRpc {
     private static final String rollAbility = Bootstrap.MODID + ":char.roll";
 
     public static void updateChar(int entityId, Character character) {
-        Rpc.sendToServer(updateChar, entityId, character.toNBT());
+        More.RPC.sendToServer(updateChar, entityId, character.toNBT());
     }
 
     public static void clearEntity(int entityId) {
-        Rpc.sendToServer(clearEntity, entityId);
+        More.RPC.sendToServer(clearEntity, entityId);
     }
 
     @RpcMethod(updateChar)
@@ -69,7 +68,7 @@ public enum CharRpc {
             if (target instanceof EntityPlayer) {
                 if (!before.name.equals(after.name)) {
                     ((EntityPlayer) target).refreshDisplayName();
-                    Rpc.sendToAll(refreshName, entityId);
+                    More.RPC.sendToAll(refreshName, entityId);
                 }
 
                 if (before.estitence != after.estitence) {
@@ -104,7 +103,7 @@ public enum CharRpc {
     }
 
     public static void rollAbility(int entityId, Ability ability) {
-        Rpc.sendToServer(rollAbility, entityId, ability.ordinal());
+        More.RPC.sendToServer(rollAbility, entityId, ability.ordinal());
     }
 
     @RpcMethod(rollAbility)

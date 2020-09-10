@@ -7,7 +7,7 @@ import msifeed.mc.mellow.widgets.Widget;
 import msifeed.mc.mellow.widgets.button.ButtonLabel;
 import msifeed.mc.mellow.widgets.text.TextInput;
 import msifeed.mc.mellow.widgets.window.Window;
-import msifeed.mc.sys.rpc.Rpc;
+import msifeed.mc.more.More;
 import net.minecraft.tileentity.TileEntity;
 
 public class ScreenSkeletalKey extends MellowGuiScreen {
@@ -49,6 +49,6 @@ public class ScreenSkeletalKey extends MellowGuiScreen {
 
     private void sendOverrideRequest() {
         final TileEntity te = lock.getTileEntity();
-        Rpc.sendToServer(LocksRpc.gmOverrideLock, te.xCoord, te.yCoord, te.zCoord, lock.isLocked(), lock.getDifficulty());
+        More.RPC.sendToServer(LocksRpc.gmOverrideLock, te.xCoord, te.yCoord, te.zCoord, lock.isLocked(), lock.getDifficulty());
     }
 }

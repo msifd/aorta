@@ -3,7 +3,7 @@ package msifeed.mc.extensions.chat;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.Bootstrap;
-import msifeed.mc.sys.rpc.Rpc;
+import msifeed.mc.more.More;
 import msifeed.mc.sys.rpc.RpcMethod;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -17,7 +17,7 @@ public final class SpeechatRpc {
 
     public static void sendSpeech(EntityPlayerMP sender, int range, IChatComponent cc) {
         final NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(sender.dimension, sender.posX, sender.posY, sender.posZ, range);
-        Rpc.sendToAllAround(speech, point, sender.getEntityId(), cc, range);
+        More.RPC.sendToAllAround(point, speech, sender.getEntityId(), cc, range);
     }
 
     @RpcMethod(speech)
@@ -26,7 +26,7 @@ public final class SpeechatRpc {
     }
 
     public static void sendGlobal(IChatComponent cc) {
-        Rpc.sendToAll(global, cc);
+        More.RPC.sendToAll(global, cc);
     }
 
     @RpcMethod(global)
@@ -35,7 +35,7 @@ public final class SpeechatRpc {
     }
 
     public static void sendGmGlobal(IChatComponent cc) {
-        Rpc.sendToAll(gm_global, cc);
+        More.RPC.sendToAll(gm_global, cc);
     }
 
     @RpcMethod(gm_global)
@@ -45,15 +45,15 @@ public final class SpeechatRpc {
 
     public static void sendRaw(EntityLivingBase sender, int range, IChatComponent cc) {
         final NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(sender.dimension, sender.posX, sender.posY, sender.posZ, range);
-        Rpc.sendToAllAround(raw, point, cc);
+        More.RPC.sendToAllAround(point, raw, cc);
     }
 
     public static void sendRaw(NetworkRegistry.TargetPoint point, IChatComponent cc) {
-        Rpc.sendToAllAround(raw, point, cc);
+        More.RPC.sendToAllAround(point, raw, cc);
     }
 
     public static void sendRawTo(EntityPlayerMP receiver, IChatComponent cc) {
-        Rpc.sendTo(raw, receiver, cc);
+        More.RPC.sendTo(receiver, raw, cc);
     }
 
     @RpcMethod(raw)

@@ -3,6 +3,7 @@ package msifeed.mc.more;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import msifeed.mc.Bootstrap;
 import msifeed.mc.commons.defines.DefineCommand;
 import msifeed.mc.commons.defines.Defines;
 import msifeed.mc.commons.logs.ExternalLogs;
@@ -30,6 +31,7 @@ import msifeed.mc.more.commands.RollCommand;
 import msifeed.mc.more.content.MoreItems;
 import msifeed.mc.more.crabs.Crabs;
 import msifeed.mc.more.tools.ToolItems;
+import msifeed.mc.sys.rpc.RpcChannel;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.server.MinecraftServer;
 
@@ -45,6 +47,7 @@ public class More {
     )
     public static GuiHandler GUI_HANDLER;
     public static Defines DEFINES = new Defines();
+    public static RpcChannel RPC = new RpcChannel(Bootstrap.MODID + ":rpc");
 
     private Crabs crabs = new Crabs();
     private ExternalLogs externalLogs = new ExternalLogs();

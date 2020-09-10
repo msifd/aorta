@@ -27,6 +27,7 @@ public enum PotionsHandler {
     };
     private final JsonConfig<HashMap<Integer, ArrayList<PotionRule>>> rulesConfig = ConfigBuilder.of(potionRulesType, "potion_rules.json")
             .addAdapter(Buff.class, new BuffJsonAdapter())
+            .sync()
             .create();
 
     public void init() {

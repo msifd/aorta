@@ -3,11 +3,11 @@ package msifeed.mc.more.crabs.action;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
+import msifeed.mc.more.More;
 import msifeed.mc.more.crabs.action.parser.ActionJsonAdapter;
 import msifeed.mc.sys.config.ConfigBuilder;
 import msifeed.mc.sys.config.ConfigEvent;
 import msifeed.mc.sys.config.JsonConfig;
-import msifeed.mc.sys.rpc.Rpc;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
 import org.apache.logging.log4j.LogManager;
@@ -40,7 +40,7 @@ public enum ActionRegistry {
     public void init() {
         MinecraftForge.EVENT_BUS.register(this);
         FMLCommonHandler.instance().bus().register(this);
-        Rpc.register(ActionRpc.INSTANCE);
+        More.RPC.register(ActionRpc.INSTANCE);
     }
 
     public static ActionHeader getHeader(String id) {

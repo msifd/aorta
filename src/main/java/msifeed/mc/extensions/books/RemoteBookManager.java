@@ -3,7 +3,7 @@ package msifeed.mc.extensions.books;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
 import msifeed.mc.Bootstrap;
-import msifeed.mc.sys.rpc.Rpc;
+import msifeed.mc.more.More;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -34,7 +34,7 @@ public enum RemoteBookManager {
     private Consumer<RemoteBook> fetchConsumer = null;
 
     public static void preInit() {
-        Rpc.register(rpcHandler);
+        More.RPC.register(rpcHandler);
 
         final File mcRootDir = Loader.instance().getConfigDir().getParentFile();
         INSTANCE.booksDir = new File(mcRootDir, "books");

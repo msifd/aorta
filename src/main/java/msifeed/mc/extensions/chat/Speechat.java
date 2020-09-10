@@ -7,7 +7,7 @@ import msifeed.mc.commons.logs.ExternalLogs;
 import msifeed.mc.extensions.chat.commands.*;
 import msifeed.mc.extensions.chat.formatter.MiscFormatter;
 import msifeed.mc.extensions.chat.formatter.SpeechFormatter;
-import msifeed.mc.sys.rpc.Rpc;
+import msifeed.mc.more.More;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
@@ -20,7 +20,7 @@ public class Speechat {
 
     public void preInit() {
         if (FMLCommonHandler.instance().getSide().isClient())
-            Rpc.register(speechatRpc);
+            More.RPC.register(speechatRpc);
         MinecraftForge.EVENT_BUS.register(this);
     }
 

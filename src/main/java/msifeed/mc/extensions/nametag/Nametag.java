@@ -9,8 +9,6 @@ import msifeed.mc.Bootstrap;
 import msifeed.mc.more.More;
 import msifeed.mc.more.crabs.character.Character;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
-import msifeed.mc.sys.rpc.Rpc;
-import msifeed.mc.sys.rpc.RpcMethod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -29,23 +27,22 @@ public class Nametag {
     private static final String notifyTyping = Bootstrap.MODID + ":nametags.notify";
 
     public static void preInit() {
-        Rpc.register(INSTANCE);
+        More.RPC.register(INSTANCE);
         MinecraftForge.EVENT_BUS.register(INSTANCE);
         FMLCommonHandler.instance().bus().register(INSTANCE);
     }
 
     public static void notifyTyping() {
-        Rpc.sendToServer(Nametag.notifyTyping, Minecraft.getMinecraft().thePlayer.getEntityId());
+        More.RPC.sendToServer(Nametag.notifyTyping, Minecraft.getMinecraft().thePlayer.getEntityId());
     }
 
-    @RpcMethod(Nametag.notifyTyping)
     public void onNotifyTyping(MessageContext ctx, int id) {
         final EntityPlayerMP player = ctx.getServerHandler().playerEntity;
         final ChunkCoordinates coord = player.getPlayerCoordinates();
         final NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(
                 player.dimension, coord.posX, coord.posY, coord.posZ, getSpeechRadius()
         );
-        Rpc.sendToAllAround(Nametag.broadcastTyping, point, id);
+        More.RPC.sendToAllAround(point, Nametag.broadcastTyping, id);
     }
 
     @SubscribeEvent

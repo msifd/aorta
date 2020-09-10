@@ -6,7 +6,6 @@ import cpw.mods.fml.common.event.*;
 import msifeed.mc.more.More;
 import msifeed.mc.sys.attributes.AttributeHandler;
 import msifeed.mc.sys.config.ConfigManager;
-import msifeed.mc.sys.rpc.Rpc;
 
 @Mod(modid = Bootstrap.MODID, name = Bootstrap.NAME, version = Bootstrap.VERSION)
 public class Bootstrap {
@@ -26,11 +25,10 @@ public class Bootstrap {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        Rpc.preInit();
         AttributeHandler.preInit();
         ConfigManager.preInit(event);
         MORE.preInit();
-        ConfigManager.reload();
+        ConfigManager.load();
     }
 
     @Mod.EventHandler
