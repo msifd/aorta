@@ -66,6 +66,11 @@ public final class Buff implements DynamicEffect {
         return name() + ':' + pause + ':' + steps + ':' + mergeMode + ':' + effect.encode();
     }
 
+    @Override
+    public String format() {
+        return effect.format();
+    }
+
     /**
      * [pause before activation]:[number of time the effect is applied]:[repeat mode]:[effect]
      */
@@ -190,6 +195,11 @@ public final class Buff implements DynamicEffect {
         }
 
         @Override
+        public String format() {
+            return "когда " + role.format() + " то " + effect.format();
+        }
+
+        @Override
         public EffectArg[] args() {
             return new EffectArg[]{STRING, EFFECT};
         }
@@ -248,6 +258,11 @@ public final class Buff implements DynamicEffect {
         @Override
         public String encode() {
             return name() + ':' + tag.toString().toLowerCase() + ':' + effect.encode();
+        }
+
+        @Override
+        public String format() {
+            return "когда " + tag.format() + " то " + effect.format();
         }
 
         @Override

@@ -12,6 +12,7 @@ public interface Effect {
 
     Effect copy();
     String encode();
+    String format();
 
     enum Stage {
         PRE_SCORE, SCORE, ACTION

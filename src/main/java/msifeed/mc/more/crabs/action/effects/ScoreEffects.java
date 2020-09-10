@@ -46,6 +46,11 @@ public final class ScoreEffects {
         public String encode() {
             return name();
         }
+
+        @Override
+        public String format() {
+            return encode();
+        }
     }
 
     public static class ScoreAbility implements DynamicEffect {
@@ -109,6 +114,11 @@ public final class ScoreEffects {
             e.multiplier = (float) args[1];
             return e;
         }
+
+        @Override
+        public String format() {
+            return encode();
+        }
     }
 
     public static class ScoreAdder implements DynamicEffect {
@@ -149,6 +159,11 @@ public final class ScoreEffects {
         @Override
         public String encode() {
             return name() + ':' + value;
+        }
+
+        @Override
+        public String format() {
+            return String.format("счет %+d", value);
         }
 
         @Override
@@ -202,6 +217,11 @@ public final class ScoreEffects {
         @Override
         public String encode() {
             return name() + ':' + value;
+        }
+
+        @Override
+        public String format() {
+            return String.format("счет * %.2f", value);
         }
 
         @Override
@@ -259,6 +279,11 @@ public final class ScoreEffects {
         }
 
         @Override
+        public String format() {
+            return String.format("счет >= %d", value);
+        }
+
+        @Override
         public EffectArg[] args() {
             return new EffectArg[]{INT};
         }
@@ -313,6 +338,11 @@ public final class ScoreEffects {
         @Override
         public String encode() {
             return name() + ':' + ability + ':' + modifier;
+        }
+
+        @Override
+        public String format() {
+            return String.format("%s %+d", ability.trShort(), modifier);
         }
 
         @Override

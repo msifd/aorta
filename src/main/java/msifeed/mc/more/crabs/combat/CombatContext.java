@@ -168,11 +168,44 @@ public class CombatContext {
         public String toString() {
             return name().toLowerCase();
         }
+
+        public String format() {
+            switch (this) {
+                case NONE:
+                    return "нет";
+                case IDLE:
+                    return "стоим";
+                case ATTACK:
+                    return "атака";
+                case DEFEND:
+                    return "защита";
+                case WAIT:
+                    return "ожидание";
+                case END:
+                    return "развязка";
+                case LEAVE:
+                    return "выход";
+                default:
+                    return "";
+            }
+        }
     }
 
-
     public enum Role {
-        NONE, OFFENCE, DEFENCE
+        NONE, OFFENCE, DEFENCE;
+
+        public String format() {
+            switch (this) {
+                case NONE:
+                    return "угодно";
+                case OFFENCE:
+                    return "атака";
+                case DEFENCE:
+                    return "защита";
+                default:
+                    return "";
+            }
+        }
     }
 
     private static final class Tags {

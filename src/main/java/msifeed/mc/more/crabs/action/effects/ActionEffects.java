@@ -45,6 +45,11 @@ public final class ActionEffects {
         public String encode() {
             return name();
         }
+
+        @Override
+        public String format() {
+            return "передать урон";
+        }
     }
 
     public static class DamageAdder implements DynamicEffect {
@@ -90,6 +95,11 @@ public final class ActionEffects {
         @Override
         public String encode() {
             return name() + ':' + value;
+        }
+
+        @Override
+        public String format() {
+            return String.format("урон %+d", value);
         }
 
         @Override
@@ -146,6 +156,11 @@ public final class ActionEffects {
         }
 
         @Override
+        public String format() {
+            return String.format("чистый урон %+d", value);
+        }
+
+        @Override
         public EffectArg[] args() {
             return new EffectArg[]{INT};
         }
@@ -197,6 +212,11 @@ public final class ActionEffects {
         @Override
         public String encode() {
             return name() + ':' + value;
+        }
+
+        @Override
+        public String format() {
+            return String.format("урон * %.2f", value);
         }
 
         @Override
@@ -256,6 +276,11 @@ public final class ActionEffects {
         }
 
         @Override
+        public String format() {
+            return String.format("чужой урон %+d", value);
+        }
+
+        @Override
         public EffectArg[] args() {
             return new EffectArg[]{INT};
         }
@@ -310,6 +335,11 @@ public final class ActionEffects {
         }
 
         @Override
+        public String format() {
+            return String.format("чужой урон * %.2f", value);
+        }
+
+        @Override
         public EffectArg[] args() {
             return new EffectArg[]{FLOAT};
         }
@@ -360,6 +390,11 @@ public final class ActionEffects {
         @Override
         public String encode() {
             return name() + ':' + value;
+        }
+
+        @Override
+        public String format() {
+            return String.format("излечить %d", value);
         }
 
         @Override

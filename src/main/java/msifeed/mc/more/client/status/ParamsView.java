@@ -78,11 +78,11 @@ class ParamsView extends Widget {
 
     private static String formatBuff(Buff b) {
         final int counter = b.pause > 0 ? -b.pause : b.steps;
-        return String.format("%2d - %s", counter, b.effect.encode());
+        return String.format("%2d - %s", counter, b.effect.format());
     }
 
     private static String formatPassiveBuff(Effect e) {
-        return "** - " + e.encode();
+        return "** - " + e.format();
     }
 
     private void fillNonEditable() {
