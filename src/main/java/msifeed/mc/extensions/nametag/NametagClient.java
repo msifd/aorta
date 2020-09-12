@@ -4,6 +4,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.ReflectionHelper;
+import msifeed.mc.sys.rpc.RpcMethod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,6 +26,7 @@ public class NametagClient extends Nametag {
     private char lastCharPressed = 0;
     private boolean chatIsOpened = false;
 
+    @RpcMethod(broadcastTyping)
     public void onBroadcastTyping(MessageContext ctx, int id) {
         typingPlayers.put(id, System.currentTimeMillis());
     }
