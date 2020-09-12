@@ -60,14 +60,19 @@ public class JsonConfig<T> {
     }
 
     void load() {
-        value = read();
+        try {
+            value = read();
+        } catch (Exception e) {
+            e.printStackTrace();
+            value = getDefaultConfig();
+        }
     }
 
     void save() {
         write(value != null ? value : getDefaultConfig());
     }
 
-    public T read() {
+    public T read() throws Exception {
         final File filepath = ConfigManager.getConfigFile(filename);
         if (!filepath.exists())
             return getDefaultConfig();
@@ -76,7 +81,7 @@ public class JsonConfig<T> {
             return gson.fromJson(new FileReader(filepath), type.getType());
         } catch (IOException e) {
             LOGGER.error("Error while reading '{}' config: {}", filename, e.getMessage());
-            throw new RuntimeException("Failed to read config file: '" + filename  + "'");
+            throw new Exception("Failed to read config file: '" + filename  + "'");
         }
     }
 

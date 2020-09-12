@@ -134,7 +134,7 @@ public class DBHandler {
     public static class ConfigSection {
         DB database = new DB();
         String chat_table = "chat_logs";
-        ZoneId timezone = ZoneId.of("UTC+3");
+        ZoneId timezone = ZoneId.systemDefault();
 
         static class DB {
             String host = "localhost";
