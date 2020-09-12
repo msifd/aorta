@@ -30,6 +30,7 @@ public enum ConfigManager {
     public static void load() {
         for (JsonConfig<?> cfg : INSTANCE.handlers.values())
             cfg.load();
+        MinecraftForge.EVENT_BUS.post(new ConfigEvent.AfterUpdate());
     }
 
     public static boolean reload() {
