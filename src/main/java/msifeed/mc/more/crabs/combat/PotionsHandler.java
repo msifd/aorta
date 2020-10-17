@@ -19,13 +19,14 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public enum PotionsHandler {
     INSTANCE;
 
-    private final TypeToken<HashMap<Integer, ArrayList<PotionRule>>> potionRulesType = new TypeToken<HashMap<Integer, ArrayList<PotionRule>>>() {
+    private final TypeToken<HashMap<Integer, PotionRule>> potionRulesType = new TypeToken<HashMap<Integer, PotionRule>>() {
     };
-    private final JsonConfig<HashMap<Integer, ArrayList<PotionRule>>> rulesConfig = ConfigBuilder.of(potionRulesType, "potion_rules.json")
+    private final JsonConfig<HashMap<Integer, PotionRule>> rulesConfig = ConfigBuilder.of(potionRulesType, "potion_rules.json")
             .addAdapter(Buff.class, new BuffJsonAdapter())
             .sync()
             .create();
@@ -66,24 +67,12 @@ public enum PotionsHandler {
         if (effects.isEmpty())
             return Collections.emptyList();
 
-        final HashMap<Integer, ArrayList<PotionRule>> ruleLists = INSTANCE.rulesConfig.get();
         final List<Integer> toRemove = new ArrayList<>(effects.size());
         final List<Buff> convertedBuffs = new ArrayList<>(effects.size());
 
         for (PotionEffect e : effects) {
-            final ArrayList<PotionRule> rules = ruleLists.get(e.getPotionID());
-            if (rules == null)
-                continue;
-            for (PotionRule pr : rules) {
-                // Subtract 1 from maxAmplifier so in config starting value was 1
-                if (e.getDuration() <= pr.maxDuration && e.getAmplifier() <= pr.maxAmplifier - 1) {
-                    for (Buff b : pr.buffs) {
-                        convertedBuffs.add(b);
-                        toRemove.add(e.getPotionID());
-                    }
-                    break;
-                }
-            }
+            if (convert(e, convertedBuffs))
+                toRemove.add(e.getPotionID());
         }
 
         for (int id : toRemove)
@@ -97,53 +86,46 @@ public enum PotionsHandler {
         if (potions.isEmpty())
             return Collections.emptyList();
 
-        final HashMap<Integer, ArrayList<PotionRule>> ruleLists = INSTANCE.rulesConfig.get();
-        final List<Effect> effects = new ArrayList<>(potions.size());
-
+        final List<Buff> convertedBuffs = new ArrayList<>(potions.size());
         for (PotionEffect e : potions) {
-            final ArrayList<PotionRule> rules = ruleLists.get(e.getPotionID());
-            if (rules == null)
-                continue;
-            for (PotionRule pr : rules) {
-                // Subtract 1 from maxAmplifier so in config starting value was 1
-                if (e.getDuration() <= pr.maxDuration && e.getAmplifier() <= pr.maxAmplifier - 1) {
-                    for (Buff b : pr.buffs)
-                        effects.add(b.effect);
-                    break;
-                }
-            }
+            convert(e, convertedBuffs);
         }
 
-        return effects;
+        return convertedBuffs.stream().map(buff -> buff.effect).collect(Collectors.toList());
     }
 
-    public static List<Buff> convertItemStack(EntityLivingBase entity, ItemStack stack) {
+    public static List<Buff> convertItemStack(ItemStack stack) {
         final List<PotionEffect> effects = Items.potionitem.getEffects(stack);
         if (effects == null || effects.isEmpty())
             return Collections.emptyList();
 
-        final HashMap<Integer, ArrayList<PotionRule>> ruleLists = INSTANCE.rulesConfig.get();
         final List<Buff> convertedBuffs = new ArrayList<>();
-
-        for (PotionEffect e : effects) {
-            final ArrayList<PotionRule> rules = ruleLists.get(e.getPotionID());
-            if (rules == null)
-                continue;
-            for (PotionRule pr : rules) {
-                // Subtract 1 from maxAmplifier so in config starting value was 1
-                if (e.getDuration() <= pr.maxDuration && e.getAmplifier() <= pr.maxAmplifier - 1) {
-                    convertedBuffs.addAll(pr.buffs);
-                    break;
-                }
-            }
-        }
+        for (PotionEffect e : effects)
+            convert(e, convertedBuffs);
 
         return convertedBuffs;
     }
 
+    private static boolean convert(PotionEffect e, List<Buff> converted) {
+        final HashMap<Integer, PotionRule> rulesMap = INSTANCE.rulesConfig.get();
+        final PotionRule rule = rulesMap.get(e.getPotionID());
+        if (rule == null || rule.amplifications.isEmpty())
+            return false;
+
+        final int steps = e.getDuration() / rule.stepDuration;
+        final int index = Math.min(e.getAmplifier(), rule.amplifications.size() - 1);
+
+        for (Buff tmp : rule.amplifications.get(index)) {
+            final Buff copy = tmp.copy();
+            copy.steps += steps;
+            converted.add(copy);
+        }
+
+        return true;
+    }
+
     public static class PotionRule {
-        public int maxDuration;
-        public int maxAmplifier;
-        public List<Buff> buffs;
+        public int stepDuration = 1200;
+        public List<List<Buff>> amplifications;
     }
 }

@@ -293,6 +293,64 @@ public final class ActionEffects {
         }
     }
 
+    public static class OtherRawDamageAdder implements DynamicEffect {
+        private int value;
+
+        @Override
+        public String name() {
+            return "other raw damage+";
+        }
+
+        @Override
+        public boolean shouldApply(Stage stage, FighterInfo target, FighterInfo other) {
+            return stage == Stage.ACTION;
+        }
+
+        @Override
+        public void apply(Stage stage, FighterInfo target, FighterInfo other) {
+            other.com.damageToReceive.add(new DamageAmount(DamageSource.generic, value));
+        }
+
+        @Override
+        public boolean same(Effect other) {
+            return other instanceof OtherRawDamageAdder;
+        }
+
+        @Override
+        public boolean stronger(Effect lesser) {
+            return lesser instanceof OtherRawDamageAdder && value > ((OtherRawDamageAdder) lesser).value;
+        }
+
+        @Override
+        public Effect copy() {
+            final OtherRawDamageAdder e = new OtherRawDamageAdder();
+            e.value = value;
+            return e;
+        }
+
+        @Override
+        public String encode() {
+            return name() + ':' + value;
+        }
+
+        @Override
+        public String format() {
+            return String.format("чужой чистый урон %+d", value);
+        }
+
+        @Override
+        public EffectArg[] args() {
+            return new EffectArg[]{INT};
+        }
+
+        @Override
+        public DynamicEffect create(Object[] args) {
+            final OtherRawDamageAdder e = new OtherRawDamageAdder();
+            e.value = (int) args[0];
+            return e;
+        }
+    }
+
     public static class OtherDamageMultiplier implements DynamicEffect {
         private float value;
 

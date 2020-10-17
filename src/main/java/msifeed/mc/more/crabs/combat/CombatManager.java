@@ -328,7 +328,7 @@ public enum CombatManager {
             final EntityLivingBase entity = self.entity();
             final ItemStack heldItem = entity.getHeldItem();
             if (heldItem != null && heldItem.stackSize > 0) {
-                self.act.buffsToReceive.addAll(PotionsHandler.convertItemStack(self.entity(), heldItem));
+                self.act.buffsToReceive.addAll(PotionsHandler.convertItemStack(heldItem));
                 heldItem.stackSize--;
 
                 if (heldItem.stackSize == 0 && entity instanceof EntityPlayer) {

@@ -21,6 +21,7 @@ public final class EffectsRegistry {
                 new ActionEffects.RawDamageAdder(),
                 new ActionEffects.DamageMultiplier(),
                 new ActionEffects.OtherDamageAdder(),
+                new ActionEffects.OtherRawDamageAdder(),
                 new ActionEffects.OtherDamageMultiplier(),
                 new ActionEffects.Heal(),
                 // Buffs

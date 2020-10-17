@@ -52,7 +52,7 @@ public final class Buff implements DynamicEffect {
     }
 
     @Override
-    public Effect copy() {
+    public Buff copy() {
         final Buff b = new Buff();
         b.pause = pause;
         b.steps = steps;
