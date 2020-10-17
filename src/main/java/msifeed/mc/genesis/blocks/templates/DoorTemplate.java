@@ -41,6 +41,15 @@ public class DoorTemplate extends BlockDoor implements ITileEntityProvider, Spec
     }
 
     @Override
+    public float getBlockHardness(World world, int x, int y, int z) {
+        final LockObject lock = getLock(world, x, y, z);
+        if (lock == null || !lock.isLocked())
+            return super.getBlockHardness(world, x, y, z);
+        else
+            return -1;
+    }
+
+    @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
         final LockObject lock = getLock(world, x, y, z);
         if (lock == null)

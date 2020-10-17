@@ -33,6 +33,7 @@ public class Locks {
         GameRegistry.registerItem(new AdvancedLockpickItem(), AdvancedLockpickItem.ID);
         GameRegistry.registerItem(new AccessTunerItem(), AccessTunerItem.ID);
         GameRegistry.registerItem(new AdvancedAccessTunerItem(), AdvancedAccessTunerItem.ID);
+        GameRegistry.registerItem(new MagicalLockpickItem(), MagicalLockpickItem.ID);
         GameRegistry.registerItem(new SkeletalKeyItem(), SkeletalKeyItem.ID);
         GameRegistry.registerTileEntity(LockTileEntity.class, LockTileEntity.ID);
 

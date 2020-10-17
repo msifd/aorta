@@ -48,6 +48,6 @@ public class Bootstrap {
 
     @Mod.EventHandler
     public void serverStopping(FMLServerStoppingEvent event) {
-        ConfigManager.save();
+//        ConfigManager.save();
     }
 }

@@ -19,10 +19,12 @@ item.lock_key.name=Ключ
 item.lock_build_in.name=Встроенный замок
 item.lock_padlock.name=Навесной замок
 item.lock_digital.name=Цифровой замок
+item.lock_magical.name=Магический замок
 item.lock_lockpick.name=Отмычка
 item.lock_advanced_lockpick.name=Авто-отмычка
 item.lock_access_tuner.name=Настройщик доступа
 item.lock_advanced_tuner.name=Рекомбинатор схем
+item.lock_magical_lockpick.name=Руническая отмычка
 item.lock_skeletal_key.name=Скелетный ключ
 
 item.desc.consumable=Разрушается при использовании.

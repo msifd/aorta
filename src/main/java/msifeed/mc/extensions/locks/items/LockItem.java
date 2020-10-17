@@ -17,7 +17,7 @@ import java.util.List;
 public class LockItem extends Item {
     static final String DEFAULT_DIGITAL_SECRET = "0000";
     private static final String ID_BASE = "lock_";
-    private LockType type;
+    private final LockType type;
 
     public LockItem(LockType type) {
         this.type = type;
