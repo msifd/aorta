@@ -1,5 +1,12 @@
 package msifeed.mc.more.crabs.combat;
 
+import com.emoniph.witchery.brewing.BrewItemKey;
+import com.emoniph.witchery.brewing.ItemBrew;
+import com.emoniph.witchery.brewing.ModifiersEffect;
+import com.emoniph.witchery.brewing.WitcheryBrewRegistry;
+import com.emoniph.witchery.brewing.action.BrewAction;
+import com.emoniph.witchery.brewing.action.BrewActionList;
+import com.emoniph.witchery.brewing.action.BrewPotionEffect;
 import com.google.gson.reflect.TypeToken;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import msifeed.mc.more.crabs.action.ActionTag;
@@ -12,12 +19,16 @@ import msifeed.mc.more.crabs.utils.GetUtils;
 import msifeed.mc.sys.config.ConfigBuilder;
 import msifeed.mc.sys.config.JsonConfig;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import vazkii.botania.api.brew.IBrewItem;
 
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -94,8 +105,17 @@ public enum PotionsHandler {
         return convertedBuffs.stream().map(buff -> buff.effect).collect(Collectors.toList());
     }
 
-    public static List<Buff> convertItemStack(ItemStack stack) {
-        final List<PotionEffect> effects = Items.potionitem.getEffects(stack);
+    public static List<Buff> convertItemStack(ItemStack stack, EntityLivingBase user) {
+        final Class<? extends Item> clazz = stack.getItem().getClass();
+
+        final List<PotionEffect> effects;
+        if (clazz.getName().startsWith("com.emoniph.witchery"))
+            effects = convertWitcheryPotion(stack, user instanceof EntityPlayer ? (EntityPlayer) user : null);
+        else if (clazz.getName().startsWith("vazkii.botania"))
+            effects = convertBotaniaPotion(stack);
+        else
+            effects = convertVanillaPotion(stack);
+
         if (effects == null || effects.isEmpty())
             return Collections.emptyList();
 
@@ -104,6 +124,47 @@ public enum PotionsHandler {
             convert(e, convertedBuffs);
 
         return convertedBuffs;
+    }
+
+    private static List<PotionEffect> convertWitcheryPotion(ItemStack stack, EntityPlayer player) {
+        if (!(stack.getItem() instanceof ItemBrew))
+            return convertVanillaPotion(stack);
+
+        try {
+            final Field ingredientsField = WitcheryBrewRegistry.class.getDeclaredField("ingredients");
+            ingredientsField.setAccessible(true);
+            final Hashtable<BrewItemKey, BrewAction> ingredients = (Hashtable<BrewItemKey, BrewAction>) ingredientsField.get(WitcheryBrewRegistry.INSTANCE);
+
+            final BrewActionList actionList = new BrewActionList(stack.getTagCompound(), ingredients);
+            final ModifiersEffect modifiers = new ModifiersEffect(1.0D, 1.0D, false, null, false, 0, player);
+
+            final List<PotionEffect> effects = new ArrayList<>();
+            for (BrewAction action : actionList.actions) {
+                if (action.augmentEffectLevels(modifiers.effectLevel)) {
+                    action.augmentEffectModifiers(modifiers);
+                    if (action instanceof BrewPotionEffect) {
+                        final BrewPotionEffect b = (BrewPotionEffect) action;
+                        final int strength = Math.min(modifiers.getStrength(), 10);
+                        effects.add(new PotionEffect(b.potion.id, modifiers.getModifiedDuration(modifiers.duration), strength, modifiers.noParticles));
+                    }
+                }
+            }
+
+            return effects;
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            return Collections.emptyList();
+        }
+    }
+
+    private static List<PotionEffect> convertBotaniaPotion(ItemStack stack) {
+        if (stack.getItem() instanceof IBrewItem)
+            return ((IBrewItem) stack.getItem()).getBrew(stack).getPotionEffects(stack);
+        else
+            return convertVanillaPotion(stack);
+    }
+
+    private static List<PotionEffect> convertVanillaPotion(ItemStack stack) {
+        return Items.potionitem.getEffects(stack);
     }
 
     private static boolean convert(PotionEffect e, List<Buff> converted) {

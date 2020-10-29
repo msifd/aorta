@@ -328,14 +328,17 @@ public enum CombatManager {
             final EntityLivingBase entity = self.entity();
             final ItemStack heldItem = entity.getHeldItem();
             if (heldItem != null && heldItem.stackSize > 0) {
-                self.act.buffsToReceive.addAll(PotionsHandler.convertItemStack(heldItem));
-                heldItem.stackSize--;
+                final List<Buff> newBuffs = PotionsHandler.convertItemStack(heldItem, entity);
+                if (!newBuffs.isEmpty()) {
+                    self.act.buffsToReceive.addAll(newBuffs);
+                    heldItem.stackSize--;
 
-                if (heldItem.stackSize == 0 && entity instanceof EntityPlayer) {
-                    final EntityPlayer player = ((EntityPlayer) entity);
-                    player.inventory.mainInventory[player.inventory.currentItem] = null;
-                    player.inventory.markDirty();
-                    MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(player, heldItem));
+                    if (heldItem.stackSize == 0 && entity instanceof EntityPlayer) {
+                        final EntityPlayer player = ((EntityPlayer) entity);
+                        player.inventory.mainInventory[player.inventory.currentItem] = null;
+                        player.inventory.markDirty();
+                        MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(player, heldItem));
+                    }
                 }
             }
         }

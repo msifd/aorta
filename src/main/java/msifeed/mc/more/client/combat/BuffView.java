@@ -21,7 +21,7 @@ class BuffView extends Widget {
     BuffView(EntityLivingBase entity) {
         this.entity = entity;
 
-        setSizeHint(150, 150);
+        setSizeHint(200, 150);
         setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.PREFERRED);
         setLayout(FillLayout.INSTANCE);
 

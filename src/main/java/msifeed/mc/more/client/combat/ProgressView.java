@@ -39,7 +39,7 @@ public class ProgressView extends Widget {
     ProgressView(EntityLivingBase entity) {
         this.entity = entity;
 
-        setSizeHint(150, 150);
+        setSizeHint(200, 150);
         setSizePolicy(SizePolicy.Policy.MINIMUM, SizePolicy.Policy.PREFERRED);
         setLayout(FillLayout.INSTANCE);
 
@@ -193,7 +193,7 @@ public class ProgressView extends Widget {
     }
 
     private void addPane(String fmtKey, Object... args) {
-        scroll.addChild(new Pane(L10n.fmt(fmtKey, args), 140));
+        scroll.addChild(new Pane(L10n.fmt(fmtKey, args), 190));
     }
 
     private static String formatBuff(Buff b) {
