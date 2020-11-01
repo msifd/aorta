@@ -1,7 +1,6 @@
 package msifeed.mc.more.crabs.character;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.Bootstrap;
 import msifeed.mc.commons.logs.ExternalLogs;
 import msifeed.mc.commons.traits.Trait;
@@ -16,8 +15,9 @@ import msifeed.mc.more.crabs.utils.Differ;
 import msifeed.mc.more.crabs.utils.GetUtils;
 import msifeed.mc.more.crabs.utils.MetaAttribute;
 import msifeed.mc.sys.attributes.MissingRequiredAttributeException;
-import msifeed.mc.sys.rpc.RpcMethod;
-import msifeed.mc.sys.rpc.RpcMethodException;
+import msifeed.mc.sys.rpc.RpcContext;
+import msifeed.mc.sys.rpc.RpcException;
+import msifeed.mc.sys.rpc.RpcMethodHandler;
 import msifeed.mc.sys.utils.ChatUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -42,8 +42,8 @@ public enum CharRpc {
         More.RPC.sendToServer(clearEntity, entityId);
     }
 
-    @RpcMethod(updateChar)
-    public void onUpdateChar(MessageContext ctx, int entityId, NBTTagCompound charNbt) {
+    @RpcMethodHandler(updateChar)
+    public void onUpdateChar(RpcContext ctx, int entityId, NBTTagCompound charNbt) {
         final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
         final EntityLivingBase target = GetUtils.entityLiving(sender, entityId).orElse(null);
         if (target == null)
@@ -82,19 +82,19 @@ public enum CharRpc {
         }
     }
 
-    @RpcMethod(refreshName)
-    public void onRefreshName(MessageContext ctx, int entityId) {
+    @RpcMethodHandler(refreshName)
+    public void onRefreshName(RpcContext ctx, int entityId) {
         final Entity entity = FMLClientHandler.instance().getWorldClient().getEntityByID(entityId);
         if (entity instanceof EntityPlayer)
             ((EntityPlayer) entity).refreshDisplayName();
     }
 
-    @RpcMethod(clearEntity)
-    public void onClearEntity(MessageContext ctx, int entityId) {
+    @RpcMethodHandler(clearEntity)
+    public void onClearEntity(RpcContext ctx, int entityId) {
         final EntityPlayerMP sender = ctx.getServerHandler().playerEntity;
         final EntityLivingBase target = GetUtils.entityLiving(sender, entityId)
                 .filter(e -> !(e instanceof EntityPlayer))
-                .orElseThrow(() -> new RpcMethodException(sender, "invalid target entity"));
+                .orElseThrow(() -> new RpcException(sender, "invalid target entity"));
 
         if (CharacterAttribute.require(sender).has(Trait.gm)) {
             CharacterAttribute.INSTANCE.set(target, null);
@@ -106,11 +106,11 @@ public enum CharRpc {
         More.RPC.sendToServer(rollAbility, entityId, ability.ordinal());
     }
 
-    @RpcMethod(rollAbility)
-    public void onRollAbility(MessageContext ctx, int entityId, int abilityOrd) {
+    @RpcMethodHandler(rollAbility)
+    public void onRollAbility(RpcContext ctx, int entityId, int abilityOrd) {
         final EntityPlayer sender = ctx.getServerHandler().playerEntity;
         final EntityLivingBase target = GetUtils.entityLiving(sender, entityId)
-                .orElseThrow(() -> new RpcMethodException(sender, "invalid target entity"));
+                .orElseThrow(() -> new RpcException(sender, "invalid target entity"));
 
         final Ability[] abilityValues = Ability.values();
         if (abilityOrd >= abilityValues.length)
@@ -128,7 +128,7 @@ public enum CharRpc {
             SpeechatRpc.sendRaw(target, range, cc);
             ExternalLogs.log(sender, "roll", cc.getUnformattedText());
         } catch (MissingRequiredAttributeException e) {
-            throw new RpcMethodException(sender, "target has no character property");
+            throw new RpcException(sender, "target has no character property");
         }
     }
 }

@@ -1,10 +1,10 @@
 package msifeed.mc.extensions.chat;
 
 import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.Bootstrap;
 import msifeed.mc.more.More;
-import msifeed.mc.sys.rpc.RpcMethod;
+import msifeed.mc.sys.rpc.RpcContext;
+import msifeed.mc.sys.rpc.RpcMethodHandler;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.IChatComponent;
@@ -20,8 +20,8 @@ public final class SpeechatRpc {
         More.RPC.sendToAllAround(point, speech, sender.getEntityId(), cc, range);
     }
 
-    @RpcMethod(speech)
-    public void receiveSpeech(MessageContext ctx, int senderId, IChatComponent cc, int range) {
+    @RpcMethodHandler(speech)
+    public void receiveSpeech(RpcContext ctx, int senderId, IChatComponent cc, int range) {
         SpeechatClient.receiveSpeech(senderId, cc, range);
     }
 
@@ -29,8 +29,8 @@ public final class SpeechatRpc {
         More.RPC.sendToAll(global, cc);
     }
 
-    @RpcMethod(global)
-    public void receiveGlobal(MessageContext ctx, IChatComponent cc) {
+    @RpcMethodHandler(global)
+    public void receiveGlobal(RpcContext ctx, IChatComponent cc) {
         SpeechatClient.receiveGlobal(cc);
     }
 
@@ -38,8 +38,8 @@ public final class SpeechatRpc {
         More.RPC.sendToAll(gm_global, cc);
     }
 
-    @RpcMethod(gm_global)
-    public void receiveGmGlobal(MessageContext ctx, IChatComponent cc) {
+    @RpcMethodHandler(gm_global)
+    public void receiveGmGlobal(RpcContext ctx, IChatComponent cc) {
         SpeechatClient.receiveGmGlobal(cc);
     }
 
@@ -56,8 +56,8 @@ public final class SpeechatRpc {
         More.RPC.sendTo(receiver, raw, cc);
     }
 
-    @RpcMethod(raw)
-    public void receiveRaw(MessageContext ctx, IChatComponent cc) {
+    @RpcMethodHandler(raw)
+    public void receiveRaw(RpcContext ctx, IChatComponent cc) {
         SpeechatClient.receiveRaw(cc);
     }
 }

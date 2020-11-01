@@ -4,12 +4,12 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.Bootstrap;
 import msifeed.mc.more.More;
 import msifeed.mc.more.crabs.character.Character;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
-import msifeed.mc.sys.rpc.RpcMethod;
+import msifeed.mc.sys.rpc.RpcContext;
+import msifeed.mc.sys.rpc.RpcMethodHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -37,8 +37,8 @@ public class Nametag {
         More.RPC.sendToServer(Nametag.notifyTyping, Minecraft.getMinecraft().thePlayer.getEntityId());
     }
 
-    @RpcMethod(notifyTyping)
-    public void onNotifyTyping(MessageContext ctx, int id) {
+    @RpcMethodHandler(notifyTyping)
+    public void onNotifyTyping(RpcContext ctx, int id) {
         final EntityPlayerMP player = ctx.getServerHandler().playerEntity;
         final ChunkCoordinates coord = player.getPlayerCoordinates();
         final NetworkRegistry.TargetPoint point = new NetworkRegistry.TargetPoint(

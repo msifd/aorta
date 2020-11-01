@@ -1,10 +1,9 @@
 package msifeed.mc.more.crabs.action;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.Bootstrap;
 import msifeed.mc.more.More;
-import msifeed.mc.sys.rpc.RpcMethod;
+import msifeed.mc.sys.rpc.RpcMethodHandler;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -26,8 +25,8 @@ public enum ActionRpc {
         More.RPC.sendTo(player, actionsUpdate, wrapHeaders(actions));
     }
 
-    @RpcMethod(actionsUpdate)
-    public void onActionsUpdate(MessageContext ctx, NBTTagCompound nbt) {
+    @RpcMethodHandler(actionsUpdate)
+    public void onActionsUpdate(NBTTagCompound nbt) {
         ActionRegistry.setActionHeaders(unwrapHeaders(nbt));
     }
 

@@ -1,9 +1,9 @@
 package msifeed.mc.extensions.rename;
 
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.Bootstrap;
 import msifeed.mc.more.More;
-import msifeed.mc.sys.rpc.RpcMethod;
+import msifeed.mc.sys.rpc.RpcContext;
+import msifeed.mc.sys.rpc.RpcMethodHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -38,10 +38,8 @@ public enum RenameRpc {
         More.RPC.sendToServer(rename, nbt);
     }
 
-    @RpcMethod(rename)
-    public void onRename(MessageContext ctx, NBTTagCompound nbt) {
-        if (ctx.side.isClient())
-            return;
+    @RpcMethodHandler(rename)
+    public void onRename(RpcContext ctx, NBTTagCompound nbt) {
         final EntityPlayer sender = ctx.getServerHandler().playerEntity;
         final ItemStack itemStack = sender.getHeldItem();
         if (itemStack == null)
@@ -57,10 +55,8 @@ public enum RenameRpc {
         More.RPC.sendToServer(clear);
     }
 
-    @RpcMethod(clear)
-    public void onClear(MessageContext ctx) {
-        if (ctx.side.isClient())
-            return;
+    @RpcMethodHandler(clear)
+    public void onClear(RpcContext ctx) {
         final EntityPlayer sender = ctx.getServerHandler().playerEntity;
         final ItemStack itemStack = sender.getHeldItem();
         if (itemStack == null)
@@ -74,10 +70,8 @@ public enum RenameRpc {
             More.RPC.sendToServer(setValue, key, value == null ? "[del]" : value);
     }
 
-    @RpcMethod(setValue)
-    public void onSetValue(MessageContext ctx, String key, String value) {
-        if (ctx.side.isClient())
-            return;
+    @RpcMethodHandler(setValue)
+    public void onSetValue(RpcContext ctx, String key, String value) {
         final EntityPlayer sender = ctx.getServerHandler().playerEntity;
         final ItemStack itemStack = sender.getHeldItem();
         if (itemStack == null)
@@ -90,8 +84,8 @@ public enum RenameRpc {
         More.RPC.sendTo(player, openRenameGui);
     }
 
-    @RpcMethod(openRenameGui)
-    public void onOpenRenameGui(MessageContext ctx) {
+    @RpcMethodHandler(openRenameGui)
+    public void onOpenRenameGui() {
         More.GUI_HANDLER.toggleRenamer();
     }
 }

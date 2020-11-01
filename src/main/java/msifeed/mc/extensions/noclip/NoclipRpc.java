@@ -1,9 +1,8 @@
 package msifeed.mc.extensions.noclip;
 
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import msifeed.mc.Bootstrap;
 import msifeed.mc.more.More;
-import msifeed.mc.sys.rpc.RpcMethod;
+import msifeed.mc.sys.rpc.RpcMethodHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,8 +22,8 @@ public enum NoclipRpc {
         More.RPC.sendTo((EntityPlayerMP) player, toggle);
     }
 
-    @RpcMethod(toggle)
-    public void onToggle(MessageContext ctx) {
+    @RpcMethodHandler(toggle)
+    public void onToggle() {
         EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
         player.noClip = !player.noClip;
     }

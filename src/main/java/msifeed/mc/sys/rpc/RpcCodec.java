@@ -19,13 +19,11 @@ import java.util.function.Function;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterOutputStream;
 
-public enum RpcCodec {
-    INSTANCE;
-
+public class RpcCodec {
     private final ArrayList<TypeCodec<?>> codecsById = new ArrayList<>(Byte.MAX_VALUE);
     private final HashMap<Class<?>, TypeCodec<?>> codecsByType = new HashMap<>();
 
-    RpcCodec() {
+    public RpcCodec() {
         addType(Boolean.class, ByteBuf::writeBoolean, ByteBuf::readBoolean);
         addType(Byte.class, (BiConsumer<ByteBuf, Byte>) ByteBuf::writeByte, ByteBuf::readByte);
         addType(Short.class, (BiConsumer<ByteBuf, Short>) ByteBuf::writeShort, ByteBuf::readShort);
@@ -35,15 +33,14 @@ public enum RpcCodec {
         addType(Double.class, ByteBuf::writeDouble, ByteBuf::readDouble);
         addType(String.class, ByteBufUtils::writeUTF8String, ByteBufUtils::readUTF8String);
         addType(NBTTagCompound.class, ByteBufUtils::writeTag, ByteBufUtils::readTag);
-
-        addType(byte[].class, RpcCodec::writeCompressed, RpcCodec::readCompressed);
-
         addType(UUID.class,
                 (buf, uuid) -> {
                     buf.writeLong(uuid.getMostSignificantBits());
                     buf.writeLong(uuid.getLeastSignificantBits());
                 },
                 buf -> new UUID(buf.readLong(), buf.readLong()));
+
+        addType(byte[].class, RpcCodec::writeCompressed, RpcCodec::readCompressed);
 
         addType(IChatComponent.class,
                 (buf, comp) -> ByteBufUtils.writeUTF8String(buf, IChatComponent.Serializer.func_150696_a(comp)),
@@ -53,7 +50,7 @@ public enum RpcCodec {
         addAlias(ChatComponentTranslation.class, IChatComponent.class);
     }
 
-    public boolean hasCodec(Class<?> c) {
+    public boolean hasCodecForType(Class<?> c) {
         return codecsByType.containsKey(c);
     }
 
@@ -62,8 +59,6 @@ public enum RpcCodec {
         final TypeCodec<T> codec = (TypeCodec<T>) codecsByType.get(objType);
         if (codec == null)
             throw new RuntimeException(String.format("Unknown codec for type '%s'", objType.getName()));
-//        if (!codec.type.isAssignableFrom(objType))
-//            throw new RuntimeException(String.format("Tried to encode '%s' with codec for '%s'", objType.getName(), codec.type.getName()));
         buf.writeByte(codec.id);
         codec.encoder.accept(buf, obj);
     }
@@ -77,7 +72,7 @@ public enum RpcCodec {
     }
 
     public <T> void addType(Class<T> type, BiConsumer<ByteBuf, T> encoder, Function<ByteBuf, T> decoder) {
-        if (hasCodec(type))
+        if (hasCodecForType(type))
             throw new RuntimeException(String.format("Duplicate codec for type '%s'", type.getName()));
 
         final int id = codecsById.size();
