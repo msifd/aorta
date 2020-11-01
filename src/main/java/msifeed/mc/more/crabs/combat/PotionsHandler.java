@@ -145,7 +145,7 @@ public enum PotionsHandler {
                     if (action instanceof BrewPotionEffect) {
                         final BrewPotionEffect b = (BrewPotionEffect) action;
                         final int strength = Math.min(modifiers.getStrength(), 10);
-                        effects.add(new PotionEffect(b.potion.id, modifiers.getModifiedDuration(modifiers.duration), strength, modifiers.noParticles));
+                        effects.add(new PotionEffect(b.potion.id, modifiers.getModifiedDuration(b.baseDuration), strength, modifiers.noParticles));
                     }
                 }
             }

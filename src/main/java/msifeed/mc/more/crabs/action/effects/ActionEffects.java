@@ -242,7 +242,7 @@ public final class ActionEffects {
 
         @Override
         public boolean shouldApply(Stage stage, FighterInfo target, FighterInfo other) {
-            return stage == Stage.ACTION;
+            return stage == Stage.ACTION && other != null;
         }
 
         @Override
@@ -303,7 +303,7 @@ public final class ActionEffects {
 
         @Override
         public boolean shouldApply(Stage stage, FighterInfo target, FighterInfo other) {
-            return stage == Stage.ACTION;
+            return stage == Stage.ACTION && other != null;
         }
 
         @Override
@@ -361,7 +361,7 @@ public final class ActionEffects {
 
         @Override
         public boolean shouldApply(Stage stage, FighterInfo target, FighterInfo other) {
-            return stage == Stage.ACTION;
+            return stage == Stage.ACTION && other != null;
         }
 
         @Override

@@ -115,13 +115,13 @@
     "stepDuration": 1200,
     "amplifications": [
       [
-        "buff:0:0:replace:damage*:0.9"
+        "buff:0:0:replace:role:defence:damage*:0.9"
       ],
       [
-        "buff:0:0:replace:damage*:0.8"
+        "buff:0:0:replace:role:defence:damage*:0.8"
       ],
       [
-        "buff:0:0:replace:damage*:0.7"
+        "buff:0:0:replace:role:defence:damage*:0.7"
       ]
     ]
   },
@@ -143,13 +143,13 @@
     "stepDuration": 1200,
     "amplifications": [
       [
-        "buff:0:0:replace:other damage*:0.9"
+        "buff:0:0:replace:role:offence:other damage*:0.9"
       ],
       [
-        "buff:0:0:replace:other damage*:0.8"
+        "buff:0:0:replace:role:offence:other damage*:0.8"
       ],
       [
-        "buff:0:0:replace:other damage*:0.7"
+        "buff:0:0:replace:role:offence:other damage*:0.7"
       ]
     ]
   },
@@ -279,13 +279,13 @@
     "stepDuration": 1200,
     "amplifications": [
       [
-        "buff:0:0:replace:damage*:1.2"
+        "buff:0:0:replace:role:defence:damage*:1.2"
       ],
       [
-        "buff:0:0:replace:damage*:1.4"
+        "buff:0:0:replace:role:defence:damage*:1.4"
       ],
       [
-        "buff:0:0:replace:damage*:1.6"
+        "buff:0:0:replace:role:defence:damage*:1.6"
       ]
     ]
   },
@@ -293,13 +293,13 @@
     "stepDuration": 1200,
     "amplifications": [
       [
-        "buff:0:0:replace:other raw damage+:3"
+        "buff:0:0:replace:role:offence:other raw damage+:3"
       ],
       [
-        "buff:0:0:replace:other raw damage+:5"
+        "buff:0:0:replace:role:offence:other raw damage+:5"
       ],
       [
-        "buff:0:0:replace:other raw damage+:7"
+        "buff:0:0:replace:role:offence:other raw damage+:7"
       ]
     ]
   },
@@ -307,13 +307,13 @@
     "stepDuration": 1200,
     "amplifications": [
       [
-        "buff:0:0:replace:other damage*:0.8"
+        "buff:0:0:replace:role:offence:other damage*:0.8"
       ],
       [
-        "buff:0:0:replace:other damage*:0.6"
+        "buff:0:0:replace:role:offence:other damage*:0.6"
       ],
       [
-        "buff:0:0:replace:other damage*:0.4"
+        "buff:0:0:replace:role:offence:other damage*:0.4"
       ]
     ]
   },
@@ -381,10 +381,10 @@
     "stepDuration": 99999,
     "amplifications": [
       [
-        "buff:0:1:replace:damage+:7"
+        "buff:0:1:replace:role:offence:damage+:7"
       ],
       [
-        "buff:0:1:replace:damage+:14"
+        "buff:0:1:replace:role:offence:damage+:14"
       ]
     ]
   }
