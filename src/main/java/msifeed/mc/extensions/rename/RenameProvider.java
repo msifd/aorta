@@ -1,6 +1,7 @@
 package msifeed.mc.extensions.rename;
 
 import msifeed.mc.genesis.items.IItemTemplate;
+import msifeed.mc.sys.utils.ChatUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -19,7 +20,7 @@ public class RenameProvider {
             if (itemStack.hasTagCompound() && itemStack.stackTagCompound.hasKey("display", 10))
                 itemStack.stackTagCompound.getCompoundTag("display").removeTag(Tags.title);
         } else {
-            itemStack.setStackDisplayName(fromAmpersandFormatting(title));
+            itemStack.setStackDisplayName(ChatUtils.fromAmpersandFormatting(title));
         }
     }
 
@@ -77,7 +78,7 @@ public class RenameProvider {
         if (value == null)
             values.removeTag(key);
         else
-            values.setString(fromAmpersandFormatting(key), fromAmpersandFormatting(value));
+            values.setString(ChatUtils.fromAmpersandFormatting(key), ChatUtils.fromAmpersandFormatting(value));
     }
 
     public static Map<String, String> getOverriddenValues(ItemStack itemStack) {
@@ -106,14 +107,6 @@ public class RenameProvider {
         return itemStack.getItem() instanceof IItemTemplate
                 ? Tags.description
                 : Tags.vanillaDescription;
-    }
-
-    static String fromAmpersandFormatting(String str) {
-        return str.replace('&', '\u00A7');
-    }
-
-    static String intoAmpersandFormatting(String str) {
-        return str.replace('\u00A7', '&');
     }
 
     static class Tags {

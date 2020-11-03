@@ -31,4 +31,12 @@ public class ChatUtils {
 
         return entity.getCommandSenderName();
     }
+
+    public static String fromAmpersandFormatting(String str) {
+        return str.replace('&', '\u00A7');
+    }
+
+    public static String intoAmpersandFormatting(String str) {
+        return str.replace('\u00A7', '&');
+    }
 }

@@ -5,6 +5,7 @@ import msifeed.mc.extensions.chat.GmSpeech;
 import msifeed.mc.extensions.chat.SpeechatRpc;
 import msifeed.mc.extensions.chat.formatter.MiscFormatter;
 import msifeed.mc.sys.cmd.GmExtCommand;
+import msifeed.mc.sys.utils.ChatUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -90,7 +91,8 @@ public class GmSayCommand extends GmExtCommand {
                 break;
             default:
                 final String text = String.join(" ", args);
-                SpeechatRpc.sendRaw(player, prefs.range, MiscFormatter.formatGmSay(prefs, new ChatComponentText(text)));
+                final String formatted = ChatUtils.fromAmpersandFormatting(text);
+                SpeechatRpc.sendRaw(player, prefs.range, MiscFormatter.formatGmSay(prefs, new ChatComponentText(formatted)));
                 ExternalLogs.log(player, "gm", text);
                 break;
         }

@@ -5,6 +5,7 @@ import msifeed.mc.extensions.chat.GmSpeech;
 import msifeed.mc.extensions.chat.SpeechatRpc;
 import msifeed.mc.extensions.chat.formatter.MiscFormatter;
 import msifeed.mc.sys.cmd.GmExtCommand;
+import msifeed.mc.sys.utils.ChatUtils;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
@@ -55,10 +56,11 @@ public class GmPmCommand extends GmExtCommand {
         final EntityPlayerMP player = (EntityPlayerMP) sender;
         final GmSpeech.Preferences prefs = GmSpeech.get(player.getCommandSenderName());
         final String text = Stream.of(args).skip(1).collect(Collectors.joining(" "));
-        final String senderText = "gmpm " + target.getDisplayName() + ": " + text;
+        final String formatted = ChatUtils.fromAmpersandFormatting(text);
+        final String senderText = "gmpm " + target.getDisplayName() + ": " + formatted;
 
         SpeechatRpc.sendRawTo(player, new ChatComponentText(senderText));
-        SpeechatRpc.sendRawTo(target, MiscFormatter.formatGmSay(prefs, new ChatComponentText(text)));
+        SpeechatRpc.sendRawTo(target, MiscFormatter.formatGmSay(prefs, new ChatComponentText(formatted)));
         ExternalLogs.log(sender, "gm", senderText);
     }
 }

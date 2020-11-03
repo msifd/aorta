@@ -79,7 +79,7 @@ public enum CombatRpc {
                 .orElseThrow(() -> new RpcException(sender, "target is not a combatant"));
 
         if (com.phase != CombatContext.Phase.ATTACK)
-            throw new RpcException(sender, "target is attacking!");
+            throw new RpcException(sender, "target is not attacking!");
 
         CombatManager.INSTANCE.endAction(target, com);
     }

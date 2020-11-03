@@ -381,10 +381,10 @@
     "stepDuration": 99999,
     "amplifications": [
       [
-        "buff:0:1:replace:role:offence:damage+:7"
+        "buff:0:1:replace:damage+:7"
       ],
       [
-        "buff:0:1:replace:role:offence:damage+:14"
+        "buff:0:1:replace:damage+:14"
       ]
     ]
   }

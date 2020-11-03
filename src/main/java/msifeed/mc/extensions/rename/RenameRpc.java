@@ -4,6 +4,7 @@ import msifeed.mc.Bootstrap;
 import msifeed.mc.more.More;
 import msifeed.mc.sys.rpc.RpcContext;
 import msifeed.mc.sys.rpc.RpcMethodHandler;
+import msifeed.mc.sys.utils.ChatUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -32,7 +33,7 @@ public enum RenameRpc {
 
         final NBTTagList descNbt = new NBTTagList();
         for (String l : desc)
-            descNbt.appendTag(new NBTTagString(RenameProvider.fromAmpersandFormatting("\u00A7r" + l)));
+            descNbt.appendTag(new NBTTagString(ChatUtils.fromAmpersandFormatting("\u00A7r" + l)));
         nbt.setTag("d", descNbt);
 
         More.RPC.sendToServer(rename, nbt);

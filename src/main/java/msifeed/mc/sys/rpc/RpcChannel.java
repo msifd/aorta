@@ -106,15 +106,18 @@ public class RpcChannel {
             final Throwable cause = e.getCause();
             logger.error("Method '{}' excepted: {} at {}",
                     message.method, cause.toString(), cause.getStackTrace()[0].toString());
-            final String s = String.format("Method '%s' excepted: %s at %s",
-                    message.method, cause.toString(), cause.getStackTrace()[0].toString());
-            final IChatComponent cc = new ChatComponentText(s);
-            cc.getChatStyle().setColor(EnumChatFormatting.RED);
 
-            if (side.isServer())
-                ((NetHandlerPlayServer) netHandler).playerEntity.addChatMessage(cc);
-            else
-                Minecraft.getMinecraft().thePlayer.addChatMessage(cc);
+            if (!(cause instanceof RpcException)) {
+                final String s = String.format("Method '%s' excepted: %s at %s",
+                        message.method, cause.toString(), cause.getStackTrace()[0].toString());
+                final IChatComponent cc = new ChatComponentText(s);
+                cc.getChatStyle().setColor(EnumChatFormatting.RED);
+
+                if (side.isServer())
+                    ((NetHandlerPlayServer) netHandler).playerEntity.addChatMessage(cc);
+                else
+                    Minecraft.getMinecraft().thePlayer.addChatMessage(cc);
+            }
         } catch (Throwable e) {
             logger.error("Method '{}' excepted: {} at {}",
                     message.method, e.toString(), e.getStackTrace()[0].toString());

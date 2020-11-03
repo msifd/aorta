@@ -8,6 +8,7 @@ import msifeed.mc.extensions.chat.commands.*;
 import msifeed.mc.extensions.chat.formatter.MiscFormatter;
 import msifeed.mc.extensions.chat.formatter.SpeechFormatter;
 import msifeed.mc.more.More;
+import msifeed.mc.sys.utils.ChatUtils;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
@@ -41,7 +42,8 @@ public class Speechat {
         if (text != null) {
             if (GmSpeech.shouldUseGmsay(event.player)) {
                 final GmSpeech.Preferences prefs = GmSpeech.get(event.player.getCommandSenderName());
-                SpeechatRpc.sendRaw(event.player, prefs.range, MiscFormatter.formatGmSay(prefs, text));
+                final String formatted = ChatUtils.fromAmpersandFormatting(event.message);
+                SpeechatRpc.sendRaw(event.player, prefs.range, MiscFormatter.formatGmSay(prefs, new ChatComponentText(formatted)));
                 ExternalLogs.log(event.player, "gm", text.getUnformattedText());
             } else {
                 final int range = SpeechFormatter.getSpeechRange(text.getUnformattedText());

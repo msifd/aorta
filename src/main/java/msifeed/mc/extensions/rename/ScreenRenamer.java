@@ -15,6 +15,7 @@ import msifeed.mc.mellow.widgets.text.TextInput;
 import msifeed.mc.mellow.widgets.text.TextInputArea;
 import msifeed.mc.mellow.widgets.window.Window;
 import msifeed.mc.more.crabs.utils.CharacterAttribute;
+import msifeed.mc.sys.utils.ChatUtils;
 import msifeed.mc.sys.utils.L10n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -54,7 +55,7 @@ public class ScreenRenamer extends MellowGuiScreen {
         renameTab.addChild(new Label(L10n.tr("more.gui.renamer.title")));
         renameTab.addChild(titleInput);
         titleInput.setMaxLineWidth(200);
-        titleInput.setText(RenameProvider.intoAmpersandFormatting(heldItem.getDisplayName()));
+        titleInput.setText(ChatUtils.intoAmpersandFormatting(heldItem.getDisplayName()));
         titleInput.setFilter(s -> !s.startsWith(" "));
 
         renameTab.addChild(new Label(L10n.tr("more.gui.renamer.desc")));
@@ -75,7 +76,7 @@ public class ScreenRenamer extends MellowGuiScreen {
         applyBtn.setClickCallback(() -> RenameRpc.rename(
                 titleInput.getText(),
                 descInput.toLineStream()
-                        .map(RenameProvider::fromAmpersandFormatting)
+                        .map(ChatUtils::fromAmpersandFormatting)
                         .collect(Collectors.toList())
         ));
         footer.addChild(applyBtn);
@@ -103,14 +104,14 @@ public class ScreenRenamer extends MellowGuiScreen {
         if (!customDesc.isEmpty())
             return customDesc.stream()
                     .map(s -> s.substring(2)) // Remove &r prefix on each line
-                    .map(RenameProvider::intoAmpersandFormatting)
+                    .map(ChatUtils::intoAmpersandFormatting)
                     .collect(Collectors.toList());
 
         if ((itemStack.getItem() instanceof IItemTemplate)) {
             final String[] desc = ((IItemTemplate) itemStack.getItem()).getUnit().desc;
             if (desc != null)
                 return Stream.of(desc)
-                        .map(RenameProvider::intoAmpersandFormatting)
+                        .map(ChatUtils::intoAmpersandFormatting)
                         .collect(Collectors.toList());
         }
 
