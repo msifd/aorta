@@ -1,10 +1,12 @@
 package msifeed.mc.extensions.environment;
 
-import msifeed.mc.sys.cmd.GmExtCommand;
+import cpw.mods.fml.common.FMLCommonHandler;
+import msifeed.mc.sys.cmd.ExtCommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.WorldServer;
 
-public class EnvironmentCommand extends GmExtCommand {
+public class EnvironmentCommand extends ExtCommand {
     @Override
     public String getCommandName() {
         return "aenv";
@@ -16,7 +18,20 @@ public class EnvironmentCommand extends GmExtCommand {
     }
 
     @Override
+    public boolean canCommandSenderUseCommand(ICommandSender sender) {
+        return isGm(sender);
+    }
+
+    @Override
     public void processCommand(ICommandSender sender, String[] args) {
+        if (!(sender instanceof EntityPlayer)) {
+            final WorldServer[] worlds = FMLCommonHandler.instance().getMinecraftServerInstance().worldServers;
+            for (WorldServer w : worlds) {
+                info(sender, "- " + w.provider.getDimensionName() + ", dim: " + w.provider.dimensionId);
+            }
+            return;
+        }
+
         final EntityPlayer player = (EntityPlayer) sender;
 
         if (args.length < 1) {
