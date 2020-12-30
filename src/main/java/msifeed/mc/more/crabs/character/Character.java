@@ -20,7 +20,7 @@ public class Character {
     public int armor = 0;
     public int damageThreshold = 0;
 
-    public int estitence = 60;
+    public int estitence = 62;
     public int sin = 0;
 
     public boolean visibleOnMap = true;
