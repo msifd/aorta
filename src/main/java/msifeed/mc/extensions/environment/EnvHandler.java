@@ -142,6 +142,8 @@ public class EnvHandler {
             if (r.accumulated <= 0) {
                 wi.setRaining(false);
                 wi.setThundering(false);
+            } else {
+                wi.setThundering(r.accumulated > r.thunderThreshold);
             }
         } else {
             r.accumulated += r.income;
